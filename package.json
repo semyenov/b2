@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
+    "cli": "bun run src/cli/index.tsx",
     "check": "bun tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -13,7 +14,12 @@
     "@sinclair/typebox": "^0.34.41",
     "consola": "^3.4.2",
     "elysia": "^1.4.10",
+    "ink": "^6.3.1",
+    "ink-select-input": "^6.2.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^6.0.0",
     "radash": "^12.1.1",
+    "react": "^19.2.0",
     "unstorage": "^1.17.1"
   },
   "devDependencies": {

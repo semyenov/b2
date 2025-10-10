@@ -13,6 +13,7 @@ A high-performance word game server built with [Bun](https://bun.sh), [Elysia](h
 - 🔍 **Detailed Error Handling** - Custom error classes with informative messages
 - 🧩 **Modular Architecture** - Plugin-based route organization
 - 💾 **Persistent Storage** - Games are saved to disk using unstorage with filesystem driver
+- 🖥️ **CLI Frontend** - Interactive terminal interface built with React Ink
 
 ## Quick Start
 
@@ -31,6 +32,25 @@ bun run dev
 ```
 
 Server will start at `http://localhost:3000`
+
+### CLI Frontend
+
+Run the interactive CLI frontend:
+
+```bash
+bun run cli
+```
+
+The CLI provides an interactive interface to:
+- Create new games
+- List and select existing games
+- Play games with a visual board display
+- Get AI move suggestions
+- Make moves with guided input
+
+**Note:** The server must be running for the CLI to work.
+
+For detailed CLI usage instructions, see [CLI_GUIDE.md](./CLI_GUIDE.md).
 
 ### Linting
 
