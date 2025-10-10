@@ -6,6 +6,8 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@sinclair/typebox": "^0.34.41",
+    "consola": "^3.4.2",
     "elysia": "latest"
   },
   "devDependencies": {
