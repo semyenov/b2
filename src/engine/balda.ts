@@ -30,6 +30,7 @@ export interface GameState {
 
 export interface Dictionary {
   has: (word: string) => boolean;
+  hasPrefix?: (prefix: string) => boolean;
 }
 
 export class AllowAllDictionary implements Dictionary {

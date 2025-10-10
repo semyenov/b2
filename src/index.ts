@@ -11,6 +11,8 @@ const app = new Elysia()
   .onError(({ code, error }) => {
     consola.error(`[${code}]`, error);
   })
+  .get("/favicon.ico", () => new Response("", { status: 204 }))
+  .get("/", () => ({ status: "ok" }))
   .use(registerRoutes)
   .listen(port);
 

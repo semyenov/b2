@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { createGame, applyMove, findPlacementsForWord } from "./engine/balda";
+import { suggestWords } from "./engine/suggest";
 import { store } from "./store";
 import {
   CreateGameBodySchema,
@@ -9,19 +10,22 @@ import {
   ErrorSchema,
   FindPlacementsQuerySchema,
   PlacementsResponseSchema,
-  DictionaryStatsSchema
+  DictionaryStatsSchema,
+  SuggestQuerySchema,
+  SuggestResponseSchema
 } from "./schemas";
+import type { SizedDictionary } from "./dictionary";
 
-let dictionaryPromise: Promise<any> | null = null;
-async function getDictionary() {
+let dictionaryPromise: Promise<SizedDictionary> | null = null;
+async function getDictionary(): Promise<SizedDictionary> {
   if (!dictionaryPromise) {
     const dictPath = process.env.DICT_PATH;
     if (dictPath) {
       const { loadDictionaryFromFile } = await import("./dictionary");
       dictionaryPromise = loadDictionaryFromFile(dictPath);
     } else {
-      const { AllowAllDictionary } = await import("./engine/balda");
-      dictionaryPromise = Promise.resolve(new AllowAllDictionary());
+      const { AllowAllSizedDictionary } = await import("./dictionary");
+      dictionaryPromise = Promise.resolve(new AllowAllSizedDictionary());
     }
   }
   return dictionaryPromise;
@@ -41,6 +45,21 @@ export function registerRoutes(app: Elysia): Elysia {
         return { loaded: true, source: "file" as const, size: dict.size() };
       },
       { response: { 200: DictionaryStatsSchema } }
+    )
+    .get(
+      "/games/:id/suggest",
+      async ({ params, query, set }) => {
+        const game = store.get(params.id);
+        if (!game) {
+          set.status = 404;
+          return { error: "Not Found" };
+        }
+        const dict = await getDictionary();
+        const q = query as unknown as { limit?: string | number };
+        const limit = Number(q.limit ?? 20);
+        return suggestWords(game.board, dict, { limit });
+      },
+      { query: SuggestQuerySchema, response: { 200: SuggestResponseSchema, 404: ErrorSchema } }
     )
     .post(
       "/games",
@@ -63,7 +82,8 @@ export function registerRoutes(app: Elysia): Elysia {
           set.status = 404;
           return { error: "Not Found" };
         }
-        const word = String((query as any).word || "");
+        const q = query as unknown as { word?: string };
+        const word = String(q.word || "");
         if (!word) {
           set.status = 400;
           return { error: "Missing word" };

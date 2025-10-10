@@ -39,6 +39,19 @@ export const DictionaryStatsSchema = Type.Object({
   size: Type.Optional(Type.Integer({ minimum: 0 }))
 });
 
+export const SuggestQuerySchema = Type.Object({
+  limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 200 }))
+});
+
+export const SuggestionSchema = Type.Object({
+  position: PositionSchema,
+  letter: Type.String({ minLength: 1, maxLength: 1 }),
+  word: Type.String({ minLength: 1 }),
+  score: Type.Number()
+});
+
+export const SuggestResponseSchema = Type.Array(SuggestionSchema);
+
 export const GameStateSchema = Type.Object({
   id: Type.String(),
   size: Type.Integer(),

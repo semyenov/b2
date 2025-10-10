@@ -4,6 +4,8 @@ import { consola } from "consola";
 export interface SizedDictionary extends Dictionary {
   size(): number;
   hasPrefix(prefix: string): boolean;
+  getAlphabet(): string[];
+  getLetterFrequency(): Record<string, number>;
 }
 
 class TrieNode {
@@ -14,12 +16,16 @@ class TrieNode {
 export class TrieDictionary implements SizedDictionary {
   private readonly root = new TrieNode();
   private wordCount = 0;
+  private readonly alphabetSet = new Set<string>();
+  private readonly frequency = new Map<string, number>();
 
   insert(word: string): void {
     const normalized = word.trim().toUpperCase();
     if (!normalized) return;
     let node = this.root;
     for (const ch of normalized) {
+      this.alphabetSet.add(ch);
+      this.frequency.set(ch, (this.frequency.get(ch) ?? 0) + 1);
       let next = node.children.get(ch);
       if (!next) {
         next = new TrieNode();
@@ -44,6 +50,16 @@ export class TrieDictionary implements SizedDictionary {
 
   size(): number {
     return this.wordCount;
+  }
+
+  getAlphabet(): string[] {
+    return Array.from(this.alphabetSet.values());
+  }
+
+  getLetterFrequency(): Record<string, number> {
+    const out: Record<string, number> = {};
+    for (const [k, v] of this.frequency) out[k] = v;
+    return out;
   }
 
   private traverse(sequence: string): TrieNode | null {
@@ -72,4 +88,28 @@ export async function loadDictionaryFromFile(path: string): Promise<SizedDiction
   }
   consola.success(`Dictionary loaded from ${path}: ${dict.size()} words (processed ${lines} lines)`);
   return dict;
+}
+
+export class AllowAllSizedDictionary implements SizedDictionary {
+  private readonly alphabet: string[];
+  constructor(alphabet: string[] = []) {
+    this.alphabet = alphabet.length ? alphabet : Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
+  }
+  has(word: string): boolean {
+    return !!word?.trim();
+  }
+  hasPrefix(prefix: string): boolean {
+    return !!prefix?.trim();
+  }
+  size(): number {
+    return 0;
+  }
+  getAlphabet(): string[] {
+    return this.alphabet;
+  }
+  getLetterFrequency(): Record<string, number> {
+    const out: Record<string, number> = {};
+    for (const ch of this.alphabet) out[ch] = 1;
+    return out;
+  }
 }
