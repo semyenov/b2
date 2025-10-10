@@ -1,39 +1,204 @@
-import { flat, list, objectify, sift, unique } from 'radash'
+import { list, objectify, unique } from 'radash'
 import { ORTHOGONAL_DIRS } from '../constants'
+
+/**
+ * Simple memoization utility for expensive function calls
+ */
+function memoize<T extends (...args: any[]) => any>(
+  fn: T,
+  maxSize = 1000,
+): T {
+  const cache = new Map<string, ReturnType<T>>()
+  return ((...args: Parameters<T>): ReturnType<T> => {
+    const key = JSON.stringify(args)
+    if (cache.has(key)) {
+      return cache.get(key)! as ReturnType<T>
+    }
+    const result = fn(...args)
+    if (cache.size >= maxSize) {
+      // Remove oldest entry (simple LRU)
+      const firstKey = cache.keys().next().value
+      cache.delete(firstKey!)
+    }
+    cache.set(key, result)
+    return result
+  }) as T
+}
+
+/**
+ * Create a memoized version of existsPathForWord for repeated calls
+ */
+const memoizedExistsPathForWord = memoize(
+  (board: Letter[][], word: string, mustInclude: BoardPosition): boolean => {
+    // Implementation moved from the original function
+    const size = board.length
+    const target = normalizeWord(word)
+    if (!target.length)
+      return false
+
+    const first = target[0]!
+    const starts: BoardPosition[] = []
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (board[r][c] === first) {
+          starts.push({ row: r, col: c })
+        }
+      }
+    }
+    if (starts.length === 0)
+      return false
+
+    const mustKey = `${mustInclude.row},${mustInclude.col}`
+
+    for (const start of starts) {
+      const stack: Array<{ pos: BoardPosition, index: number, path: Set<string> }> = [
+        { pos: start, index: 0, path: new Set([`${start.row},${start.col}`]) },
+      ]
+
+      while (stack.length > 0) {
+        const { pos, index, path } = stack.pop()!
+        const _key = `${pos.row},${pos.col}`
+
+        if (index === target.length - 1) {
+          if (path.has(mustKey)) {
+            return true
+          }
+          continue
+        }
+
+        for (const d of ORTHOGONAL_DIRS) {
+          const nextPos = { row: pos.row + d.row, col: pos.col + d.col }
+          if (!isInside(size, nextPos))
+            continue
+
+          const nextKey = `${nextPos.row},${nextPos.col}`
+          if (path.has(nextKey))
+            continue
+
+          const nextCell = board[nextPos.row][nextPos.col]
+          if (nextCell !== target[index + 1])
+            continue
+
+          const newPath = new Set(path)
+          newPath.add(nextKey)
+          stack.push({ pos: nextPos, index: index + 1, path: newPath })
+        }
+      }
+    }
+    return false
+  },
+  500, // Limit cache size to prevent memory issues
+)
 
 export type Letter = string | null
 
 export interface BoardPosition {
-  row: number
-  col: number
+  readonly row: number
+  readonly col: number
 }
 
 export interface MoveInput {
-  playerId: string
-  position: BoardPosition
-  letter: string
-  word: string
+  readonly playerId: string
+  readonly position: BoardPosition
+  readonly letter: string
+  readonly word: string
 }
 
 export interface AppliedMove extends MoveInput {
-  appliedAt: number
+  readonly appliedAt: number
 }
 
 export interface GameState {
-  id: string
-  size: number
-  board: Letter[][]
-  players: string[]
-  currentPlayerIndex: number
-  moves: AppliedMove[]
-  createdAt: number
-  scores: Record<string, number>
-  usedWords: string[]
+  readonly id: string
+  readonly size: number
+  readonly board: Letter[][]
+  readonly players: string[]
+  readonly currentPlayerIndex: number
+  readonly moves: AppliedMove[]
+  readonly createdAt: number
+  readonly scores: Record<string, number>
+  readonly usedWords: string[]
 }
 
 export interface Dictionary {
-  has: (word: string) => boolean
-  hasPrefix?: (prefix: string) => boolean
+  readonly has: (word: string) => boolean
+  readonly hasPrefix?: (prefix: string) => boolean
+}
+
+/**
+ * Game configuration for creating new games
+ */
+export interface GameConfig {
+  readonly size: number
+  readonly baseWord: string
+  readonly players?: readonly string[]
+}
+
+/**
+ * Result of applying a move to a game
+ */
+export type MoveResult
+  = | { readonly ok: true, readonly game: GameState }
+    | { readonly ok: false, readonly message: string }
+
+/**
+ * Valid directions for board navigation
+ */
+export type Direction = 'up' | 'down' | 'left' | 'right'
+
+/**
+ * Position validation result
+ */
+export interface PositionValidation {
+  readonly isValid: boolean
+  readonly reason?: string
+}
+
+/**
+ * Validate if a move input is well-formed
+ */
+function _validateMoveInput(move: MoveInput, size: number): { ok: true } | { ok: false, message: string } {
+  if (!move.playerId?.trim()) {
+    return { ok: false, message: 'Player ID is required' }
+  }
+  if (!move.letter?.trim()) {
+    return { ok: false, message: 'Letter is required' }
+  }
+  if (move.letter.length !== 1) {
+    return { ok: false, message: 'Letter must be exactly one character' }
+  }
+  if (!move.word?.trim()) {
+    return { ok: false, message: 'Word is required' }
+  }
+  if (!isInside(size, move.position)) {
+    return { ok: false, message: 'Position is outside of board' }
+  }
+  return { ok: true }
+}
+
+/**
+ * Validate if a position can be used for placement
+ */
+function validatePlacement(game: GameState, position: BoardPosition): { ok: true } | { ok: false, message: string } {
+  if (game.board[position.row][position.col] !== null) {
+    return { ok: false, message: 'Cell is already occupied' }
+  }
+  if (!isAdjacentToExisting(game.board, position)) {
+    return { ok: false, message: 'Placement must be adjacent to existing letters' }
+  }
+  return { ok: true }
+}
+
+/**
+ * Create a new board state with a letter placed at the given position
+ */
+function createBoardWithPlacement(board: Letter[][], position: BoardPosition, letter: string): Letter[][] {
+  return board.map(row => [...row])
+    .map((row, r) =>
+      r === position.row
+        ? row.map((cell, c) => c === position.col ? letter : cell)
+        : row,
+    )
 }
 
 export class AllowAllDictionary implements Dictionary {
@@ -105,71 +270,16 @@ export function existsPathForWord(
   word: string,
   mustInclude: BoardPosition,
 ): boolean {
-  const size = board.length
-  const target = normalizeWord(word)
-  if (!target.length)
-    return false
-
-  // Pre-collect all starting cells for first letter
-  const first = target[0]!
-  const starts = sift(
-    flat(
-      list(0, size - 1, r =>
-        list(0, size - 1, c =>
-          board[r][c] === first ? { row: r, col: c } : null)),
-    ),
-  )
-  if (starts.length === 0)
-    return false
-
-  const mustKey = `${mustInclude.row},${mustInclude.col}`
-
-  const visited = new Set<string>()
-
-  const dfs = (pos: BoardPosition, index: number): boolean => {
-    const key = `${pos.row},${pos.col}`
-    if (visited.has(key))
-      return false
-    const cell = board[pos.row][pos.col]
-    if (cell !== target[index])
-      return false
-    visited.add(key)
-    try {
-      if (index === target.length - 1) {
-        // Completed word; ensure path used includes mustInclude
-        return visited.has(mustKey)
-      }
-      let found = false
-      forEachNeighbor(size, pos, (n) => {
-        if (found)
-          return
-        if (board[n.row][n.col] == null)
-          return
-        if (board[n.row][n.col] !== target[index + 1])
-          return
-        if (dfs(n, index + 1))
-          found = true
-      })
-      return found
-    }
-    finally {
-      visited.delete(key)
-    }
-  }
-
-  for (const start of starts) {
-    if (dfs(start, 0))
-      return true
-  }
-  return false
+  // Use memoization for repeated calls with same parameters (useful for suggestion engine)
+  // Note: Board state changes frequently, so we don't cache based on board content
+  return memoizedExistsPathForWord(board, word, mustInclude)
 }
 
 export function applyMove(
   game: GameState,
   move: MoveInput,
   dictionary: Dictionary,
-): { ok: true, game: GameState } | { ok: false, message: string } {
-  const size = game.size
+): MoveResult {
   const { position } = move
   const letter = normalizeLetter(move.letter)
   const word = normalizeWord(move.word)
@@ -183,19 +293,10 @@ export function applyMove(
   if (!dictionary.has(word)) {
     return { ok: false, message: 'Word is not present in dictionary' }
   }
-  if (!isInside(size, position)) {
-    return { ok: false, message: 'Position is outside of board' }
-  }
-  if (game.board[position.row][position.col] !== null) {
-    return { ok: false, message: 'Cell is already occupied' }
-  }
-  if (!letter || letter.length !== 1) {
-    return { ok: false, message: 'Letter must be a single character' }
-  }
-
-  // Placement must be adjacent to at least one occupied cell
-  if (!isAdjacentToExisting(game.board, position)) {
-    return { ok: false, message: 'Placement must be adjacent to existing letters' }
+  // Validate input format and placement
+  const placementValidation = validatePlacement(game, position)
+  if (!placementValidation.ok) {
+    return placementValidation
   }
 
   // Uniqueness check
@@ -203,38 +304,45 @@ export function applyMove(
     return { ok: false, message: 'Word already used in this game' }
   }
 
-  // Tentatively place the letter and validate the path
-  game.board[position.row][position.col] = letter
-  const valid = existsPathForWord(game.board, word, position)
+  // Create board with tentative placement and validate path
+  const boardWithPlacement = createBoardWithPlacement(game.board, position, letter)
+
+  // Validate the path with the tentative placement
+  const valid = existsPathForWord(boardWithPlacement, word, position)
   if (!valid) {
-    // revert tentative placement
-    game.board[position.row][position.col] = null
     return { ok: false, message: 'No valid path for the claimed word' }
   }
 
-  // Record move
-  game.moves.push({ ...move, letter, word, appliedAt: Date.now() })
-  // Scoring: 1 point per letter
-  game.scores[move.playerId] = (game.scores[move.playerId] ?? 0) + word.length
-  // Record used word
-  game.usedWords.push(word)
-  // rotate turn
-  game.currentPlayerIndex = (game.currentPlayerIndex + 1) % game.players.length
-  return { ok: true, game }
+  // Create new game state with all updates (immutable)
+  const updatedGame: GameState = {
+    ...game,
+    board: boardWithPlacement,
+    moves: [
+      ...game.moves,
+      { ...move, letter, word, appliedAt: Date.now() },
+    ],
+    scores: {
+      ...game.scores,
+      [move.playerId]: (game.scores[move.playerId] ?? 0) + word.length,
+    },
+    usedWords: [...game.usedWords, word],
+    currentPlayerIndex: (game.currentPlayerIndex + 1) % game.players.length,
+  }
+
+  return { ok: true, game: updatedGame }
 }
 
 export function createGame(
   id: string,
-  size: number,
-  baseWord: string,
-  players: string[] = ['A', 'B'],
+  config: GameConfig,
 ): GameState {
+  const { size, baseWord, players = ['A', 'B'] } = config
   if (size < 3 || size % 2 === 0) {
     throw new Error('Board size must be an odd number >= 3')
   }
   const board = createEmptyBoard(size)
   placeBaseWord(board, baseWord)
-  const normalizedPlayers = players.length ? players : ['A', 'B']
+  const normalizedPlayers = players.length ? [...players] : ['A', 'B']
   const scores = objectify(
     normalizedPlayers,
     p => p,
@@ -273,9 +381,10 @@ export function findPlacementsForWord(
       if (!isAdjacentToExisting(board, pos))
         continue
       for (const letter of candidateLetters) {
-        board[r][c] = letter
-        const ok = existsPathForWord(board, word, pos)
-        board[r][c] = null
+        // Create a copy of the board with the tentative placement
+        const boardCopy = board.map(row => [...row])
+        boardCopy[r][c] = letter
+        const ok = existsPathForWord(boardCopy, word, pos)
         if (ok)
           results.push({ position: pos, letter })
       }

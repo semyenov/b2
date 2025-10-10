@@ -4,6 +4,24 @@ import { consola } from 'consola'
 interface WsClient {
   send: (data: string) => number
   close: (code?: number, reason?: string) => void
+  readyState: number
+}
+
+/**
+ * WebSocket connection states
+ */
+const WS_STATES = {
+  CONNECTING: 0,
+  OPEN: 1,
+  CLOSING: 2,
+  CLOSED: 3,
+} as const
+
+/**
+ * Check if a WebSocket client is in a valid state for sending messages
+ */
+function isClientReady(client: WsClient): boolean {
+  return client.readyState === WS_STATES.OPEN
 }
 
 const gameIdToClients = new Map<string, Set<WsClient>>()
@@ -43,6 +61,24 @@ export function removeClient(client: WsClient): void {
 }
 
 /**
+ * Safely send a message to a WebSocket client with error handling
+ */
+function sendToClient(client: WsClient, payload: string): boolean {
+  try {
+    if (!isClientReady(client)) {
+      consola.warn('Attempted to send to non-ready WebSocket client')
+      return false
+    }
+    client.send(payload)
+    return true
+  }
+  catch (error) {
+    consola.warn('Failed to send WebSocket message:', error)
+    return false
+  }
+}
+
+/**
  * Broadcast updated game state to all clients watching a game
  */
 export function broadcastGame(gameId: string, game: GameState): void {
@@ -52,19 +88,28 @@ export function broadcastGame(gameId: string, game: GameState): void {
     return
   }
 
-  const payload = JSON.stringify({ type: 'game', game })
+  const payload = JSON.stringify({ type: 'game_update', game })
   let successCount = 0
   let errorCount = 0
+  const failedClients: WsClient[] = []
 
-  for (const c of set) {
-    try {
-      c.send(payload)
+  for (const client of set) {
+    if (sendToClient(client, payload)) {
       successCount++
     }
-    catch (error) {
+    else {
       errorCount++
-      consola.warn(`Failed to send to client in game ${gameId}:`, error)
-      // Client likely disconnected, will be cleaned up on close event
+      failedClients.push(client)
+    }
+  }
+
+  // Clean up failed clients immediately instead of waiting for close event
+  for (const failedClient of failedClients) {
+    try {
+      removeClient(failedClient)
+    }
+    catch (error) {
+      consola.error(`Error removing failed client for game ${gameId}:`, error)
     }
   }
 
