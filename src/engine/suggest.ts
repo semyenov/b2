@@ -1,7 +1,7 @@
 import type { SizedDictionary } from '../dictionary'
 import type { BoardPosition, Letter } from './balda'
 import { DEFAULT_SUGGESTION_LIMIT, MAX_SUGGESTION_LIMIT, MAX_WORD_LENGTH, ORTHOGONAL_DIRS } from '../constants'
-import { isAdjacentToExisting, normalizeWord } from './balda'
+import { calculateWordScore, isAdjacentToExisting, normalizeWord } from './balda'
 
 export interface Suggestion {
   position: BoardPosition
@@ -44,7 +44,7 @@ export function suggestWords(
   for (const pos of validPositions) {
     // Try all alphabet letters as candidates at this position
     for (const ch of dict.getAlphabet()) {
-      // Create board copy once per position+letter combination
+      // Create a copy of the board for enumeration to avoid mutating input
       const boardCopy = board.map(row => [...row])
       boardCopy[pos.row][pos.col] = ch
 
@@ -54,7 +54,7 @@ export function suggestWords(
         if (!normalized || !dict.has(normalized))
           return
 
-        const score = normalized.length + rarity(ch)
+        const score = calculateWordScore(normalized) + rarity(ch)
         const key = `${pos.row},${pos.col},${ch},${normalized}`
 
         // Keep only the highest scoring suggestion for each position+letter+word combination
@@ -134,6 +134,9 @@ function enumerateAroundOptimized(
       }
     }
   }
+
+  // Clear visited set to prevent memory leak
+  visited.clear()
 }
 
 // Removed: collectCandidateStrings - no longer needed with optimized enumerateAround

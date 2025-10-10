@@ -1,7 +1,7 @@
 import type { Storage } from 'unstorage'
 import type { GameState } from './engine/balda'
 import { consola } from 'consola'
-import { map, sift } from 'radash'
+import { sift } from 'radash'
 import { createStorage } from 'unstorage'
 import fsDriver from 'unstorage/drivers/fs'
 
@@ -25,7 +25,8 @@ export class GameStore {
 
   async getAll(): Promise<GameState[]> {
     const keys = await this.storage.getKeys()
-    const games = await map(keys, async key => await this.storage.getItem(key))
+    // Use Promise.all for parallel execution instead of sequential map
+    const games = await Promise.all(keys.map(key => this.storage.getItem(key)))
     return sift(games)
   }
 

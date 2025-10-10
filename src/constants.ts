@@ -13,7 +13,7 @@ export const ORTHOGONAL_DIRS: Readonly<BoardPosition[]> = Object.freeze([
 /**
  * Default alphabet for dictionary (Latin + Cyrillic)
  */
-export const DEFAULT_ALPHABET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
+export const DEFAULT_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
 
 /**
  * Maximum word length for word enumeration in suggestions

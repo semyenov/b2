@@ -104,7 +104,9 @@ export function broadcastGame(gameId: string, game: GameState): void {
   }
 
   // Clean up failed clients immediately instead of waiting for close event
-  for (const failedClient of failedClients) {
+  // Create a copy of failed clients to avoid modifying the set while iterating
+  const clientsToRemove = [...failedClients]
+  for (const failedClient of clientsToRemove) {
     try {
       removeClient(failedClient)
     }

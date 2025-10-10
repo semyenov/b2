@@ -1,6 +1,6 @@
 import type { Dictionary } from './engine/balda'
 import { consola } from 'consola'
-import { list, objectify, sift } from 'radash'
+import { objectify, sift } from 'radash'
 import { DEFAULT_ALPHABET } from './constants'
 
 export interface SizedDictionary extends Dictionary {
@@ -29,6 +29,7 @@ export class TrieDictionary implements SizedDictionary {
     let node = this.root
     for (const ch of normalized) {
       this.alphabetSet.add(ch)
+      // Count frequency per word occurrence, not per character insertion
       this.frequency.set(ch, (this.frequency.get(ch) ?? 0) + 1)
       let next = node.children.get(ch)
       if (!next) {
@@ -60,7 +61,7 @@ export class TrieDictionary implements SizedDictionary {
 
   getAlphabet(): string[] {
     if (!this.alphabetCache)
-      this.alphabetCache = list(this.alphabetSet)
+      this.alphabetCache = Array.from(this.alphabetSet)
     return this.alphabetCache
   }
 
@@ -91,7 +92,7 @@ export async function loadDictionaryFromFile(path: string): Promise<SizedDiction
   const dict = new TrieDictionary()
   const lines = text.split(/\r?\n/g)
   const validWords = sift(
-    lines.map(line => {
+    lines.map((line) => {
       const word = line.trim().toUpperCase()
       // Skip empty words or words with spaces/digits
       return word && /^[A-ZА-ЯЁ]+$/.test(word) ? word : null

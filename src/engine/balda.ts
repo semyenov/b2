@@ -2,27 +2,61 @@ import { list, objectify, unique } from 'radash'
 import { ORTHOGONAL_DIRS } from '../constants'
 
 /**
- * Simple memoization utility for expensive function calls
+ * Generate a stable cache key for board state and word parameters
  */
-function memoize<T extends (...args: any[]) => any>(
-  fn: T,
+function generateCacheKey(board: Letter[][], word: string, mustInclude: BoardPosition): string {
+  // Create a hash of the board state by flattening and joining
+  const boardHash = board.map(row => row.map(cell => cell ?? '').join(',')).join('|')
+  return `${boardHash}:${word}:${mustInclude.row},${mustInclude.col}`
+}
+
+/**
+ * Simple memoization utility for expensive function calls with proper LRU eviction
+ */
+function memoize(
+  fn: (board: Letter[][], word: string, mustInclude: BoardPosition) => boolean,
+  keyGenerator: (board: Letter[][], word: string, mustInclude: BoardPosition) => string,
   maxSize = 1000,
-): T {
-  const cache = new Map<string, ReturnType<T>>()
-  return ((...args: Parameters<T>): ReturnType<T> => {
-    const key = JSON.stringify(args)
+): (board: Letter[][], word: string, mustInclude: BoardPosition) => boolean {
+  const cache = new Map<string, boolean>()
+  const accessOrder = new Map<string, number>()
+  let accessCounter = 0
+
+  return (board: Letter[][], word: string, mustInclude: BoardPosition): boolean => {
+    const key = keyGenerator(board, word, mustInclude)
+
     if (cache.has(key)) {
-      return cache.get(key)! as ReturnType<T>
+      // Update access order for LRU
+      accessOrder.set(key, ++accessCounter)
+      const cachedValue = cache.get(key)
+      if (cachedValue !== undefined) {
+        return cachedValue
+      }
     }
-    const result = fn(...args)
+
+    const result = fn(board, word, mustInclude)
+
     if (cache.size >= maxSize) {
-      // Remove oldest entry (simple LRU)
-      const firstKey = cache.keys().next().value
-      cache.delete(firstKey!)
+      // Find least recently used entry
+      let oldestKey = ''
+      let oldestAccess = Infinity
+      for (const [k, access] of accessOrder) {
+        if (access < oldestAccess) {
+          oldestAccess = access
+          oldestKey = k
+        }
+      }
+      // Remove least recently used entry
+      if (oldestKey) {
+        cache.delete(oldestKey)
+        accessOrder.delete(oldestKey)
+      }
     }
+
     cache.set(key, result)
+    accessOrder.set(key, ++accessCounter)
     return result
-  }) as T
+  }
 }
 
 /**
@@ -36,7 +70,9 @@ const memoizedExistsPathForWord = memoize(
     if (!target.length)
       return false
 
-    const first = target[0]!
+    const first = target[0]
+    if (!first)
+      return false
     const starts: BoardPosition[] = []
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
@@ -87,6 +123,7 @@ const memoizedExistsPathForWord = memoize(
     }
     return false
   },
+  generateCacheKey,
   500, // Limit cache size to prevent memory issues
 )
 
@@ -224,8 +261,11 @@ export function placeBaseWord(board: Letter[][], baseWord: string): void {
   const word = normalizeWord(baseWord)
   if (word.length > size)
     throw new Error('Base word length must fit the board size')
+
+  // Center the word both horizontally and vertically
   const centerRow = Math.floor(size / 2)
   const startCol = Math.floor((size - word.length) / 2)
+
   for (let i = 0; i < word.length; i++) {
     board[centerRow][startCol + i] = word[i]
   }
@@ -234,11 +274,97 @@ export function placeBaseWord(board: Letter[][], baseWord: string): void {
 export function normalizeLetter(letter: string): string {
   if (!letter || letter.length === 0)
     return letter
-  return letter[0]!.toUpperCase()
+  const firstChar = letter[0]
+  if (!firstChar)
+    return letter
+  return firstChar.toUpperCase()
 }
 
 export function normalizeWord(word: string): string {
   return (word ?? '').trim().toUpperCase()
+}
+
+/**
+ * Letter rarity scores for Russian language (based on frequency analysis)
+ * Rare letters get higher scores
+ */
+const LETTER_SCORES: Record<string, number> = {
+  // Common letters (lower scores)
+  А: 1,
+  Е: 1,
+  И: 1,
+  Н: 1,
+  О: 1,
+  Р: 1,
+  С: 1,
+  Т: 1,
+  // Medium frequency
+  В: 2,
+  Д: 2,
+  К: 2,
+  Л: 2,
+  М: 2,
+  П: 2,
+  У: 2,
+  Я: 2,
+  // Less common
+  Б: 3,
+  Г: 3,
+  Ж: 3,
+  З: 3,
+  Й: 3,
+  Х: 3,
+  Ц: 3,
+  Ч: 3,
+  // Rare letters (higher scores)
+  Ё: 4,
+  Ш: 4,
+  Щ: 4,
+  Ъ: 4,
+  Ы: 4,
+  Ь: 4,
+  Э: 4,
+  Ю: 4,
+  Ф: 4,
+  // Latin letters (medium scores)
+  A: 2,
+  B: 2,
+  C: 2,
+  D: 2,
+  E: 2,
+  F: 2,
+  G: 2,
+  H: 2,
+  I: 2,
+  J: 2,
+  K: 2,
+  L: 2,
+  M: 2,
+  N: 2,
+  O: 2,
+  P: 2,
+  Q: 3,
+  R: 2,
+  S: 2,
+  T: 2,
+  U: 2,
+  V: 2,
+  W: 3,
+  X: 3,
+  Y: 3,
+  Z: 3,
+}
+
+/**
+ * Calculate word score based on letter rarity
+ */
+export function calculateWordScore(word: string): number {
+  const normalized = normalizeWord(word)
+  let score = 0
+  for (const letter of normalized) {
+    score += LETTER_SCORES[letter] ?? 1 // Default score for unknown letters
+  }
+  return score
 }
 
 /**
@@ -284,7 +410,7 @@ export function applyMove(
   const letter = normalizeLetter(move.letter)
   const word = normalizeWord(move.word)
 
-  // Turn validation
+  // Turn validation - check if player ID matches current player
   const currentPlayerId = game.players[game.currentPlayerIndex]
   if (move.playerId !== currentPlayerId) {
     return { ok: false, message: 'Not current player\'s turn' }
@@ -313,6 +439,11 @@ export function applyMove(
     return { ok: false, message: 'No valid path for the claimed word' }
   }
 
+  // Verify that the placed letter is actually used in the word
+  if (!word.includes(letter)) {
+    return { ok: false, message: 'Placed letter must be part of the claimed word' }
+  }
+
   // Create new game state with all updates (immutable)
   const updatedGame: GameState = {
     ...game,
@@ -323,7 +454,7 @@ export function applyMove(
     ],
     scores: {
       ...game.scores,
-      [move.playerId]: (game.scores[move.playerId] ?? 0) + word.length,
+      [move.playerId]: (game.scores[move.playerId] ?? 0) + calculateWordScore(word),
     },
     usedWords: [...game.usedWords, word],
     currentPlayerIndex: (game.currentPlayerIndex + 1) % game.players.length,
@@ -337,12 +468,13 @@ export function createGame(
   config: GameConfig,
 ): GameState {
   const { size, baseWord, players = ['A', 'B'] } = config
-  if (size < 3 || size % 2 === 0) {
-    throw new Error('Board size must be an odd number >= 3')
+  if (size < 3) {
+    throw new Error('Board size must be at least 3')
   }
   const board = createEmptyBoard(size)
   placeBaseWord(board, baseWord)
-  const normalizedPlayers = players.length ? [...players] : ['A', 'B']
+  // Use provided players or default to ['A', 'B']
+  const normalizedPlayers = [...players]
   const scores = objectify(
     normalizedPlayers,
     p => p,
