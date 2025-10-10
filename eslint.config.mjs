@@ -1,0 +1,26 @@
+import antfu from '@antfu/eslint-config'
+
+export default antfu({
+  typescript: true,
+  stylistic: {
+    indent: 2,
+    quotes: 'single',
+  },
+  ignores: ['**/*.md'],
+  rules: {
+    // Allow Cyrillic alphabet ranges in regex (used for Russian word support)
+    'regexp/no-obscure-range': 'off',
+    // Bun provides global process
+    'node/prefer-global/process': 'off',
+    // Allow multiple statements per line for concise code
+    'style/max-statements-per-line': 'off',
+    // Allow unused vars starting with underscore
+    'unused-imports/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
+  },
+})
