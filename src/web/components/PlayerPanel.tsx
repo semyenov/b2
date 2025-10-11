@@ -51,12 +51,12 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
 
       {/* Words list */}
       <div className="flex-1 overflow-y-auto p-3">
-        <div className="text-xs text-gray-500 mb-2 font-semibold uppercase tracking-wide">
+        <div className="text-sm text-gray-400 mb-3 font-bold uppercase tracking-wide">
           Слова:
           {' '}
           {playerWords.length}
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {playerWords.length === 0
             ? (
                 <div className="text-gray-600 text-sm italic py-4 text-center">Пока нет слов</div>
@@ -65,10 +65,10 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-2.5 py-2 bg-gray-750 hover:bg-gray-700 text-sm font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
+                    className="px-3 py-2.5 bg-gray-750 hover:bg-gray-700 text-base font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
                   >
-                    <span className="font-bold">{word}</span>
-                    <span className="text-xs text-gray-500 group-hover:text-gray-400">
+                    <span className="font-black tracking-wide">{word}</span>
+                    <span className="text-xs text-gray-500 group-hover:text-gray-400 font-bold">
                       #
                       {i + 1}
                     </span>

@@ -229,7 +229,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Three column layout - fills available space */}
-            <div className="flex-1 grid grid-cols-[240px_1fr_240px] gap-6 px-6 py-5 overflow-hidden">
+            <div className="flex-1 grid grid-cols-[310px_1fr_310px] gap-6 px-6 py-5 overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}

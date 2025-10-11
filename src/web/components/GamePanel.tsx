@@ -58,19 +58,11 @@ export function GamePanel({
                   <div className="text-4xl font-black font-mono tracking-widest text-center text-cyan-400">
                     {wordFormed}
                   </div>
-                  <div className="text-center text-xs">
-                    {disabled
-                      ? (
-                          <div className="text-orange-300 font-semibold">⏳ Ждите хода</div>
-                        )
-                      : currentStep === 4
-                        ? (
-                            <div className="text-green-300 font-bold">✓ Готово к отправке!</div>
-                          )
-                        : (
-                            <div className="text-purple-200 font-semibold">✍️ Составьте слово</div>
-                          )}
-                  </div>
+                  {disabled && (
+                    <div className="text-center text-xs">
+                      <div className="text-orange-300 font-semibold">⏳ Ждите хода</div>
+                    </div>
+                  )}
                 </div>
               )
             : (
