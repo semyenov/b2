@@ -229,7 +229,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Three column layout - fills available space */}
-            <div className="flex-1 grid grid-cols-[clamp(200px,15vw,320px)_1fr_clamp(200px,15vw,320px)] gap-[clamp(1rem,1.5vw,2rem)] px-[clamp(1rem,2vw,2rem)] py-[clamp(0.5rem,1vw,1rem)] overflow-hidden">
+            <div className="flex-1 grid grid-cols-[clamp(250px,15vw,320px)_1fr_clamp(250px,15vw,320px)] gap-[clamp(1rem,1.5vw,2rem)] px-[clamp(1rem,2vw,2rem)] py-[clamp(0.5rem,1vw,1rem)] overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}
@@ -261,19 +261,68 @@ export function App() {
             </div>
 
             {/* Control buttons bar - fixed at bottom */}
-            <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 px-[clamp(1rem,2vw,2rem)] py-[clamp(0.75rem,1.5vw,1.5rem)] shadow-depth-3 overflow-hidden">
-              <div className="flex items-center justify-between gap-[clamp(0.5rem,1.5vw,1.5rem)] min-w-0">
-                {/* Left: Exit Button */}
-                <button
-                  onClick={handleExitToMenu}
-                  className="px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[clamp(0.875rem,1.5vw,1.125rem)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0"
-                >
-                  ← Выход
-                </button>
+            <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 shadow-depth-3 overflow-hidden">
+              {/* Status Message Bar */}
+              {playerName && currentGame && (
+                <div className="border-b-2 border-gray-700 px-[clamp(1rem,2vw,2rem)] py-[clamp(0.5rem,1vh,0.75rem)]">
+                  {!isMyTurn()
+                    ? (
+                        <div className="text-orange-300 font-bold text-[clamp(1rem,2vw,1.5rem)] text-center bg-orange-900 bg-opacity-40 py-[clamp(0.25rem,0.5vh,0.5rem)]">
+                          ⏳ Ждите хода...
+                        </div>
+                      )
+                    : !selectedCell
+                      ? (
+                          <div className="text-cyan-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold text-center bg-cyan-900 bg-opacity-20 py-[clamp(0.25rem,0.5vh,0.5rem)]">
+                            👆
+                            {' '}
+                            <span className="font-black">Шаг 1:</span>
+                            {' '}
+                            Выберите пустую клетку
+                          </div>
+                        )
+                      : !selectedLetter
+                        ? (
+                            <div className="text-blue-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold text-center bg-blue-900 bg-opacity-20 py-[clamp(0.25rem,0.5vh,0.5rem)]">
+                              🔤
+                              {' '}
+                              <span className="font-black">Шаг 2:</span>
+                              {' '}
+                              Выберите букву
+                            </div>
+                          )
+                        : wordPath.length < 2
+                          ? (
+                              <div className="text-purple-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold text-center bg-purple-900 bg-opacity-20 py-[clamp(0.25rem,0.5vh,0.5rem)]">
+                                ✍️
+                                {' '}
+                                <span className="font-black">Шаг 3:</span>
+                                {' '}
+                                Составьте слово из букв
+                              </div>
+                            )
+                          : (
+                              <div className="text-green-300 text-[clamp(1rem,2vw,1.5rem)] font-bold text-center bg-green-900 bg-opacity-20 py-[clamp(0.25rem,0.5vh,0.5rem)]">
+                                ✓ Готово! Нажмите "Подтвердить ход"
+                              </div>
+                            )}
+                </div>
+              )}
 
-                {/* Center: Control Buttons */}
-                {playerName && currentGame && (
-                  <div className="flex items-center gap-[clamp(0.5rem,1vw,1rem)] flex-1 justify-center min-w-0">
+              {/* Buttons Bar */}
+              <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.75rem,1.5vw,1.5rem)]">
+                <div className="flex items-center justify-between gap-[clamp(0.5rem,1.5vw,1.5rem)] min-w-0">
+                  {/* Left: Exit Button */}
+                  <button
+                    onClick={handleExitToMenu}
+                    className="px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[clamp(0.875rem,1.5vw,1.125rem)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0"
+                  >
+                    ← Выход
+                  </button>
+
+                  {/* Center: Control Buttons */}
+                  {playerName && currentGame && (
+                    <div className="flex items-center gap-[clamp(0.5rem,1vw,1rem)] flex-1 justify-center min-w-0">
                     <button
                       onClick={() => {
                         if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
@@ -337,6 +386,7 @@ export function App() {
                       </span>
                     </div>
                   )}
+                </div>
                 </div>
               </div>
             </div>

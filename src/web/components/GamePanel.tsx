@@ -35,8 +35,8 @@ export function GamePanel({
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      {/* Board Section - Centered */}
-      <div className="flex justify-center mb-2 shrink-0">
+      {/* Board Section - Centered, with max size constraint */}
+      <div className="flex items-center justify-center min-h-0 flex-grow overflow-visible" style={{ maxHeight: '60%' }}>
         <Board
           game={game}
           selectedCell={selectedCell}
@@ -47,69 +47,20 @@ export function GamePanel({
         />
       </div>
 
-      {/* Controls Section - Full width */}
-      <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 flex-shrink-0">
-        {/* Unified Status & Word Display - Fixed Height */}
-        <div className="border-b-2 border-gray-600 min-h-[44px] flex items-center justify-center">
-          {wordFormed
-            ? (
-              /* Word Display - Hero Element */
-                <div className="flex flex-col items-center justify-center gap-1 w-full py-2 bg-gray-700">
-                  <div className="text-[clamp(2rem,4vw,3rem)] font-black font-mono tracking-widest text-center text-cyan-400">
-                    {wordFormed}
-                  </div>
-                  {disabled && (
-                    <div className="text-center text-xs">
-                      <div className="text-orange-300 font-semibold">⏳ Ждите хода</div>
-                    </div>
-                  )}
-                </div>
-              )
-            : (
-              /* Status Message - No Margins */
-                <div className="w-full h-full flex items-center justify-center">
-                  {disabled
-                    ? (
-                        <div className="text-orange-300 font-bold text-[clamp(1rem,2vw,1.5rem)] w-full text-center py-2 bg-orange-900 bg-opacity-40">⏳ Ждите хода...</div>
-                      )
-                    : (
-                        <>
-                          {currentStep === 1 && (
-                            <div className="text-cyan-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold w-full text-center py-2 bg-cyan-900 bg-opacity-20">
-                              👆
-                              {' '}
-                              <span className="font-black">Шаг 1:</span>
-                              {' '}
-                              Выберите пустую клетку
-                            </div>
-                          )}
-                          {currentStep === 2 && (
-                            <div className="text-blue-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold w-full text-center py-2 bg-blue-900 bg-opacity-20">
-                              🔤
-                              {' '}
-                              <span className="font-black">Шаг 2:</span>
-                              {' '}
-                              Выберите букву
-                            </div>
-                          )}
-                          {currentStep === 3 && (
-                            <div className="text-purple-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold w-full text-center py-2 bg-purple-900 bg-opacity-20">
-                              ✍️
-                              {' '}
-                              <span className="font-black">Шаг 3:</span>
-                              {' '}
-                              Составьте слово из букв
-                            </div>
-                          )}
-                        </>
-                      )}
-                </div>
-              )}
-        </div>
+      {/* Controls Section - Alphabet Only */}
+      <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 flex-shrink-0 mt-[clamp(0.25rem,0.5vh,0.5rem)]">
+        {/* Word Display (if formed) - Compact */}
+        {wordFormed && (
+          <div className="border-b-2 border-gray-600 py-[clamp(0.5rem,1vh,0.75rem)] bg-gray-700">
+            <div className="text-[clamp(2rem,4vw,3rem)] font-black font-mono tracking-widest text-center text-cyan-400">
+              {wordFormed}
+            </div>
+          </div>
+        )}
 
         {/* Alphabet Grid - Enhanced Visibility */}
-        <div className="p-[clamp(0.5rem,1vw,1rem)]">
-          <div className="grid grid-cols-11 gap-[clamp(0.5rem,1vw,0.75rem)] w-full max-w-[min(100%,1200px)] mx-auto">
+        <div className="p-[clamp(0.25rem,0.5vw,0.5rem)]">
+          <div className="grid grid-cols-11 gap-[clamp(0.375rem,0.75vw,0.5rem)] w-full max-w-[min(100%,1200px)] mx-auto">
             {RUSSIAN_ALPHABET.map(letter => (
               <button
                 key={letter}
