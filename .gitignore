@@ -43,3 +43,6 @@ package-lock.json
 
 # game data storage
 /data/games
+
+# environment config
+.env

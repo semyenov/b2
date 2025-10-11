@@ -3,17 +3,18 @@ import SelectInput from 'ink-select-input'
 import React from 'react'
 
 interface MainMenuProps {
-  onSelect: (action: 'list' | 'create' | 'exit') => void
+  onSelect: (action: 'list' | 'create' | 'join' | 'exit') => void
 }
 
 export function MainMenu({ onSelect }: MainMenuProps) {
   const items = [
-    { label: '📋 List Games', value: 'list' as const },
     { label: '➕ Create New Game', value: 'create' as const },
+    { label: '🔗 Join Game by Code', value: 'join' as const },
+    { label: '📋 List All Games', value: 'list' as const },
     { label: '🚪 Exit', value: 'exit' as const },
   ]
 
-  const handleSelect = (item: { value: 'list' | 'create' | 'exit' }) => {
+  const handleSelect = (item: { value: 'list' | 'create' | 'join' | 'exit' }) => {
     onSelect(item.value)
   }
 

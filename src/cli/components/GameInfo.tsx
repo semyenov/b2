@@ -16,11 +16,6 @@ export function GameInfo({ game }: GameInfoProps) {
       </Box>
 
       <Box>
-        <Text color="gray">ID: </Text>
-        <Text>{game.id}</Text>
-      </Box>
-
-      <Box marginTop={1}>
         <Text color="gray">Current Turn: </Text>
         <Text bold color="yellow">{currentPlayer}</Text>
       </Box>

@@ -10,6 +10,29 @@ export type Suggestion = Static<typeof SuggestionSchema>
 export class ApiClient {
   constructor(private baseUrl: string = 'http://localhost:3000') {}
 
+  connectWebSocket(gameId: string, onMessage: (game: GameState) => void): WebSocket {
+    const wsUrl = this.baseUrl.replace('http://', 'ws://').replace('https://', 'wss://')
+    const ws = new WebSocket(`${wsUrl}/games/${gameId}/ws`)
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data)
+        if (data.type === 'game_update' && data.game) {
+          onMessage(data.game)
+        }
+      }
+      catch (error) {
+        console.error('Failed to parse WebSocket message:', error)
+      }
+    }
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error)
+    }
+
+    return ws
+  }
+
   async getGames(): Promise<GameState[]> {
     const response = await fetch(`${this.baseUrl}/games`)
     if (!response.ok)
@@ -74,6 +97,19 @@ export class ApiClient {
     const response = await fetch(`${this.baseUrl}/health`)
     if (!response.ok)
       throw new Error('Health check failed')
+    return response.json()
+  }
+
+  async updatePlayerName(gameId: string, oldName: string, newName: string): Promise<GameState> {
+    const response = await fetch(`${this.baseUrl}/games/${gameId}/player`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ oldName, newName }),
+    })
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error || 'Failed to update player name')
+    }
     return response.json()
   }
 }

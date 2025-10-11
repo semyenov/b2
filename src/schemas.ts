@@ -116,3 +116,14 @@ export const GameStateSchema = Type.Object({
 export const ErrorSchema = Type.Object({
   error: Type.String(),
 })
+
+export const UpdatePlayerBodySchema = Type.Object({
+  oldName: Type.String({
+    minLength: 1,
+    error: 'Old player name is required',
+  }),
+  newName: Type.String({
+    minLength: 1,
+    error: 'New player name is required',
+  }),
+})

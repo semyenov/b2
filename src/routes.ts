@@ -14,29 +14,49 @@ import {
   PlacementsResponseSchema,
   SuggestQuerySchema,
   SuggestResponseSchema,
+  UpdatePlayerBodySchema,
 } from './schemas'
 import { store } from './store'
 import { broadcastGame } from './wsHub'
 
 let dictionaryPromise: Promise<SizedDictionary> | null = null
+let dictionaryLoadingLock = false
+
 async function getDictionary(): Promise<SizedDictionary> {
-  if (!dictionaryPromise) {
+  // If dictionary is already loaded or being loaded, return the existing promise
+  if (dictionaryPromise) {
+    return dictionaryPromise
+  }
+
+  // Check if another request is already loading the dictionary
+  if (dictionaryLoadingLock) {
+    // Wait a bit and retry
+    await new Promise(resolve => setTimeout(resolve, 10))
+    return getDictionary()
+  }
+
+  // Acquire the lock and load the dictionary
+  dictionaryLoadingLock = true
+  try {
     const dictPath = process.env.DICT_PATH
     if (dictPath) {
-      try {
-        const { loadDictionaryFromFile } = await import('./dictionary')
-        dictionaryPromise = loadDictionaryFromFile(dictPath)
-      }
-      catch (error) {
+      const { loadDictionaryFromFile } = await import('./dictionary')
+      dictionaryPromise = loadDictionaryFromFile(dictPath).catch((error) => {
+        // Reset on error to allow retry
+        dictionaryPromise = null
         throw new DictionaryError(`Failed to load dictionary from ${dictPath}: ${error}`)
-      }
+      })
     }
     else {
       const { AllowAllSizedDictionary } = await import('./dictionary')
       dictionaryPromise = Promise.resolve(new AllowAllSizedDictionary())
     }
   }
-  return dictionaryPromise
+  finally {
+    dictionaryLoadingLock = false
+  }
+
+  return dictionaryPromise!
 }
 
 /**
@@ -84,7 +104,8 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
       throw new InvalidMoveError(res.message)
 
     await store.set(res.game)
-    broadcastGame(params.id, res.game)
+    // Broadcast to all connected clients
+    setTimeout(() => broadcastGame(params.id, res.game), 50)
     return res.game
   }, {
     params: GameIdParamsSchema,
@@ -111,6 +132,60 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
     const limit = query.limit ? Number(query.limit) : undefined
     return suggestWords(game.board, dict, { limit })
   }, { query: SuggestQuerySchema, response: { 200: SuggestResponseSchema, 404: ErrorSchema } })
+  .patch('/:id/player', async ({ params, body }) => {
+    const game = await store.get(params.id)
+    if (!game)
+      throw new GameNotFoundError(params.id)
+
+    const { oldName, newName } = body
+
+    // Check if new name already exists in the game
+    if (game.players.includes(newName) && newName !== oldName) {
+      throw new InvalidMoveError(`Player name "${newName}" is already taken in this game`)
+    }
+
+    const playerIndex = game.players.indexOf(oldName)
+    if (playerIndex === -1)
+      throw new InvalidMoveError(`Player "${oldName}" not found in game`)
+
+    // Create updated game with new player name
+    const updatedPlayers = [...game.players]
+    updatedPlayers[playerIndex] = newName
+
+    // Safely migrate scores - only if the old player had a score
+    const updatedScores = { ...game.scores }
+    if (oldName in game.scores) {
+      updatedScores[newName] = game.scores[oldName]
+      delete updatedScores[oldName]
+    }
+    else {
+      // Initialize score for new player if they don't have one
+      updatedScores[newName] = 0
+    }
+
+    // Update move history to reflect the new player name
+    const updatedMoves = game.moves.map(move =>
+      move.playerId === oldName
+        ? { ...move, playerId: newName }
+        : move,
+    )
+
+    const updatedGame = {
+      ...game,
+      players: updatedPlayers,
+      scores: updatedScores,
+      moves: updatedMoves,
+    }
+
+    await store.set(updatedGame)
+    // Broadcast to all connected clients immediately
+    setTimeout(() => broadcastGame(params.id, updatedGame), 50)
+    return updatedGame
+  }, {
+    params: GameIdParamsSchema,
+    body: UpdatePlayerBodySchema,
+    response: { 200: GameStateSchema, 400: ErrorSchema, 404: ErrorSchema },
+  })
 
 export function registerRoutes(app: Elysia): Elysia {
   return app

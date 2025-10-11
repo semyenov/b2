@@ -6,7 +6,8 @@ import { ORTHOGONAL_DIRS } from '../constants'
  */
 function generateCacheKey(board: Letter[][], word: string, mustInclude: BoardPosition): string {
   // Create a hash of the board state by flattening and joining
-  const boardHash = board.map(row => row.map(cell => cell ?? '').join(',')).join('|')
+  // Use '-' for null to avoid collision with empty string letters
+  const boardHash = board.map(row => row.map(cell => cell === null ? '-' : cell).join(',')).join('|')
   return `${boardHash}:${word}:${mustInclude.row},${mustInclude.col}`
 }
 

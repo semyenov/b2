@@ -35,15 +35,13 @@ export function GameList({ games, onSelect, onBack }: GameListProps) {
         <Text bold color="cyan">Select a Game</Text>
       </Box>
 
-      {games.length === 0
-        ? (
-            <Box>
-              <Text color="yellow">No games found. Create a new game!</Text>
-            </Box>
-          )
-        : (
-            <SelectInput items={items} onSelect={handleSelect} />
-          )}
+      {games.length === 0 && (
+        <Box marginBottom={1}>
+          <Text color="yellow">No games found. Create a new game!</Text>
+        </Box>
+      )}
+
+      <SelectInput items={items} onSelect={handleSelect} />
     </Box>
   )
 }

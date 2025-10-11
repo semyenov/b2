@@ -1,11 +1,12 @@
 import type { CreateGameBody, GameState, MoveBody, Suggestion } from './api'
 import { Box, Text, useApp, useInput } from 'ink'
 import Spinner from 'ink-spinner'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ApiClient } from './api'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
 import { GamePlay } from './components/GamePlay'
+import { JoinGame } from './components/JoinGame'
 import { MainMenu } from './components/MainMenu'
 import { Suggestions } from './components/Suggestions'
 
@@ -13,6 +14,7 @@ type Screen
   = | { type: 'menu' }
     | { type: 'list' }
     | { type: 'create' }
+    | { type: 'join' }
     | { type: 'play', gameId: string }
     | { type: 'suggestions', suggestions: Suggestion[] }
 
@@ -21,9 +23,11 @@ export function App() {
   const [screen, setScreen] = useState<Screen>({ type: 'menu' })
   const [games, setGames] = useState<GameState[]>([])
   const [currentGame, setCurrentGame] = useState<GameState | null>(null)
+  const [currentPlayerName, setCurrentPlayerName] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [apiClient] = useState(() => new ApiClient())
+  const wsRef = useRef<WebSocket | null>(null)
 
   // Check server health on mount
   useEffect(() => {
@@ -38,13 +42,41 @@ export function App() {
     void checkHealth()
   }, [apiClient])
 
+  // WebSocket connection management
+  useEffect(() => {
+    if (screen.type === 'play' && screen.gameId) {
+      // Connect WebSocket for real-time updates using gameId from screen, not currentGame
+      // This prevents reconnection when currentGame updates
+      wsRef.current = apiClient.connectWebSocket(screen.gameId, (updatedGame) => {
+        setCurrentGame(updatedGame)
+      })
+
+      // Periodic refresh to ensure sync (every 5 seconds)
+      const refreshInterval = setInterval(async () => {
+        try {
+          const latestGame = await apiClient.getGame(screen.gameId)
+          setCurrentGame(latestGame)
+        }
+        catch {
+          // Ignore errors in background refresh
+        }
+      }, 5000)
+
+      return () => {
+        // Cleanup WebSocket on unmount or when leaving play screen
+        if (wsRef.current) {
+          wsRef.current.close()
+          wsRef.current = null
+        }
+        clearInterval(refreshInterval)
+      }
+    }
+  }, [screen, apiClient])
+
   // Handle ESC key to clear errors
   useInput((input, key) => {
     if (key.escape && error) {
       setError(null)
-    }
-    if (screen.type === 'suggestions' && !loading) {
-      setScreen({ type: 'play', gameId: currentGame!.id })
     }
   })
 
@@ -63,12 +95,15 @@ export function App() {
     }
   }
 
-  const loadGame = async (gameId: string) => {
+  const loadGame = async (gameId: string, playerName?: string) => {
     setLoading(true)
     setError(null)
     try {
       const game = await apiClient.getGame(gameId)
       setCurrentGame(game)
+      if (playerName) {
+        setCurrentPlayerName(playerName)
+      }
       setScreen({ type: 'play', gameId })
     }
     catch (err) {
@@ -80,7 +115,7 @@ export function App() {
     }
   }
 
-  const handleMenuSelect = async (action: 'list' | 'create' | 'exit') => {
+  const handleMenuSelect = async (action: 'list' | 'create' | 'join' | 'exit') => {
     if (action === 'exit') {
       exit()
     }
@@ -91,18 +126,77 @@ export function App() {
     else if (action === 'create') {
       setScreen({ type: 'create' })
     }
+    else if (action === 'join') {
+      setScreen({ type: 'join' })
+    }
   }
 
-  const handleCreateGame = async (body: CreateGameBody) => {
+  const handleCreateGame = async (body: CreateGameBody, playerName: string) => {
     setLoading(true)
     setError(null)
     try {
       const game = await apiClient.createGame(body)
-      setCurrentGame(game)
+      // Fetch the game again to ensure we have the latest state
+      const latestGame = await apiClient.getGame(game.id)
+      setCurrentGame(latestGame)
+      setCurrentPlayerName(playerName)
       setScreen({ type: 'play', gameId: game.id })
     }
     catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create game')
+      setScreen({ type: 'menu' })
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+
+  const handleJoinGame = async (gameId: string, playerName: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      // First load the game to see current state
+      const game = await apiClient.getGame(gameId)
+
+      // Check if this player name is already in the game
+      if (game.players.includes(playerName)) {
+        // Player is already in the game, just join with their existing name
+        setCurrentGame(game)
+        setCurrentPlayerName(playerName)
+        setScreen({ type: 'play', gameId })
+        return
+      }
+
+      // Find placeholder players (Player 2, Player 3, etc.)
+      const placeholderPlayer = game.players.find(p => p.startsWith('Player ') && p !== 'Player 1')
+
+      if (placeholderPlayer) {
+        // Replace the placeholder with the actual player name
+        try {
+          await apiClient.updatePlayerName(gameId, placeholderPlayer, playerName)
+          // Refetch the game to ensure we have the latest state
+          const latestGame = await apiClient.getGame(gameId)
+          setCurrentGame(latestGame)
+          setCurrentPlayerName(playerName)
+          setScreen({ type: 'play', gameId })
+        }
+        catch (updateErr) {
+          // If update fails (e.g., name already taken), join as observer
+          setError(`Could not join as player: ${updateErr instanceof Error ? updateErr.message : 'Unknown error'}`)
+          setCurrentGame(game)
+          setCurrentPlayerName(null) // Join as observer
+          setScreen({ type: 'play', gameId })
+        }
+      }
+      else {
+        // No placeholder slots available, join as observer
+        setCurrentGame(game)
+        setCurrentPlayerName(null) // Join as observer
+        setScreen({ type: 'play', gameId })
+      }
+    }
+    catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to join game')
       setScreen({ type: 'menu' })
     }
     finally {
@@ -121,8 +215,10 @@ export function App() {
     setLoading(true)
     setError(null)
     try {
-      const updatedGame = await apiClient.makeMove(currentGame.id, move)
-      setCurrentGame(updatedGame)
+      await apiClient.makeMove(currentGame.id, move)
+      // Immediately fetch the latest game state to ensure consistency
+      const latestGame = await apiClient.getGame(currentGame.id)
+      setCurrentGame(latestGame)
     }
     catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to make move')
@@ -159,6 +255,7 @@ export function App() {
   const handleBack = () => {
     setScreen({ type: 'menu' })
     setCurrentGame(null)
+    setCurrentPlayerName(null)
     setError(null)
   }
 
@@ -205,9 +302,14 @@ export function App() {
         <CreateGame onSubmit={handleCreateGame} onCancel={handleBack} />
       )}
 
+      {!loading && screen.type === 'join' && (
+        <JoinGame onSubmit={handleJoinGame} onCancel={handleBack} />
+      )}
+
       {!loading && screen.type === 'play' && currentGame && (
         <GamePlay
           game={currentGame}
+          currentPlayerName={currentPlayerName}
           onMove={handleMove}
           onRefresh={handleRefresh}
           onSuggest={handleSuggest}

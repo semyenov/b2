@@ -1,5 +1,5 @@
 import type { Suggestion } from '../api'
-import { Box, Text } from 'ink'
+import { Box, Text, useInput } from 'ink'
 import React from 'react'
 
 interface SuggestionsProps {
@@ -7,7 +7,12 @@ interface SuggestionsProps {
   onClose?: () => void
 }
 
-export function Suggestions({ suggestions, onClose: _onClose }: SuggestionsProps) {
+export function Suggestions({ suggestions, onClose }: SuggestionsProps) {
+  useInput(() => {
+    if (onClose) {
+      onClose()
+    }
+  })
   return (
     <Box flexDirection="column" borderStyle="round" borderColor="yellow" padding={1}>
       <Box marginBottom={1}>

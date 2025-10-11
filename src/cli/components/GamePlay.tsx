@@ -7,13 +7,14 @@ import { GameInfo } from './GameInfo'
 
 interface GamePlayProps {
   game: GameState
+  currentPlayerName: string | null
   onMove: (move: MoveBody) => Promise<void>
   onRefresh: () => Promise<void>
   onSuggest: () => Promise<void>
   onBack: () => void
 }
 
-export function GamePlay({ game, onMove, onRefresh, onSuggest, onBack }: GamePlayProps) {
+export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest, onBack }: GamePlayProps) {
   const [mode, setMode] = useState<'idle' | 'input'>('idle')
   const [step, setStep] = useState<'row' | 'col' | 'letter' | 'word'>('row')
   const [row, setRow] = useState('')
@@ -24,10 +25,16 @@ export function GamePlay({ game, onMove, onRefresh, onSuggest, onBack }: GamePla
   const [loading, setLoading] = useState(false)
 
   const currentPlayer = game.players[game.currentPlayerIndex]
+  // Check if it's this player's turn - must match the exact player name in the game
+  const isMyTurn = currentPlayerName !== null && currentPlayerName === currentPlayer
 
   useInput((input, key) => {
     if (mode === 'idle') {
       if (input === 'm') {
+        if (!isMyTurn) {
+          setError('It\'s not your turn!')
+          return
+        }
         setMode('input')
         setStep('row')
         setError(null)
@@ -95,8 +102,14 @@ export function GamePlay({ game, onMove, onRefresh, onSuggest, onBack }: GamePla
       // Submit the move
       setLoading(true)
       try {
+        // Use the actual player's name, not whose turn it is
+        if (!currentPlayerName) {
+          setError('Player name not set')
+          setMode('idle')
+          return
+        }
         await onMove({
-          playerId: currentPlayer,
+          playerId: currentPlayerName,
           position: { row: Number(row), col: Number(col) },
           letter,
           word: value,
@@ -125,11 +138,30 @@ export function GamePlay({ game, onMove, onRefresh, onSuggest, onBack }: GamePla
 
   return (
     <Box flexDirection="column">
-      <Box marginBottom={1}>
-        <Text bold color="magenta">
-          Playing Game:
-          {game.id.slice(0, 8)}
-        </Text>
+      <Box marginBottom={1} flexDirection="column">
+        <Box flexDirection="column">
+          <Box>
+            <Text bold color="magenta">
+              Game ID (share this to invite players):
+            </Text>
+          </Box>
+          <Box marginTop={1} paddingX={1} borderStyle="round" borderColor="cyan">
+            <Text bold color="cyan">
+              {game.id}
+            </Text>
+          </Box>
+        </Box>
+        {currentPlayerName && (
+          <Box marginTop={1}>
+            <Text>
+              Playing as:
+              {' '}
+            </Text>
+            <Text bold color="green">
+              {currentPlayerName}
+            </Text>
+          </Box>
+        )}
       </Box>
 
       <Box gap={2}>
@@ -157,6 +189,24 @@ export function GamePlay({ game, onMove, onRefresh, onSuggest, onBack }: GamePla
 
       {mode === 'idle' && !loading && (
         <Box marginTop={1} flexDirection="column">
+          {!isMyTurn && currentPlayerName && (
+            <Box marginBottom={1}>
+              <Text color="yellow">
+                ⏳ Waiting for
+                {' '}
+                {currentPlayer}
+                {' '}
+                to make a move...
+              </Text>
+            </Box>
+          )}
+          {isMyTurn && currentPlayerName && (
+            <Box marginBottom={1}>
+              <Text color="green" bold>
+                ▶ Your turn! Make a move.
+              </Text>
+            </Box>
+          )}
           <Text bold>Commands:</Text>
           <Text>
             {' '}

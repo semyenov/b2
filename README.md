@@ -68,8 +68,28 @@ bun run lint:fix
 
 ## Environment Variables
 
+Create a `.env` file in the project root:
+
+```bash
+# Dictionary Configuration
+DICT_PATH=./data/dictionaries/russian.txt
+
+# Server Configuration
+PORT=3000
+
+# Storage Configuration
+STORAGE_DIR=./data/games
+
+# Environment
+NODE_ENV=development
+```
+
+**Available Environment Variables:**
 - `PORT` - HTTP server port (default: 3000)
 - `DICT_PATH` - Path to dictionary file (optional; uses permissive mode if unset)
+  - **Included:** 50,910 Russian words in `./data/dictionaries/russian.txt`
+  - Format: One word per line, UTF-8 encoding
+  - Case-insensitive matching
 - `NODE_ENV` - Set to `production` to hide detailed error messages
 - `STORAGE_DIR` - Game storage directory (default: `./data/games`)
 

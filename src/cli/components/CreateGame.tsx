@@ -1,18 +1,24 @@
 import type { CreateGameBody } from '../api'
-import { Box, Text } from 'ink'
+import { Box, Text, useInput } from 'ink'
 import TextInput from 'ink-text-input'
 import React, { useState } from 'react'
 
 interface CreateGameProps {
-  onSubmit: (game: CreateGameBody) => void
+  onSubmit: (game: CreateGameBody, playerName: string) => void
   onCancel?: () => void
 }
 
-export function CreateGame({ onSubmit, onCancel: _onCancel }: CreateGameProps) {
-  const [step, setStep] = useState<'size' | 'baseWord' | 'players'>('size')
+export function CreateGame({ onSubmit, onCancel }: CreateGameProps) {
+  const [step, setStep] = useState<'size' | 'baseWord' | 'playerName'>('size')
   const [size, setSize] = useState('')
   const [baseWord, setBaseWord] = useState('')
-  const [players, setPlayers] = useState('')
+  const [playerName, setPlayerName] = useState('')
+
+  useInput((input, key) => {
+    if (key.escape && onCancel) {
+      onCancel()
+    }
+  })
 
   const handleSubmit = (value: string) => {
     if (step === 'size') {
@@ -29,23 +35,20 @@ export function CreateGame({ onSubmit, onCancel: _onCancel }: CreateGameProps) {
         return
       }
       setBaseWord(value)
-      setStep('players')
+      setStep('playerName')
     }
-    else if (step === 'players') {
-      const playerList = value
-        .split(',')
-        .map(p => p.trim())
-        .filter(p => p.length > 0)
-
-      if (playerList.length === 0) {
+    else if (step === 'playerName') {
+      if (!value.trim()) {
         return
       }
+      setPlayerName(value.trim())
 
+      // Create game with placeholder for second player
       onSubmit({
         size: Number(size),
         baseWord,
-        players: playerList,
-      })
+        players: [value.trim(), 'Player 2'],
+      }, value.trim())
     }
   }
 
@@ -85,26 +88,33 @@ export function CreateGame({ onSubmit, onCancel: _onCancel }: CreateGameProps) {
         </Box>
       )}
 
-      {step === 'players' && (
+      {step === 'playerName' && (
         <Box flexDirection="column">
           <Box>
             <Text color="gray">
               Size:
+              {' '}
               {size}
             </Text>
           </Box>
           <Box>
             <Text color="gray">
               Base Word:
+              {' '}
               {baseWord}
             </Text>
           </Box>
           <Box marginTop={1} marginBottom={1}>
-            <Text>Enter player names (comma-separated):</Text>
+            <Text>Enter your player name:</Text>
+          </Box>
+          <Box marginBottom={1}>
+            <Text dimColor>
+              (Another player can join using the game code)
+            </Text>
           </Box>
           <Box>
-            <Text color="cyan">Players: </Text>
-            <TextInput value={players} onChange={setPlayers} onSubmit={handleSubmit} />
+            <Text color="cyan">Your Name: </Text>
+            <TextInput value={playerName} onChange={setPlayerName} onSubmit={handleSubmit} />
           </Box>
         </Box>
       )}
