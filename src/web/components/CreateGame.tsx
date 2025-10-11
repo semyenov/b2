@@ -23,7 +23,7 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
 
       {/* Form Card */}
       <div className="w-full max-w-lg">
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-depth-3 p-8 border-2 border-gray-700">
+        <div className="bg-gradient-to-br from-gray-800 to-gray-900 shadow-depth-3 p-8 border-2 border-gray-700">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Board Size */}
             <div>
@@ -36,7 +36,7 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
                     key={s}
                     type="button"
                     onClick={() => setSize(s)}
-                    className={`py-3 rounded-lg font-bold text-base transition-all duration-200 ${
+                    className={`py-3 font-bold text-base transition-all duration-200 ${
                       size === s
                         ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-depth-2 scale-105 ring-2 ring-cyan-400'
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:scale-105'
@@ -57,7 +57,7 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
                 type="text"
                 value={baseWord}
                 onChange={e => setBaseWord(e.target.value.toUpperCase())}
-                className="w-full px-6 py-4 bg-gray-900 rounded-lg border-2 border-gray-700 focus:border-cyan-400 focus:outline-none uppercase text-center text-2xl font-bold tracking-widest text-cyan-400 placeholder-gray-600 transition-all duration-200"
+                className="w-full px-6 py-4 bg-gray-900 border-2 border-gray-700 focus:border-cyan-400 focus:outline-none uppercase text-center text-2xl font-bold tracking-widest text-cyan-400 placeholder-gray-600 transition-all duration-200"
                 placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
                 maxLength={Number.parseInt(size, 10)}
                 required
@@ -69,7 +69,7 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-900 bg-opacity-40 border-2 border-red-600 rounded-lg p-4 flex items-center gap-3">
+              <div className="bg-red-900 bg-opacity-40 border-2 border-red-600 p-4 flex items-center gap-3">
                 <span className="text-2xl">⚠️</span>
                 <span className="text-red-300 font-medium">{error}</span>
               </div>
@@ -80,13 +80,13 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
               <button
                 type="button"
                 onClick={onBack}
-                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 rounded-lg font-bold text-base text-gray-200 transition-all duration-200 hover:scale-105 shadow-depth-2"
+                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 font-bold text-base text-gray-200 transition-all duration-200 hover:scale-105 shadow-depth-2"
               >
                 ← Назад
               </button>
               <button
                 type="submit"
-                className="flex-1 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-lg font-bold text-base text-white transition-all duration-200 hover:scale-105 shadow-depth-2 hover:shadow-depth-3"
+                className="flex-1 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 font-bold text-base text-white transition-all duration-200 hover:scale-105 shadow-depth-2 hover:shadow-depth-3"
               >
                 ✓ Создать
               </button>

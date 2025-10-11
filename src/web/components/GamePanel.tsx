@@ -72,28 +72,28 @@ export function GamePanel({
       </div>
 
       {/* Controls Section - Full width */}
-      <div className="bg-gray-800 border-2 border-gray-700 rounded-lg shadow-depth-3 overflow-hidden">
+      <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 overflow-hidden">
         {/* Progress & Word Display */}
         <div className="p-5 bg-gray-700 border-b-2 border-gray-600">
           {/* Status Message - Enhanced Prominence */}
-          <div className="text-center mb-4">
+          <div className="text-center">
             {disabled
               ? (
-                  <div className="text-orange-300 font-bold text-xl py-2 px-4 bg-orange-900 bg-opacity-30 rounded-lg border-2 border-orange-600 inline-block">⏳ Ждите хода...</div>
+                  <div className="text-orange-300 font-bold text-xl py-2 px-4 bg-orange-900 bg-opacity-30 border-2 border-orange-600 inline-block">⏳ Ждите хода...</div>
                 )
               : (
                   <>
-                    {currentStep === 1 && <div className="text-cyan-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 rounded-lg border-2 border-cyan-600 border-opacity-40 inline-block">👆 <span className="font-black">Шаг 1:</span> Выберите пустую клетку</div>}
-                    {currentStep === 2 && <div className="text-blue-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 rounded-lg border-2 border-blue-500 border-opacity-40 inline-block">🔤 <span className="font-black">Шаг 2:</span> Выберите букву</div>}
-                    {currentStep === 3 && <div className="text-purple-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 rounded-lg border-2 border-purple-500 border-opacity-40 inline-block">✍️ <span className="font-black">Шаг 3:</span> Составьте слово из букв</div>}
-                    {currentStep === 4 && <div className="text-green-200 font-black text-2xl py-2 px-4 bg-green-900 bg-opacity-40 rounded-lg border-2 border-green-500 inline-block shadow-depth-2">✓ Готово к отправке!</div>}
+                    {currentStep === 1 && <div className="text-cyan-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-cyan-600 border-opacity-40 inline-block">👆 <span className="font-black">Шаг 1:</span> Выберите пустую клетку</div>}
+                    {currentStep === 2 && <div className="text-blue-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-blue-500 border-opacity-40 inline-block">🔤 <span className="font-black">Шаг 2:</span> Выберите букву</div>}
+                    {currentStep === 3 && <div className="text-purple-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-purple-500 border-opacity-40 inline-block">✍️ <span className="font-black">Шаг 3:</span> Составьте слово из букв</div>}
+                    {currentStep === 4 && <div className="text-green-200 font-black text-2xl py-2 px-4 bg-green-900 bg-opacity-40 border-2 border-green-500 inline-block shadow-depth-2">✓ Готово к отправке!</div>}
                   </>
                 )}
           </div>
 
           {/* Word Display - Balanced and Prominent */}
           {wordFormed && (
-            <div className="bg-gray-900 rounded-lg border-2 border-gray-600 p-4 shadow-depth-2">
+            <div className="bg-gray-900 border-2 border-gray-600 p-4 shadow-depth-2">
               <div className="text-xs text-gray-500 mb-2 text-center uppercase tracking-wider">Сформированное слово:</div>
               <div className="text-3xl font-bold font-mono tracking-widest text-center text-cyan-400">
                 {wordFormed}
@@ -112,7 +112,7 @@ export function GamePanel({
                 onMouseEnter={() => setHoveredLetter(letter)}
                 onMouseLeave={() => setHoveredLetter('')}
                 disabled={disabled || !selectedCell || !!selectedLetter}
-                className={`aspect-square rounded-lg font-black text-xl transition-all duration-200 ${selectedLetter === letter
+                className={`aspect-square font-black text-xl transition-all duration-200 ${selectedLetter === letter
                   ? 'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105'
                   : hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
                     ? 'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3'
@@ -134,7 +134,7 @@ export function GamePanel({
             <button
               onClick={handleSubmit}
               disabled={!canSubmit || disabled}
-              className={`flex-1 py-4 px-6 rounded-lg font-bold text-lg transition-all duration-200 ${canSubmit && !disabled
+              className={`flex-1 py-4 px-6 font-bold text-lg transition-all duration-200 ${canSubmit && !disabled
                 ? 'bg-green-600 hover:bg-green-700 text-white shadow-depth-2 hover:shadow-depth-3 hover:scale-105 glow-success'
                 : 'bg-gray-700 text-gray-500 cursor-not-allowed shadow-depth-1'
               }`}
@@ -145,7 +145,7 @@ export function GamePanel({
             <button
               onClick={onClearSelection}
               disabled={disabled || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-              className="px-6 py-4 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-6 py-4 bg-gray-600 hover:bg-gray-500 text-white font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               ✕ Отмена
             </button>
@@ -156,11 +156,11 @@ export function GamePanel({
                 setShowSuggestions(true)
               }}
               disabled={disabled}
-              className="px-6 py-4 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
+              className="px-6 py-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
             >
               💡 AI
               {suggestions.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full font-bold shadow-depth-2">
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 font-bold shadow-depth-2">
                   {suggestions.length}
                 </span>
               )}
@@ -172,7 +172,7 @@ export function GamePanel({
       {/* AI Suggestions Modal - Unified Styling */}
       {showSuggestions && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={() => setShowSuggestions(false)}>
-          <div className="bg-gray-800 rounded-lg shadow-depth-4 max-w-2xl w-full max-h-[80vh] overflow-hidden border-2 border-yellow-500" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-gray-800 shadow-depth-4 max-w-2xl w-full max-h-[80vh] overflow-hidden border-2 border-yellow-500" onClick={(e) => e.stopPropagation()}>
             {/* Modal Header */}
             <div className="bg-yellow-900 bg-opacity-40 border-b-2 border-yellow-600 px-6 py-4 flex justify-between items-center">
               <h3 className="text-2xl font-bold text-yellow-300 flex items-center gap-2">
@@ -183,7 +183,7 @@ export function GamePanel({
               </h3>
               <button
                 onClick={() => setShowSuggestions(false)}
-                className="text-gray-400 hover:text-white text-2xl font-bold hover:bg-gray-700 w-10 h-10 rounded-lg transition-all duration-200 hover:scale-105"
+                className="text-gray-400 hover:text-white text-2xl font-bold hover:bg-gray-700 w-10 h-10 transition-all duration-200 hover:scale-105"
               >
                 ✕
               </button>
@@ -194,7 +194,7 @@ export function GamePanel({
               {loadingSuggestions
                 ? (
                     <div className="flex flex-col items-center justify-center py-12">
-                      <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-yellow-400 mb-4"></div>
+                      <div className="animate-spin h-16 w-16 border-b-4 border-yellow-400 mb-4"></div>
                       <div className="text-gray-400 font-semibold text-lg">Загрузка подсказок...</div>
                     </div>
                   )
@@ -221,7 +221,7 @@ export function GamePanel({
                               className={`
                                 w-full group relative bg-gradient-to-br from-gray-750 to-gray-800 hover:from-gray-700 hover:to-gray-750
                                 border-2 ${index === 0 ? 'border-yellow-500' : 'border-gray-600'} hover:border-yellow-400
-                                rounded-lg p-4 transition-all duration-200
+                                p-4 transition-all duration-200
                                 hover:shadow-depth-3 hover:scale-105 cursor-pointer text-left
                                 ${index === 0 ? 'shadow-depth-2 ring-2 ring-yellow-500 ring-opacity-50' : 'shadow-depth-1'}
                               `}
@@ -230,8 +230,8 @@ export function GamePanel({
                                 {/* Left: Rank + Move Info */}
                                 <div className="flex items-center gap-3">
                                   <div className={`
-                                    w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold
-                                    ${index === 0 ? 'bg-yellow-600 text-white' : index === 1 ? 'bg-gray-600 text-gray-200' : index === 2 ? 'bg-amber-700 text-amber-100' : 'bg-gray-700 text-gray-400'}
+                                    w-10 h-10 flex items-center justify-center text-sm font-bold border-2
+                                    ${index === 0 ? 'bg-yellow-600 text-white border-yellow-500' : index === 1 ? 'bg-gray-600 text-gray-200 border-gray-500' : index === 2 ? 'bg-amber-700 text-amber-100 border-amber-600' : 'bg-gray-700 text-gray-400 border-gray-600'}
                                   `}>
                                     #{index + 1}
                                   </div>
@@ -240,7 +240,7 @@ export function GamePanel({
                                       <span className="text-yellow-400 font-mono font-bold text-lg">{posStr}</span>
                                       <span className="text-green-400 font-bold text-xl">+{suggestion.letter}</span>
                                     </div>
-                                    <div className="bg-gray-900 rounded px-3 py-1 inline-block">
+                                    <div className="bg-gray-900 px-3 py-1 inline-block border border-gray-700">
                                       <span className="text-white font-bold uppercase tracking-wide text-base">
                                         {suggestion.word}
                                       </span>

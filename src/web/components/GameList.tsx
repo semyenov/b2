@@ -60,7 +60,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
           </div>
           <button
             onClick={onBack}
-            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 rounded-lg font-bold text-base transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
+            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 font-bold text-base transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
           >
             ← Back to Menu
           </button>
@@ -69,13 +69,13 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
         {/* Games Grid */}
         {games.length === 0
           ? (
-              <div className="bg-gray-800 rounded-lg border-2 border-gray-700 p-12 text-center shadow-depth-2">
+              <div className="bg-gray-800 border-2 border-gray-700 p-12 text-center shadow-depth-2">
                 <div className="text-6xl mb-4">🎮</div>
                 <h3 className="text-xl font-bold text-gray-300 mb-2">No Games Available</h3>
                 <p className="text-gray-400 text-base mb-6">Be the first to create a game!</p>
                 <button
                   onClick={onBack}
-                  className="px-8 py-3 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 rounded-lg font-bold text-base text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105"
+                  className="px-8 py-3 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 font-bold text-base text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105"
                 >
                   Create New Game
                 </button>
@@ -119,11 +119,11 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                       <div
                         key={game.id}
                         onClick={() => handleJoin(game)}
-                        className="bg-gray-800 border-2 border-gray-700 rounded-lg p-5 cursor-pointer transition-all duration-200 hover:border-cyan-500 hover:shadow-depth-3 hover:scale-105 hover:bg-gray-750 shadow-depth-1"
+                        className="bg-gray-800 border-2 border-gray-700 p-5 cursor-pointer transition-all duration-200 hover:border-cyan-500 hover:shadow-depth-3 hover:scale-105 hover:bg-gray-750 shadow-depth-1"
                       >
                         {/* Header: Status + Time */}
                         <div className="flex justify-between items-start mb-3">
-                          <div className={`px-2.5 py-1 rounded text-xs font-bold border ${statusInfo.color}`}>
+                          <div className={`px-2.5 py-1 text-xs font-bold border ${statusInfo.color}`}>
                             {statusInfo.label}
                           </div>
                           <div className="text-xs text-gray-500">{timeAgo}</div>
@@ -196,7 +196,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
 
                         {/* Join Button */}
                         <button
-                          className="w-full py-2.5 bg-green-600 hover:bg-green-700 border-2 border-green-500 rounded-lg font-bold text-base text-white transition-all duration-200 hover:shadow-depth-2 hover:scale-105"
+                          className="w-full py-2.5 bg-green-600 hover:bg-green-700 border-2 border-green-500 font-bold text-base text-white transition-all duration-200 hover:shadow-depth-2 hover:scale-105"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleJoin(game)

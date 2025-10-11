@@ -21,7 +21,7 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
 
   return (
     <div className={`
-      flex flex-col h-full bg-gray-800 border-2 rounded-lg
+      flex flex-col h-full bg-gray-800 border-2
       transition-all duration-200
       ${isCurrentTurn ? 'border-yellow-500 shadow-depth-3 animate-pulse-glow' : 'border-gray-600 shadow-depth-2'}
     `}
@@ -64,7 +64,7 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-2 py-1 bg-gray-750 hover:bg-gray-700 rounded text-xs font-mono text-gray-300 transition-all duration-200 border border-transparent hover:border-gray-600 hover:shadow-depth-1"
+                    className="px-2 py-1 bg-gray-750 hover:bg-gray-700 text-xs font-mono text-gray-300 transition-all duration-200 border border-transparent hover:border-gray-600 hover:shadow-depth-1"
                   >
                     {word}
                   </div>

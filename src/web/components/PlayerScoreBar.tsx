@@ -23,7 +23,7 @@ export function PlayerScoreBar({ game, currentPlayerName }: PlayerScoreBarProps)
   const player2Words = game.moves.filter(m => m.playerId === player2).length
 
   return (
-    <div className="bg-gray-800 border-2 border-gray-700 rounded-lg p-4 shadow-depth-2">
+    <div className="bg-gray-800 border-2 border-gray-700 p-4 shadow-depth-2">
       <div className="flex items-center justify-between max-w-4xl mx-auto">
         {/* Player 1 */}
         <div className={`flex items-center gap-3 flex-1 transition-all duration-200 ${isPlayer1Current ? 'animate-pulse-glow' : ''}`}>
