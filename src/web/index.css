@@ -591,12 +591,21 @@ button:focus-visible {
 }
 
 /* Custom background shades */
+.bg-gray-650 {
+  background-color: #4a5568; /* Between gray-600 (#4b5563) and gray-700 (#374151) */
+}
+
 .bg-gray-750 {
   background-color: var(--color-bg-elevated);
 }
 
 .bg-gray-850 {
   background-color: #1a202c;
+}
+
+/* Custom border shades */
+.border-gray-650 {
+  border-color: #4a5568;
 }
 
 /* ========================================

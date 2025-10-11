@@ -58,7 +58,7 @@ export function GamePanel({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Board Section - Centered */}
       <div className="flex justify-center">
         <Board
@@ -74,19 +74,19 @@ export function GamePanel({
       {/* Controls Section - Full width */}
       <div className="bg-gray-800 border-2 border-gray-700 rounded-lg shadow-depth-3 overflow-hidden">
         {/* Progress & Word Display */}
-        <div className="p-4 bg-gray-750 border-b border-gray-700">
-          {/* Status Message */}
-          <div className="text-center mb-3">
+        <div className="p-5 bg-gray-700 border-b-2 border-gray-600">
+          {/* Status Message - Enhanced Prominence */}
+          <div className="text-center mb-4">
             {disabled
               ? (
-                  <div className="text-orange-400 font-semibold text-lg">⏳ Ждите хода...</div>
+                  <div className="text-orange-300 font-bold text-xl py-2 px-4 bg-orange-900 bg-opacity-30 rounded-lg border-2 border-orange-600 inline-block">⏳ Ждите хода...</div>
                 )
               : (
                   <>
-                    {currentStep === 1 && <div className="text-gray-300 text-lg">👆 <span className="font-semibold">Шаг 1:</span> Выберите пустую клетку</div>}
-                    {currentStep === 2 && <div className="text-blue-300 text-lg">🔤 <span className="font-semibold">Шаг 2:</span> Выберите букву</div>}
-                    {currentStep === 3 && <div className="text-purple-300 text-lg">✍️ <span className="font-semibold">Шаг 3:</span> Составьте слово из букв</div>}
-                    {currentStep === 4 && <div className="text-green-400 font-bold text-xl">✓ Готово к отправке!</div>}
+                    {currentStep === 1 && <div className="text-cyan-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 rounded-lg border-2 border-cyan-600 border-opacity-40 inline-block">👆 <span className="font-black">Шаг 1:</span> Выберите пустую клетку</div>}
+                    {currentStep === 2 && <div className="text-blue-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 rounded-lg border-2 border-blue-500 border-opacity-40 inline-block">🔤 <span className="font-black">Шаг 2:</span> Выберите букву</div>}
+                    {currentStep === 3 && <div className="text-purple-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 rounded-lg border-2 border-purple-500 border-opacity-40 inline-block">✍️ <span className="font-black">Шаг 3:</span> Составьте слово из букв</div>}
+                    {currentStep === 4 && <div className="text-green-200 font-black text-2xl py-2 px-4 bg-green-900 bg-opacity-40 rounded-lg border-2 border-green-500 inline-block shadow-depth-2">✓ Готово к отправке!</div>}
                   </>
                 )}
           </div>
@@ -102,8 +102,8 @@ export function GamePanel({
           )}
         </div>
 
-        {/* Alphabet Grid - Clean and Consistent */}
-        <div className="p-4">
+        {/* Alphabet Grid - Enhanced Visibility */}
+        <div className="p-5">
           <div className="grid grid-cols-11 gap-2 max-w-4xl mx-auto">
             {RUSSIAN_ALPHABET.map(letter => (
               <button
@@ -112,14 +112,14 @@ export function GamePanel({
                 onMouseEnter={() => setHoveredLetter(letter)}
                 onMouseLeave={() => setHoveredLetter('')}
                 disabled={disabled || !selectedCell || !!selectedLetter}
-                className={`aspect-square rounded-lg font-bold text-xl transition-all duration-200 ${selectedLetter === letter
-                  ? 'bg-blue-600 text-white shadow-depth-2 ring-2 ring-blue-400 transform scale-105'
+                className={`aspect-square rounded-lg font-black text-xl transition-all duration-200 ${selectedLetter === letter
+                  ? 'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105'
                   : hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
-                    ? 'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-2'
-                    : 'bg-gray-700 text-gray-200 border-2 border-gray-600 hover:bg-gray-600'
+                    ? 'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3'
+                    : 'bg-gray-650 text-gray-100 border-2 border-gray-600 hover:bg-gray-600 hover:border-gray-500'
                 } ${(disabled || !selectedCell || !!selectedLetter) && selectedLetter !== letter
                   ? 'opacity-30 cursor-not-allowed'
-                  : 'cursor-pointer hover:shadow-depth-2'
+                  : 'cursor-pointer hover:shadow-depth-2 hover:scale-105'
                 }`}
               >
                 {letter}

@@ -11,7 +11,7 @@ export function App() {
   // Core game client logic
   const {
     screen,
-    gameId,
+    // gameId,
     games,
     currentGame,
     playerName,
@@ -214,7 +214,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Compact Header */}
-            <div className="bg-gray-800 border-b-2 border-gray-700 px-6 py-3 flex justify-between items-center shadow-depth-3 relative z-10">
+            <div className="bg-gray-800 border-b-2 border-gray-700 px-6 py-4 flex justify-between items-center shadow-depth-3 relative z-10">
               <button
                 onClick={handleExitToMenu}
                 className="px-4 py-2 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 rounded-lg text-base font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
@@ -236,8 +236,8 @@ export function App() {
               </div>
 
               {playerName && (
-                <div className="px-4 py-2 bg-green-900 bg-opacity-40 border-2 border-green-600 rounded-lg shadow-depth-1 glow-success">
-                  <span className="text-green-300 font-bold text-base">{playerName}</span>
+                <div className="px-4 py-2 bg-gray-700 border-2 border-cyan-600 border-opacity-50 rounded-lg shadow-depth-1">
+                  <span className="text-cyan-300 font-bold text-base">{playerName}</span>
                 </div>
               )}
             </div>
