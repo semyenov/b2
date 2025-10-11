@@ -11,6 +11,40 @@ interface BoardProps {
   disabled?: boolean
 }
 
+// Helper function to determine cell styling
+function getCellClassName(
+  selected: boolean,
+  inPath: boolean,
+  hasCell: boolean,
+  canClick: boolean,
+  isHovered: boolean,
+): string {
+  const baseClasses = 'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-2xl)] font-black transition-all duration-200 relative'
+
+  // State-based styling
+  const stateClasses = selected
+    ? 'bg-blue-600 border-blue-400 text-white shadow-depth-3'
+    : inPath
+      ? 'bg-green-600 border-green-400 text-white shadow-depth-3'
+      : hasCell
+        ? 'bg-gray-650 border-gray-500 text-emerald-300 shadow-depth-1'
+        : 'bg-gray-800 border-gray-650 text-gray-500'
+
+  // Interactive styling
+  const interactiveClasses = canClick
+    ? 'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-gray-650 hover:z-10 hover:border-cyan-500'
+    : 'cursor-default'
+
+  // Hover ring
+  const hoverRing = isHovered && canClick
+    ? selected
+      ? 'ring-2 ring-blue-300'
+      : 'ring-2 ring-yellow-400 bg-gray-650'
+    : ''
+
+  return `${baseClasses} ${stateClasses} ${interactiveClasses} ${hoverRing}`.trim()
+}
+
 export function Board({
   game,
   selectedCell,
@@ -26,12 +60,10 @@ export function Board({
     <div className="flex flex-col items-center justify-center h-full w-full p-[clamp(0.5rem,1vh,1rem)]" style={{ maxWidth: 'fit-content', maxHeight: '95%' }}>
       {/* Column headers */}
       <div className="flex mb-1">
-        <div className="w-[clamp(2.5rem,4vw,4rem)] h-[clamp(2.5rem,3.5vw,3.5rem)]" />
-        {/* Empty corner */}
+        <div className="w-[var(--size-resp-label)] h-[var(--size-resp-header)]" />
         {Array.from({ length: size }, (_, i) => (
-          <div key={i} className="w-[clamp(3.5rem,6.5vw,6rem)] h-[clamp(2.5rem,3.5vw,3.5rem)] flex items-center justify-center text-cyan-200 font-black text-[clamp(1.125rem,2vw,1.75rem)]">
+          <div key={i} className="w-[var(--size-resp-cell)] h-[var(--size-resp-header)] flex items-center justify-center text-cyan-200 font-black text-[var(--text-resp-lg)]">
             {String.fromCharCode(1040 + i)}
-            {/* Russian letters А-Я */}
           </div>
         ))}
       </div>
@@ -40,7 +72,7 @@ export function Board({
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {/* Row number */}
-          <div className="w-[clamp(2.5rem,4vw,4rem)] h-[clamp(3.5rem,6.5vw,6rem)] flex items-center justify-center text-cyan-200 font-black text-[clamp(1.125rem,2vw,1.75rem)]">
+          <div className="w-[var(--size-resp-label)] h-[var(--size-resp-cell)] flex items-center justify-center text-cyan-200 font-black text-[var(--text-resp-lg)]">
             {rowIndex}
           </div>
 
@@ -75,28 +107,7 @@ export function Board({
                 onClick={() => canClick && onCellClick?.(rowIndex, colIndex)}
                 onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
                 onMouseLeave={() => setHoveredCell(null)}
-                className={`
-                  w-[clamp(3.5rem,6.5vw,6rem)] h-[clamp(3.5rem,6.5vw,6rem)] border-2 flex items-center justify-center text-[clamp(1.75rem,3.75vw,3.25rem)] font-black
-                  transition-all duration-200 relative
-                  ${selected
-                ? 'bg-blue-600 border-blue-400 text-white shadow-depth-3'
-                : inPath
-                  ? 'bg-green-600 border-green-400 text-white shadow-depth-3'
-                  : cell
-                    ? 'bg-gray-650 border-gray-500 text-emerald-300 shadow-depth-1'
-                    : 'bg-gray-800 border-gray-650 text-gray-500'
-              }
-                  ${canClick
-                ? 'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-gray-650 hover:z-10 hover:border-cyan-500'
-                : 'cursor-default'
-              }
-                  ${isHovered && canClick
-                ? selected
-                  ? 'ring-2 ring-blue-300'
-                  : 'ring-2 ring-yellow-400 bg-gray-650'
-                : ''
-              }
-                `}
+                className={getCellClassName(selected, inPath, !!cell, canClick, isHovered)}
               >
                 {displayContent}
                 {inPath && pathIdx >= 0 && (

@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import { Banner } from './components/Banner'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
 import { GamePanel } from './components/GamePanel'
+import { MenuButton } from './components/MenuButton'
 import { PlayerPanel } from './components/PlayerPanel'
+import { StatusMessage } from './components/StatusMessage'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameInteraction } from './hooks/useGameInteraction'
@@ -92,39 +95,22 @@ export function App() {
     setShowSuggestions(false)
   }
 
+  // Calculate formed word for display
+  const getFormedWord = () => {
+    if (!currentGame || !selectedCell || !selectedLetter || wordPath.length < 2) {
+      return ''
+    }
+    return formWordFromPath(wordPath, currentGame.board, selectedCell, selectedLetter)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
-      {/* Error banner */}
-      {error && (
-        <div className="fixed top-4 right-4 bg-red-700 text-white px-4 py-3 shadow-depth-3 z-50 border-2 border-red-600">
-          <div className="flex items-center gap-2">
-            <span className="text-base">{error}</span>
-            <button onClick={() => setError('')} className="ml-4 hover:bg-red-800 px-2 py-1 transition-all duration-200">
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Loading indicator */}
-      {loading && (
-        <div className="fixed top-4 right-4 bg-blue-600 text-white px-4 py-3 shadow-depth-3 z-50 border-2 border-blue-500">
-          <div className="flex items-center gap-2">
-            <div className="animate-spin h-4 w-4 border-b-2 border-white"></div>
-            <span className="text-base">Loading...</span>
-          </div>
-        </div>
-      )}
-
-      {/* AI Error banner */}
+      {/* Banners */}
+      {error && <Banner variant="error" message={error} onClose={() => setError('')} />}
+      {loading && <Banner variant="loading" message="Loading..." />}
       {aiError && (
-        <div className="fixed top-16 right-4 bg-yellow-700 text-white px-4 py-3 shadow-depth-3 z-50 border-2 border-yellow-600">
-          <div className="flex items-center gap-2">
-            <span className="text-base">
-              🤖
-              {aiError}
-            </span>
-          </div>
+        <div className="fixed top-16 right-4">
+          <Banner variant="warning" message={aiError} />
         </div>
       )}
 
@@ -146,29 +132,8 @@ export function App() {
             <div className="w-full max-w-md">
               <div className="bg-gradient-to-br from-gray-800 to-gray-900 shadow-depth-4 p-8 border-2 border-gray-700 backdrop-blur-sm">
                 <div className="space-y-3">
-                  {/* Quick Start */}
-                  <button
-                    onClick={quickStart}
-                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-lg font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
-                    <div className="relative flex items-center justify-center gap-3">
-                      <span className="text-xl">⚡</span>
-                      <span>Быстрая игра 5×5</span>
-                    </div>
-                  </button>
-
-                  {/* AI Game */}
-                  <button
-                    onClick={quickStartVsAI}
-                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-lg font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
-                    <div className="relative flex items-center justify-center gap-3">
-                      <span className="text-xl">🤖</span>
-                      <span>Играть с AI</span>
-                    </div>
-                  </button>
+                  <MenuButton icon="⚡" label="Быстрая игра 5×5" variant="success" size="large" onClick={quickStart} />
+                  <MenuButton icon="🤖" label="Играть с AI" variant="warning" size="large" onClick={quickStartVsAI} />
 
                   {/* Divider */}
                   <div className="flex items-center gap-3 py-2">
@@ -177,29 +142,8 @@ export function App() {
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
                   </div>
 
-                  {/* Create Game */}
-                  <button
-                    onClick={() => setScreen('create')}
-                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-base font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
-                    <div className="relative flex items-center justify-center gap-3">
-                      <span className="text-lg">➕</span>
-                      <span>Создать игру</span>
-                    </div>
-                  </button>
-
-                  {/* Join Game */}
-                  <button
-                    onClick={loadGames}
-                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-base font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
-                    <div className="relative flex items-center justify-center gap-3">
-                      <span className="text-lg">🎮</span>
-                      <span>Присоединиться</span>
-                    </div>
-                  </button>
+                  <MenuButton icon="➕" label="Создать игру" variant="primary" onClick={() => setScreen('create')} />
+                  <MenuButton icon="🎮" label="Присоединиться" variant="secondary" onClick={loadGames} />
                 </div>
               </div>
 
@@ -229,13 +173,12 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Three column layout - fills available space */}
-            <div className="flex-1 grid grid-cols-[clamp(300px,15vw,320px)_1fr_clamp(300px,15vw,320px)] gap-[clamp(1rem,1.5vw,2rem)] px-[clamp(1rem,2vw,2rem)] py-[clamp(0.5rem,1vw,1rem)] overflow-hidden">
+            <div className="flex-1 grid grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-md)] px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-sm)] overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}
                 playerIndex={0}
                 currentPlayerName={playerName}
-                isLeft
               />
 
               {/* Center: Game Panel */}
@@ -263,63 +206,48 @@ export function App() {
             {/* Control buttons bar - fixed at bottom */}
             <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 shadow-depth-3 overflow-hidden">
               {/* Buttons Bar */}
-              <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.75rem,1.5vw,1.5rem)]">
-                <div className="flex items-center justify-between gap-[clamp(0.5rem,1.5vw,1.5rem)] min-w-0">
+              <div className="px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)]">
+                <div className="flex items-center justify-between gap-[var(--spacing-resp-md)] min-w-0">
                   {/* Left: Exit Button */}
                   <button
                     onClick={handleExitToMenu}
-                    className="px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[clamp(0.875rem,1.5vw,1.125rem)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0"
+                    className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[var(--text-resp-sm)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0"
                   >
                     ← Выход
                   </button>
 
                   {/* Center: Control Buttons or Status Messages */}
                   {playerName && currentGame && (
-                    <div className="flex items-center gap-[clamp(0.5rem,1vw,1rem)] flex-1 justify-center min-w-0">
-                    {/* Conditional rendering: Status message or Submit button */}
+                    <div className="flex items-center gap-[var(--spacing-resp-sm)] flex-1 justify-center min-w-0">
+                    {/* Conditional rendering: Status messages */}
                     {!isMyTurn()
-                      ? (
-                          <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] text-orange-300 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] bg-orange-900 bg-opacity-50 border-2 border-orange-700 shadow-depth-1 flex-shrink-0">
-                            ⏳ Ждите хода...
-                          </div>
-                        )
+                      ? <StatusMessage step="waiting" />
                       : !selectedCell
-                        ? (
-                            <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] text-cyan-200 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] bg-cyan-900 bg-opacity-30 border-2 border-cyan-700 shadow-depth-1 flex-shrink-0">
-                              👆 Шаг 1: Выберите пустую клетку
-                            </div>
-                          )
+                        ? <StatusMessage step="select-cell" />
                         : !selectedLetter
-                          ? (
-                              <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] text-blue-200 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] bg-blue-900 bg-opacity-30 border-2 border-blue-700 shadow-depth-1 flex-shrink-0">
-                                🔤 Шаг 2: Выберите букву
-                              </div>
-                            )
+                          ? <StatusMessage step="select-letter" />
                           : wordPath.length < 2
-                            ? (
-                                <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] text-purple-200 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] bg-purple-900 bg-opacity-30 border-2 border-purple-700 shadow-depth-1 flex-shrink-0">
-                                  ✍️ Шаг 3: Составьте слово из букв
-                                </div>
-                              )
+                            ? <StatusMessage step="build-word" />
                             : (
                                 <button
                                   onClick={() => {
                                     if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
-                                      const wordFormed = formWordFromPath(wordPath, currentGame.board, selectedCell, selectedLetter)
+                                      const wordFormed = getFormedWord()
                                       const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, wordFormed)
                                       makeMove(moveBody)
                                     }
                                   }}
-                                  className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-green-600 hover:bg-green-700 text-white font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] transition-all duration-200 shadow-depth-2 hover:shadow-depth-3 hover:scale-105 flex-shrink-0"
+                                  className="px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-xs)] bg-green-900 bg-opacity-30 hover:bg-green-900 hover:bg-opacity-50 border-2 border-green-700 text-green-300 font-bold text-[var(--text-resp-sm)] transition-all duration-200 shadow-depth-2 hover:shadow-depth-3 hover:scale-105 flex items-center gap-2"
                                 >
-                                  ✓ Подтвердить ход
+                                  <span>📤 send:</span>
+                                  <span className="text-[var(--text-resp-base)] font-black tracking-wider">{getFormedWord()}</span>
                                 </button>
                               )}
 
                     <button
                       onClick={handleClearSelection}
                       disabled={!isMyTurn() || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-                      className="px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-gray-600 hover:bg-gray-500 text-white font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+                      className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-600 hover:bg-gray-500 text-white font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
                     >
                       ✕ Отмена
                     </button>
@@ -327,7 +255,7 @@ export function App() {
                     <button
                       onClick={toggleSuggestions}
                       disabled={!isMyTurn()}
-                      className={`px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative flex-shrink-0 ${
+                      className={`px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative flex-shrink-0 ${
                         showSuggestions
                           ? 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3'
                           : 'bg-yellow-600 hover:bg-yellow-700 text-white'
@@ -344,20 +272,20 @@ export function App() {
                 )}
 
                 {/* Right: Info Badges */}
-                <div className="flex items-center gap-[clamp(0.5rem,1vw,1rem)] min-w-0 flex-shrink-0">
-                  <div className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold text-gray-200 bg-gray-700 px-[clamp(0.75rem,1.5vw,1rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] shadow-depth-1 border-2 border-gray-600 flex-shrink-0">
+                <div className="flex items-center gap-[var(--spacing-resp-sm)] min-w-0 flex-shrink-0">
+                  <div className="text-[var(--text-resp-xs)] font-bold text-gray-200 bg-gray-700 px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] shadow-depth-1 border-2 border-gray-600 flex-shrink-0">
                     Ход
                     {' '}
                     {Math.floor(currentGame.moves.length / 2) + 1}
                   </div>
                   {aiThinking && (
-                    <div className="px-[clamp(0.75rem,1.5vw,1rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse flex-shrink-0">
-                      <span className="text-yellow-300 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)]">🤖 AI</span>
+                    <div className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse flex-shrink-0">
+                      <span className="text-yellow-300 font-bold text-[var(--text-resp-sm)]">🤖 AI</span>
                     </div>
                   )}
                   {playerName && (
-                    <div className="px-[clamp(0.75rem,1.5vw,1rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1 max-w-[clamp(150px,20vw,200px)] flex-shrink-0 min-w-0">
-                      <span className="text-cyan-300 font-bold text-[clamp(0.875rem,1.5vw,1rem)] truncate block" title={playerName}>
+                    <div className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1 max-w-[clamp(150px,20vw,200px)] flex-shrink-0 min-w-0">
+                      <span className="text-cyan-300 font-bold text-[var(--text-resp-xs)] truncate block" title={playerName}>
                         {playerName}
                       </span>
                     </div>
@@ -369,7 +297,7 @@ export function App() {
 
             {/* Suggestions Panel - Expands when visible, up to 50% of viewport */}
             {showSuggestions && playerName && currentGame && (
-              <div className="shrink-0 max-h-[50vh] min-h-0 overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-[clamp(1rem,2vw,2rem)] py-[clamp(1rem,1.5vw,1.5rem)] shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+              <div className="shrink-0 max-h-[50vh] min-h-0 overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)] shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
                   {loadingSuggestions
                     ? (
                         <div className="flex items-center justify-center py-2">

@@ -18,7 +18,6 @@ const RUSSIAN_ALPHABET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩ
 
 export function GamePanel({
   game,
-  playerName: _playerName,
   disabled,
   selectedCell,
   selectedLetter,
@@ -28,15 +27,10 @@ export function GamePanel({
 }: GamePanelProps) {
   const [hoveredLetter, setHoveredLetter] = useState<string>('')
 
-  const wordFormed = formWordFromPath(wordPath, game.board, selectedCell, selectedLetter)
-
-  // Determine current step
-  const currentStep = !selectedCell ? 1 : !selectedLetter ? 2 : wordPath.length < 2 ? 3 : 4
-
   return (
-    <div className="flex flex-col h-full min-h-0 justify-center gap-[clamp(0.75rem,1.5vh,1.25rem)]">
-      {/* Board Section - Centered, with flexible max size */}
-      <div className="flex items-center justify-center min-h-0 overflow-hidden" style={{ maxHeight: '62%' }}>
+    <div className="flex flex-col h-full min-h-0 justify-center gap-[var(--spacing-resp-md)]">
+      {/* Board Section */}
+      <div className="flex items-center justify-center min-h-0 overflow-hidden max-h-[65%]">
         <Board
           game={game}
           selectedCell={selectedCell}
@@ -47,20 +41,11 @@ export function GamePanel({
         />
       </div>
 
-      {/* Controls Section - Alphabet Only */}
-      <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 flex flex-col" style={{ maxHeight: '35%', minHeight: '200px' }}>
-        {/* Word Display (if formed) - Compact */}
-        {wordFormed && (
-          <div className="border-b-2 border-gray-600 py-[clamp(0.25rem,0.5vh,0.5rem)] bg-gray-700 flex-shrink-0">
-            <div className="text-[clamp(2rem,4vw,3rem)] font-black font-mono tracking-widest text-center text-cyan-400">
-              {wordFormed}
-            </div>
-          </div>
-        )}
-
-        {/* Alphabet Grid - Enhanced Visibility */}
-        <div className="flex-1 min-h-0 flex items-center justify-center py-[clamp(0.25rem,0.75vh,0.5rem)] px-[clamp(0.25rem,0.75vw,0.5rem)]">
-          <div className="grid grid-cols-11 gap-[clamp(0.2rem,0.5vw,0.4rem)] w-full max-w-[min(100%,1200px)] h-full">
+      {/* Alphabet Section */}
+      <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 flex flex-col max-h-[32%] min-h-[180px]">
+        {/* Alphabet Grid */}
+        <div className="flex-1 min-h-0 flex items-center justify-center py-[var(--spacing-resp-sm)] px-[var(--spacing-resp-sm)]">
+          <div className="grid grid-cols-11 gap-[var(--spacing-resp-xs)] w-full max-w-[min(100%,1200px)] h-full">
             {RUSSIAN_ALPHABET.map(letter => (
               <button
                 key={letter}
@@ -68,7 +53,7 @@ export function GamePanel({
                 onMouseEnter={() => setHoveredLetter(letter)}
                 onMouseLeave={() => setHoveredLetter('')}
                 disabled={disabled || !selectedCell || !!selectedLetter}
-                className={`aspect-square font-black text-[clamp(1.25rem,2.5vw,2.25rem)] transition-all duration-200 ${selectedLetter === letter
+                className={`aspect-square font-black text-[var(--text-resp-xl)] transition-all duration-200 ${selectedLetter === letter
                   ? 'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105'
                   : hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
                     ? 'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3'
@@ -83,7 +68,6 @@ export function GamePanel({
             ))}
           </div>
         </div>
-
       </div>
     </div>
   )
