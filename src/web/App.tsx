@@ -155,12 +155,23 @@ export function App() {
         return
       }
 
-      // Add to path if adjacent to last position
-      const lastPos = wordPath.length > 0 ? wordPath[wordPath.length - 1] : selectedCell
-      const isAdjacent = Math.abs(row - lastPos.row) <= 1 && Math.abs(col - lastPos.col) <= 1
+      // First letter: can be any letter on board (no adjacency requirement)
+      if (wordPath.length === 0) {
+        // Check if cell has a letter (existing or the selected cell with new letter)
+        const hasLetter = currentGame.board[row][col] || (row === selectedCell.row && col === selectedCell.col)
+        if (hasLetter) {
+          setWordPath([{ row, col }])
+        }
+      } else {
+        // Subsequent letters: must be orthogonally adjacent to last letter in path
+        const lastPos = wordPath[wordPath.length - 1]
+        const isAdjacent = (Math.abs(row - lastPos.row) === 1 && col === lastPos.col) ||
+                           (Math.abs(col - lastPos.col) === 1 && row === lastPos.row)
 
-      if (isAdjacent && currentGame.board[row][col]) {
-        setWordPath([...wordPath, { row, col }])
+        const hasLetter = currentGame.board[row][col] || (row === selectedCell.row && col === selectedCell.col)
+        if (isAdjacent && hasLetter) {
+          setWordPath([...wordPath, { row, col }])
+        }
       }
     }
   }
@@ -168,8 +179,8 @@ export function App() {
   const handleLetterSelect = (letter: string) => {
     if (selectedCell && !selectedLetter) {
       setSelectedLetter(letter)
-      // Start word path with the selected cell
-      setWordPath([selectedCell])
+      // DO NOT auto-add to path - user must explicitly click cells to build word
+      setWordPath([])
     }
   }
 
@@ -180,20 +191,102 @@ export function App() {
   }
 
   const handleSuggestionSelect = (suggestion: Suggestion) => {
+    if (!currentGame) return
+
     setSelectedCell(suggestion.position)
     setSelectedLetter(suggestion.letter)
-    // Build word path from suggestion
-    const path: Array<{ row: number; col: number }> = []
-    const word = suggestion.word.toUpperCase()
-    const board = currentGame?.board
 
-    if (!board) return
+    // Build word path from suggestion using path-finding
+    const path = findWordPath(
+      currentGame.board,
+      suggestion.position,
+      suggestion.letter,
+      suggestion.word.toUpperCase()
+    )
 
-    // Simple path reconstruction (this is a simplified version)
-    // In a real implementation, you'd use the same path-finding algorithm as the backend
-    path.push(suggestion.position)
-    setWordPath(path)
+    if (path) {
+      setWordPath(path)
+    }
     setShowSuggestions(false)
+  }
+
+  // Find path for a word on the board (with new letter placed)
+  const findWordPath = (
+    board: (string | null)[][],
+    newLetterPos: { row: number; col: number },
+    newLetter: string,
+    word: string
+  ): Array<{ row: number; col: number }> | null => {
+    const rows = board.length
+    const cols = board[0].length
+
+    // Create a copy of board with the new letter
+    const tempBoard = board.map(row => [...row])
+    tempBoard[newLetterPos.row][newLetterPos.col] = newLetter
+
+    // Try to find the word starting from each cell
+    for (let startRow = 0; startRow < rows; startRow++) {
+      for (let startCol = 0; startCol < cols; startCol++) {
+        if (tempBoard[startRow][startCol] === word[0]) {
+          const path = dfsWordSearch(
+            tempBoard,
+            word,
+            startRow,
+            startCol,
+            new Set<string>(),
+            [{ row: startRow, col: startCol }]
+          )
+          if (path) return path
+        }
+      }
+    }
+
+    return null
+  }
+
+  // DFS to search for word path
+  const dfsWordSearch = (
+    board: (string | null)[][],
+    word: string,
+    row: number,
+    col: number,
+    visited: Set<string>,
+    path: Array<{ row: number; col: number }>
+  ): Array<{ row: number; col: number }> | null => {
+    if (path.length === word.length) {
+      return path
+    }
+
+    const key = `${row},${col}`
+    visited.add(key)
+
+    const nextChar = word[path.length]
+    const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]] // orthogonal only
+
+    for (const [dr, dc] of directions) {
+      const newRow = row + dr
+      const newCol = col + dc
+      const newKey = `${newRow},${newCol}`
+
+      if (
+        newRow >= 0 && newRow < board.length &&
+        newCol >= 0 && newCol < board[0].length &&
+        !visited.has(newKey) &&
+        board[newRow][newCol] === nextChar
+      ) {
+        const result = dfsWordSearch(
+          board,
+          word,
+          newRow,
+          newCol,
+          new Set(visited),
+          [...path, { row: newRow, col: newCol }]
+        )
+        if (result) return result
+      }
+    }
+
+    return null
   }
 
   const loadSuggestions = async () => {
@@ -229,10 +322,10 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Error banner */}
       {error && (
-        <div className="fixed top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+        <div className="fixed top-4 right-4 bg-red-700 text-white px-4 py-2 rounded-lg shadow-lg z-50">
           <div className="flex items-center gap-2">
             <span>{error}</span>
             <button onClick={() => setError('')} className="ml-4 hover:bg-red-700 px-2 py-1 rounded">
@@ -256,24 +349,24 @@ export function App() {
       <div className="max-w-7xl mx-auto">
         {screen === 'menu' && (
           <div className="flex flex-col items-center justify-center min-h-screen">
-            <div className="bg-white rounded-lg shadow-2xl p-12 border-2 border-gray-300">
-              <h1 className="text-7xl font-bold text-blue-600 mb-12 text-center tracking-wider">БАЛДА</h1>
+            <div className="bg-gray-800 rounded-lg shadow-2xl p-12 border-2 border-gray-600">
+              <h1 className="text-7xl font-bold text-cyan-400 mb-12 text-center tracking-wider">БАЛДА</h1>
               <div className="flex flex-col gap-4">
                 <button
                   onClick={quickStart}
-                  className="px-12 py-4 bg-green-500 hover:bg-green-600 border-2 border-green-700 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                  className="px-12 py-4 bg-green-600 hover:bg-green-700 border-2 border-green-500 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
                 >
                   Быстрая игра 5x5
                 </button>
                 <button
                   onClick={() => setScreen('create')}
-                  className="px-12 py-4 bg-blue-500 hover:bg-blue-600 border-2 border-blue-700 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                  className="px-12 py-4 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
                 >
                   Создать игру
                 </button>
                 <button
                   onClick={loadGames}
-                  className="px-12 py-4 bg-purple-500 hover:bg-purple-600 border-2 border-purple-700 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                  className="px-12 py-4 bg-purple-600 hover:bg-purple-700 border-2 border-purple-500 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
                 >
                   Присоединиться
                 </button>
@@ -298,9 +391,9 @@ export function App() {
         )}
 
         {screen === 'play' && currentGame && (
-          <div className="h-screen flex flex-col bg-gradient-to-b from-blue-50 to-blue-100">
+          <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Header */}
-            <div className="bg-white border-b-2 border-gray-300 px-6 py-3 flex justify-between items-center shadow-md">
+            <div className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex justify-between items-center">
               <button
                 onClick={() => {
                   setScreen('menu')
@@ -309,30 +402,30 @@ export function App() {
                   setGameId('')
                   handleClearSelection()
                 }}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 border border-gray-400 rounded font-semibold transition"
+                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded text-sm font-semibold transition text-gray-200"
               >
                 ← Выход
               </button>
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4">
                 <div>
-                  <span className="text-gray-600">Игра: </span>
-                  <span className="text-blue-600 font-mono font-bold text-lg">{gameId}</span>
+                  <span className="text-gray-500 text-sm">Игра: </span>
+                  <span className="text-cyan-400 font-mono font-bold">{gameId}</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-700">
+                <div className="text-lg font-bold text-gray-300">
                   {Math.floor(currentGame.moves.length / 2)} ход
                 </div>
               </div>
               {playerName && (
-                <div className="px-4 py-2 bg-green-100 border border-green-300 rounded">
-                  <span className="text-green-700 font-bold">{playerName}</span>
+                <div className="px-3 py-1 bg-green-900 bg-opacity-30 border border-green-700 rounded">
+                  <span className="text-green-400 font-semibold text-sm">{playerName}</span>
                 </div>
               )}
             </div>
 
             {/* Main game area */}
-            <div className="flex-1 flex p-6 gap-4 overflow-hidden">
+            <div className="flex-1 flex p-3 gap-3 overflow-hidden">
               {/* Left player panel */}
-              <div className="w-64 flex-shrink-0">
+              <div className="w-48 flex-shrink-0">
                 <PlayerPanel
                   game={currentGame}
                   playerIndex={0}
@@ -354,7 +447,7 @@ export function App() {
               </div>
 
               {/* Right player panel */}
-              <div className="w-64 flex-shrink-0">
+              <div className="w-48 flex-shrink-0">
                 <PlayerPanel
                   game={currentGame}
                   playerIndex={1}
@@ -365,7 +458,7 @@ export function App() {
 
             {/* Bottom controls */}
             {playerName && (
-              <div className="border-t-2 border-gray-300 bg-white p-4 shadow-lg">
+              <div className="border-t-2 border-gray-700 bg-gray-900 p-2 shadow-lg">
                 <BottomControls
                   game={currentGame}
                   playerName={playerName}
@@ -383,18 +476,18 @@ export function App() {
 
             {/* Suggestions modal */}
             {showSuggestions && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg shadow-xl max-w-2xl max-h-[80vh] overflow-hidden">
-                  <div className="p-4 border-b flex justify-between items-center">
-                    <h3 className="text-xl font-bold">Подсказки AI</h3>
+              <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+                <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-lg max-h-[70vh] overflow-hidden border border-gray-600">
+                  <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center bg-gray-750">
+                    <h3 className="text-sm font-bold text-cyan-400">💡 Подсказки AI ({suggestions.length})</h3>
                     <button
                       onClick={() => setShowSuggestions(false)}
-                      className="text-gray-500 hover:text-gray-700 text-2xl"
+                      className="text-gray-400 hover:text-gray-200 text-xl w-6 h-6 flex items-center justify-center"
                     >
                       ×
                     </button>
                   </div>
-                  <div className="p-4 overflow-y-auto max-h-[60vh]">
+                  <div className="p-3">
                     <Suggestions
                       suggestions={suggestions}
                       loading={loadingSuggestions}

@@ -20,47 +20,41 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft = fal
 
   return (
     <div className={`
-      flex flex-col h-full bg-gray-100 border-2 rounded-lg
-      ${isCurrentTurn ? 'border-yellow-500 shadow-lg' : 'border-gray-400'}
-      ${isLeft ? 'mr-2' : 'ml-2'}
+      flex flex-col h-full bg-gray-800 border rounded
+      ${isCurrentTurn ? 'border-yellow-500 shadow-lg' : 'border-gray-600'}
     `}>
       {/* Header with player info */}
       <div className={`
-        p-4 rounded-t-lg
-        ${isCurrentTurn ? 'bg-yellow-100' : 'bg-gray-200'}
+        p-2 flex items-center justify-between border-b border-gray-700
+        ${isCurrentTurn ? 'bg-yellow-900 bg-opacity-30' : 'bg-gray-750'}
       `}>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            {isCurrentTurn && <span className="text-yellow-600 text-xl">▶</span>}
-            <h3 className={`
-              font-bold text-lg
-              ${isMe ? 'text-blue-600' : 'text-gray-700'}
-            `}>
-              {isMe ? `${player} (You)` : player}
-            </h3>
-          </div>
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          {isCurrentTurn && <span className="text-yellow-400 text-sm">▶</span>}
+          <h3 className={`
+            font-bold text-sm truncate
+            ${isMe ? 'text-cyan-400' : 'text-gray-300'}
+          `}>
+            {isMe ? player : player}
+          </h3>
         </div>
-        <div className="text-3xl font-bold text-center text-gray-800">
+        <div className="text-2xl font-bold text-gray-100 ml-2">
           {score}
-        </div>
-        <div className="text-xs text-center text-gray-600 mt-1">
-          очков
         </div>
       </div>
 
       {/* Words list */}
-      <div className="flex-1 p-4 overflow-y-auto">
-        <div className="text-xs font-semibold text-gray-600 mb-2 uppercase">
-          Слова ({playerWords.length})
+      <div className="flex-1 p-2 overflow-y-auto">
+        <div className="text-xs text-gray-500 mb-1">
+          {playerWords.length} слов
         </div>
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           {playerWords.length === 0 ? (
-            <div className="text-gray-400 text-sm italic">Нет слов</div>
+            <div className="text-gray-600 text-xs italic">—</div>
           ) : (
             playerWords.map((word, i) => (
               <div
                 key={i}
-                className="px-2 py-1 bg-white rounded text-sm font-mono border border-gray-300"
+                className="px-1.5 py-0.5 bg-gray-750 rounded text-xs font-mono text-gray-300"
               >
                 {word}
               </div>
@@ -68,13 +62,6 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft = fal
           )}
         </div>
       </div>
-
-      {/* Turn indicator */}
-      {isCurrentTurn && (
-        <div className="p-2 bg-green-100 text-green-700 text-center text-sm font-semibold">
-          {isMe ? 'Ваш ход!' : 'Ход противника'}
-        </div>
-      )}
     </div>
   )
 }

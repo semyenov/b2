@@ -55,30 +55,28 @@ export function BottomControls({
   }
 
   return (
-    <div className="bg-gray-200 border-2 border-gray-400 rounded-lg p-4">
+    <div className="bg-gray-800 border-2 border-gray-600 rounded-lg p-3">
       {/* Status and word display */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="text-sm text-gray-600">
-            {disabled ? (
-              <span className="text-orange-600 font-semibold">Ждите своего хода...</span>
-            ) : (
-              <>
-                {!selectedCell && <span>Кликните на пустую клетку</span>}
-                {selectedCell && !selectedLetter && <span>Выберите букву</span>}
-                {selectedCell && selectedLetter && wordPath.length < 2 && <span>Составьте слово (кликайте по буквам)</span>}
-                {canSubmit && <span className="text-green-600 font-semibold">Слово готово!</span>}
-              </>
-            )}
-          </div>
+      <div className="mb-1.5 flex items-center justify-between">
+        <div className="text-xs text-gray-500">
+          {disabled ? (
+            <span className="text-orange-400">Ждите хода...</span>
+          ) : (
+            <>
+              {!selectedCell && <span>Выберите клетку</span>}
+              {selectedCell && !selectedLetter && <span>Выберите букву</span>}
+              {selectedCell && selectedLetter && wordPath.length < 2 && <span>Составьте слово</span>}
+              {canSubmit && <span className="text-green-400 font-semibold">Готово!</span>}
+            </>
+          )}
         </div>
 
         {/* Word display */}
         {wordFormed && (
           <div className="flex items-center gap-2">
-            <span className="text-gray-600">Слово:</span>
-            <div className="px-4 py-2 bg-white rounded border-2 border-gray-400">
-              <span className="text-2xl font-bold font-mono tracking-wider">
+            <span className="text-gray-500 text-xs">Слово:</span>
+            <div className="px-3 py-1 bg-gray-700 rounded border border-gray-600">
+              <span className="text-xl font-bold font-mono tracking-wider text-gray-100">
                 {wordFormed}
               </span>
             </div>
@@ -87,7 +85,7 @@ export function BottomControls({
       </div>
 
       {/* Alphabet buttons */}
-      <div className="mb-4">
+      <div className="mb-2">
         <div className="grid grid-cols-11 gap-1">
           {RUSSIAN_ALPHABET.map(letter => (
             <button
@@ -97,15 +95,15 @@ export function BottomControls({
               onMouseLeave={() => setHoveredLetter('')}
               disabled={disabled || !selectedCell || !!selectedLetter}
               className={`
-                px-2 py-3 rounded font-bold text-lg transition-all
+                px-1.5 py-1.5 rounded font-bold text-base transition-all
                 ${selectedLetter === letter
-                  ? 'bg-blue-500 text-white shadow-md transform scale-105'
+                  ? 'bg-blue-600 text-white shadow-md transform scale-105'
                   : hoveredLetter === letter
-                  ? 'bg-yellow-300 text-gray-800 transform scale-105'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
+                  ? 'bg-yellow-500 text-gray-900 transform scale-105'
+                  : 'bg-gray-700 text-gray-200 border border-gray-600 hover:bg-gray-600'
                 }
                 ${(disabled || !selectedCell || !!selectedLetter) && selectedLetter !== letter
-                  ? 'opacity-40 cursor-not-allowed'
+                  ? 'opacity-30 cursor-not-allowed'
                   : 'cursor-pointer hover:shadow-md'
                 }
               `}
@@ -117,15 +115,15 @@ export function BottomControls({
       </div>
 
       {/* Action buttons */}
-      <div className="flex gap-2">
+      <div className="flex gap-1.5">
         <button
           onClick={handleSubmit}
           disabled={!canSubmit || disabled}
           className={`
-            flex-1 py-3 px-6 rounded-lg font-semibold text-lg transition-all
+            flex-1 py-2 px-4 rounded font-semibold text-sm transition-all
             ${canSubmit && !disabled
-              ? 'bg-green-500 hover:bg-green-600 text-white shadow-md hover:shadow-lg transform hover:scale-102'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ? 'bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg'
+              : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }
           `}
         >
@@ -135,7 +133,7 @@ export function BottomControls({
         <button
           onClick={onClearSelection}
           disabled={disabled || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-          className="px-6 py-3 bg-gray-400 hover:bg-gray-500 text-white rounded-lg font-semibold transition-all hover:shadow-md"
+          className="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded font-semibold text-sm transition-all hover:shadow-md"
         >
           Отмена
         </button>
@@ -143,7 +141,7 @@ export function BottomControls({
         <button
           onClick={onGetSuggestions}
           disabled={disabled}
-          className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition-all hover:shadow-md flex items-center gap-2"
+          className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded font-semibold text-sm transition-all hover:shadow-md flex items-center gap-1.5"
         >
           💡 Подсказка
         </button>

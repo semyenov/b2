@@ -49,21 +49,28 @@ export function Board({
     }
 
     // If we have selected cell and letter, can click letters to form word
-    // Must be adjacent to last cell in path (or the selected cell if path is empty)
-    const lastPos = wordPath.length > 0 ? wordPath[wordPath.length - 1] : selectedCell
-    const isAdjacent = Math.abs(row - lastPos.row) <= 1 && Math.abs(col - lastPos.col) <= 1
+    const hasLetter = cell || isSelected(row, col)
 
-    // Can click the selected cell (with new letter) or existing letters
-    return isAdjacent && (isSelected(row, col) || !!cell) && !isInWordPath(row, col)
+    // First letter: can be any letter on board (no adjacency requirement)
+    if (wordPath.length === 0) {
+      return hasLetter
+    }
+
+    // Subsequent letters: must be orthogonally adjacent to last letter in path
+    const lastPos = wordPath[wordPath.length - 1]
+    const isAdjacent = (Math.abs(row - lastPos.row) === 1 && col === lastPos.col) ||
+                       (Math.abs(col - lastPos.col) === 1 && row === lastPos.row)
+
+    return isAdjacent && hasLetter && !isInWordPath(row, col)
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-xl border-2 border-gray-400">
+    <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-600">
       {/* Column headers */}
-      <div className="flex mb-1">
-        <div className="w-14 h-8" /> {/* Empty corner */}
+      <div className="flex mb-0.5">
+        <div className="w-12 h-6" /> {/* Empty corner */}
         {Array.from({ length: size }, (_, i) => (
-          <div key={i} className="w-14 h-8 flex items-center justify-center text-gray-700 font-bold text-sm">
+          <div key={i} className="w-12 h-6 flex items-center justify-center text-cyan-400 font-bold text-xs">
             {String.fromCharCode(1040 + i)} {/* Russian letters А-Я */}
           </div>
         ))}
@@ -73,7 +80,7 @@ export function Board({
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {/* Row number */}
-          <div className="w-14 h-14 flex items-center justify-center text-gray-700 font-bold text-sm">
+          <div className="w-12 h-12 flex items-center justify-center text-cyan-400 font-bold text-xs">
             {rowIndex}
           </div>
 
@@ -101,15 +108,15 @@ export function Board({
                 onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
                 onMouseLeave={() => setHoveredCell(null)}
                 className={`
-                  w-14 h-14 border-2 flex items-center justify-center text-2xl font-bold
+                  w-12 h-12 border-2 flex items-center justify-center text-xl font-bold
                   transition-all relative
                   ${selected
-                    ? 'bg-blue-200 border-blue-500 text-blue-700 shadow-inner'
+                    ? 'bg-blue-600 border-blue-400 text-white shadow-inner'
                     : inPath
-                    ? 'bg-green-200 border-green-500 text-green-700'
+                    ? 'bg-green-600 border-green-400 text-white'
                     : cell
-                    ? 'bg-gray-50 border-gray-400 text-gray-800'
-                    : 'bg-white border-gray-300 text-gray-400'
+                    ? 'bg-gray-700 border-gray-500 text-green-400'
+                    : 'bg-gray-900 border-gray-700 text-gray-600'
                   }
                   ${canClick
                     ? 'cursor-pointer hover:shadow-md hover:transform hover:scale-105'
@@ -117,15 +124,15 @@ export function Board({
                   }
                   ${isHovered && canClick
                     ? selected
-                      ? 'ring-2 ring-blue-400'
-                      : 'ring-2 ring-yellow-400 bg-yellow-50'
+                      ? 'ring-2 ring-blue-300'
+                      : 'ring-2 ring-yellow-400 bg-gray-600'
                     : ''
                   }
                 `}
               >
                 {displayContent}
                 {inPath && pathIdx >= 0 && (
-                  <div className="absolute top-0 right-0 w-5 h-5 bg-green-600 text-white text-xs rounded-bl-lg flex items-center justify-center">
+                  <div className="absolute top-0 right-0 w-4 h-4 bg-green-700 text-white text-[10px] rounded-bl flex items-center justify-center font-bold">
                     {pathIdx + 1}
                   </div>
                 )}
@@ -136,18 +143,18 @@ export function Board({
       ))}
 
       {/* Legend */}
-      <div className="mt-4 flex gap-4 text-xs text-gray-600">
+      <div className="mt-2 flex gap-3 text-[10px] text-gray-500">
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 bg-blue-200 border border-blue-500 rounded"></div>
-          <span>Выбранная клетка</span>
+          <div className="w-3 h-3 bg-blue-600 border border-blue-400 rounded"></div>
+          <span>Выбрана</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 bg-green-200 border border-green-500 rounded"></div>
-          <span>Путь слова</span>
+          <div className="w-3 h-3 bg-green-600 border border-green-400 rounded"></div>
+          <span>Путь</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 bg-yellow-50 border border-yellow-400 rounded"></div>
-          <span>Доступно для клика</span>
+          <div className="w-3 h-3 bg-gray-600 border border-yellow-400 rounded"></div>
+          <span>Доступно</span>
         </div>
       </div>
     </div>
