@@ -369,7 +369,7 @@ export function App() {
                                 доступно
                               </span>
                             </div>
-                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pb-2">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-2">
                               {suggestions.slice(0, 100).map((suggestion, index) => {
                                 const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
                                 const scoreColor = suggestion.score >= 10 ? 'text-green-400' : suggestion.score >= 5 ? 'text-yellow-400' : 'text-gray-400'
@@ -381,34 +381,31 @@ export function App() {
                                       handleSuggestionSelect(suggestion)
                                       setShowSuggestions(false)
                                     }}
-                                    className="group relative bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 hover:scale-[1.02] overflow-hidden"
+                                    className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 px-3 py-2.5 flex items-center gap-3"
                                   >
-                                    {/* Rank Badge - Top Left Corner */}
-                                    <div className="absolute top-0 left-0 bg-gray-800 text-gray-500 font-black text-xs px-2 py-0.5 border-r border-b border-gray-600">
+                                    {/* Rank Badge */}
+                                    <div className="bg-gray-800 text-gray-500 font-black text-xs px-2 py-1 shrink-0">
                                       #{index + 1}
                                     </div>
 
-                                    {/* Score - Top Right */}
-                                    <div className={`absolute top-2 right-2 ${scoreColor} font-black text-2xl leading-none`}>
-                                      {suggestion.score.toFixed(0)}
+                                    {/* Word - Hero Element */}
+                                    <div className="flex-1 text-white font-black uppercase text-lg tracking-wider text-left truncate">
+                                      {suggestion.word}
                                     </div>
 
-                                    {/* Main Content */}
-                                    <div className="pt-8 pb-3 px-3">
-                                      {/* Action: Position + Letter - Hero Section */}
-                                      <div className="flex items-center justify-center gap-2 mb-3">
-                                        <span className="text-cyan-400 font-mono font-bold text-sm bg-gray-800 bg-opacity-50 px-2 py-1">
-                                          {posStr}
-                                        </span>
-                                        <span className="text-green-400 font-black text-4xl leading-none">
-                                          {suggestion.letter}
-                                        </span>
-                                      </div>
+                                    {/* Position + Letter */}
+                                    <div className="flex items-center gap-1.5 shrink-0">
+                                      <span className="text-cyan-400 font-mono font-bold text-xs bg-gray-800 bg-opacity-50 px-1.5 py-0.5">
+                                        {posStr}
+                                      </span>
+                                      <span className="text-green-400 font-black text-2xl leading-none">
+                                        {suggestion.letter}
+                                      </span>
+                                    </div>
 
-                                      {/* Result: Word */}
-                                      <div className="text-white font-black uppercase text-base tracking-widest text-center border-t border-gray-600 pt-2">
-                                        {suggestion.word}
-                                      </div>
+                                    {/* Score */}
+                                    <div className={`${scoreColor} font-black text-xl shrink-0 min-w-[32px] text-right`}>
+                                      {suggestion.score.toFixed(0)}
                                     </div>
                                   </button>
                                 )
