@@ -23,9 +23,9 @@ export function Board({
   const [hoveredCell, setHoveredCell] = useState<{ row: number, col: number } | null>(null)
 
   return (
-    <div className="px-4 py-4 max-w-4xl mx-auto">
+    <div className="px-3 py-2 max-w-4xl mx-auto">
       {/* Column headers */}
-      <div className="flex mb-3">
+      <div className="flex mb-2">
         <div className="w-14 h-14" />
         {/* Empty corner */}
         {Array.from({ length: size }, (_, i) => (
