@@ -29,7 +29,7 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
   // Check if it's this player's turn - must match the exact player name in the game
   const isMyTurn = currentPlayerName !== null && currentPlayerName === currentPlayer
 
-  // Parse unified input progressively: "1" → "1A" → "1AФ"
+  // Parse unified input progressively: "1" → "1А" → "1АФ"
   const parseUnifiedInput = (input: string) => {
     const cleaned = input.trim().toUpperCase()
 
@@ -41,21 +41,21 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
       }
     }
 
-    // Stage 2: Row + Column (e.g., "1A")
-    const posMatch = cleaned.match(/^(\d+)([A-Z])$/)
+    // Stage 2: Row + Column (e.g., "1А") - Russian letters
+    const posMatch = cleaned.match(/^(\d+)([А-ЯЁ])$/)
     if (posMatch) {
       const rowNum = Number.parseInt(posMatch[1], 10)
-      const colNum = posMatch[2].charCodeAt(0) - 65
+      const colNum = posMatch[2].charCodeAt(0) - 1040 // А=1040 in Unicode
       if (rowNum >= 0 && rowNum < game.size && colNum >= 0 && colNum < game.size) {
         return { stage: 'position' as const, row: rowNum, col: colNum, letter: null }
       }
     }
 
-    // Stage 3: Row + Column + Letter (e.g., "1AФ")
-    const fullMatch = cleaned.match(/^(\d+)([A-Z])([А-ЯЁA-Z])$/)
+    // Stage 3: Row + Column + Letter (e.g., "1АФ")
+    const fullMatch = cleaned.match(/^(\d+)([А-ЯЁ])([А-ЯЁ])$/)
     if (fullMatch) {
       const rowNum = Number.parseInt(fullMatch[1], 10)
-      const colNum = fullMatch[2].charCodeAt(0) - 65
+      const colNum = fullMatch[2].charCodeAt(0) - 1040 // А=1040 in Unicode
       const letterChar = fullMatch[3]
       if (rowNum >= 0 && rowNum < game.size && colNum >= 0 && colNum < game.size) {
         return { stage: 'complete' as const, row: rowNum, col: colNum, letter: letterChar }
@@ -70,22 +70,23 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
 
   useInput((input, key) => {
     if (mode === 'idle') {
-      if (input === 'm') {
+      // Support both Latin and Cyrillic keyboard layouts
+      if (input === 'm' || input === 'м' || input === 'ь') { // m, м (Russian m), ь (Russian m on some layouts)
         if (!isMyTurn) {
-          setError('It\'s not your turn!')
+          setError('Сейчас не ваш ход!')
           return
         }
         setMode('input')
         setStep('unified')
         setError(null)
       }
-      else if (input === 'r') {
+      else if (input === 'r' || input === 'р' || input === 'к') { // r, р (Russian r), к (Russian r on some layouts)
         void onRefresh()
       }
-      else if (input === 's') {
+      else if (input === 's' || input === 'с' || input === 'ы') { // s, с (Russian s), ы (Russian s on some layouts)
         void onSuggest()
       }
-      else if (input === 'b') {
+      else if (input === 'b' || input === 'б' || input === 'и') { // b, б (Russian b), и (Russian b on some layouts)
         onBack()
       }
       else if (key.escape) {
@@ -107,7 +108,7 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
     if (step === 'unified') {
       const parsed = parseUnifiedInput(value)
       if (parsed.stage !== 'complete') {
-        setError(`Invalid input. Format: {row}{col}{letter} like "1AФ", "2BШ" (row 0-${game.size - 1}, col A-${String.fromCharCode(64 + game.size)})`)
+        setError(`Неверный формат. Введите: {ряд}{колонка}{буква} например "1АФ", "2БШ" (ряд 0-${game.size - 1}, кол А-${String.fromCharCode(1039 + game.size)})`)
         return
       }
       setUnifiedInput(value)
@@ -119,7 +120,7 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
     }
     else if (step === 'word') {
       if (!value.trim()) {
-        setError('Word cannot be empty')
+        setError('Слово не может быть пустым')
         return
       }
       setWord(value)
@@ -174,7 +175,7 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
         <Box flexDirection="column">
           <Box>
             <Text bold color="magenta">
-              Game ID (share this to invite players):
+              ID игры (поделитесь им для приглашения игроков):
             </Text>
           </Box>
           <Box marginTop={1} paddingX={1} borderStyle="round" borderColor="cyan">
@@ -186,7 +187,7 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
         {currentPlayerName && (
           <Box marginTop={1}>
             <Text>
-              Playing as:
+              Играете как:
               {' '}
             </Text>
             <Text bold color="green">
@@ -226,96 +227,95 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
           {!isMyTurn && currentPlayerName && (
             <Box marginBottom={1}>
               <Text color="yellow">
-                ⏳ Waiting for
+                ⏳ Ожидание хода игрока
                 {' '}
                 {currentPlayer}
-                {' '}
-                to make a move...
+                ...
               </Text>
             </Box>
           )}
           {isMyTurn && currentPlayerName && (
             <Box marginBottom={1}>
               <Text color="green" bold>
-                ▶ Your turn! Make a move.
+                ▶ Ваш ход! Сделайте ход.
               </Text>
             </Box>
           )}
-          <Text bold>Commands:</Text>
+          <Text bold>Команды:</Text>
           <Text>
             {' '}
-            [m] Make Move  [r] Refresh  [s] Suggestions  [b] Back
+            [м] Ход  [р] Обновить  [с] Подсказки  [б] Назад
           </Text>
         </Box>
       )}
 
       {mode === 'input' && (
         <Box marginTop={1} flexDirection="column" borderStyle="single" padding={1}>
-          <Text bold color="cyan">Make a Move</Text>
+          <Text bold color="cyan">Сделать ход</Text>
 
           {step === 'unified' && (
             <Box marginTop={1} flexDirection="column">
               <Box marginBottom={1}>
                 <Text dimColor>
-                  Type all in one:
+                  Введите всё вместе:
                   {' {'}
-                  Row
+                  Ряд
                   {'}{'}
-                  Col
+                  Кол
                   {'}{'}
-                  Letter
+                  Буква
                   {'} '}
-                  (e.g., "1AФ", "2BШ")
+                  (например, "1АФ", "2БШ")
                 </Text>
               </Box>
               <Box marginBottom={1}>
                 <Text dimColor>
-                  • First char: Row (0-
+                  • Первый символ: Ряд (0-
                   {game.size - 1}
-                  ) → highlights row
+                  ) → подсветит ряд
                 </Text>
               </Box>
               <Box marginBottom={1}>
                 <Text dimColor>
-                  • Second char: Column (A-
-                  {String.fromCharCode(64 + game.size)}
-                  ) → highlights cell
+                  • Второй символ: Колонка (А-
+                  {String.fromCharCode(1039 + game.size)}
+                  ) → подсветит ячейку
                 </Text>
               </Box>
               <Box marginBottom={1}>
                 <Text dimColor>
-                  • Third char: Letter (А-Я) → shows in
+                  • Третий символ: Буква (А-Я) → покажет
                   {' '}
-                  <Text color="red" bold>RED</Text>
+                  <Text color="red" bold>КРАСНЫМ</Text>
                   {' '}
-                  on board
+                  на доске
                 </Text>
               </Box>
               {parsed.stage === 'row' && (
                 <Box marginBottom={1}>
                   <Text color="yellow">
-                    → Row
+                    → Ряд
                     {' '}
                     {parsed.row}
                     {' '}
-                    selected
+                    выбран
                   </Text>
                 </Box>
               )}
               {parsed.stage === 'position' && (
                 <Box marginBottom={1}>
                   <Text color="yellow">
-                    → Position:
+                    → Позиция:
                     {' '}
                     {parsed.row}
-                    {String.fromCharCode(65 + parsed.col!)}
+                    {String.fromCharCode(1040 + parsed.col!)}
                     {' '}
-                    (Row
+                    (Ряд
                     {' '}
                     {parsed.row}
-                    , Col
+                    , Кол
                     {' '}
-                    {String.fromCharCode(65 + parsed.col!)}
+                    {String.fromCharCode(1040 + parsed.col!)}
                     )
                   </Text>
                 </Box>
@@ -323,10 +323,10 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
               {parsed.stage === 'complete' && (
                 <Box marginBottom={1}>
                   <Text color="green">
-                    ✓ Complete:
+                    ✓ Готово:
                     {' '}
                     {parsed.row}
-                    {String.fromCharCode(65 + parsed.col!)}
+                    {String.fromCharCode(1040 + parsed.col!)}
                     {' '}
                     +
                     <Text color="red" bold>
@@ -336,7 +336,7 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
                 </Box>
               )}
               <Box>
-                <Text>Input: </Text>
+                <Text>Ввод: </Text>
                 <TextInput
                   value={unifiedInput}
                   onChange={(val) => {
@@ -353,25 +353,25 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
             <Box marginTop={1} flexDirection="column">
               <Box>
                 <Text color="gray">
-                  Position:
+                  Позиция:
                   {' '}
                   {row}
-                  {col !== null ? String.fromCharCode(65 + col) : '?'}
+                  {col !== null ? String.fromCharCode(1040 + col) : '?'}
                   {' '}
-                  | Letter:
+                  | Буква:
                   {' '}
                   <Text color="red" bold>{letter.toUpperCase()}</Text>
                 </Text>
               </Box>
               <Box marginTop={1}>
-                <Text>Word: </Text>
+                <Text>Слово: </Text>
                 <TextInput value={word} onChange={setWord} onSubmit={handleSubmit} />
               </Box>
             </Box>
           )}
 
           <Box marginTop={1}>
-            <Text dimColor>Press ESC to cancel</Text>
+            <Text dimColor>Нажмите ESC для отмены</Text>
           </Box>
         </Box>
       )}

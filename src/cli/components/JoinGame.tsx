@@ -37,21 +37,21 @@ export function JoinGame({ onSubmit, onCancel }: JoinGameProps) {
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
-        <Text bold color="cyan">Join Game</Text>
+        <Text bold color="cyan">Присоединиться к игре</Text>
       </Box>
 
       {step === 'gameId' && (
         <Box flexDirection="column">
           <Box marginBottom={1}>
-            <Text>Enter full game ID:</Text>
+            <Text>Введите полный ID игры:</Text>
           </Box>
           <Box marginBottom={1}>
             <Text dimColor>
-              (Ask the game creator to share the full ID from their screen)
+              (Попросите создателя игры поделиться полным ID с их экрана)
             </Text>
           </Box>
           <Box>
-            <Text color="cyan">Game ID: </Text>
+            <Text color="cyan">ID игры: </Text>
             <TextInput value={gameId} onChange={setGameId} onSubmit={handleSubmit} />
           </Box>
         </Box>
@@ -61,24 +61,24 @@ export function JoinGame({ onSubmit, onCancel }: JoinGameProps) {
         <Box flexDirection="column">
           <Box>
             <Text color="gray">
-              Joining game:
+              Присоединение к игре:
               {' '}
               {gameId.slice(0, 8)}
               ...
             </Text>
           </Box>
           <Box marginTop={1} marginBottom={1}>
-            <Text>Enter your player name:</Text>
+            <Text>Введите ваше имя:</Text>
           </Box>
           <Box>
-            <Text color="cyan">Name: </Text>
+            <Text color="cyan">Имя: </Text>
             <TextInput value={playerName} onChange={setPlayerName} onSubmit={handleSubmit} />
           </Box>
         </Box>
       )}
 
       <Box marginTop={1}>
-        <Text dimColor>Press ESC to cancel (Ctrl+C to exit)</Text>
+        <Text dimColor>Нажмите ESC для отмены (Ctrl+C для выхода)</Text>
       </Box>
     </Box>
   )

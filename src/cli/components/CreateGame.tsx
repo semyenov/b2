@@ -55,16 +55,16 @@ export function CreateGame({ onSubmit, onCancel }: CreateGameProps) {
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
-        <Text bold color="cyan">Create New Game</Text>
+        <Text bold color="cyan">Создать новую игру</Text>
       </Box>
 
       {step === 'size' && (
         <Box flexDirection="column">
           <Box marginBottom={1}>
-            <Text>Enter board size (minimum 3):</Text>
+            <Text>Введите размер доски (минимум 3):</Text>
           </Box>
           <Box>
-            <Text color="cyan">Size: </Text>
+            <Text color="cyan">Размер: </Text>
             <TextInput value={size} onChange={setSize} onSubmit={handleSubmit} />
           </Box>
         </Box>
@@ -74,15 +74,16 @@ export function CreateGame({ onSubmit, onCancel }: CreateGameProps) {
         <Box flexDirection="column">
           <Box>
             <Text color="gray">
-              Size:
+              Размер:
+              {' '}
               {size}
             </Text>
           </Box>
           <Box marginTop={1} marginBottom={1}>
-            <Text>Enter base word (placed in the center):</Text>
+            <Text>Введите базовое слово (размещается в центре):</Text>
           </Box>
           <Box>
-            <Text color="cyan">Base Word: </Text>
+            <Text color="cyan">Базовое слово: </Text>
             <TextInput value={baseWord} onChange={setBaseWord} onSubmit={handleSubmit} />
           </Box>
         </Box>
@@ -92,35 +93,35 @@ export function CreateGame({ onSubmit, onCancel }: CreateGameProps) {
         <Box flexDirection="column">
           <Box>
             <Text color="gray">
-              Size:
+              Размер:
               {' '}
               {size}
             </Text>
           </Box>
           <Box>
             <Text color="gray">
-              Base Word:
+              Базовое слово:
               {' '}
               {baseWord}
             </Text>
           </Box>
           <Box marginTop={1} marginBottom={1}>
-            <Text>Enter your player name:</Text>
+            <Text>Введите ваше имя:</Text>
           </Box>
           <Box marginBottom={1}>
             <Text dimColor>
-              (Another player can join using the game code)
+              (Другой игрок может присоединиться используя код игры)
             </Text>
           </Box>
           <Box>
-            <Text color="cyan">Your Name: </Text>
+            <Text color="cyan">Ваше имя: </Text>
             <TextInput value={playerName} onChange={setPlayerName} onSubmit={handleSubmit} />
           </Box>
         </Box>
       )}
 
       <Box marginTop={1}>
-        <Text dimColor>Press ESC to cancel (Ctrl+C to exit)</Text>
+        <Text dimColor>Нажмите ESC для отмены (Ctrl+C для выхода)</Text>
       </Box>
     </Box>
   )

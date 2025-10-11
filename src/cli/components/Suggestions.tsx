@@ -16,17 +16,17 @@ export function Suggestions({ suggestions, onClose }: SuggestionsProps) {
   return (
     <Box flexDirection="column" borderStyle="round" borderColor="yellow" padding={1}>
       <Box marginBottom={1}>
-        <Text bold color="yellow">AI Move Suggestions</Text>
+        <Text bold color="yellow">Подсказки AI</Text>
       </Box>
 
       {suggestions.length === 0
         ? (
-            <Text color="gray">No suggestions available</Text>
+            <Text color="gray">Нет доступных подсказок</Text>
           )
         : (
             <Box flexDirection="column">
               {suggestions.slice(0, 10).map((suggestion, index) => {
-                const posStr = `${suggestion.position.row}${String.fromCharCode(65 + suggestion.position.col)}`
+                const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
                 return (
                   <Box key={index}>
                     <Text color="cyan">
@@ -61,7 +61,7 @@ export function Suggestions({ suggestions, onClose }: SuggestionsProps) {
           )}
 
       <Box marginTop={1}>
-        <Text dimColor>Press any key to close</Text>
+        <Text dimColor>Нажмите любую клавишу для закрытия</Text>
       </Box>
     </Box>
   )

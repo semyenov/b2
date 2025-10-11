@@ -16,7 +16,7 @@ export function Board({ game, highlightPosition, highlightRow, previewLetter }: 
     <Box flexDirection="column" borderStyle="round" borderColor="cyan" padding={1}>
       <Box marginBottom={1}>
         <Text bold color="cyan">
-          Balda Board (
+          Доска Балда (
           {size}
           x
           {size}
@@ -24,13 +24,14 @@ export function Board({ game, highlightPosition, highlightRow, previewLetter }: 
         </Text>
       </Box>
 
-      {/* Column headers (letters) */}
+      {/* Column headers (Russian letters) */}
       <Box>
         <Text>   </Text>
         {Array.from({ length: size }, (_, i) => (
           <Text key={i} color="cyan" bold>
             {' '}
-            {String.fromCharCode(65 + i)}
+            {/* А=1040 in Unicode */}
+            {String.fromCharCode(1040 + i)}
             {' '}
           </Text>
         ))}

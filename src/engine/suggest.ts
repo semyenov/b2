@@ -88,12 +88,18 @@ function enumerateAroundOptimized(
   onWord: (word: string) => void,
 ) {
   const size = board.length
-  const visited = new Set<string>()
+  const foundWords = new Set<string>()
 
-  // DFS with prefix pruning and target position tracking
-  function dfs(r: number, c: number, word: string, pathIncludesTarget: boolean) {
+  // DFS with prefix pruning, target position tracking, and path tracking
+  function dfs(r: number, c: number, word: string, pathIncludesTarget: boolean, path: Set<string>) {
     const ch = board[r][c]
     if (!ch)
+      return
+
+    const cellKey = `${r},${c}`
+
+    // Skip if this cell is already in the current path
+    if (path.has(cellKey))
       return
 
     const newWord = word + ch
@@ -105,8 +111,8 @@ function enumerateAroundOptimized(
     }
 
     // If this forms a valid word including our target position
-    if (newWord.length >= 3 && targetIncluded && dict.has(newWord) && !visited.has(newWord)) {
-      visited.add(newWord)
+    if (newWord.length >= 3 && targetIncluded && dict.has(newWord) && !foundWords.has(newWord)) {
+      foundWords.add(newWord)
       onWord(newWord)
     }
 
@@ -115,6 +121,10 @@ function enumerateAroundOptimized(
       return
     }
 
+    // Add current cell to path for recursive exploration
+    const newPath = new Set(path)
+    newPath.add(cellKey)
+
     // Explore orthogonal neighbors
     for (const d of ORTHOGONAL_DIRS) {
       const nr = r + d.row
@@ -122,7 +132,7 @@ function enumerateAroundOptimized(
       if (nr < 0 || nr >= size || nc < 0 || nc >= size)
         continue
 
-      dfs(nr, nc, newWord, targetIncluded)
+      dfs(nr, nc, newWord, targetIncluded, newPath)
     }
   }
 
@@ -130,13 +140,13 @@ function enumerateAroundOptimized(
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       if (board[r][c] !== null) {
-        dfs(r, c, '', false)
+        dfs(r, c, '', false, new Set())
       }
     }
   }
 
-  // Clear visited set to prevent memory leak
-  visited.clear()
+  // Clear found words set to prevent memory leak
+  foundWords.clear()
 }
 
 // Removed: collectCandidateStrings - no longer needed with optimized enumerateAround

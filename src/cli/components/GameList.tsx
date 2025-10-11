@@ -36,9 +36,9 @@ export function GameList({ games, onWatch, onJoin, onBack }: GameListProps) {
 
     // Indicators
     const indicator = hasReal ? '👥' : '🤖'
-    const slotsText = hasSlots ? ' [JOIN]' : ''
+    const slotsText = hasSlots ? ' [ВОЙТИ]' : ''
 
-    return `${indicator} ${id} - ${players} - ${moves} moves${slotsText}`
+    return `${indicator} ${id} - ${players} - ${moves} ходов${slotsText}`
   }
 
   const items = [
@@ -46,7 +46,7 @@ export function GameList({ games, onWatch, onJoin, onBack }: GameListProps) {
       label: formatGameLabel(game),
       value: game.id,
     })),
-    { label: '← Back to Menu', value: '__back__' },
+    { label: '← Назад в меню', value: '__back__' },
   ]
 
   useInput((input, key) => {
@@ -94,12 +94,12 @@ export function GameList({ games, onWatch, onJoin, onBack }: GameListProps) {
     return (
       <Box flexDirection="column">
         <Box marginBottom={1}>
-          <Text bold color="cyan">Join Game</Text>
+          <Text bold color="cyan">Присоединиться к игре</Text>
         </Box>
 
         <Box marginBottom={1}>
           <Text>
-            Game:
+            Игра:
             {' '}
             <Text color="yellow">{selectedGame.id.slice(0, 8)}</Text>
           </Text>
@@ -107,7 +107,7 @@ export function GameList({ games, onWatch, onJoin, onBack }: GameListProps) {
 
         <Box marginBottom={1}>
           <Text>
-            Players:
+            Игроки:
             {' '}
             <Text color="green">{selectedGame.players.join(', ')}</Text>
           </Text>
@@ -115,38 +115,39 @@ export function GameList({ games, onWatch, onJoin, onBack }: GameListProps) {
 
         <Box marginBottom={1}>
           <Text>
-            Moves:
+            Ходов:
             {' '}
             {selectedGame.moves.length}
           </Text>
         </Box>
 
         <Box marginTop={1} marginBottom={1} flexDirection="column">
-          <Text bold>Enter your name to join as player:</Text>
+          <Text bold>Введите ваше имя для присоединения как игрок:</Text>
           <Box marginTop={1}>
-            <Text>Name: </Text>
+            <Text>Имя: </Text>
             <TextInput value={playerName} onChange={setPlayerName} onSubmit={handleJoinSubmit} />
           </Box>
         </Box>
 
         <Box marginTop={1} flexDirection="column">
-          <Text dimColor>Press Enter to join as player</Text>
+          <Text dimColor>Нажмите Enter для присоединения как игрок</Text>
           <Box marginTop={1}>
-            <Text dimColor>
-              Or press
-              {' '}
-              <Text bold>[w]</Text>
-              {' '}
-              to watch only
-            </Text>
+          <Text dimColor>
+            Или нажмите
+            {' '}
+            <Text bold>[ц]</Text>
+            {' '}
+            только для просмотра
+          </Text>
           </Box>
-          <Text dimColor>Press ESC to cancel</Text>
+          <Text dimColor>Нажмите ESC для отмены</Text>
         </Box>
 
-        {/* Hidden input handler for 'w' key */}
+        {/* Hidden input handler for 'w' key - support both Latin and Cyrillic */}
         {React.createElement(() => {
           useInput((input) => {
-            if (input === 'w') {
+            // Support: w, в (Russian v which is w position), ц (w on Russian layout)
+            if (input === 'w' || input === 'в' || input === 'ц') {
               handleWatch()
             }
           })
@@ -160,19 +161,19 @@ export function GameList({ games, onWatch, onJoin, onBack }: GameListProps) {
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
-        <Text bold color="cyan">Select a Game</Text>
+        <Text bold color="cyan">Выберите игру</Text>
       </Box>
 
       {games.length === 0 && (
         <Box marginBottom={1}>
-          <Text color="yellow">No games found. Create a new game!</Text>
+          <Text color="yellow">Игр не найдено. Создайте новую игру!</Text>
         </Box>
       )}
 
       {games.length > 0 && (
         <Box marginBottom={1} flexDirection="column">
           <Text dimColor>
-            👥 = Has real players  |  🤖 = Only placeholders  |  [JOIN] = Slots available
+            👥 = Есть игроки  |  🤖 = Только заглушки  |  [ВОЙТИ] = Есть места
           </Text>
         </Box>
       )}

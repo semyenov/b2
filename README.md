@@ -112,6 +112,29 @@ NODE_ENV=development
 ### WebSocket
 - `WS /games/:id/ws` - Real-time game updates
 
+## Recent Updates
+
+### ✅ Critical Bug Fix: Suggestions Algorithm (Oct 11, 2025)
+
+Fixed a critical bug in the AI suggestions engine where the algorithm was generating invalid move suggestions. The issue was that the DFS path traversal was not tracking visited cells within the current path, allowing the same cell to be reused multiple times in a single word.
+
+**What was fixed:**
+- Added `path: Set<string>` tracking to prevent cell reuse in paths
+- All AI suggestions are now guaranteed to be valid and playable
+- Algorithm now matches the same validation logic used for move verification
+
+For technical details, see [SUGGESTIONS_BUG_FIX.md](./SUGGESTIONS_BUG_FIX.md).
+
+### 🇷🇺 Full Russian Localization (Oct 11, 2025)
+
+The CLI interface has been fully localized to Russian:
+- Russian letters for board columns (А, Б, В, Г, Д)
+- Russian position format (1А, 2Б, 3В)
+- All UI texts, menus, and messages in Russian
+- Russian keyboard layout support for all commands
+
+See [RUSSIAN_LOCALIZATION.md](./RUSSIAN_LOCALIZATION.md) and [RUSSIAN_KEYBOARD_SUPPORT.md](./RUSSIAN_KEYBOARD_SUPPORT.md).
+
 ## Architecture
 
 The codebase follows Elysia best practices with a modular plugin architecture:

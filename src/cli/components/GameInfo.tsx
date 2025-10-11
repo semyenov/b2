@@ -12,16 +12,16 @@ export function GameInfo({ game }: GameInfoProps) {
   return (
     <Box flexDirection="column" borderStyle="round" borderColor="magenta" padding={1}>
       <Box marginBottom={1}>
-        <Text bold color="magenta">Game Info</Text>
+        <Text bold color="magenta">Информация об игре</Text>
       </Box>
 
       <Box>
-        <Text color="gray">Current Turn: </Text>
+        <Text color="gray">Текущий ход: </Text>
         <Text bold color="yellow">{currentPlayer}</Text>
       </Box>
 
       <Box marginTop={1}>
-        <Text bold color="cyan">Scores:</Text>
+        <Text bold color="cyan">Очки:</Text>
       </Box>
       {game.players.map((player) => {
         const score = game.scores[player] || 0
@@ -40,12 +40,12 @@ export function GameInfo({ game }: GameInfoProps) {
       })}
 
       <Box marginTop={1}>
-        <Text color="gray">Moves: </Text>
+        <Text color="gray">Ходов: </Text>
         <Text>{game.moves.length}</Text>
       </Box>
 
       <Box marginTop={1}>
-        <Text color="gray">Used Words: </Text>
+        <Text color="gray">Использовано слов: </Text>
         <Text>{game.usedWords.length}</Text>
       </Box>
     </Box>
