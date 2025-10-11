@@ -1,5 +1,5 @@
 import type { CreateGameBody } from '../lib/client'
-import { useState } from 'react'
+import { useCreateGameForm } from '../hooks/useCreateGameForm'
 
 interface CreateGameProps {
   onSubmit: (body: CreateGameBody) => void
@@ -7,32 +7,7 @@ interface CreateGameProps {
 }
 
 export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
-  const [size, setSize] = useState('5')
-  const [baseWord, setBaseWord] = useState('')
-  const [error, setError] = useState('')
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-
-    const sizeNum = parseInt(size, 10)
-
-    if (!baseWord || baseWord.length !== sizeNum) {
-      setError(`Base word must be exactly ${sizeNum} letters`)
-      return
-    }
-
-    if (!/^[А-ЯЁ]+$/i.test(baseWord)) {
-      setError('Use Russian letters only')
-      return
-    }
-
-    onSubmit({
-      size: sizeNum,
-      baseWord: baseWord.toUpperCase(),
-      players: [`Player_${Date.now()}`, 'Player 2']
-    })
-  }
+  const { size, baseWord, error, setSize, setBaseWord, handleSubmit } = useCreateGameForm({ onSubmit })
 
   return (
     <div className="max-w-md mx-auto mt-8">

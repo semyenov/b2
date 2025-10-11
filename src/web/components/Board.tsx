@@ -1,5 +1,6 @@
 import type { GameState } from '../lib/client'
 import { useState } from 'react'
+import { canClickCell, getPositionPathIndex, isPositionInWordPath, isPositionSelected } from '../utils/boardValidation'
 
 interface BoardProps {
   game: GameState
@@ -20,50 +21,6 @@ export function Board({
 }: BoardProps) {
   const { board, size } = game
   const [hoveredCell, setHoveredCell] = useState<{ row: number, col: number } | null>(null)
-
-  const isInWordPath = (row: number, col: number) => {
-    return wordPath.some(pos => pos.row === row && pos.col === col)
-  }
-
-  const getPathIndex = (row: number, col: number) => {
-    return wordPath.findIndex(pos => pos.row === row && pos.col === col)
-  }
-
-  const isSelected = (row: number, col: number) => {
-    return selectedCell?.row === row && selectedCell?.col === col
-  }
-
-  const canClickCell = (row: number, col: number) => {
-    if (disabled)
-      return false
-
-    const cell = board[row][col]
-
-    // If no cell selected yet, can only click empty cells
-    if (!selectedCell) {
-      return !cell
-    }
-
-    // If cell selected but no letter, can't click anything
-    if (!selectedLetter) {
-      return false
-    }
-
-    // If we have selected cell and letter, can click letters to form word
-    const hasLetter = cell || isSelected(row, col)
-
-    // First letter: can be any letter on board (no adjacency requirement)
-    if (wordPath.length === 0) {
-      return hasLetter
-    }
-
-    // Subsequent letters: must be orthogonally adjacent to last letter in path
-    const lastPos = wordPath[wordPath.length - 1]
-    const isAdjacent = (Math.abs(row - lastPos.row) === 1 && col === lastPos.col)
-      || (Math.abs(col - lastPos.col) === 1 && row === lastPos.row)
-
-    return isAdjacent && hasLetter && !isInWordPath(row, col)
-  }
 
   return (
     <div className="bg-gray-800 p-3 rounded-lg shadow-2xl border-2 border-gray-600">
@@ -91,11 +48,19 @@ export function Board({
 
           {/* Cells */}
           {row.map((cell, colIndex) => {
-            const canClick = canClickCell(rowIndex, colIndex)
+            const canClick = canClickCell({
+              row: rowIndex,
+              col: colIndex,
+              board,
+              disabled: !!disabled,
+              selectedCell,
+              selectedLetter,
+              wordPath,
+            })
             const isHovered = hoveredCell?.row === rowIndex && hoveredCell?.col === colIndex
-            const inPath = isInWordPath(rowIndex, colIndex)
-            const pathIdx = getPathIndex(rowIndex, colIndex)
-            const selected = isSelected(rowIndex, colIndex)
+            const inPath = isPositionInWordPath(rowIndex, colIndex, wordPath)
+            const pathIdx = getPositionPathIndex(rowIndex, colIndex, wordPath)
+            const selected = isPositionSelected(rowIndex, colIndex, selectedCell)
 
             // Display content
             let displayContent = cell
