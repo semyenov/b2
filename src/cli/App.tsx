@@ -115,7 +115,7 @@ export function App() {
     }
   }
 
-  const handleMenuSelect = async (action: 'list' | 'create' | 'join' | 'exit') => {
+  const handleMenuSelect = async (action: 'list' | 'create' | 'join' | 'quick5x5' | 'exit') => {
     if (action === 'exit') {
       exit()
     }
@@ -128,6 +128,46 @@ export function App() {
     }
     else if (action === 'join') {
       setScreen({ type: 'join' })
+    }
+    else if (action === 'quick5x5') {
+      await handleQuickStart5x5()
+    }
+  }
+
+  const handleQuickStart5x5 = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      // Get a random 5-letter word from the dictionary
+      const words = await apiClient.getRandomWords(5, 1)
+      if (!words || words.length === 0) {
+        setError('No 5-letter words available in dictionary. Please use custom game creation.')
+        setScreen({ type: 'menu' })
+        return
+      }
+
+      const randomWord = words[0]
+      const playerName = 'Player 1'
+
+      // Create game with the random word
+      const game = await apiClient.createGame({
+        size: 5,
+        baseWord: randomWord,
+        players: [playerName, 'Player 2'],
+      })
+
+      // Fetch the game again to ensure we have the latest state
+      const latestGame = await apiClient.getGame(game.id)
+      setCurrentGame(latestGame)
+      setCurrentPlayerName(playerName)
+      setScreen({ type: 'play', gameId: game.id })
+    }
+    catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to start quick game')
+      setScreen({ type: 'menu' })
+    }
+    finally {
+      setLoading(false)
     }
   }
 

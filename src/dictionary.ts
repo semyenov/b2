@@ -8,6 +8,7 @@ export interface SizedDictionary extends Dictionary {
   hasPrefix: (prefix: string) => boolean
   getAlphabet: () => string[]
   getLetterFrequency: () => Record<string, number>
+  getRandomWords: (length: number, count: number) => string[]
 }
 
 class TrieNode {
@@ -73,6 +74,27 @@ export class TrieDictionary implements SizedDictionary {
     )
   }
 
+  getRandomWords(length: number, count: number): string[] {
+    const words: string[] = []
+    const collectWords = (node: TrieNode, prefix: string) => {
+      if (node.isWord && prefix.length === length) {
+        words.push(prefix)
+      }
+      if (prefix.length >= length) {
+        return // Don't go deeper if we've already reached target length
+      }
+      for (const [char, child] of node.children) {
+        collectWords(child, prefix + char)
+      }
+    }
+
+    collectWords(this.root, '')
+
+    // Shuffle and return requested count
+    const shuffled = words.sort(() => Math.random() - 0.5)
+    return shuffled.slice(0, Math.min(count, shuffled.length))
+  }
+
   private traverse(sequence: string): TrieNode | null {
     const normalized = sequence.trim().toUpperCase()
     if (!normalized)
@@ -129,5 +151,10 @@ export class AllowAllSizedDictionary implements SizedDictionary {
     const out: Record<string, number> = {}
     for (const ch of this.alphabet) out[ch] = 1
     return out
+  }
+
+  getRandomWords(_length: number, _count: number): string[] {
+    // AllowAllDictionary can't generate random words, return empty array
+    return []
   }
 }

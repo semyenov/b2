@@ -112,4 +112,13 @@ export class ApiClient {
     }
     return response.json()
   }
+
+  async getRandomWords(length: number, count: number = 1): Promise<string[]> {
+    const response = await fetch(`${this.baseUrl}/dictionary/random?length=${length}&count=${count}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch random words')
+    }
+    const data = await response.json()
+    return data.words
+  }
 }

@@ -12,6 +12,8 @@ import {
   GameStateSchema,
   MoveBodySchema,
   PlacementsResponseSchema,
+  RandomWordsQuerySchema,
+  RandomWordsResponseSchema,
   SuggestQuerySchema,
   SuggestResponseSchema,
   UpdatePlayerBodySchema,
@@ -71,6 +73,13 @@ const dictionaryPlugin = new Elysia({ name: 'dictionary', prefix: '/dictionary' 
     const dict = await loadDictionaryFromFile(dictPath)
     return { loaded: true, source: 'file' as const, size: dict.size() }
   }, { response: { 200: DictionaryStatsSchema } })
+  .get('/random', async ({ query }) => {
+    const dict = await getDictionary()
+    const length = query.length ? Number(query.length) : 5
+    const count = query.count ? Number(query.count) : 1
+    const words = dict.getRandomWords(length, count)
+    return { words }
+  }, { query: RandomWordsQuerySchema, response: { 200: RandomWordsResponseSchema } })
 
 /**
  * Game management plugin - handles game CRUD operations

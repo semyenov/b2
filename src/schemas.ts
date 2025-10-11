@@ -133,3 +133,28 @@ export const UpdatePlayerBodySchema = Type.Object({
     error: 'New player name is required',
   }),
 })
+
+export const RandomWordsQuerySchema = Type.Object({
+  length: Type.Optional(Type.Union([
+    Type.Integer({
+      minimum: 3,
+      maximum: 10,
+    }),
+    Type.String({
+      pattern: '^[0-9]+$',
+    }),
+  ])),
+  count: Type.Optional(Type.Union([
+    Type.Integer({
+      minimum: 1,
+      maximum: 100,
+    }),
+    Type.String({
+      pattern: '^[0-9]+$',
+    }),
+  ])),
+})
+
+export const RandomWordsResponseSchema = Type.Object({
+  words: Type.Array(Type.String()),
+})
