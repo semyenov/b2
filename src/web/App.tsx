@@ -6,6 +6,7 @@ import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameInteraction } from './hooks/useGameInteraction'
 import { useSuggestions } from './hooks/useSuggestions'
+import { buildMoveBody, canSubmitMove, formWordFromPath } from './utils/moveValidation'
 
 export function App() {
   // Core game client logic
@@ -213,79 +214,114 @@ export function App() {
 
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
-            {/* Compact Header */}
-            <div className="bg-gray-800 border-b-2 border-gray-700 px-6 py-4 flex justify-between items-center shadow-depth-3 relative z-10">
-              <button
-                onClick={handleExitToMenu}
-                className="px-5 py-2 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-lg font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
-              >
-                ← Выход
-              </button>
+            {/* Header with Controls */}
+            <div className="bg-gray-800 border-b-2 border-gray-700 px-6 py-4 shadow-depth-3 relative z-10">
+              <div className="flex items-center justify-between gap-6">
+                {/* Left: Exit Button */}
+                <button
+                  onClick={handleExitToMenu}
+                  className="px-5 py-2 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-lg font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
+                >
+                  ← Выход
+                </button>
 
-              <div className="flex items-center gap-4">
-                <div className="text-lg font-bold text-gray-200 bg-gray-700 px-5 py-2 shadow-depth-1 border-2 border-gray-600">
-                  Ход
-                  {' '}
-                  {Math.floor(currentGame.moves.length / 2) + 1}
-                </div>
-                {aiThinking && (
-                  <div className="px-4 py-2 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse">
-                    <span className="text-yellow-300 font-bold text-lg">🤖 AI думает...</span>
+                {/* Center: Control Buttons */}
+                {playerName && currentGame && (
+                  <div className="flex items-center gap-3 flex-1 justify-center">
+                    <button
+                      onClick={() => {
+                        if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
+                          const wordFormed = formWordFromPath(wordPath, currentGame.board, selectedCell, selectedLetter)
+                          const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, wordFormed)
+                          makeMove(moveBody)
+                        }
+                      }}
+                      disabled={!canSubmitMove(selectedCell, selectedLetter, wordPath) || !isMyTurn()}
+                      className={`px-8 py-2 font-bold text-lg transition-all duration-200 ${canSubmitMove(selectedCell, selectedLetter, wordPath) && isMyTurn()
+                        ? 'bg-green-600 hover:bg-green-700 text-white shadow-depth-2 hover:shadow-depth-3 hover:scale-105'
+                        : 'bg-gray-700 text-gray-500 cursor-not-allowed shadow-depth-1'
+                      }`}
+                    >
+                      ✓ Подтвердить ход
+                    </button>
+
+                    <button
+                      onClick={handleClearSelection}
+                      disabled={!isMyTurn() || (!selectedCell && !selectedLetter && wordPath.length === 0)}
+                      className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      ✕ Отмена
+                    </button>
+
+                    <button
+                      onClick={loadSuggestions}
+                      disabled={!isMyTurn()}
+                      className="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
+                    >
+                      💡 AI
+                      {suggestions.length > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2">
+                          {suggestions.length}
+                        </span>
+                      )}
+                    </button>
                   </div>
                 )}
-              </div>
 
-              {playerName && (
-                <div className="px-5 py-2 bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1">
-                  <span className="text-cyan-300 font-bold text-lg">{playerName}</span>
+                {/* Right: Info Badges */}
+                <div className="flex items-center gap-4">
+                  <div className="text-lg font-bold text-gray-200 bg-gray-700 px-5 py-2 shadow-depth-1 border-2 border-gray-600">
+                    Ход
+                    {' '}
+                    {Math.floor(currentGame.moves.length / 2) + 1}
+                  </div>
+                  {aiThinking && (
+                    <div className="px-4 py-2 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse">
+                      <span className="text-yellow-300 font-bold text-lg">🤖 AI</span>
+                    </div>
+                  )}
+                  {playerName && (
+                    <div className="px-5 py-2 bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1">
+                      <span className="text-cyan-300 font-bold text-lg">{playerName}</span>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Main game area - Three column layout */}
-            <div className="flex-1 overflow-auto py-6">
-              <div className="max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-[300px_1fr_300px] gap-6 items-start">
-                  {/* Left: Player 1 */}
-                  <div className="sticky top-0">
-                    <PlayerPanel
-                      game={currentGame}
-                      playerIndex={0}
-                      currentPlayerName={playerName}
-                      isLeft
-                    />
-                  </div>
+            <div className="flex-1 grid grid-cols-[300px_1fr_300px] gap-6 px-6 py-6 overflow-hidden">
+              {/* Left: Player 1 */}
+              <PlayerPanel
+                game={currentGame}
+                playerIndex={0}
+                currentPlayerName={playerName}
+                isLeft
+              />
 
-                  {/* Center: Game Panel */}
-                  {playerName && (
-                    <GamePanel
-                      game={currentGame}
-                      playerName={playerName}
-                      onMove={makeMove}
-                      onGetSuggestions={loadSuggestions}
-                      disabled={!isMyTurn()}
-                      selectedCell={selectedCell}
-                      selectedLetter={selectedLetter}
-                      wordPath={wordPath}
-                      onCellClick={handleCellClick}
-                      onLetterSelect={handleLetterSelect}
-                      onClearSelection={handleClearSelection}
-                      suggestions={suggestions}
-                      loadingSuggestions={loadingSuggestions}
-                      onSelectSuggestion={handleSuggestionSelect}
-                    />
-                  )}
+              {/* Center: Game Panel */}
+              {playerName && (
+                <GamePanel
+                  game={currentGame}
+                  playerName={playerName}
+                  disabled={!isMyTurn()}
+                  selectedCell={selectedCell}
+                  selectedLetter={selectedLetter}
+                  wordPath={wordPath}
+                  onCellClick={handleCellClick}
+                  onLetterSelect={handleLetterSelect}
+                  suggestions={suggestions}
+                  loadingSuggestions={loadingSuggestions}
+                  onSelectSuggestion={handleSuggestionSelect}
+                />
+              )}
 
-                  {/* Right: Player 2 */}
-                  <div className="sticky top-0">
-                    <PlayerPanel
-                      game={currentGame}
-                      playerIndex={1}
-                      currentPlayerName={playerName}
-                    />
-                  </div>
-                </div>
-              </div>
+              {/* Right: Player 2 */}
+              <PlayerPanel
+                game={currentGame}
+                playerIndex={1}
+                currentPlayerName={playerName}
+              />
             </div>
           </div>
         )}

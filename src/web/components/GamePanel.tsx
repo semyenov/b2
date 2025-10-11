@@ -1,20 +1,17 @@
-import type { GameState, MoveBody, Suggestion } from '../lib/client'
-import { useState } from 'react'
-import { buildMoveBody, canSubmitMove, formWordFromPath } from '../utils/moveValidation'
+import type { GameState, Suggestion } from '../lib/client'
+import { useEffect, useRef, useState } from 'react'
+import { formWordFromPath } from '../utils/moveValidation'
 import { Board } from './Board'
 
 interface GamePanelProps {
   game: GameState
   playerName: string
-  onMove: (move: MoveBody) => void
-  onGetSuggestions: () => void
   disabled?: boolean
   selectedCell?: { row: number, col: number }
   selectedLetter?: string
   wordPath?: Array<{ row: number, col: number }>
   onCellClick?: (row: number, col: number) => void
   onLetterSelect?: (letter: string) => void
-  onClearSelection?: () => void
   suggestions?: Suggestion[]
   loadingSuggestions?: boolean
   onSelectSuggestion?: (suggestion: Suggestion) => void
@@ -24,43 +21,42 @@ const RUSSIAN_ALPHABET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩ
 
 export function GamePanel({
   game,
-  playerName,
-  onMove,
-  onGetSuggestions,
+  playerName: _playerName,
   disabled,
   selectedCell,
   selectedLetter,
   wordPath = [],
   onCellClick,
   onLetterSelect,
-  onClearSelection,
   suggestions = [],
   loadingSuggestions = false,
   onSelectSuggestion,
 }: GamePanelProps) {
   const [hoveredLetter, setHoveredLetter] = useState<string>('')
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const prevSuggestionsLengthRef = useRef(0)
 
   const wordFormed = formWordFromPath(wordPath, game.board, selectedCell, selectedLetter)
-  const canSubmit = canSubmitMove(selectedCell, selectedLetter, wordPath)
 
   // Determine current step
   const currentStep = !selectedCell ? 1 : !selectedLetter ? 2 : wordPath.length < 2 ? 3 : 4
 
-  const handleSubmit = () => {
-    if (!canSubmit || !selectedCell || !selectedLetter) {
-      return
+  // Auto-show suggestions modal when new suggestions arrive
+  useEffect(() => {
+    if (
+      suggestions.length > 0
+      && suggestions.length !== prevSuggestionsLengthRef.current
+      && !loadingSuggestions
+    ) {
+      setShowSuggestions(true)
     }
-
-    const moveBody = buildMoveBody(playerName, selectedCell, selectedLetter, wordFormed)
-    onMove(moveBody)
-    onClearSelection?.()
-  }
+    prevSuggestionsLengthRef.current = suggestions.length
+  }, [suggestions.length, loadingSuggestions])
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col h-full">
       {/* Board Section - Centered */}
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-6">
         <Board
           game={game}
           selectedCell={selectedCell}
@@ -72,7 +68,7 @@ export function GamePanel({
       </div>
 
       {/* Controls Section - Full width */}
-      <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 overflow-hidden">
+      <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 flex-shrink-0">
         {/* Progress & Word Display */}
         <div className="p-5 bg-gray-700 border-b-2 border-gray-600">
           {/* Status Message - Enhanced Prominence */}
@@ -153,45 +149,6 @@ export function GamePanel({
           </div>
         </div>
 
-        {/* Action Buttons - Unified Styling */}
-        <div className="p-4 bg-gray-750 border-t-2 border-gray-700">
-          <div className="flex gap-3 max-w-2xl mx-auto">
-            <button
-              onClick={handleSubmit}
-              disabled={!canSubmit || disabled}
-              className={`flex-1 py-4 px-6 font-bold text-xl transition-all duration-200 ${canSubmit && !disabled
-                ? 'bg-green-600 hover:bg-green-700 text-white shadow-depth-2 hover:shadow-depth-3 hover:scale-105 glow-success'
-                : 'bg-gray-700 text-gray-500 cursor-not-allowed shadow-depth-1'
-              }`}
-            >
-              ✓ Подтвердить ход
-            </button>
-
-            <button
-              onClick={onClearSelection}
-              disabled={disabled || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-              className="px-6 py-4 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              ✕ Отмена
-            </button>
-
-            <button
-              onClick={() => {
-                onGetSuggestions()
-                setShowSuggestions(true)
-              }}
-              disabled={disabled}
-              className="px-6 py-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-xl transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
-            >
-              💡 AI
-              {suggestions.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2">
-                  {suggestions.length}
-                </span>
-              )}
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* AI Suggestions Modal - Unified Styling */}
