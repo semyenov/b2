@@ -1,5 +1,6 @@
 import { consola } from 'consola'
 import { Elysia } from 'elysia'
+import { cors } from '@elysiajs/cors'
 import { DictionaryError, GameNotFoundError, InvalidMoveError, InvalidPlacementError } from './errors'
 import { registerRoutes } from './routes'
 import { GameIdParamsSchema } from './schemas'
@@ -9,6 +10,10 @@ const port = Number(process.env.PORT ?? 3000)
 const isProduction = process.env.NODE_ENV === 'production'
 
 const app = new Elysia()
+  .use(cors({
+    origin: true,
+    credentials: true,
+  }))
   .error({
     GAME_NOT_FOUND: GameNotFoundError,
     INVALID_MOVE: InvalidMoveError,

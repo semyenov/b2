@@ -3,7 +3,9 @@ import { Box, Text, useInput } from 'ink'
 import TextInput from 'ink-text-input'
 import React, { useState } from 'react'
 import { Board } from './Board'
-import { GameInfo } from './GameInfo'
+import { FullScreenLayout } from './FullScreenLayout'
+import { StatusBar } from './StatusBar'
+import { UsedWords } from './UsedWords'
 
 interface GamePlayProps {
   game: GameState
@@ -169,174 +171,95 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
     }
   }
 
+  // Build input prompt for status bar
+  const getInputPrompt = () => {
+    if (step === 'unified') {
+      if (parsed.stage === 'row') {
+        return `Ряд ${parsed.row} выбран → добавьте колонку (А-${String.fromCharCode(1039 + game.size)})`
+      }
+      if (parsed.stage === 'position') {
+        return `Позиция ${parsed.row}${String.fromCharCode(1040 + parsed.col!)} → добавьте букву (А-Я)`
+      }
+      if (parsed.stage === 'complete') {
+        return `✓ ${parsed.row}${String.fromCharCode(1040 + parsed.col!)} + ${parsed.letter} → нажмите Enter`
+      }
+      return `Введите: {ряд}{колонка}{буква} например "1АФ" (ряд 0-${game.size - 1}, кол А-${String.fromCharCode(1039 + game.size)})`
+    }
+    else {
+      return `Позиция: ${row}${col !== null ? String.fromCharCode(1040 + col) : '?'} | Буква: ${letter.toUpperCase()} → Введите слово`
+    }
+  }
+
   return (
-    <Box flexDirection="column">
-      <Box marginBottom={1} flexDirection="column">
-        <Box flexDirection="column">
-          <Box>
-            <Text bold color="magenta">
-              ID игры (поделитесь им для приглашения игроков):
-            </Text>
+    <FullScreenLayout
+      header={(
+        <Box flexDirection="column" width="100%">
+          {/* Game ID */}
+          <Box paddingX={2} paddingY={1} justifyContent="center" borderStyle="double" borderColor="magenta">
+            <Text bold color="magenta">ID: </Text>
+            <Text bold color="cyan">{game.id}</Text>
+            {currentPlayerName && (
+              <>
+                <Text dimColor> | </Text>
+                <Text>Вы: </Text>
+                <Text bold color="green">{currentPlayerName}</Text>
+              </>
+            )}
           </Box>
-          <Box marginTop={1} paddingX={1} borderStyle="round" borderColor="cyan">
-            <Text bold color="cyan">
-              {game.id}
-            </Text>
+
+          {/* Scores */}
+          <Box paddingX={2} paddingY={1} justifyContent="space-around" borderStyle="single" borderColor="cyan">
+            {game.players.map((player) => {
+              const score = game.scores[player] || 0
+              const isCurrent = player === currentPlayer
+              return (
+                <Box key={player} gap={1}>
+                  <Text color={isCurrent ? 'yellow' : 'white'} bold={isCurrent}>
+                    {isCurrent ? '> ' : ''}
+                    {player}
+                    :
+                  </Text>
+                  <Text bold color={isCurrent ? 'yellow' : 'green'}>{score}</Text>
+                </Box>
+              )
+            })}
           </Box>
         </Box>
-        {currentPlayerName && (
-          <Box marginTop={1}>
-            <Text>
-              Играете как:
-              {' '}
-            </Text>
-            <Text bold color="green">
-              {currentPlayerName}
-            </Text>
-          </Box>
-        )}
-      </Box>
-
-      <Box gap={2}>
-        <Board
-          game={game}
-          highlightRow={parsed.stage === 'row' ? parsed.row! : undefined}
-          highlightPosition={parsed.stage === 'position' || parsed.stage === 'complete' ? { row: parsed.row!, col: parsed.col! } : undefined}
-          previewLetter={parsed.stage === 'complete' ? { row: parsed.row!, col: parsed.col!, letter: parsed.letter! } : undefined}
+      )}
+      footer={(
+        <StatusBar
+          mode={mode}
+          isMyTurn={isMyTurn}
+          currentPlayer={currentPlayer}
+          currentPlayerName={currentPlayerName}
+          error={error}
+          loading={loading}
+          inputPrompt={mode === 'input' ? getInputPrompt() : undefined}
         />
-        <GameInfo game={game} />
-      </Box>
-
-      {loading && (
-        <Box marginTop={1}>
-          <Text color="yellow">Processing move...</Text>
-        </Box>
       )}
-
-      {error && (
-        <Box marginTop={1}>
-          <Text color="red">
-            Error:
-            {error}
-          </Text>
+    >
+      <Box flexDirection="column" width="100%">
+        {/* Board - takes center space */}
+        <Box paddingY={1}>
+          <Board
+            game={game}
+            highlightRow={parsed.stage === 'row' ? parsed.row! : undefined}
+            highlightPosition={parsed.stage === 'position' || parsed.stage === 'complete' ? { row: parsed.row!, col: parsed.col! } : undefined}
+            previewLetter={parsed.stage === 'complete' ? { row: parsed.row!, col: parsed.col!, letter: parsed.letter! } : undefined}
+          />
         </Box>
-      )}
 
-      {mode === 'idle' && !loading && (
-        <Box marginTop={1} flexDirection="column">
-          {!isMyTurn && currentPlayerName && (
-            <Box marginBottom={1}>
-              <Text color="yellow">
-                ⏳ Ожидание хода игрока
-                {' '}
-                {currentPlayer}
-                ...
-              </Text>
-            </Box>
-          )}
-          {isMyTurn && currentPlayerName && (
-            <Box marginBottom={1}>
-              <Text color="green" bold>
-                ▶ Ваш ход! Сделайте ход.
-              </Text>
-            </Box>
-          )}
-          <Text bold>Команды:</Text>
-          <Text>
-            {' '}
-            [м] Ход  [р] Обновить  [с] Подсказки  [б] Назад
-          </Text>
+        {/* Used Words - side by side below board */}
+        <Box paddingX={2} paddingY={1}>
+          <UsedWords game={game} />
         </Box>
-      )}
 
-      {mode === 'input' && (
-        <Box marginTop={1} flexDirection="column" borderStyle="single" padding={1}>
-          <Text bold color="cyan">Сделать ход</Text>
-
-          {step === 'unified' && (
-            <Box marginTop={1} flexDirection="column">
-              <Box marginBottom={1}>
-                <Text dimColor>
-                  Введите всё вместе:
-                  {' {'}
-                  Ряд
-                  {'}{'}
-                  Кол
-                  {'}{'}
-                  Буква
-                  {'} '}
-                  (например, "1АФ", "2БШ")
-                </Text>
-              </Box>
-              <Box marginBottom={1}>
-                <Text dimColor>
-                  • Первый символ: Ряд (0-
-                  {game.size - 1}
-                  ) → подсветит ряд
-                </Text>
-              </Box>
-              <Box marginBottom={1}>
-                <Text dimColor>
-                  • Второй символ: Колонка (А-
-                  {String.fromCharCode(1039 + game.size)}
-                  ) → подсветит ячейку
-                </Text>
-              </Box>
-              <Box marginBottom={1}>
-                <Text dimColor>
-                  • Третий символ: Буква (А-Я) → покажет
-                  {' '}
-                  <Text color="red" bold>КРАСНЫМ</Text>
-                  {' '}
-                  на доске
-                </Text>
-              </Box>
-              {parsed.stage === 'row' && (
-                <Box marginBottom={1}>
-                  <Text color="yellow">
-                    → Ряд
-                    {' '}
-                    {parsed.row}
-                    {' '}
-                    выбран
-                  </Text>
-                </Box>
-              )}
-              {parsed.stage === 'position' && (
-                <Box marginBottom={1}>
-                  <Text color="yellow">
-                    → Позиция:
-                    {' '}
-                    {parsed.row}
-                    {String.fromCharCode(1040 + parsed.col!)}
-                    {' '}
-                    (Ряд
-                    {' '}
-                    {parsed.row}
-                    , Кол
-                    {' '}
-                    {String.fromCharCode(1040 + parsed.col!)}
-                    )
-                  </Text>
-                </Box>
-              )}
-              {parsed.stage === 'complete' && (
-                <Box marginBottom={1}>
-                  <Text color="green">
-                    ✓ Готово:
-                    {' '}
-                    {parsed.row}
-                    {String.fromCharCode(1040 + parsed.col!)}
-                    {' '}
-                    +
-                    <Text color="red" bold>
-                      {parsed.letter}
-                    </Text>
-                  </Text>
-                </Box>
-              )}
+        {/* Input area when in input mode */}
+        {mode === 'input' && (
+          <Box paddingX={2} flexDirection="column">
+            {step === 'unified' && (
               <Box>
-                <Text>Ввод: </Text>
+                <Text bold color="cyan">Ввод: </Text>
                 <TextInput
                   value={unifiedInput}
                   onChange={(val) => {
@@ -346,35 +269,17 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
                   onSubmit={handleSubmit}
                 />
               </Box>
-            </Box>
-          )}
+            )}
 
-          {step === 'word' && (
-            <Box marginTop={1} flexDirection="column">
+            {step === 'word' && (
               <Box>
-                <Text color="gray">
-                  Позиция:
-                  {' '}
-                  {row}
-                  {col !== null ? String.fromCharCode(1040 + col) : '?'}
-                  {' '}
-                  | Буква:
-                  {' '}
-                  <Text color="red" bold>{letter.toUpperCase()}</Text>
-                </Text>
-              </Box>
-              <Box marginTop={1}>
-                <Text>Слово: </Text>
+                <Text bold color="cyan">Слово: </Text>
                 <TextInput value={word} onChange={setWord} onSubmit={handleSubmit} />
               </Box>
-            </Box>
-          )}
-
-          <Box marginTop={1}>
-            <Text dimColor>Нажмите ESC для отмены</Text>
+            )}
           </Box>
-        </Box>
-      )}
-    </Box>
+        )}
+      </Box>
+    </FullScreenLayout>
   )
 }

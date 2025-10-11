@@ -1,5 +1,5 @@
 import type { GameState } from '../api'
-import { Box, Text } from 'ink'
+import { Box, Text, useStdout } from 'ink'
 import React from 'react'
 
 interface BoardProps {
@@ -11,29 +11,27 @@ interface BoardProps {
 
 export function Board({ game, highlightPosition, highlightRow, previewLetter }: BoardProps) {
   const { board, size } = game
+  const { stdout } = useStdout()
+  const terminalWidth = stdout.columns || 80
+
+  // Calculate cell size to make board as large as possible while remaining square
+  // Leave space for row numbers (3 chars) and column headers
+  const availableWidth = terminalWidth - 6
+  const cellWidth = Math.max(3, Math.floor(availableWidth / size))
+  const cellHeight = 1
 
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor="cyan" padding={1}>
-      <Box marginBottom={1}>
-        <Text bold color="cyan">
-          Доска Балда (
-          {size}
-          x
-          {size}
-          )
-        </Text>
-      </Box>
-
+    <Box flexDirection="column" width="100%" alignItems="center">
       {/* Column headers (Russian letters) */}
       <Box>
         <Text>   </Text>
         {Array.from({ length: size }, (_, i) => (
-          <Text key={i} color="cyan" bold>
-            {' '}
-            {/* А=1040 in Unicode */}
-            {String.fromCharCode(1040 + i)}
-            {' '}
-          </Text>
+          <Box key={i} width={cellWidth} justifyContent="center">
+            <Text color="cyan" bold>
+              {/* А=1040 in Unicode */}
+              {String.fromCharCode(1040 + i)}
+            </Text>
+          </Box>
         ))}
       </Box>
 
@@ -43,10 +41,11 @@ export function Board({ game, highlightPosition, highlightRow, previewLetter }: 
 
         return (
           <Box key={rowIndex}>
-            <Text color={isRowHighlighted ? 'yellow' : 'gray'} bold={isRowHighlighted}>
-              {rowIndex}
-              {' '}
-            </Text>
+            <Box width={3}>
+              <Text color={isRowHighlighted ? 'yellow' : 'gray'} bold={isRowHighlighted}>
+                {rowIndex}
+              </Text>
+            </Box>
             {row.map((cell, colIndex) => {
               const isPositionHighlighted
                 = highlightPosition?.row === rowIndex
@@ -61,8 +60,10 @@ export function Board({ game, highlightPosition, highlightRow, previewLetter }: 
               return (
                 <Box
                   key={colIndex}
-                  width={3}
+                  width={cellWidth}
+                  height={cellHeight}
                   justifyContent="center"
+                  alignItems="center"
                   borderStyle="single"
                   borderColor={
                     hasPreviewLetter

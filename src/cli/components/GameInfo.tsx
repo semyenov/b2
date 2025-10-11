@@ -29,7 +29,7 @@ export function GameInfo({ game }: GameInfoProps) {
         return (
           <Box key={player} marginLeft={2}>
             <Text color={isCurrent ? 'yellow' : 'white'}>
-              {isCurrent ? '▶ ' : '  '}
+              {isCurrent ? '> ' : '  '}
               {player}
               :
               {' '}

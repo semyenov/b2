@@ -5,28 +5,42 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
+    "dev:web": "vite",
+    "build:web": "vite build",
+    "preview:web": "vite preview",
+    "dev:all": "bun run dev & bun run dev:web",
     "cli": "bun run src/cli/index.tsx",
     "check": "bun tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@elysiajs/cors": "^1.4.0",
     "@sinclair/typebox": "^0.34.41",
+    "@tailwindcss/postcss": "^4.1.14",
+    "autoprefixer": "^10.4.21",
     "consola": "^3.4.2",
     "elysia": "^1.4.10",
     "ink": "^6.3.1",
     "ink-select-input": "^6.2.0",
     "ink-spinner": "^5.0.0",
     "ink-text-input": "^6.0.0",
+    "postcss": "^8.5.6",
     "radash": "^12.1.1",
     "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.14",
     "unstorage": "^1.17.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
     "@types/bun": "^1.2.23",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "@vitejs/plugin-react": "^5.0.4",
     "bun-types": "^1.2.23",
     "eslint": "^9.37.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.9"
   }
 }

@@ -1,4 +1,5 @@
 import type { SizedDictionary } from './dictionary'
+import { Type } from '@sinclair/typebox'
 import { Elysia } from 'elysia'
 import { applyMove, createGame, findPlacementsForWord } from './engine/balda'
 import { suggestWords } from './engine/suggest'
@@ -85,7 +86,9 @@ const dictionaryPlugin = new Elysia({ name: 'dictionary', prefix: '/dictionary' 
  * Game management plugin - handles game CRUD operations
  */
 const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
-  .get('/', async () => await store.getAll())
+  .get('/', async () => await store.getAll(), {
+    response: { 200: Type.Array(GameStateSchema) },
+  })
   .post('/', async ({ body }) => {
     const id = crypto.randomUUID()
     const game = createGame(id, { size: body.size, baseWord: body.baseWord, players: body.players })

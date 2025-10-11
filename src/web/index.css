@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+body {
+  background-color: rgb(17 24 39);
+  color: rgb(243 244 246);
+}
+
+.board-cell {
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgb(75 85 99);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.board-cell-empty {
+  cursor: pointer;
+  background-color: rgb(17 24 39);
+}
+
+.board-cell-empty:hover {
+  background-color: rgb(31 41 55);
+  border-color: rgb(96 165 250);
+}
+
+.board-cell-filled {
+  background-color: rgb(31 41 55);
+  color: rgb(74 222 128);
+  cursor: default;
+}
+
+.board-cell-selected {
+  background-color: rgb(6 182 212);
+  color: rgb(255 255 255);
+  border-color: rgb(6 182 212);
+  border-width: 2px;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.board-cell-preview {
+  background-color: rgb(88 28 135);
+  color: rgb(233 213 255);
+  border-color: rgb(168 85 247);
+}
+
+.board-cell-highlight {
+  background-color: rgb(113 63 18);
+  border-color: rgb(250 204 21);
+}
