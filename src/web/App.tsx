@@ -1,11 +1,10 @@
 import type { CreateGameBody, GameState, MoveBody, Suggestion } from './lib/client'
 import { useEffect, useRef, useState } from 'react'
 import { Board } from './components/Board'
-import { BottomControls } from './components/BottomControls'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
 import { PlayerPanel } from './components/PlayerPanel'
-import { Suggestions } from './components/Suggestions'
+import { SideControls } from './components/SideControls'
 import { ApiClient } from './lib/client'
 
 type Screen = 'menu' | 'list' | 'create' | 'play'
@@ -22,13 +21,16 @@ export function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
 
   // Mouse interaction state
-  const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | undefined>()
+  const [selectedCell, setSelectedCell] = useState<
+    { row: number, col: number } | undefined
+  >()
   const [selectedLetter, setSelectedLetter] = useState<string>('')
-  const [wordPath, setWordPath] = useState<Array<{ row: number; col: number }>>([])
+  const [wordPath, setWordPath] = useState<
+    Array<{ row: number, col: number }>
+  >([])
 
   // Refs
   const apiClient = useRef(new ApiClient()).current
@@ -46,8 +48,8 @@ export function App() {
     if (screen === 'play' && gameId && !wsRef.current) {
       wsRef.current = apiClient.connectWebSocket(
         gameId,
-        (updatedGame) => setCurrentGame(updatedGame),
-        () => setError('Connection lost')
+        updatedGame => setCurrentGame(updatedGame),
+        () => setError('Connection lost'),
       )
     }
 
@@ -59,16 +61,33 @@ export function App() {
     }
   }, [screen, gameId, apiClient])
 
+  // Auto-load suggestions when it's player's turn
+  useEffect(() => {
+    if (!currentGame || !playerName || screen !== 'play') {
+      return
+    }
+
+    // Check if it's my turn
+    const isMyTurn = playerName === currentGame.players[currentGame.currentPlayerIndex]
+    
+    // Auto-load suggestions when it becomes my turn
+    if (isMyTurn && !loadingSuggestions) {
+      loadSuggestions()
+    }
+  }, [currentGame?.currentPlayerIndex, currentGame?.moves.length, playerName, screen])
+
   // API wrapper with error handling
   const apiCall = async <T,>(fn: () => Promise<T>): Promise<T | null> => {
     setLoading(true)
     setError('')
     try {
       return await fn()
-    } catch (err) {
+    }
+    catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       return null
-    } finally {
+    }
+    finally {
       setLoading(false)
     }
   }
@@ -83,7 +102,9 @@ export function App() {
 
   const joinGame = async (id: string, name: string) => {
     const game = await apiCall(() => apiClient.getGame(id))
-    if (!game) return
+    if (!game) {
+      return
+    }
 
     setCurrentGame(game)
     setPlayerName(name)
@@ -91,12 +112,16 @@ export function App() {
 
     // Try to claim a slot if not already in game
     if (!game.players.includes(name)) {
-      const slotIndex = game.players.findIndex(p => p.startsWith('Player ') && p !== 'Player 1')
+      const slotIndex = game.players.findIndex(
+        p => p.startsWith('Player ') && p !== 'Player 1',
+      )
       if (slotIndex !== -1) {
         const updated = await apiCall(() =>
-          apiClient.updatePlayerName(id, game.players[slotIndex], name)
+          apiClient.updatePlayerName(id, game.players[slotIndex], name),
         )
-        if (updated) setCurrentGame(updated)
+        if (updated) {
+          setCurrentGame(updated)
+        }
       }
     }
 
@@ -110,13 +135,104 @@ export function App() {
     }
   }
 
+  // Render helpers
+  const isMyTurn = () => {
+    return currentGame && playerName === currentGame.players[currentGame.currentPlayerIndex]
+  }
+
+  // DFS to search for word path
+  const dfsWordSearch = (
+    board: (string | null)[][],
+    word: string,
+    row: number,
+    col: number,
+    visited: Set<string>,
+    path: Array<{ row: number, col: number }>,
+  ): Array<{ row: number, col: number }> | null => {
+    if (path.length === word.length) {
+      return path
+    }
+
+    const key = `${row},${col}`
+    visited.add(key)
+
+    const nextChar = word[path.length]
+    const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]] // orthogonal only
+
+    for (const [dr, dc] of directions) {
+      const newRow = row + dr
+      const newCol = col + dc
+      const newKey = `${newRow},${newCol}`
+
+      if (
+        newRow >= 0
+        && newRow < board.length
+        && newCol >= 0
+        && newCol < board[0].length
+        && !visited.has(newKey)
+        && board[newRow][newCol] === nextChar
+      ) {
+        const result = dfsWordSearch(
+          board,
+          word,
+          newRow,
+          newCol,
+          new Set(visited),
+          [...path, { row: newRow, col: newCol }],
+        )
+        if (result) {
+          return result
+        }
+      }
+    }
+
+    return null
+  }
+
+  // Find path for a word on the board (with new letter placed)
+  const findWordPath = (
+    board: (string | null)[][],
+    newLetterPos: { row: number, col: number },
+    newLetter: string,
+    word: string,
+  ): Array<{ row: number, col: number }> | null => {
+    const rows = board.length
+    const cols = board[0].length
+
+    // Create a copy of board with the new letter
+    const tempBoard = board.map(row => [...row])
+    tempBoard[newLetterPos.row][newLetterPos.col] = newLetter
+
+    // Try to find the word starting from each cell
+    for (let startRow = 0; startRow < rows; startRow++) {
+      for (let startCol = 0; startCol < cols; startCol++) {
+        if (tempBoard[startRow][startCol] === word[0]) {
+          const path = dfsWordSearch(
+            tempBoard,
+            word,
+            startRow,
+            startCol,
+            new Set<string>(),
+            [{ row: startRow, col: startCol }],
+          )
+          if (path) {
+            return path
+          }
+        }
+      }
+    }
+
+    return null
+  }
+
   const makeMove = async (move: MoveBody) => {
-    if (!currentGame) return
+    if (!currentGame) {
+      return
+    }
     const result = await apiCall(() => apiClient.makeMove(currentGame.id, move))
     if (result) {
       // Clear interaction state after successful move
       setSuggestions([])
-      setShowSuggestions(false)
       setSelectedCell(undefined)
       setSelectedLetter('')
       setWordPath([])
@@ -125,7 +241,9 @@ export function App() {
 
   // Mouse interaction handlers
   const handleCellClick = (row: number, col: number) => {
-    if (!currentGame || !isMyTurn()) return
+    if (!currentGame || !isMyTurn()) {
+      return
+    }
 
     // If no cell selected yet, select empty cell
     if (!selectedCell) {
@@ -158,17 +276,20 @@ export function App() {
       // First letter: can be any letter on board (no adjacency requirement)
       if (wordPath.length === 0) {
         // Check if cell has a letter (existing or the selected cell with new letter)
-        const hasLetter = currentGame.board[row][col] || (row === selectedCell.row && col === selectedCell.col)
+        const hasLetter = currentGame.board[row][col]
+          || (row === selectedCell.row && col === selectedCell.col)
         if (hasLetter) {
           setWordPath([{ row, col }])
         }
-      } else {
+      }
+      else {
         // Subsequent letters: must be orthogonally adjacent to last letter in path
         const lastPos = wordPath[wordPath.length - 1]
-        const isAdjacent = (Math.abs(row - lastPos.row) === 1 && col === lastPos.col) ||
-                           (Math.abs(col - lastPos.col) === 1 && row === lastPos.row)
+        const isAdjacent = (Math.abs(row - lastPos.row) === 1 && col === lastPos.col)
+          || (Math.abs(col - lastPos.col) === 1 && row === lastPos.row)
 
-        const hasLetter = currentGame.board[row][col] || (row === selectedCell.row && col === selectedCell.col)
+        const hasLetter = currentGame.board[row][col]
+          || (row === selectedCell.row && col === selectedCell.col)
         if (isAdjacent && hasLetter) {
           setWordPath([...wordPath, { row, col }])
         }
@@ -191,7 +312,9 @@ export function App() {
   }
 
   const handleSuggestionSelect = (suggestion: Suggestion) => {
-    if (!currentGame) return
+    if (!currentGame) {
+      return
+    }
 
     setSelectedCell(suggestion.position)
     setSelectedLetter(suggestion.letter)
@@ -201,105 +324,28 @@ export function App() {
       currentGame.board,
       suggestion.position,
       suggestion.letter,
-      suggestion.word.toUpperCase()
+      suggestion.word.toUpperCase(),
     )
 
     if (path) {
       setWordPath(path)
     }
-    setShowSuggestions(false)
-  }
-
-  // Find path for a word on the board (with new letter placed)
-  const findWordPath = (
-    board: (string | null)[][],
-    newLetterPos: { row: number; col: number },
-    newLetter: string,
-    word: string
-  ): Array<{ row: number; col: number }> | null => {
-    const rows = board.length
-    const cols = board[0].length
-
-    // Create a copy of board with the new letter
-    const tempBoard = board.map(row => [...row])
-    tempBoard[newLetterPos.row][newLetterPos.col] = newLetter
-
-    // Try to find the word starting from each cell
-    for (let startRow = 0; startRow < rows; startRow++) {
-      for (let startCol = 0; startCol < cols; startCol++) {
-        if (tempBoard[startRow][startCol] === word[0]) {
-          const path = dfsWordSearch(
-            tempBoard,
-            word,
-            startRow,
-            startCol,
-            new Set<string>(),
-            [{ row: startRow, col: startCol }]
-          )
-          if (path) return path
-        }
-      }
-    }
-
-    return null
-  }
-
-  // DFS to search for word path
-  const dfsWordSearch = (
-    board: (string | null)[][],
-    word: string,
-    row: number,
-    col: number,
-    visited: Set<string>,
-    path: Array<{ row: number; col: number }>
-  ): Array<{ row: number; col: number }> | null => {
-    if (path.length === word.length) {
-      return path
-    }
-
-    const key = `${row},${col}`
-    visited.add(key)
-
-    const nextChar = word[path.length]
-    const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]] // orthogonal only
-
-    for (const [dr, dc] of directions) {
-      const newRow = row + dr
-      const newCol = col + dc
-      const newKey = `${newRow},${newCol}`
-
-      if (
-        newRow >= 0 && newRow < board.length &&
-        newCol >= 0 && newCol < board[0].length &&
-        !visited.has(newKey) &&
-        board[newRow][newCol] === nextChar
-      ) {
-        const result = dfsWordSearch(
-          board,
-          word,
-          newRow,
-          newCol,
-          new Set(visited),
-          [...path, { row: newRow, col: newCol }]
-        )
-        if (result) return result
-      }
-    }
-
-    return null
   }
 
   const loadSuggestions = async () => {
-    if (!currentGame) return
+    if (!currentGame) {
+      return
+    }
 
     setLoadingSuggestions(true)
     try {
-      const result = await apiClient.getSuggestions(currentGame.id, 10)
+      const result = await apiClient.getSuggestions(currentGame.id, 20)
       setSuggestions(result)
-      setShowSuggestions(true)
-    } catch (err) {
+    }
+    catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load suggestions')
-    } finally {
+    }
+    finally {
       setLoadingSuggestions(false)
     }
   }
@@ -311,14 +357,9 @@ export function App() {
       await createGame({
         size: 5,
         baseWord: words[0],
-        players: [name, 'Player 2']
+        players: [name, 'Player 2'],
       })
     }
-  }
-
-  // Render helpers
-  const isMyTurn = () => {
-    return currentGame && playerName === currentGame.players[currentGame.currentPlayerIndex]
   }
 
   return (
@@ -393,7 +434,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Header */}
-            <div className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex justify-between items-center">
+            <div className="bg-gray-800 border-b-2 border-gray-700 px-4 py-2.5 flex justify-between items-center shadow-depth-4 relative z-10">
               <button
                 onClick={() => {
                   setScreen('menu')
@@ -401,23 +442,30 @@ export function App() {
                   setPlayerName('')
                   setGameId('')
                   handleClearSelection()
+                  setSuggestions([])
                 }}
-                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded text-sm font-semibold transition text-gray-200"
+                className="px-4 py-1.5 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg text-sm font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
               >
                 ← Выход
               </button>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-6">
                 <div>
-                  <span className="text-gray-500 text-sm">Игра: </span>
-                  <span className="text-cyan-400 font-mono font-bold">{gameId}</span>
+                  <span className="text-gray-500 text-xs uppercase tracking-wider">
+                    Игра:
+                  </span>
+                  <span className="text-cyan-400 font-mono font-bold text-sm">
+                    {gameId.substring(0, 8)}
+                  </span>
                 </div>
-                <div className="text-lg font-bold text-gray-300">
-                  {Math.floor(currentGame.moves.length / 2)} ход
+                <div className="text-xl font-bold text-gray-200 bg-gray-700 px-3 py-1 rounded-lg shadow-depth-1">
+                  Ход
+                  {' '}
+                  {Math.floor(currentGame.moves.length / 2) + 1}
                 </div>
               </div>
               {playerName && (
-                <div className="px-3 py-1 bg-green-900 bg-opacity-30 border border-green-700 rounded">
-                  <span className="text-green-400 font-semibold text-sm">{playerName}</span>
+                <div className="px-4 py-1.5 bg-green-900 bg-opacity-40 border-2 border-green-600 rounded-lg shadow-depth-1 glow-green">
+                  <span className="text-green-300 font-bold text-sm">{playerName}</span>
                 </div>
               )}
             </div>
@@ -435,7 +483,7 @@ export function App() {
               </div>
 
               {/* Center board area */}
-              <div className="flex-1 flex flex-col items-center justify-center">
+              <div className="flex-1 flex items-center justify-center">
                 <Board
                   game={currentGame}
                   selectedCell={selectedCell}
@@ -446,6 +494,27 @@ export function App() {
                 />
               </div>
 
+              {/* Center-right controls with suggestions */}
+              {playerName && (
+                <div className="w-72 flex-shrink-0">
+                  <SideControls
+                    game={currentGame}
+                    playerName={playerName}
+                    onMove={makeMove}
+                    onGetSuggestions={loadSuggestions}
+                    disabled={!isMyTurn()}
+                    selectedCell={selectedCell}
+                    selectedLetter={selectedLetter}
+                    wordPath={wordPath}
+                    onLetterSelect={handleLetterSelect}
+                    onClearSelection={handleClearSelection}
+                    suggestions={suggestions}
+                    loadingSuggestions={loadingSuggestions}
+                    onSelectSuggestion={handleSuggestionSelect}
+                  />
+                </div>
+              )}
+
               {/* Right player panel */}
               <div className="w-48 flex-shrink-0">
                 <PlayerPanel
@@ -455,48 +524,6 @@ export function App() {
                 />
               </div>
             </div>
-
-            {/* Bottom controls */}
-            {playerName && (
-              <div className="border-t-2 border-gray-700 bg-gray-900 p-2 shadow-lg">
-                <BottomControls
-                  game={currentGame}
-                  playerName={playerName}
-                  onMove={makeMove}
-                  onGetSuggestions={loadSuggestions}
-                  disabled={!isMyTurn()}
-                  selectedCell={selectedCell}
-                  selectedLetter={selectedLetter}
-                  wordPath={wordPath}
-                  onLetterSelect={handleLetterSelect}
-                  onClearSelection={handleClearSelection}
-                />
-              </div>
-            )}
-
-            {/* Suggestions modal */}
-            {showSuggestions && (
-              <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-                <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-lg max-h-[70vh] overflow-hidden border border-gray-600">
-                  <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center bg-gray-750">
-                    <h3 className="text-sm font-bold text-cyan-400">💡 Подсказки AI ({suggestions.length})</h3>
-                    <button
-                      onClick={() => setShowSuggestions(false)}
-                      className="text-gray-400 hover:text-gray-200 text-xl w-6 h-6 flex items-center justify-center"
-                    >
-                      ×
-                    </button>
-                  </div>
-                  <div className="p-3">
-                    <Suggestions
-                      suggestions={suggestions}
-                      loading={loadingSuggestions}
-                      onSelectSuggestion={handleSuggestionSelect}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>

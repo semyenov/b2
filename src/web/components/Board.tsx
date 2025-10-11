@@ -3,9 +3,9 @@ import { useState } from 'react'
 
 interface BoardProps {
   game: GameState
-  selectedCell?: { row: number; col: number }
+  selectedCell?: { row: number, col: number }
   selectedLetter?: string
-  wordPath?: Array<{ row: number; col: number }>
+  wordPath?: Array<{ row: number, col: number }>
   onCellClick?: (row: number, col: number) => void
   disabled?: boolean
 }
@@ -16,10 +16,10 @@ export function Board({
   selectedLetter,
   wordPath = [],
   onCellClick,
-  disabled
+  disabled,
 }: BoardProps) {
   const { board, size } = game
-  const [hoveredCell, setHoveredCell] = useState<{ row: number; col: number } | null>(null)
+  const [hoveredCell, setHoveredCell] = useState<{ row: number, col: number } | null>(null)
 
   const isInWordPath = (row: number, col: number) => {
     return wordPath.some(pos => pos.row === row && pos.col === col)
@@ -34,7 +34,8 @@ export function Board({
   }
 
   const canClickCell = (row: number, col: number) => {
-    if (disabled) return false
+    if (disabled)
+      return false
 
     const cell = board[row][col]
 
@@ -58,20 +59,24 @@ export function Board({
 
     // Subsequent letters: must be orthogonally adjacent to last letter in path
     const lastPos = wordPath[wordPath.length - 1]
-    const isAdjacent = (Math.abs(row - lastPos.row) === 1 && col === lastPos.col) ||
-                       (Math.abs(col - lastPos.col) === 1 && row === lastPos.row)
+    const isAdjacent = (Math.abs(row - lastPos.row) === 1 && col === lastPos.col)
+      || (Math.abs(col - lastPos.col) === 1 && row === lastPos.row)
 
     return isAdjacent && hasLetter && !isInWordPath(row, col)
   }
 
   return (
-    <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-600">
+    <div className="bg-gray-800 p-3 rounded-lg shadow-2xl border-2 border-gray-600">
       {/* Column headers */}
       <div className="flex mb-0.5">
-        <div className="w-12 h-6" /> {/* Empty corner */}
+        <div className="w-12 h-6" />
+        {' '}
+        {/* Empty corner */}
         {Array.from({ length: size }, (_, i) => (
           <div key={i} className="w-12 h-6 flex items-center justify-center text-cyan-400 font-bold text-xs">
-            {String.fromCharCode(1040 + i)} {/* Russian letters А-Я */}
+            {String.fromCharCode(1040 + i)}
+            {' '}
+            {/* Russian letters А-Я */}
           </div>
         ))}
       </div>
@@ -108,31 +113,31 @@ export function Board({
                 onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
                 onMouseLeave={() => setHoveredCell(null)}
                 className={`
-                  w-12 h-12 border-2 flex items-center justify-center text-xl font-bold
-                  transition-all relative
+                  w-12 h-12 border-2 flex items-center justify-center text-lg font-bold
+                  transition-all relative rounded
                   ${selected
-                    ? 'bg-blue-600 border-blue-400 text-white shadow-inner'
-                    : inPath
-                    ? 'bg-green-600 border-green-400 text-white'
-                    : cell
+                ? 'bg-blue-600 border-blue-400 text-white shadow-lg'
+                : inPath
+                  ? 'bg-green-600 border-green-400 text-white shadow-md'
+                  : cell
                     ? 'bg-gray-700 border-gray-500 text-green-400'
                     : 'bg-gray-900 border-gray-700 text-gray-600'
-                  }
+              }
                   ${canClick
-                    ? 'cursor-pointer hover:shadow-md hover:transform hover:scale-105'
-                    : 'cursor-default'
-                  }
+                ? 'cursor-pointer hover:shadow-lg hover:transform hover:scale-110 hover:bg-gray-800 hover:z-10'
+                : 'cursor-default'
+              }
                   ${isHovered && canClick
-                    ? selected
-                      ? 'ring-2 ring-blue-300'
-                      : 'ring-2 ring-yellow-400 bg-gray-600'
-                    : ''
-                  }
+                ? selected
+                  ? 'ring-2 ring-blue-300'
+                  : 'ring-2 ring-yellow-400 bg-gray-600'
+                : ''
+              }
                 `}
               >
                 {displayContent}
                 {inPath && pathIdx >= 0 && (
-                  <div className="absolute top-0 right-0 w-4 h-4 bg-green-700 text-white text-[10px] rounded-bl flex items-center justify-center font-bold">
+                  <div className="absolute top-0 right-0 w-4 h-4 bg-green-800 text-white text-[9px] rounded-bl flex items-center justify-center font-bold border border-green-600">
                     {pathIdx + 1}
                   </div>
                 )}
@@ -143,17 +148,17 @@ export function Board({
       ))}
 
       {/* Legend */}
-      <div className="mt-2 flex gap-3 text-[10px] text-gray-500">
+      <div className="mt-2 flex gap-2 text-[9px] text-gray-500 justify-center">
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 bg-blue-600 border border-blue-400 rounded"></div>
+          <div className="w-2.5 h-2.5 bg-blue-600 border border-blue-400 rounded"></div>
           <span>Выбрана</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 bg-green-600 border border-green-400 rounded"></div>
+          <div className="w-2.5 h-2.5 bg-green-600 border border-green-400 rounded"></div>
           <span>Путь</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 bg-gray-600 border border-yellow-400 rounded"></div>
+          <div className="w-2.5 h-2.5 bg-gray-600 border border-yellow-400 rounded"></div>
           <span>Доступно</span>
         </div>
       </div>
