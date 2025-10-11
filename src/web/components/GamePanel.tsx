@@ -34,9 +34,9 @@ export function GamePanel({
   const currentStep = !selectedCell ? 1 : !selectedLetter ? 2 : wordPath.length < 2 ? 3 : 4
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-h-0">
       {/* Board Section - Centered */}
-      <div className="flex justify-center mb-2">
+      <div className="flex justify-center mb-2 shrink-0">
         <Board
           game={game}
           selectedCell={selectedCell}

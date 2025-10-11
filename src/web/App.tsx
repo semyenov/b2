@@ -229,7 +229,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Three column layout - fills available space */}
-            <div className="flex-1 grid grid-cols-[310px_1fr_310px] gap-6 px-6 py-3 overflow-hidden">
+            <div className="flex-1 grid grid-cols-[250px_1fr_250px] gap-6 px-6 py-3 overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}
@@ -358,8 +358,8 @@ export function App() {
                           </div>
                         )
                       : (
-                          <div className="h-full flex flex-col">
-                            <div className="text-sm text-gray-300 mb-4 font-bold uppercase tracking-wide flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <div className="text-sm text-gray-300 mb-4 font-bold uppercase tracking-wide flex items-center justify-between shrink-0">
                               <span className="flex items-center gap-2">
                                 💡 Подсказки AI
                               </span>

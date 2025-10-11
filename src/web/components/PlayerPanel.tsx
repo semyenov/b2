@@ -21,14 +21,14 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
 
   return (
     <div className={`
-      flex flex-col bg-gray-800 border-2 h-full
+      flex flex-col bg-gray-800 border-2 h-full min-h-0
       transition-all duration-200
       ${isCurrentTurn ? 'border-yellow-500 shadow-depth-3 animate-pulse-glow' : 'border-gray-600 shadow-depth-2'}
     `}
     >
       {/* Header with player info */}
       <div className={`
-        p-2 flex flex-col gap-1 border-b-2 border-gray-700
+        p-2 flex flex-col gap-1 border-b-2 border-gray-700 shrink-0
         ${isCurrentTurn ? 'bg-yellow-900 bg-opacity-30' : 'bg-gray-750'}
       `}
       >
@@ -50,7 +50,7 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
       </div>
 
       {/* Words list */}
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto p-2 min-h-0">
         <div className="text-sm text-gray-400 mb-2 font-bold uppercase tracking-wide">
           Слова:
           {' '}
