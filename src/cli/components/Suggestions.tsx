@@ -25,39 +25,38 @@ export function Suggestions({ suggestions, onClose }: SuggestionsProps) {
           )
         : (
             <Box flexDirection="column">
-              {suggestions.slice(0, 10).map((suggestion, index) => (
-                <Box key={index}>
-                  <Text color="cyan">
-                    {index + 1}
-                    .
-                  </Text>
-                  <Text>
-                    {' '}
-                    (
-                    {suggestion.position.row}
-                    ,
-                    {suggestion.position.col}
-                    )
-                  </Text>
-                  <Text color="green">
-                    {' '}
-                    +
-                    {suggestion.letter}
-                  </Text>
-                  <Text>
-                    {' '}
-                    →
-                    {' '}
-                    <Text bold>{suggestion.word}</Text>
-                  </Text>
-                  <Text color="magenta">
-                    {' '}
-                    [
-                    {suggestion.score.toFixed(1)}
-                    ]
-                  </Text>
-                </Box>
-              ))}
+              {suggestions.slice(0, 10).map((suggestion, index) => {
+                const posStr = `${suggestion.position.row}${String.fromCharCode(65 + suggestion.position.col)}`
+                return (
+                  <Box key={index}>
+                    <Text color="cyan">
+                      {index + 1}
+                      .
+                    </Text>
+                    <Text bold color="yellow">
+                      {' '}
+                      {posStr}
+                    </Text>
+                    <Text color="green">
+                      {' '}
+                      +
+                      {suggestion.letter}
+                    </Text>
+                    <Text>
+                      {' '}
+                      →
+                      {' '}
+                      <Text bold>{suggestion.word}</Text>
+                    </Text>
+                    <Text color="magenta">
+                      {' '}
+                      [
+                      {suggestion.score.toFixed(1)}
+                      ]
+                    </Text>
+                  </Box>
+                )
+              })}
             </Box>
           )}
 

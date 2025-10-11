@@ -16,9 +16,10 @@ interface GamePlayProps {
 
 export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest, onBack }: GamePlayProps) {
   const [mode, setMode] = useState<'idle' | 'input'>('idle')
-  const [step, setStep] = useState<'row' | 'col' | 'letter' | 'word'>('row')
-  const [row, setRow] = useState('')
-  const [col, setCol] = useState('')
+  const [step, setStep] = useState<'unified' | 'word'>('unified')
+  const [unifiedInput, setUnifiedInput] = useState('')
+  const [row, setRow] = useState<number | null>(null)
+  const [col, setCol] = useState<number | null>(null)
   const [letter, setLetter] = useState('')
   const [word, setWord] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -28,6 +29,45 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
   // Check if it's this player's turn - must match the exact player name in the game
   const isMyTurn = currentPlayerName !== null && currentPlayerName === currentPlayer
 
+  // Parse unified input progressively: "1" → "1A" → "1AФ"
+  const parseUnifiedInput = (input: string) => {
+    const cleaned = input.trim().toUpperCase()
+
+    // Stage 1: Just row number (e.g., "1")
+    if (cleaned.length === 1 && /^\d$/.test(cleaned)) {
+      const rowNum = Number.parseInt(cleaned, 10)
+      if (rowNum >= 0 && rowNum < game.size) {
+        return { stage: 'row' as const, row: rowNum, col: null, letter: null }
+      }
+    }
+
+    // Stage 2: Row + Column (e.g., "1A")
+    const posMatch = cleaned.match(/^(\d+)([A-Z])$/)
+    if (posMatch) {
+      const rowNum = Number.parseInt(posMatch[1], 10)
+      const colNum = posMatch[2].charCodeAt(0) - 65
+      if (rowNum >= 0 && rowNum < game.size && colNum >= 0 && colNum < game.size) {
+        return { stage: 'position' as const, row: rowNum, col: colNum, letter: null }
+      }
+    }
+
+    // Stage 3: Row + Column + Letter (e.g., "1AФ")
+    const fullMatch = cleaned.match(/^(\d+)([A-Z])([А-ЯЁA-Z])$/)
+    if (fullMatch) {
+      const rowNum = Number.parseInt(fullMatch[1], 10)
+      const colNum = fullMatch[2].charCodeAt(0) - 65
+      const letterChar = fullMatch[3]
+      if (rowNum >= 0 && rowNum < game.size && colNum >= 0 && colNum < game.size) {
+        return { stage: 'complete' as const, row: rowNum, col: colNum, letter: letterChar }
+      }
+    }
+
+    return { stage: 'invalid' as const, row: null, col: null, letter: null }
+  }
+
+  // Real-time parsing for visual feedback
+  const parsed = parseUnifiedInput(unifiedInput)
+
   useInput((input, key) => {
     if (mode === 'idle') {
       if (input === 'm') {
@@ -36,7 +76,7 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
           return
         }
         setMode('input')
-        setStep('row')
+        setStep('unified')
         setError(null)
       }
       else if (input === 'r') {
@@ -54,8 +94,9 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
     }
     else if (key.escape) {
       setMode('idle')
-      setRow('')
-      setCol('')
+      setUnifiedInput('')
+      setRow(null)
+      setCol(null)
       setLetter('')
       setWord('')
       setError(null)
@@ -63,32 +104,16 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
   })
 
   const handleSubmit = async (value: string) => {
-    if (step === 'row') {
-      const rowNum = Number(value)
-      if (Number.isNaN(rowNum) || rowNum < 0 || rowNum >= game.size) {
-        setError('Invalid row number')
+    if (step === 'unified') {
+      const parsed = parseUnifiedInput(value)
+      if (parsed.stage !== 'complete') {
+        setError(`Invalid input. Format: {row}{col}{letter} like "1AФ", "2BШ" (row 0-${game.size - 1}, col A-${String.fromCharCode(64 + game.size)})`)
         return
       }
-      setRow(value)
-      setStep('col')
-      setError(null)
-    }
-    else if (step === 'col') {
-      const colNum = Number(value)
-      if (Number.isNaN(colNum) || colNum < 0 || colNum >= game.size) {
-        setError('Invalid column number')
-        return
-      }
-      setCol(value)
-      setStep('letter')
-      setError(null)
-    }
-    else if (step === 'letter') {
-      if (value.length !== 1) {
-        setError('Enter exactly one letter')
-        return
-      }
-      setLetter(value)
+      setUnifiedInput(value)
+      setRow(parsed.row)
+      setCol(parsed.col)
+      setLetter(parsed.letter!)
       setStep('word')
       setError(null)
     }
@@ -108,16 +133,22 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
           setMode('idle')
           return
         }
+        if (row === null || col === null) {
+          setError('Invalid position')
+          setMode('idle')
+          return
+        }
         await onMove({
           playerId: currentPlayerName,
-          position: { row: Number(row), col: Number(col) },
+          position: { row, col },
           letter,
           word: value,
         })
         // Reset state
         setMode('idle')
-        setRow('')
-        setCol('')
+        setUnifiedInput('')
+        setRow(null)
+        setCol(null)
         setLetter('')
         setWord('')
         setError(null)
@@ -125,8 +156,9 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
       catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to make move')
         setMode('idle')
-        setRow('')
-        setCol('')
+        setUnifiedInput('')
+        setRow(null)
+        setCol(null)
         setLetter('')
         setWord('')
       }
@@ -167,7 +199,9 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
       <Box gap={2}>
         <Board
           game={game}
-          highlightPosition={row && col ? { row: Number(row), col: Number(col) } : undefined}
+          highlightRow={parsed.stage === 'row' ? parsed.row! : undefined}
+          highlightPosition={parsed.stage === 'position' || parsed.stage === 'complete' ? { row: parsed.row!, col: parsed.col! } : undefined}
+          previewLetter={parsed.stage === 'complete' ? { row: parsed.row!, col: parsed.col!, letter: parsed.letter! } : undefined}
         />
         <GameInfo game={game} />
       </Box>
@@ -219,43 +253,98 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
         <Box marginTop={1} flexDirection="column" borderStyle="single" padding={1}>
           <Text bold color="cyan">Make a Move</Text>
 
-          {step === 'row' && (
-            <Box marginTop={1}>
-              <Text>Row: </Text>
-              <TextInput value={row} onChange={setRow} onSubmit={handleSubmit} />
-            </Box>
-          )}
-
-          {step === 'col' && (
-            <Box marginTop={1}>
-              <Box>
-                <Text color="gray">
-                  Row:
-                  {row}
-                </Text>
-              </Box>
-              <Box marginTop={1}>
-                <Text>Col: </Text>
-                <TextInput value={col} onChange={setCol} onSubmit={handleSubmit} />
-              </Box>
-            </Box>
-          )}
-
-          {step === 'letter' && (
+          {step === 'unified' && (
             <Box marginTop={1} flexDirection="column">
-              <Box>
-                <Text color="gray">
-                  Position: (
-                  {row}
-                  ,
-                  {' '}
-                  {col}
-                  )
+              <Box marginBottom={1}>
+                <Text dimColor>
+                  Type all in one:
+                  {' {'}
+                  Row
+                  {'}{'}
+                  Col
+                  {'}{'}
+                  Letter
+                  {'} '}
+                  (e.g., "1AФ", "2BШ")
                 </Text>
               </Box>
-              <Box marginTop={1}>
-                <Text>Letter: </Text>
-                <TextInput value={letter} onChange={setLetter} onSubmit={handleSubmit} />
+              <Box marginBottom={1}>
+                <Text dimColor>
+                  • First char: Row (0-
+                  {game.size - 1}
+                  ) → highlights row
+                </Text>
+              </Box>
+              <Box marginBottom={1}>
+                <Text dimColor>
+                  • Second char: Column (A-
+                  {String.fromCharCode(64 + game.size)}
+                  ) → highlights cell
+                </Text>
+              </Box>
+              <Box marginBottom={1}>
+                <Text dimColor>
+                  • Third char: Letter (А-Я) → shows in
+                  {' '}
+                  <Text color="red" bold>RED</Text>
+                  {' '}
+                  on board
+                </Text>
+              </Box>
+              {parsed.stage === 'row' && (
+                <Box marginBottom={1}>
+                  <Text color="yellow">
+                    → Row
+                    {' '}
+                    {parsed.row}
+                    {' '}
+                    selected
+                  </Text>
+                </Box>
+              )}
+              {parsed.stage === 'position' && (
+                <Box marginBottom={1}>
+                  <Text color="yellow">
+                    → Position:
+                    {' '}
+                    {parsed.row}
+                    {String.fromCharCode(65 + parsed.col!)}
+                    {' '}
+                    (Row
+                    {' '}
+                    {parsed.row}
+                    , Col
+                    {' '}
+                    {String.fromCharCode(65 + parsed.col!)}
+                    )
+                  </Text>
+                </Box>
+              )}
+              {parsed.stage === 'complete' && (
+                <Box marginBottom={1}>
+                  <Text color="green">
+                    ✓ Complete:
+                    {' '}
+                    {parsed.row}
+                    {String.fromCharCode(65 + parsed.col!)}
+                    {' '}
+                    +
+                    <Text color="red" bold>
+                      {parsed.letter}
+                    </Text>
+                  </Text>
+                </Box>
+              )}
+              <Box>
+                <Text>Input: </Text>
+                <TextInput
+                  value={unifiedInput}
+                  onChange={(val) => {
+                    setUnifiedInput(val)
+                    setError(null)
+                  }}
+                  onSubmit={handleSubmit}
+                />
               </Box>
             </Box>
           )}
@@ -264,18 +353,14 @@ export function GamePlay({ game, currentPlayerName, onMove, onRefresh, onSuggest
             <Box marginTop={1} flexDirection="column">
               <Box>
                 <Text color="gray">
-                  Position: (
-                  {row}
-                  ,
+                  Position:
                   {' '}
-                  {col}
-                  )
-                </Text>
-              </Box>
-              <Box>
-                <Text color="gray">
-                  Letter:
-                  {letter}
+                  {row}
+                  {col !== null ? String.fromCharCode(65 + col) : '?'}
+                  {' '}
+                  | Letter:
+                  {' '}
+                  <Text color="red" bold>{letter.toUpperCase()}</Text>
                 </Text>
               </Box>
               <Box marginTop={1}>

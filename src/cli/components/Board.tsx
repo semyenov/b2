@@ -5,9 +5,11 @@ import React from 'react'
 interface BoardProps {
   game: GameState
   highlightPosition?: { row: number, col: number }
+  highlightRow?: number
+  previewLetter?: { row: number, col: number, letter: string }
 }
 
-export function Board({ game, highlightPosition }: BoardProps) {
+export function Board({ game, highlightPosition, highlightRow, previewLetter }: BoardProps) {
   const { board, size } = game
 
   return (
@@ -22,49 +24,77 @@ export function Board({ game, highlightPosition }: BoardProps) {
         </Text>
       </Box>
 
-      {/* Column headers */}
+      {/* Column headers (letters) */}
       <Box>
         <Text>   </Text>
         {Array.from({ length: size }, (_, i) => (
-          <Text key={i} color="gray">
+          <Text key={i} color="cyan" bold>
             {' '}
-            {i}
+            {String.fromCharCode(65 + i)}
             {' '}
           </Text>
         ))}
       </Box>
 
       {/* Board rows */}
-      {board.map((row, rowIndex) => (
-        <Box key={rowIndex}>
-          <Text color="gray">
-            {rowIndex}
-            {' '}
-          </Text>
-          {row.map((cell, colIndex) => {
-            const isHighlighted
-              = highlightPosition?.row === rowIndex
-                && highlightPosition?.col === colIndex
+      {board.map((row, rowIndex) => {
+        const isRowHighlighted = highlightRow === rowIndex
 
-            return (
-              <Box
-                key={colIndex}
-                width={3}
-                justifyContent="center"
-                borderStyle="single"
-                borderColor={isHighlighted ? 'yellow' : 'blue'}
-              >
-                <Text
-                  bold={isHighlighted}
-                  color={isHighlighted ? 'yellow' : cell ? 'green' : 'gray'}
+        return (
+          <Box key={rowIndex}>
+            <Text color={isRowHighlighted ? 'yellow' : 'gray'} bold={isRowHighlighted}>
+              {rowIndex}
+              {' '}
+            </Text>
+            {row.map((cell, colIndex) => {
+              const isPositionHighlighted
+                = highlightPosition?.row === rowIndex
+                  && highlightPosition?.col === colIndex
+
+              const hasPreviewLetter
+                = previewLetter?.row === rowIndex
+                  && previewLetter?.col === colIndex
+
+              const displayLetter = hasPreviewLetter ? previewLetter.letter : cell
+
+              return (
+                <Box
+                  key={colIndex}
+                  width={3}
+                  justifyContent="center"
+                  borderStyle="single"
+                  borderColor={
+                    hasPreviewLetter
+                      ? 'red'
+                      : isPositionHighlighted
+                        ? 'yellow'
+                        : isRowHighlighted
+                          ? 'yellow'
+                          : 'blue'
+                  }
                 >
-                  {cell || '·'}
-                </Text>
-              </Box>
-            )
-          })}
-        </Box>
-      ))}
+                  <Text
+                    bold={isPositionHighlighted || isRowHighlighted || hasPreviewLetter}
+                    color={
+                      hasPreviewLetter
+                        ? 'red'
+                        : isPositionHighlighted
+                          ? 'yellow'
+                          : isRowHighlighted
+                            ? 'yellow'
+                            : cell
+                              ? 'green'
+                              : 'gray'
+                    }
+                  >
+                    {displayLetter || '·'}
+                  </Text>
+                </Box>
+              )
+            })}
+          </Box>
+        )
+      })}
     </Box>
   )
 }
