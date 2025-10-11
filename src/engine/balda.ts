@@ -490,7 +490,7 @@ export function createGame(
     moves: [],
     createdAt: Date.now(),
     scores,
-    usedWords: [],
+    usedWords: [normalizeWord(baseWord)],
   }
 }
 

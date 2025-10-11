@@ -114,6 +114,17 @@ NODE_ENV=development
 
 ## Recent Updates
 
+### ✅ Critical Bug Fix: Base Word Not Marked as Used (Oct 11, 2025)
+
+Fixed a game-breaking bug where the base word was not added to `usedWords` when creating a new game. This allowed players to reuse the base word (e.g., "АФИША", "БАЛДА") for points, which violates the rules of Balda.
+
+**What was fixed:**
+- Base word is now automatically added to `usedWords` during game creation
+- Players can no longer score points by claiming the base word as their move
+- Game behavior now matches the official Balda rules
+
+For technical details, see [BASE_WORD_FIX.md](./BASE_WORD_FIX.md).
+
 ### ✅ Critical Bug Fix: Suggestions Algorithm (Oct 11, 2025)
 
 Fixed a critical bug in the AI suggestions engine where the algorithm was generating invalid move suggestions. The issue was that the DFS path traversal was not tracking visited cells within the current path, allowing the same cell to be reused multiple times in a single word.
