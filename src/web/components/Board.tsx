@@ -17,7 +17,7 @@ interface BoardProps {
 function getCellClassName(selected: boolean, inPath: boolean, hasCell: boolean, canClick: boolean, isHovered: boolean): string {
   return cn(
     // Base classes
-    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-2xl)] font-black transition-all duration-200 relative',
+    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-board)] font-black transition-all duration-200 relative',
 
     // State-based styling
     {

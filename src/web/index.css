@@ -19,6 +19,7 @@
   --text-resp-xl: clamp(1.5rem, 3vw, 2.5rem);
   --text-resp-2xl: clamp(2rem, 4.5vw, 3.75rem);
   --text-resp-3xl: clamp(2.5rem, 5vw, 4rem);
+  --text-resp-board: clamp(3.2rem, 6vw, 5.5rem);
 
   /* Responsive dimensions */
   --size-resp-cell: clamp(3.5rem, 6.5vw, 6rem);

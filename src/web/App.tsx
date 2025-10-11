@@ -143,7 +143,7 @@ export function App() {
 
       {/* Banners */}
       {error && <Banner variant="error" message={error} onClose={() => setError('')} />}
-      {loading && <Banner variant="loading" message="Loading..." />}
+      {loading && <Banner variant="loading" message="Загрузка..." />}
       {aiError && (
         <div className="fixed top-16 right-4">
           <Banner variant="warning" message={aiError} />
@@ -273,10 +273,13 @@ export function App() {
                                             makeMove(moveBody)
                                           }
                                         }}
-                                        className="px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-xs)] bg-green-900 bg-opacity-30 hover:bg-green-900 hover:bg-opacity-50 border-2 border-green-700 text-green-300 font-bold text-[var(--text-resp-sm)] transition-all duration-200 shadow-depth-2 hover:shadow-depth-3 hover:scale-105 flex items-center gap-2"
+                                        className="px-[var(--spacing-resp-xl)] py-[var(--spacing-resp-sm)] bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 border-2 border-green-400 text-white font-black text-[var(--text-resp-base)] transition-all duration-200 shadow-depth-3 hover:shadow-depth-4 hover:scale-110 flex items-center gap-3 animate-pulse-glow"
                                       >
-                                        <span>📤 send:</span>
-                                        <span className="text-[var(--text-resp-base)] font-black tracking-wider">{getFormedWord()}</span>
+                                        <span className="text-2xl">📤</span>
+                                        <div className="flex flex-col items-start">
+                                          <span className="text-xs uppercase tracking-widest opacity-90">ОТПРАВИТЬ</span>
+                                          <span className="text-[var(--text-resp-lg)] font-black tracking-wider">{getFormedWord()}</span>
+                                        </div>
                                       </button>
                                     )}
 

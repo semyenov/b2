@@ -51,11 +51,6 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName }: Playe
 
       {/* Words list */}
       <div className="flex-1 overflow-y-auto p-[clamp(0.25rem,0.5vw,0.75rem)] min-h-0">
-        <div className="text-[clamp(0.75rem,1.2vw,1rem)] text-gray-400 mb-2 font-bold uppercase tracking-wide">
-          Слова:
-          {' '}
-          {playerWords.length}
-        </div>
         <div className="space-y-2">
           {playerWords.length === 0
             ? (

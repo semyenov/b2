@@ -1,4 +1,5 @@
 import type { GameState } from '../lib/client'
+import { getRussianPluralForm } from '../utils/russianPlural'
 
 interface GameListProps {
   games: GameState[]
@@ -55,14 +56,14 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-cyan-400 mb-2">Available Games</h1>
-            <p className="text-gray-400 text-base">Join an existing game or create a new one</p>
+            <h1 className="text-3xl font-bold text-cyan-400 mb-2">Доступные игры</h1>
+            <p className="text-gray-400 text-base">Присоединитесь к существующей игре или создайте новую</p>
           </div>
           <button
             onClick={onBack}
             className="px-6 py-3 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 font-bold text-base transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
           >
-            ← Back to Menu
+            ← Назад в меню
           </button>
         </div>
 
@@ -71,13 +72,13 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
           ? (
               <div className="bg-gray-800 border-2 border-gray-700 p-12 text-center shadow-depth-2">
                 <div className="text-6xl mb-4">🎮</div>
-                <h3 className="text-xl font-bold text-gray-300 mb-2">No Games Available</h3>
-                <p className="text-gray-400 text-base mb-6">Be the first to create a game!</p>
+                <h3 className="text-xl font-bold text-gray-300 mb-2">Нет доступных игр</h3>
+                <p className="text-gray-400 text-base mb-6">Станьте первым, кто создаст игру!</p>
                 <button
                   onClick={onBack}
                   className="px-8 py-3 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 font-bold text-base text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105"
                 >
-                  Create New Game
+                  Создать новую игру
                 </button>
               </div>
             )
@@ -86,9 +87,9 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                 <div className="text-gray-400 mb-4">
                   {games.length}
                   {' '}
-                  {games.length === 1 ? 'game' : 'games'}
+                  {getRussianPluralForm(games.length, ['игра', 'игры', 'игр'])}
                   {' '}
-                  available
+                  {getRussianPluralForm(games.length, ['доступна', 'доступно', 'доступно'])}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {games.map((game) => {
@@ -100,15 +101,15 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
 
                     const statusConfig = {
                       waiting: {
-                        label: 'Waiting',
+                        label: 'Ожидание',
                         color: 'bg-yellow-900 text-yellow-300 border-yellow-600',
                       },
                       in_progress: {
-                        label: 'In Progress',
+                        label: 'В процессе',
                         color: 'bg-green-900 text-green-300 border-green-600',
                       },
                       finished: {
-                        label: 'Finished',
+                        label: 'Завершена',
                         color: 'bg-gray-700 text-gray-300 border-gray-600',
                       },
                     }
@@ -152,7 +153,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                         {/* Game Info */}
                         <div className="space-y-2 mb-5 text-sm">
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-400">Board:</span>
+                            <span className="text-gray-400">Доска:</span>
                             <span className="text-gray-200 font-mono">
                               {game.size}
                               ×
@@ -160,12 +161,12 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                             </span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-400">Turn:</span>
+                            <span className="text-gray-400">Ход:</span>
                             <span className="text-gray-200 font-bold">{turnNumber}</span>
                           </div>
                           {status === 'in_progress' && (
                             <div className="flex items-center justify-between">
-                              <span className="text-gray-400">Current:</span>
+                              <span className="text-gray-400">Сейчас:</span>
                               <span className="text-yellow-300 font-bold text-xs">
                                 {game.aiPlayers.includes(currentPlayer) && '🤖 '}
                                 {currentPlayer}
@@ -211,7 +212,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                             handleJoin(game)
                           }}
                         >
-                          Join Game →
+                          Присоединиться →
                         </button>
                       </div>
                     )

@@ -34,7 +34,7 @@ const stepConfig = {
   },
   'ready': {
     icon: '📤',
-    text: 'send:',
+    text: 'ОТПРАВИТЬ:',
     color: 'text-green-300',
     bg: 'bg-green-900 bg-opacity-30',
     border: 'border-green-700',

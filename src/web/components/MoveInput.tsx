@@ -33,7 +33,7 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
     // Parse position (e.g., "2Б" -> row:2, col:1)
     const match = position.match(/^(\d)([А-Я])$/i)
     if (!match) {
-      setError('Position format: digit + letter (e.g., 2Б)')
+      setError('Формат позиции: цифра + буква (например, 2Б)')
       return
     }
 
@@ -41,17 +41,17 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
     const col = match[2].toUpperCase().charCodeAt(0) - 1040
 
     if (row < 0 || row >= game.size || col < 0 || col >= game.size) {
-      setError(`Invalid position. Use 0-${game.size - 1} for row and А-${String.fromCharCode(1039 + game.size)} for column`)
+      setError(`Неверная позиция. Используйте 0-${game.size - 1} для строки и А-${String.fromCharCode(1039 + game.size)} для столбца`)
       return
     }
 
     if (!letter || !/^[А-Я]$/i.test(letter)) {
-      setError('Enter one Russian letter')
+      setError('Введите одну русскую букву')
       return
     }
 
     if (!word || word.length < 2) {
-      setError('Word must be at least 2 letters')
+      setError('Слово должно содержать минимум 2 буквы')
       return
     }
 
@@ -71,18 +71,18 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
   if (disabled) {
     return (
       <div className="bg-gray-800 rounded-lg p-4 text-center text-yellow-400">
-        Waiting for your turn...
+        Ожидание вашего хода...
       </div>
     )
   }
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-4 space-y-4">
-      <h3 className="text-lg font-bold text-cyan-400">Make Your Move</h3>
+      <h3 className="text-lg font-bold text-cyan-400">Сделайте ход</h3>
 
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Position</label>
+          <label className="block text-sm text-gray-400 mb-1">Позиция</label>
           <input
             type="text"
             value={position}
@@ -95,7 +95,7 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
         </div>
 
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Letter</label>
+          <label className="block text-sm text-gray-400 mb-1">Буква</label>
           <input
             type="text"
             value={letter}
@@ -108,7 +108,7 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
         </div>
 
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Word</label>
+          <label className="block text-sm text-gray-400 mb-1">Слово</label>
           <input
             type="text"
             value={word}
@@ -128,7 +128,7 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
         type="submit"
         className="w-full py-2 bg-green-600 hover:bg-green-700 rounded font-semibold transition"
       >
-        Submit Move
+        Отправить ход
       </button>
     </form>
   )

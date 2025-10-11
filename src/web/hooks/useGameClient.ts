@@ -58,7 +58,7 @@ export function useGameClient(): UseGameClientReturn {
       wsRef.current = apiClient.connectWebSocket(
         gameId,
         updatedGame => setCurrentGame(updatedGame),
-        () => setError('Connection lost'),
+        () => setError('Соединение потеряно'),
       )
     }
 
@@ -78,7 +78,7 @@ export function useGameClient(): UseGameClientReturn {
       return await fn()
     }
     catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : 'Произошла ошибка')
       return null
     }
     finally {
