@@ -244,8 +244,15 @@ export function App() {
     }
   }
 
-  const handleGameSelect = async (game: GameState) => {
+  const handleGameWatch = async (game: GameState) => {
+    // Watch game without joining as a player
     await loadGame(game.id)
+    setCurrentPlayerName(null) // No player name = observer
+  }
+
+  const handleGameJoin = async (game: GameState, playerName: string) => {
+    // Join game as a player
+    await handleJoinGame(game.id, playerName)
   }
 
   const handleMove = async (move: MoveBody) => {
@@ -333,7 +340,8 @@ export function App() {
       {!loading && screen.type === 'list' && (
         <GameList
           games={games}
-          onSelect={handleGameSelect}
+          onWatch={handleGameWatch}
+          onJoin={handleGameJoin}
           onBack={handleBack}
         />
       )}
