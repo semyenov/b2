@@ -1,10 +1,10 @@
 import type { CreateGameBody, GameState, MoveBody, Suggestion } from './lib/client'
 import { useEffect, useRef, useState } from 'react'
 import { Board } from './components/Board'
+import { BottomControls } from './components/BottomControls'
 import { CreateGame } from './components/CreateGame'
-import { GameInfo } from './components/GameInfo'
 import { GameList } from './components/GameList'
-import { MoveInput } from './components/MoveInput'
+import { PlayerPanel } from './components/PlayerPanel'
 import { Suggestions } from './components/Suggestions'
 import { ApiClient } from './lib/client'
 
@@ -24,7 +24,11 @@ export function App() {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
-  const [selectedSuggestion, setSelectedSuggestion] = useState<Suggestion | undefined>()
+
+  // Mouse interaction state
+  const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | undefined>()
+  const [selectedLetter, setSelectedLetter] = useState<string>('')
+  const [wordPath, setWordPath] = useState<Array<{ row: number; col: number }>>([])
 
   // Refs
   const apiClient = useRef(new ApiClient()).current
@@ -110,11 +114,86 @@ export function App() {
     if (!currentGame) return
     const result = await apiCall(() => apiClient.makeMove(currentGame.id, move))
     if (result) {
-      // Clear suggestions after successful move
+      // Clear interaction state after successful move
       setSuggestions([])
       setShowSuggestions(false)
-      setSelectedSuggestion(undefined)
+      setSelectedCell(undefined)
+      setSelectedLetter('')
+      setWordPath([])
     }
+  }
+
+  // Mouse interaction handlers
+  const handleCellClick = (row: number, col: number) => {
+    if (!currentGame || !isMyTurn()) return
+
+    // If no cell selected yet, select empty cell
+    if (!selectedCell) {
+      if (!currentGame.board[row][col]) {
+        setSelectedCell({ row, col })
+        setWordPath([])
+      }
+      return
+    }
+
+    // If we have cell and letter, build word path
+    if (selectedLetter) {
+      // Check if clicking the selected cell itself
+      if (row === selectedCell.row && col === selectedCell.col) {
+        // Add selected cell to path if not already there
+        if (!wordPath.some(p => p.row === row && p.col === col)) {
+          setWordPath([...wordPath, { row, col }])
+        }
+        return
+      }
+
+      // Check if cell is already in path
+      const pathIndex = wordPath.findIndex(p => p.row === row && p.col === col)
+      if (pathIndex >= 0) {
+        // Remove from path by clicking again
+        setWordPath(wordPath.slice(0, pathIndex))
+        return
+      }
+
+      // Add to path if adjacent to last position
+      const lastPos = wordPath.length > 0 ? wordPath[wordPath.length - 1] : selectedCell
+      const isAdjacent = Math.abs(row - lastPos.row) <= 1 && Math.abs(col - lastPos.col) <= 1
+
+      if (isAdjacent && currentGame.board[row][col]) {
+        setWordPath([...wordPath, { row, col }])
+      }
+    }
+  }
+
+  const handleLetterSelect = (letter: string) => {
+    if (selectedCell && !selectedLetter) {
+      setSelectedLetter(letter)
+      // Start word path with the selected cell
+      setWordPath([selectedCell])
+    }
+  }
+
+  const handleClearSelection = () => {
+    setSelectedCell(undefined)
+    setSelectedLetter('')
+    setWordPath([])
+  }
+
+  const handleSuggestionSelect = (suggestion: Suggestion) => {
+    setSelectedCell(suggestion.position)
+    setSelectedLetter(suggestion.letter)
+    // Build word path from suggestion
+    const path: Array<{ row: number; col: number }> = []
+    const word = suggestion.word.toUpperCase()
+    const board = currentGame?.board
+
+    if (!board) return
+
+    // Simple path reconstruction (this is a simplified version)
+    // In a real implementation, you'd use the same path-finding algorithm as the backend
+    path.push(suggestion.position)
+    setWordPath(path)
+    setShowSuggestions(false)
   }
 
   const loadSuggestions = async () => {
@@ -150,7 +229,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-4">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Error banner */}
       {error && (
         <div className="fixed top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
@@ -176,27 +255,29 @@ export function App() {
       {/* Main content */}
       <div className="max-w-7xl mx-auto">
         {screen === 'menu' && (
-          <div className="flex flex-col items-center justify-center min-h-[80vh]">
-            <h1 className="text-6xl font-bold text-cyan-400 mb-8">BALDA</h1>
-            <div className="flex flex-col gap-4">
-              <button
-                onClick={quickStart}
-                className="px-8 py-3 bg-green-600 hover:bg-green-700 rounded-lg text-xl font-semibold transition"
-              >
-                Quick Start 5x5
-              </button>
-              <button
-                onClick={() => setScreen('create')}
-                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-xl font-semibold transition"
-              >
-                Create Game
-              </button>
-              <button
-                onClick={loadGames}
-                className="px-8 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg text-xl font-semibold transition"
-              >
-                Join Game
-              </button>
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="bg-white rounded-lg shadow-2xl p-12 border-2 border-gray-300">
+              <h1 className="text-7xl font-bold text-blue-600 mb-12 text-center tracking-wider">БАЛДА</h1>
+              <div className="flex flex-col gap-4">
+                <button
+                  onClick={quickStart}
+                  className="px-12 py-4 bg-green-500 hover:bg-green-600 border-2 border-green-700 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                >
+                  Быстрая игра 5x5
+                </button>
+                <button
+                  onClick={() => setScreen('create')}
+                  className="px-12 py-4 bg-blue-500 hover:bg-blue-600 border-2 border-blue-700 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                >
+                  Создать игру
+                </button>
+                <button
+                  onClick={loadGames}
+                  className="px-12 py-4 bg-purple-500 hover:bg-purple-600 border-2 border-purple-700 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                >
+                  Присоединиться
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -217,103 +298,112 @@ export function App() {
         )}
 
         {screen === 'play' && currentGame && (
-          <div className="space-y-4">
+          <div className="h-screen flex flex-col bg-gradient-to-b from-blue-50 to-blue-100">
             {/* Header */}
-            <div className="bg-gray-800 rounded-lg p-4 flex justify-between items-center">
+            <div className="bg-white border-b-2 border-gray-300 px-6 py-3 flex justify-between items-center shadow-md">
               <button
                 onClick={() => {
                   setScreen('menu')
                   setCurrentGame(null)
                   setPlayerName('')
                   setGameId('')
+                  handleClearSelection()
                 }}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded transition"
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 border border-gray-400 rounded font-semibold transition"
               >
-                ← Back
+                ← Выход
               </button>
-              <div className="text-center">
-                <span className="text-gray-400">Game ID: </span>
-                <span className="text-cyan-400 font-mono font-bold">{gameId}</span>
+              <div className="flex items-center gap-6">
+                <div>
+                  <span className="text-gray-600">Игра: </span>
+                  <span className="text-blue-600 font-mono font-bold text-lg">{gameId}</span>
+                </div>
+                <div className="text-2xl font-bold text-gray-700">
+                  {Math.floor(currentGame.moves.length / 2)} ход
+                </div>
               </div>
               {playerName && (
-                <div>
-                  <span className="text-gray-400">Playing as: </span>
-                  <span className="text-green-400 font-bold">{playerName}</span>
+                <div className="px-4 py-2 bg-green-100 border border-green-300 rounded">
+                  <span className="text-green-700 font-bold">{playerName}</span>
                 </div>
               )}
             </div>
 
-            {/* Game area */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-1">
-                <GameInfo game={currentGame} currentPlayerName={playerName} />
+            {/* Main game area */}
+            <div className="flex-1 flex p-6 gap-4 overflow-hidden">
+              {/* Left player panel */}
+              <div className="w-64 flex-shrink-0">
+                <PlayerPanel
+                  game={currentGame}
+                  playerIndex={0}
+                  currentPlayerName={playerName}
+                  isLeft={true}
+                />
               </div>
 
-              <div className="lg:col-span-2 space-y-4">
-                <Board game={currentGame} />
+              {/* Center board area */}
+              <div className="flex-1 flex flex-col items-center justify-center">
+                <Board
+                  game={currentGame}
+                  selectedCell={selectedCell}
+                  selectedLetter={selectedLetter}
+                  wordPath={wordPath}
+                  onCellClick={handleCellClick}
+                  disabled={!isMyTurn()}
+                />
+              </div>
 
-                {/* Suggestions toggle button */}
-                {playerName && isMyTurn() && (
-                  <div className="flex gap-2">
+              {/* Right player panel */}
+              <div className="w-64 flex-shrink-0">
+                <PlayerPanel
+                  game={currentGame}
+                  playerIndex={1}
+                  currentPlayerName={playerName}
+                />
+              </div>
+            </div>
+
+            {/* Bottom controls */}
+            {playerName && (
+              <div className="border-t-2 border-gray-300 bg-white p-4 shadow-lg">
+                <BottomControls
+                  game={currentGame}
+                  playerName={playerName}
+                  onMove={makeMove}
+                  onGetSuggestions={loadSuggestions}
+                  disabled={!isMyTurn()}
+                  selectedCell={selectedCell}
+                  selectedLetter={selectedLetter}
+                  wordPath={wordPath}
+                  onLetterSelect={handleLetterSelect}
+                  onClearSelection={handleClearSelection}
+                />
+              </div>
+            )}
+
+            {/* Suggestions modal */}
+            {showSuggestions && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg shadow-xl max-w-2xl max-h-[80vh] overflow-hidden">
+                  <div className="p-4 border-b flex justify-between items-center">
+                    <h3 className="text-xl font-bold">Подсказки AI</h3>
                     <button
-                      onClick={loadSuggestions}
-                      disabled={loadingSuggestions}
-                      className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition flex items-center gap-2"
+                      onClick={() => setShowSuggestions(false)}
+                      className="text-gray-500 hover:text-gray-700 text-2xl"
                     >
-                      {loadingSuggestions ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          Loading...
-                        </>
-                      ) : (
-                        <>💡 Get Suggestions</>
-                      )}
+                      ×
                     </button>
-                    {showSuggestions && suggestions.length > 0 && (
-                      <button
-                        onClick={() => setShowSuggestions(false)}
-                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded transition"
-                      >
-                        Hide Suggestions
-                      </button>
-                    )}
                   </div>
-                )}
-
-                {/* Suggestions display */}
-                {showSuggestions && (
-                  <Suggestions
-                    suggestions={suggestions}
-                    loading={loadingSuggestions}
-                    onSelectSuggestion={(suggestion) => {
-                      setSelectedSuggestion(suggestion)
-                    }}
-                  />
-                )}
-
-                {playerName && (
-                  <MoveInput
-                    game={currentGame}
-                    playerName={playerName}
-                    onMove={makeMove}
-                    disabled={!isMyTurn()}
-                    suggestion={selectedSuggestion}
-                  />
-                )}
+                  <div className="p-4 overflow-y-auto max-h-[60vh]">
+                    <Suggestions
+                      suggestions={suggestions}
+                      loading={loadingSuggestions}
+                      onSelectSuggestion={handleSuggestionSelect}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-
-            {/* Used words */}
-            <div className="bg-gray-800 rounded-lg p-4">
-              <h3 className="text-xl font-bold mb-4 text-purple-400">Used Words ({currentGame.usedWords.length})</h3>
-              <div className="flex flex-wrap gap-2">
-                {currentGame.usedWords.map((word, i) => (
-                  <span key={i} className="px-2 py-1 bg-gray-700 rounded text-sm">
-                    {word}
-                  </span>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         )}
       </div>
