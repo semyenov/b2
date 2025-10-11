@@ -308,7 +308,7 @@ body {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .game-board {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .alphabet-button {
@@ -318,6 +318,89 @@ body {
 
   .player-panel {
     width: 200px;
+  }
+
+  /* Adjust menu title for mobile */
+  h1 {
+    font-size: clamp(2.5rem, 10vw, 6rem);
+  }
+
+  /* Better spacing on mobile */
+  body {
+    padding: 0.5rem;
+  }
+
+  /* Touch-friendly buttons */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Modal adjustments */
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+
+  /* Board cells more compact on small screens */
+  .w-14 {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  /* Score bar stacking */
+  .score-bar-mobile {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .game-board {
+    padding: 0.5rem;
+  }
+
+  /* Stack buttons vertically on very small screens */
+  .button-group-mobile {
+    flex-direction: column;
+  }
+
+  /* Smaller alphabet grid */
+  .alphabet-button {
+    padding: 0.2rem;
+    font-size: 0.625rem;
+  }
+
+  /* Adjust word display */
+  .word-display {
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+  }
+
+  /* Compact header */
+  header {
+    padding: 0.5rem;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 896px) and (orientation: landscape) {
+  .min-h-screen {
+    min-height: auto;
+  }
+
+  /* Compact spacing in landscape */
+  .landscape-compact {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Large screens - better centering */
+@media (min-width: 1920px) {
+  .max-w-7xl {
+    max-width: 1536px;
   }
 }
 
@@ -471,4 +554,161 @@ button:focus-visible {
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Fade in animation for menu */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+/* Slide up animation */
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out;
+}
+
+/* Scale hover */
+.hover-scale {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Smooth hover lift */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* Button ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.button-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.button-ripple::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+/* Gradient animation */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Bounce animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Loading dots */
+@keyframes loading-dots {
+  0%, 20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.loading-dot:nth-child(1) {
+  animation: loading-dots 1.4s infinite;
+}
+
+.loading-dot:nth-child(2) {
+  animation: loading-dots 1.4s 0.2s infinite;
+}
+
+.loading-dot:nth-child(3) {
+  animation: loading-dots 1.4s 0.4s infinite;
 }

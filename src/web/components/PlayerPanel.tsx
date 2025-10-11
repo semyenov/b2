@@ -7,7 +7,7 @@ interface PlayerPanelProps {
   isLeft?: boolean
 }
 
-export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft = false }: PlayerPanelProps) {
+export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isLeft = false }: PlayerPanelProps) {
   const player = game.players[playerIndex]
   const score = game.scores[player] || 0
   const isCurrentTurn = game.currentPlayerIndex === playerIndex

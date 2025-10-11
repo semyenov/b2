@@ -115,25 +115,6 @@ export function App() {
     }
   }
 
-  const handleMenuSelect = async (action: 'list' | 'create' | 'join' | 'quick5x5' | 'exit') => {
-    if (action === 'exit') {
-      exit()
-    }
-    else if (action === 'list') {
-      await loadGames()
-      setScreen({ type: 'list' })
-    }
-    else if (action === 'create') {
-      setScreen({ type: 'create' })
-    }
-    else if (action === 'join') {
-      setScreen({ type: 'join' })
-    }
-    else if (action === 'quick5x5') {
-      await handleQuickStart5x5()
-    }
-  }
-
   const handleQuickStart5x5 = async () => {
     setLoading(true)
     setError(null)
@@ -168,6 +149,25 @@ export function App() {
     }
     finally {
       setLoading(false)
+    }
+  }
+
+  const handleMenuSelect = async (action: 'list' | 'create' | 'join' | 'quick5x5' | 'exit') => {
+    if (action === 'exit') {
+      exit()
+    }
+    else if (action === 'list') {
+      await loadGames()
+      setScreen({ type: 'list' })
+    }
+    else if (action === 'create') {
+      setScreen({ type: 'create' })
+    }
+    else if (action === 'join') {
+      setScreen({ type: 'join' })
+    }
+    else if (action === 'quick5x5') {
+      await handleQuickStart5x5()
     }
   }
 

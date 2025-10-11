@@ -10,64 +10,95 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
   const { size, baseWord, error, setSize, setBaseWord, handleSubmit } = useCreateGameForm({ onSubmit })
 
   return (
-    <div className="max-w-md mx-auto mt-8">
-      <div className="bg-gray-800 rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-6 text-cyan-400">Create New Game</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen px-4">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-3">
+          Создать игру
+        </h1>
+        <p className="text-gray-400 text-lg">
+          Настройте параметры новой игры
+        </p>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Board Size</label>
-            <select
-              value={size}
-              onChange={e => setSize(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
-            >
-              <option value="3">3x3</option>
-              <option value="4">4x4</option>
-              <option value="5">5x5</option>
-              <option value="6">6x6</option>
-              <option value="7">7x7</option>
-            </select>
-          </div>
+      {/* Form Card */}
+      <div className="w-full max-w-lg">
+        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl p-8 border-2 border-gray-700">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Board Size */}
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-3">
+                📐 Размер доски
+              </label>
+              <div className="grid grid-cols-5 gap-2">
+                {['3', '4', '5', '6', '7'].map(s => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setSize(s)}
+                    className={`py-3 rounded-lg font-bold text-lg transition-all duration-200 ${
+                      size === s
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg scale-110 ring-2 ring-cyan-400'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:scale-105'
+                    }`}
+                  >
+                    {s}×{s}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">
-              Base Word (
-              {size}
-              {' '}
-              Russian letters)
-            </label>
-            <input
-              type="text"
-              value={baseWord}
-              onChange={e => setBaseWord(e.target.value.toUpperCase())}
-              className="w-full px-3 py-2 bg-gray-700 rounded border border-gray-600 focus:border-cyan-400 focus:outline-none uppercase text-center text-xl font-bold"
-              placeholder={size === '5' ? 'БАЛДА' : 'СЛОВО'}
-              maxLength={Number.parseInt(size, 10)}
-              required
-            />
-          </div>
+            {/* Base Word */}
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-3">
+                📝 Базовое слово ({size} русских букв)
+              </label>
+              <input
+                type="text"
+                value={baseWord}
+                onChange={e => setBaseWord(e.target.value.toUpperCase())}
+                className="w-full px-6 py-4 bg-gray-900 rounded-xl border-2 border-gray-700 focus:border-cyan-400 focus:outline-none uppercase text-center text-3xl font-bold tracking-widest text-cyan-400 placeholder-gray-600 transition-all"
+                placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
+                maxLength={Number.parseInt(size, 10)}
+                required
+              />
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                Слово будет размещено в центре доски
+              </p>
+            </div>
 
-          {error && (
-            <div className="text-red-400 text-sm">{error}</div>
-          )}
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-900 bg-opacity-40 border-2 border-red-600 rounded-lg p-4 flex items-center gap-3">
+                <span className="text-2xl">⚠️</span>
+                <span className="text-red-300 font-medium">{error}</span>
+              </div>
+            )}
 
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={onBack}
-              className="flex-1 py-2 bg-gray-700 hover:bg-gray-600 rounded font-semibold transition"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded font-semibold transition"
-            >
-              Create
-            </button>
-          </div>
-        </form>
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={onBack}
+                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 rounded-xl font-bold text-lg text-gray-200 transition-all duration-200 hover:scale-105 shadow-lg"
+              >
+                ← Назад
+              </button>
+              <button
+                type="submit"
+                className="flex-1 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-xl font-bold text-lg text-white transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                ✓ Создать
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Help Text */}
+        <div className="mt-6 text-center text-gray-500 text-sm space-y-1">
+          <p>💡 Совет: Выберите интересное слово для лучшей игры</p>
+          <p>🎮 Игра начнётся автоматически после создания</p>
+        </div>
       </div>
     </div>
   )
