@@ -1,7 +1,7 @@
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
 import { GamePanel } from './components/GamePanel'
-import { PlayerScoreBar } from './components/PlayerScoreBar'
+import { PlayerPanel } from './components/PlayerPanel'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameInteraction } from './hooks/useGameInteraction'
@@ -242,34 +242,49 @@ export function App() {
               )}
             </div>
 
-            {/* Main game area - Centered single column */}
+            {/* Main game area - Three column layout */}
             <div className="flex-1 overflow-auto py-6">
-              <div className="max-w-6xl mx-auto px-6 space-y-4">
-                {/* Player Score Bar */}
-                <PlayerScoreBar
-                  game={currentGame}
-                  currentPlayerName={playerName}
-                />
+              <div className="max-w-7xl mx-auto px-6">
+                <div className="grid grid-cols-[300px_1fr_300px] gap-6 items-start">
+                  {/* Left: Player 1 */}
+                  <div className="sticky top-0">
+                    <PlayerPanel
+                      game={currentGame}
+                      playerIndex={0}
+                      currentPlayerName={playerName}
+                      isLeft
+                    />
+                  </div>
 
-                {/* Game Panel */}
-                {playerName && (
-                  <GamePanel
-                    game={currentGame}
-                    playerName={playerName}
-                    onMove={makeMove}
-                    onGetSuggestions={loadSuggestions}
-                    disabled={!isMyTurn()}
-                    selectedCell={selectedCell}
-                    selectedLetter={selectedLetter}
-                    wordPath={wordPath}
-                    onCellClick={handleCellClick}
-                    onLetterSelect={handleLetterSelect}
-                    onClearSelection={handleClearSelection}
-                    suggestions={suggestions}
-                    loadingSuggestions={loadingSuggestions}
-                    onSelectSuggestion={handleSuggestionSelect}
-                  />
-                )}
+                  {/* Center: Game Panel */}
+                  {playerName && (
+                    <GamePanel
+                      game={currentGame}
+                      playerName={playerName}
+                      onMove={makeMove}
+                      onGetSuggestions={loadSuggestions}
+                      disabled={!isMyTurn()}
+                      selectedCell={selectedCell}
+                      selectedLetter={selectedLetter}
+                      wordPath={wordPath}
+                      onCellClick={handleCellClick}
+                      onLetterSelect={handleLetterSelect}
+                      onClearSelection={handleClearSelection}
+                      suggestions={suggestions}
+                      loadingSuggestions={loadingSuggestions}
+                      onSelectSuggestion={handleSuggestionSelect}
+                    />
+                  )}
+
+                  {/* Right: Player 2 */}
+                  <div className="sticky top-0">
+                    <PlayerPanel
+                      game={currentGame}
+                      playerIndex={1}
+                      currentPlayerName={playerName}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

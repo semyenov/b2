@@ -21,52 +21,59 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
 
   return (
     <div className={`
-      flex flex-col h-full bg-gray-800 border-2
+      flex flex-col bg-gray-800 border-2 h-full
       transition-all duration-200
       ${isCurrentTurn ? 'border-yellow-500 shadow-depth-3 animate-pulse-glow' : 'border-gray-600 shadow-depth-2'}
     `}
     >
       {/* Header with player info */}
       <div className={`
-        p-3 flex items-center justify-between border-b-2 border-gray-700
+        p-4 flex flex-col gap-2 border-b-2 border-gray-700
         ${isCurrentTurn ? 'bg-yellow-900 bg-opacity-30' : 'bg-gray-750'}
       `}
       >
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          {isCurrentTurn && <span className="text-yellow-400 text-base">▶</span>}
-          {isAI && <span className="text-yellow-500 text-sm">🤖</span>}
+        <div className="flex items-center gap-2">
+          {isCurrentTurn && <span className="text-yellow-400 text-lg">▶</span>}
+          {isAI && <span className="text-yellow-500 text-base">🤖</span>}
           <h3 className={`
-            font-bold text-base truncate
+            font-bold text-lg truncate
             ${isMe ? 'text-cyan-400' : isAI ? 'text-yellow-300' : 'text-gray-300'}
           `}
           >
-            {isMe ? player : player}
+            {player}
           </h3>
         </div>
-        <div className="text-2xl font-bold text-gray-100 ml-2">
-          {score}
+        <div className="flex items-baseline gap-2">
+          <span className="text-gray-500 text-sm font-semibold uppercase">Счёт:</span>
+          <span className="text-4xl font-black text-gray-100 tabular-nums">
+            {score}
+          </span>
         </div>
       </div>
 
       {/* Words list */}
-      <div className="flex-1 p-3 overflow-y-auto">
-        <div className="text-xs text-gray-500 mb-2">
-          {playerWords.length}
+      <div className="flex-1 overflow-y-auto p-3">
+        <div className="text-xs text-gray-500 mb-3 font-semibold uppercase tracking-wide">
+          Слова:
           {' '}
-          слов
+          {playerWords.length}
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           {playerWords.length === 0
             ? (
-                <div className="text-gray-600 text-xs italic">—</div>
+                <div className="text-gray-600 text-sm italic py-8 text-center">Пока нет слов</div>
               )
             : (
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-2 py-1 bg-gray-750 hover:bg-gray-700 text-xs font-mono text-gray-300 transition-all duration-200 border border-transparent hover:border-gray-600 hover:shadow-depth-1"
+                    className="px-3 py-2 bg-gray-750 hover:bg-gray-700 text-sm font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
                   >
-                    {word}
+                    <span className="font-bold">{word}</span>
+                    <span className="text-xs text-gray-500 group-hover:text-gray-400">
+                      #
+                      {i + 1}
+                    </span>
                   </div>
                 ))
               )}

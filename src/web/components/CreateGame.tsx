@@ -42,7 +42,9 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:scale-105'
                     }`}
                   >
-                    {s}×{s}
+                    {s}
+                    ×
+                    {s}
                   </button>
                 ))}
               </div>
@@ -51,7 +53,10 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
             {/* Base Word */}
             <div>
               <label className="block text-base font-bold text-gray-300 mb-3">
-                📝 Базовое слово ({size} русских букв)
+                📝 Базовое слово (
+                {size}
+                {' '}
+                русских букв)
               </label>
               <input
                 type="text"

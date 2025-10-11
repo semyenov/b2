@@ -1,7 +1,7 @@
 import type { GameState, MoveBody, Suggestion } from '../lib/client'
 import { useState } from 'react'
-import { Board } from './Board'
 import { buildMoveBody, canSubmitMove, formWordFromPath } from '../utils/moveValidation'
+import { Board } from './Board'
 
 interface GamePanelProps {
   game: GameState
@@ -83,9 +83,30 @@ export function GamePanel({
                 )
               : (
                   <>
-                    {currentStep === 1 && <div className="text-cyan-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-cyan-600 border-opacity-40 inline-block">👆 <span className="font-black">Шаг 1:</span> Выберите пустую клетку</div>}
-                    {currentStep === 2 && <div className="text-blue-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-blue-500 border-opacity-40 inline-block">🔤 <span className="font-black">Шаг 2:</span> Выберите букву</div>}
-                    {currentStep === 3 && <div className="text-purple-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-purple-500 border-opacity-40 inline-block">✍️ <span className="font-black">Шаг 3:</span> Составьте слово из букв</div>}
+                    {currentStep === 1 && (
+                      <div className="text-cyan-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-cyan-600 border-opacity-40 inline-block">
+                        👆
+                        <span className="font-black">Шаг 1:</span>
+                        {' '}
+                        Выберите пустую клетку
+                      </div>
+                    )}
+                    {currentStep === 2 && (
+                      <div className="text-blue-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-blue-500 border-opacity-40 inline-block">
+                        🔤
+                        <span className="font-black">Шаг 2:</span>
+                        {' '}
+                        Выберите букву
+                      </div>
+                    )}
+                    {currentStep === 3 && (
+                      <div className="text-purple-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-purple-500 border-opacity-40 inline-block">
+                        ✍️
+                        <span className="font-black">Шаг 3:</span>
+                        {' '}
+                        Составьте слово из букв
+                      </div>
+                    )}
                     {currentStep === 4 && <div className="text-green-200 font-black text-2xl py-2 px-4 bg-green-900 bg-opacity-40 border-2 border-green-500 inline-block shadow-depth-2">✓ Готово к отправке!</div>}
                   </>
                 )}
@@ -172,13 +193,17 @@ export function GamePanel({
       {/* AI Suggestions Modal - Unified Styling */}
       {showSuggestions && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={() => setShowSuggestions(false)}>
-          <div className="bg-gray-800 shadow-depth-4 max-w-2xl w-full max-h-[80vh] overflow-hidden border-2 border-yellow-500" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-gray-800 shadow-depth-4 max-w-2xl w-full max-h-[80vh] overflow-hidden border-2 border-yellow-500" onClick={e => e.stopPropagation()}>
             {/* Modal Header */}
             <div className="bg-yellow-900 bg-opacity-40 border-b-2 border-yellow-600 px-6 py-4 flex justify-between items-center">
               <h3 className="text-2xl font-bold text-yellow-300 flex items-center gap-2">
                 💡 AI Подсказки
                 {suggestions.length > 0 && (
-                  <span className="text-lg text-yellow-400">({suggestions.length})</span>
+                  <span className="text-lg text-yellow-400">
+                    (
+                    {suggestions.length}
+                    )
+                  </span>
                 )}
               </h3>
               <button
@@ -232,13 +257,18 @@ export function GamePanel({
                                   <div className={`
                                     w-10 h-10 flex items-center justify-center text-sm font-bold border-2
                                     ${index === 0 ? 'bg-yellow-600 text-white border-yellow-500' : index === 1 ? 'bg-gray-600 text-gray-200 border-gray-500' : index === 2 ? 'bg-amber-700 text-amber-100 border-amber-600' : 'bg-gray-700 text-gray-400 border-gray-600'}
-                                  `}>
-                                    #{index + 1}
+                                  `}
+                                  >
+                                    #
+                                    {index + 1}
                                   </div>
                                   <div>
                                     <div className="flex items-baseline gap-2 mb-1">
                                       <span className="text-yellow-400 font-mono font-bold text-lg">{posStr}</span>
-                                      <span className="text-green-400 font-bold text-xl">+{suggestion.letter}</span>
+                                      <span className="text-green-400 font-bold text-xl">
+                                        +
+                                        {suggestion.letter}
+                                      </span>
                                     </div>
                                     <div className="bg-gray-900 px-3 py-1 inline-block border border-gray-700">
                                       <span className="text-white font-bold uppercase tracking-wide text-base">

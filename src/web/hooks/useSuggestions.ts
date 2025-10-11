@@ -1,6 +1,6 @@
 import type { ApiClient, GameState, Suggestion } from '../lib/client'
 import type { Screen } from './useGameClient'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface UseSuggestionsOptions {
   apiClient: ApiClient
@@ -25,7 +25,7 @@ export function useSuggestions({
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
 
-  const loadSuggestions = async () => {
+  const loadSuggestions = useCallback(async () => {
     if (!currentGame) {
       return
     }
@@ -42,7 +42,7 @@ export function useSuggestions({
     finally {
       setLoadingSuggestions(false)
     }
-  }
+  }, [currentGame?.id, apiClient])
 
   // Auto-load suggestions when it's player's turn
   useEffect(() => {
@@ -56,10 +56,10 @@ export function useSuggestions({
 
     // Auto-load suggestions when it becomes my turn (but not for AI players)
     // AI players have their own suggestion loading in useAIPlayer hook
-    if (isMyTurn && !isAIPlayer && !loadingSuggestions) {
+    if (isMyTurn && !isAIPlayer) {
       loadSuggestions()
     }
-  }, [currentGame?.currentPlayerIndex, currentGame?.moves.length, playerName, screen, loadingSuggestions, loadSuggestions])
+  }, [currentGame?.currentPlayerIndex, playerName, screen, loadSuggestions, currentGame])
 
   const clearSuggestions = () => {
     setSuggestions([])
