@@ -28,26 +28,30 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
     >
       {/* Header with player info */}
       <div className={`
-        p-4 flex flex-col gap-2 border-b-2 border-gray-700
+        p-4 flex flex-col gap-3 border-b-2 border-gray-700
         ${isCurrentTurn ? 'bg-yellow-900 bg-opacity-30' : 'bg-gray-750'}
       `}
       >
         <div className="flex items-center gap-2">
-          {isCurrentTurn && <span className="text-yellow-400 text-lg">▶</span>}
-          {isAI && <span className="text-yellow-500 text-base">🤖</span>}
+          {isCurrentTurn && <span className="text-yellow-400 text-xl">▶</span>}
           <h3 className={`
-            font-bold text-lg truncate
-            ${isMe ? 'text-cyan-400' : isAI ? 'text-yellow-300' : 'text-gray-300'}
+            font-bold text-xl
+            ${isMe ? 'text-cyan-400' : 'text-gray-300'}
           `}
           >
-            {player}
+            Игрок
+            {' '}
+            {playerIndex + 1}
           </h3>
+          {isAI && <span className="text-yellow-500 text-lg">🤖</span>}
         </div>
-        <div className="flex items-baseline gap-2">
-          <span className="text-gray-500 text-sm font-semibold uppercase">Счёт:</span>
-          <span className="text-4xl font-black text-gray-100 tabular-nums">
+        <div className="flex items-center justify-center">
+          <span className="text-6xl font-black text-gray-100 tabular-nums">
             {score}
           </span>
+        </div>
+        <div className="text-center text-xs text-gray-500 uppercase tracking-wider">
+          Счёт
         </div>
       </div>
 

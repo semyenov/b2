@@ -69,58 +69,70 @@ export function GamePanel({
 
       {/* Controls Section - Full width */}
       <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 flex-shrink-0">
-        {/* Progress & Word Display */}
-        <div className="p-5 bg-gray-700 border-b-2 border-gray-600">
-          {/* Status Message - Enhanced Prominence */}
-          <div className="text-center">
-            {disabled
-              ? (
-                  <div className="text-orange-300 font-bold text-2xl py-3 px-5 bg-orange-900 bg-opacity-30 border-2 border-orange-600 inline-block">⏳ Ждите хода...</div>
-                )
-              : (
-                  <>
-                    {currentStep === 1 && (
-                      <div className="text-cyan-200 text-2xl font-semibold py-3 px-5 bg-gray-800 bg-opacity-60 border-2 border-cyan-600 border-opacity-40 inline-block">
-                        👆
-                        <span className="font-black">Шаг 1:</span>
-                        {' '}
-                        Выберите пустую клетку
-                      </div>
-                    )}
-                    {currentStep === 2 && (
-                      <div className="text-blue-200 text-2xl font-semibold py-3 px-5 bg-gray-800 bg-opacity-60 border-2 border-blue-500 border-opacity-40 inline-block">
-                        🔤
-                        <span className="font-black">Шаг 2:</span>
-                        {' '}
-                        Выберите букву
-                      </div>
-                    )}
-                    {currentStep === 3 && (
-                      <div className="text-purple-200 text-2xl font-semibold py-3 px-5 bg-gray-800 bg-opacity-60 border-2 border-purple-500 border-opacity-40 inline-block">
-                        ✍️
-                        <span className="font-black">Шаг 3:</span>
-                        {' '}
-                        Составьте слово из букв
-                      </div>
-                    )}
-                    {currentStep === 4 && (
-                      <div className="text-green-200 font-black text-3xl py-3 px-5 bg-green-900 bg-opacity-40 border-2 border-green-500 inline-block shadow-depth-2">
-                        ✓ Готово к отправке!
-                      </div>
-                    )}
-                  </>
-                )}
-          </div>
-
-          {/* Word Display - Balanced and Prominent */}
-          {wordFormed && (
-            <div className="bg-gray-900 border-2 border-gray-600 p-4 shadow-depth-2 mt-4">
-              <div className="text-sm text-gray-500 mb-2 text-center uppercase tracking-wider font-semibold">Сформированное слово:</div>
-              <div className="text-4xl font-bold font-mono tracking-widest text-center text-cyan-400">
-                {wordFormed}
-              </div>
-            </div>
-          )}
+        {/* Unified Status & Word Display - Fixed Height */}
+        <div className="border-b-2 border-gray-600 min-h-[60px] flex items-center justify-center">
+          {wordFormed
+            ? (
+              /* Word Display - Hero Element */
+                <div className="flex flex-col items-center justify-center gap-2 w-full py-3 bg-gray-700">
+                  <div className="text-5xl font-black font-mono tracking-widest text-center text-cyan-400">
+                    {wordFormed}
+                  </div>
+                  <div className="text-center text-sm">
+                    {disabled
+                      ? (
+                          <div className="text-orange-300 font-semibold">⏳ Ждите хода</div>
+                        )
+                      : currentStep === 4
+                        ? (
+                            <div className="text-green-300 font-bold">✓ Готово к отправке!</div>
+                          )
+                        : (
+                            <div className="text-purple-200 font-semibold">✍️ Составьте слово</div>
+                          )}
+                  </div>
+                </div>
+              )
+            : (
+              /* Status Message - No Margins */
+                <div className="w-full h-full flex items-center justify-center">
+                  {disabled
+                    ? (
+                        <div className="text-orange-300 font-bold text-2xl w-full text-center py-5 bg-orange-900 bg-opacity-40">⏳ Ждите хода...</div>
+                      )
+                    : (
+                        <>
+                          {currentStep === 1 && (
+                            <div className="text-cyan-200 text-2xl font-semibold w-full text-center py-5 bg-cyan-900 bg-opacity-20">
+                              👆
+                              {' '}
+                              <span className="font-black">Шаг 1:</span>
+                              {' '}
+                              Выберите пустую клетку
+                            </div>
+                          )}
+                          {currentStep === 2 && (
+                            <div className="text-blue-200 text-2xl font-semibold w-full text-center py-5 bg-blue-900 bg-opacity-20">
+                              🔤
+                              {' '}
+                              <span className="font-black">Шаг 2:</span>
+                              {' '}
+                              Выберите букву
+                            </div>
+                          )}
+                          {currentStep === 3 && (
+                            <div className="text-purple-200 text-2xl font-semibold w-full text-center py-5 bg-purple-900 bg-opacity-20">
+                              ✍️
+                              {' '}
+                              <span className="font-black">Шаг 3:</span>
+                              {' '}
+                              Составьте слово из букв
+                            </div>
+                          )}
+                        </>
+                      )}
+                </div>
+              )}
         </div>
 
         {/* Alphabet Grid - Enhanced Visibility */}
