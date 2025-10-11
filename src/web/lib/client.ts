@@ -14,7 +14,7 @@ export type Placement = Static<typeof PlacementSchema>
 export type Suggestion = Static<typeof SuggestionSchema>
 
 export class ApiClient {
-  constructor(private baseUrl: string = '/api') {}
+  constructor(private baseUrl: string = '/api') { }
 
   private async fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
     const response = await fetch(url, options)
@@ -23,7 +23,8 @@ export class ApiClient {
       try {
         const error = await response.json()
         message = error.error || error.message || message
-      } catch {
+      }
+      catch {
         message = response.statusText || message
       }
       throw new Error(message)
@@ -51,7 +52,8 @@ export class ApiClient {
         if (data?.type === 'game_update' && data.game) {
           onMessage(data.game)
         }
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Failed to parse WebSocket message:', error)
       }
     }
@@ -109,7 +111,7 @@ export class ApiClient {
 
   async getRandomWords(length: number, count = 1): Promise<string[]> {
     const data = await this.fetchJson<{ words: string[] }>(
-      `${this.baseUrl}/dictionary/random?length=${length}&count=${count}`
+      `${this.baseUrl}/dictionary/random?length=${length}&count=${count}`,
     )
     return data.words
   }

@@ -22,6 +22,7 @@ interface UseGameClientReturn {
   joinGame: (id: string, name: string) => Promise<void>
   makeMove: (move: MoveBody) => Promise<void>
   quickStart: () => Promise<void>
+  quickStartVsAI: () => Promise<void>
 
   // Helpers
   isMyTurn: () => boolean
@@ -150,6 +151,19 @@ export function useGameClient(): UseGameClientReturn {
     }
   }
 
+  const quickStartVsAI = async () => {
+    const words = await apiCall(() => apiClient.getRandomWords(5, 1))
+    if (words && words[0]) {
+      const name = `Player_${Date.now()}`
+      await createGame({
+        size: 5,
+        baseWord: words[0],
+        players: [name, 'Computer'],
+        aiPlayers: ['Computer'],
+      })
+    }
+  }
+
   const isMyTurn = () => {
     return !!currentGame && playerName === currentGame.players[currentGame.currentPlayerIndex]
   }
@@ -172,6 +186,7 @@ export function useGameClient(): UseGameClientReturn {
     joinGame,
     makeMove,
     quickStart,
+    quickStartVsAI,
 
     // Helpers
     isMyTurn,

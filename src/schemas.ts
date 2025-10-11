@@ -30,6 +30,12 @@ export const CreateGameBodySchema = Type.Object({
       error: 'At least one player is required',
     },
   )),
+  aiPlayers: Type.Optional(Type.Array(
+    Type.String({
+      minLength: 1,
+      error: 'AI player name cannot be empty',
+    }),
+  )),
 })
 
 export const GameIdParamsSchema = Type.Object({
@@ -104,6 +110,7 @@ export const GameStateSchema = Type.Object({
   size: Type.Integer(),
   board: Type.Array(Type.Array(Type.Union([Type.String(), Type.Null()]))),
   players: Type.Array(Type.String()),
+  aiPlayers: Type.Array(Type.String()),
   currentPlayerIndex: Type.Integer(),
   moves: Type.Array(
     Type.Object({

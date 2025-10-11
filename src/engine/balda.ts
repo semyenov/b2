@@ -151,6 +151,7 @@ export interface GameState {
   readonly size: number
   readonly board: Letter[][]
   readonly players: string[]
+  readonly aiPlayers: string[]
   readonly currentPlayerIndex: number
   readonly moves: AppliedMove[]
   readonly createdAt: number
@@ -169,7 +170,8 @@ export interface Dictionary {
 export interface GameConfig {
   readonly size: number
   readonly baseWord: string
-  readonly players?: readonly string[]
+  readonly players?: string[]
+  readonly aiPlayers?: string[]
 }
 
 /**
@@ -468,7 +470,7 @@ export function createGame(
   id: string,
   config: GameConfig,
 ): GameState {
-  const { size, baseWord, players = ['A', 'B'] } = config
+  const { size, baseWord, players = ['A', 'B'], aiPlayers = [] } = config
   if (size < 3) {
     throw new Error('Board size must be at least 3')
   }
@@ -486,6 +488,7 @@ export function createGame(
     size,
     board,
     players: normalizedPlayers,
+    aiPlayers: [...aiPlayers],
     currentPlayerIndex: 0,
     moves: [],
     createdAt: Date.now(),

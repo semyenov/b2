@@ -91,7 +91,12 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
   })
   .post('/', async ({ body }) => {
     const id = crypto.randomUUID()
-    const game = createGame(id, { size: body.size, baseWord: body.baseWord, players: body.players })
+    const game = createGame(id, {
+      size: body.size,
+      baseWord: body.baseWord,
+      players: body.players,
+      aiPlayers: body.aiPlayers,
+    })
     await store.set(game)
     return game
   }, {

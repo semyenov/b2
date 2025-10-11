@@ -2,6 +2,7 @@ import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
 import { GamePanel } from './components/GamePanel'
 import { PlayerPanel } from './components/PlayerPanel'
+import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameInteraction } from './hooks/useGameInteraction'
 import { useSuggestions } from './hooks/useSuggestions'
@@ -23,9 +24,16 @@ export function App() {
     joinGame,
     makeMove: makeApiMove,
     quickStart,
+    quickStartVsAI,
     isMyTurn,
     apiClient,
   } = useGameClient()
+
+  // AI player automation
+  const { aiThinking } = useAIPlayer({
+    currentGame,
+    apiClient,
+  })
 
   // Suggestions logic
   const {
@@ -107,6 +115,12 @@ export function App() {
                   Быстрая игра 5x5
                 </button>
                 <button
+                  onClick={quickStartVsAI}
+                  className="px-12 py-4 bg-yellow-600 hover:bg-yellow-700 border-2 border-yellow-500 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                >
+                  🤖 Играть с компьютером
+                </button>
+                <button
                   onClick={() => setScreen('create')}
                   className="px-12 py-4 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 rounded-lg text-xl font-bold text-white shadow-md hover:shadow-lg transition-all transform hover:scale-105"
                 >
@@ -162,6 +176,11 @@ export function App() {
                   {' '}
                   {Math.floor(currentGame.moves.length / 2) + 1}
                 </div>
+                {aiThinking && (
+                  <div className="px-4 py-1.5 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 rounded-lg shadow-depth-1 glow-yellow animate-pulse">
+                    <span className="text-yellow-300 font-bold text-sm">🤖 AI думает...</span>
+                  </div>
+                )}
               </div>
               {playerName && (
                 <div className="px-4 py-1.5 bg-green-900 bg-opacity-40 border-2 border-green-600 rounded-lg shadow-depth-1 glow-green">

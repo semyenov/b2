@@ -37,7 +37,7 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
       return
     }
 
-    const row = parseInt(match[1], 10)
+    const row = Number.parseInt(match[1], 10)
     const col = match[2].toUpperCase().charCodeAt(0) - 1040
 
     if (row < 0 || row >= game.size || col < 0 || col >= game.size) {
@@ -86,7 +86,7 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
           <input
             type="text"
             value={position}
-            onChange={(e) => setPosition(e.target.value.toUpperCase())}
+            onChange={e => setPosition(e.target.value.toUpperCase())}
             className="w-full px-3 py-2 bg-gray-700 rounded border border-gray-600 focus:border-cyan-400 focus:outline-none uppercase"
             placeholder="2Б"
             maxLength={2}
@@ -99,7 +99,7 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
           <input
             type="text"
             value={letter}
-            onChange={(e) => setLetter(e.target.value.toUpperCase())}
+            onChange={e => setLetter(e.target.value.toUpperCase())}
             className="w-full px-3 py-2 bg-gray-700 rounded border border-gray-600 focus:border-cyan-400 focus:outline-none uppercase text-center text-xl font-bold"
             placeholder="Ф"
             maxLength={1}
@@ -112,7 +112,7 @@ export function MoveInput({ game, playerName, onMove, disabled, suggestion }: Mo
           <input
             type="text"
             value={word}
-            onChange={(e) => setWord(e.target.value.toUpperCase())}
+            onChange={e => setWord(e.target.value.toUpperCase())}
             className="w-full px-3 py-2 bg-gray-700 rounded border border-gray-600 focus:border-cyan-400 focus:outline-none uppercase"
             placeholder="ФРАЗА"
             required
