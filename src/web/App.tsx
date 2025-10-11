@@ -129,7 +129,7 @@ export function App() {
       )}
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto">
         {screen === 'menu' && (
           <div className="flex flex-col items-center justify-center min-h-screen px-4">
             {/* Hero Section */}
@@ -229,7 +229,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Three column layout */}
-            <div className="flex-1 grid grid-cols-[300px_1fr_300px] gap-6 px-6 py-6 overflow-hidden">
+            <div className="flex-1 grid grid-cols-[300px_1fr_300px] gap-4 px-4 py-4 overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}
@@ -261,8 +261,8 @@ export function App() {
             </div>
 
             {/* Bottom Controls Bar */}
-            <div className="bg-gray-800 border-t-2 border-gray-700 px-6 py-4 shadow-depth-3 relative z-10">
-              <div className="flex items-center justify-between gap-6">
+            <div className="bg-gray-800 border-t-2 border-gray-700 px-4 pt-4 pb-3 shadow-depth-3 relative z-10 mt-4">
+              <div className="flex items-center justify-between gap-4">
                 {/* Left: Exit Button */}
                 <button
                   onClick={handleExitToMenu}
@@ -340,29 +340,29 @@ export function App() {
 
               {/* Suggestions Panel - Collapsible */}
               {showSuggestions && playerName && currentGame && (
-                <div className="border-t-2 border-gray-700 bg-gray-750 px-6 py-4">
+                <div className="border-t-2 border-gray-700 bg-gray-750 px-4 py-3 mt-3">
                   {loadingSuggestions
                     ? (
-                        <div className="flex items-center justify-center py-4">
+                        <div className="flex items-center justify-center py-2">
                           <div className="animate-spin h-8 w-8 border-b-4 border-yellow-400 mr-3"></div>
                           <div className="text-gray-400 font-semibold">Загрузка подсказок...</div>
                         </div>
                       )
                     : suggestions.length === 0
                       ? (
-                          <div className="text-center py-4 text-gray-500">
+                          <div className="text-center py-2 text-gray-500">
                             Нет доступных подсказок
                           </div>
                         )
                       : (
                           <div>
-                            <div className="text-sm text-gray-400 mb-3 font-semibold">
-                              AI Подсказки (
+                            <div className="text-xs text-gray-400 mb-2 font-semibold uppercase">
+                              💡 Подсказки:
+                              {' '}
                               {suggestions.length}
-                              )
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
-                              {suggestions.map((suggestion, index) => {
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1.5 max-h-32 overflow-y-auto">
+                              {suggestions.slice(0, 50).map((suggestion, index) => {
                                 const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
                                 const scoreColor = suggestion.score >= 10 ? 'text-green-400' : suggestion.score >= 5 ? 'text-yellow-400' : 'text-gray-400'
 
@@ -373,19 +373,19 @@ export function App() {
                                       handleSuggestionSelect(suggestion)
                                       setShowSuggestions(false)
                                     }}
-                                    className="group bg-gray-700 hover:bg-gray-650 border border-gray-600 hover:border-yellow-500 p-3 transition-all duration-200 hover:shadow-depth-2 text-left"
+                                    className="group flex flex-col bg-gray-700 hover:bg-gray-650 border border-gray-600 hover:border-yellow-500 p-2 transition-all duration-200 hover:shadow-depth-2"
                                   >
-                                    <div className="flex items-center justify-between mb-1">
-                                      <div className="flex items-center gap-2">
+                                    <div className="flex items-center justify-between mb-0.5">
+                                      <div className="flex items-center gap-1">
                                         <span className="text-xs font-bold text-gray-500">#{index + 1}</span>
-                                        <span className="text-yellow-400 font-mono font-bold text-sm">{posStr}</span>
-                                        <span className="text-green-400 font-bold text-base">+{suggestion.letter}</span>
+                                        <span className="text-yellow-400 font-mono font-bold text-xs">{posStr}</span>
+                                        <span className="text-green-400 font-bold text-sm">+{suggestion.letter}</span>
                                       </div>
-                                      <div className={`${scoreColor} font-bold text-lg`}>
+                                      <div className={`${scoreColor} font-bold text-sm`}>
                                         {suggestion.score.toFixed(0)}
                                       </div>
                                     </div>
-                                    <div className="text-white font-bold uppercase text-sm tracking-wide">
+                                    <div className="text-white font-bold uppercase text-xs tracking-wide truncate">
                                       {suggestion.word}
                                     </div>
                                   </button>

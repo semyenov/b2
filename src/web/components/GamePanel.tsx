@@ -36,7 +36,7 @@ export function GamePanel({
   return (
     <div className="flex flex-col h-full">
       {/* Board Section - Centered */}
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-3">
         <Board
           game={game}
           selectedCell={selectedCell}
@@ -50,15 +50,15 @@ export function GamePanel({
       {/* Controls Section - Full width */}
       <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 flex-shrink-0">
         {/* Unified Status & Word Display - Fixed Height */}
-        <div className="border-b-2 border-gray-600 min-h-[60px] flex items-center justify-center">
+        <div className="border-b-2 border-gray-600 min-h-[50px] flex items-center justify-center">
           {wordFormed
             ? (
               /* Word Display - Hero Element */
-                <div className="flex flex-col items-center justify-center gap-2 w-full py-3 bg-gray-700">
-                  <div className="text-5xl font-black font-mono tracking-widest text-center text-cyan-400">
+                <div className="flex flex-col items-center justify-center gap-1 w-full py-2 bg-gray-700">
+                  <div className="text-4xl font-black font-mono tracking-widest text-center text-cyan-400">
                     {wordFormed}
                   </div>
-                  <div className="text-center text-sm">
+                  <div className="text-center text-xs">
                     {disabled
                       ? (
                           <div className="text-orange-300 font-semibold">⏳ Ждите хода</div>
@@ -78,12 +78,12 @@ export function GamePanel({
                 <div className="w-full h-full flex items-center justify-center">
                   {disabled
                     ? (
-                        <div className="text-orange-300 font-bold text-2xl w-full text-center py-5 bg-orange-900 bg-opacity-40">⏳ Ждите хода...</div>
+                        <div className="text-orange-300 font-bold text-xl w-full text-center py-3 bg-orange-900 bg-opacity-40">⏳ Ждите хода...</div>
                       )
                     : (
                         <>
                           {currentStep === 1 && (
-                            <div className="text-cyan-200 text-2xl font-semibold w-full text-center py-5 bg-cyan-900 bg-opacity-20">
+                            <div className="text-cyan-200 text-xl font-semibold w-full text-center py-3 bg-cyan-900 bg-opacity-20">
                               👆
                               {' '}
                               <span className="font-black">Шаг 1:</span>
@@ -92,7 +92,7 @@ export function GamePanel({
                             </div>
                           )}
                           {currentStep === 2 && (
-                            <div className="text-blue-200 text-2xl font-semibold w-full text-center py-5 bg-blue-900 bg-opacity-20">
+                            <div className="text-blue-200 text-xl font-semibold w-full text-center py-3 bg-blue-900 bg-opacity-20">
                               🔤
                               {' '}
                               <span className="font-black">Шаг 2:</span>
@@ -101,7 +101,7 @@ export function GamePanel({
                             </div>
                           )}
                           {currentStep === 3 && (
-                            <div className="text-purple-200 text-2xl font-semibold w-full text-center py-5 bg-purple-900 bg-opacity-20">
+                            <div className="text-purple-200 text-xl font-semibold w-full text-center py-3 bg-purple-900 bg-opacity-20">
                               ✍️
                               {' '}
                               <span className="font-black">Шаг 3:</span>
@@ -116,8 +116,8 @@ export function GamePanel({
         </div>
 
         {/* Alphabet Grid - Enhanced Visibility */}
-        <div className="p-5">
-          <div className="grid grid-cols-11 gap-2 max-w-4xl mx-auto">
+        <div className="p-3">
+          <div className="grid grid-cols-11 gap-1.5 max-w-4xl mx-auto">
             {RUSSIAN_ALPHABET.map(letter => (
               <button
                 key={letter}
