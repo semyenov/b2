@@ -40,7 +40,7 @@ export function Board({
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {/* Row number */}
-          <div className="w-[clamp(2rem,3vw,3rem)] h-[clamp(3rem,5vw,4.5rem)] flex items-center justify-center text-cyan-300 font-black text-[clamp(0.875rem,1.5vw,1.25rem)]">
+          <div className="w-[clamp(2.5rem,3.5vw,3.5rem)] h-[clamp(3.5rem,6vw,5.5rem)] flex items-center justify-center text-cyan-300 font-black text-[clamp(1rem,1.75vw,1.5rem)]">
             {rowIndex}
           </div>
 
@@ -76,7 +76,7 @@ export function Board({
                 onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
                 onMouseLeave={() => setHoveredCell(null)}
                 className={`
-                  w-[clamp(3rem,5vw,4.5rem)] h-[clamp(3rem,5vw,4.5rem)] border-2 flex items-center justify-center text-[clamp(1.5rem,3vw,2.5rem)] font-black
+                  w-[clamp(3.5rem,6vw,5.5rem)] h-[clamp(3.5rem,6vw,5.5rem)] border-2 flex items-center justify-center text-[clamp(1.75rem,3.5vw,3rem)] font-black
                   transition-all duration-200 relative
                   ${selected
                 ? 'bg-blue-600 border-blue-400 text-white shadow-depth-3'
