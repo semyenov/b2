@@ -1,6 +1,6 @@
 import type { ApiClient, GameState, Suggestion } from '../lib/client'
 import type { Screen } from './useGameClient'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface UseSuggestionsOptions {
   apiClient: ApiClient
@@ -24,6 +24,7 @@ export function useSuggestions({
 }: UseSuggestionsOptions): UseSuggestionsReturn {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
+  const lastAutoLoadTurn = useRef<{ playerIndex: number, moveCount: number } | null>(null)
 
   const loadSuggestions = useCallback(async () => {
     if (!currentGame) {
@@ -50,13 +51,31 @@ export function useSuggestions({
       return
     }
 
+    // Don't auto-load on initial game state (no moves yet)
+    if (currentGame.moves.length === 0) {
+      return
+    }
+
     // Check if it's my turn
     const isMyTurn = playerName === currentGame.players[currentGame.currentPlayerIndex]
     const isAIPlayer = currentGame.aiPlayers.includes(playerName)
 
+    // Don't re-trigger if we already auto-loaded for this turn
+    if (
+      lastAutoLoadTurn.current
+      && lastAutoLoadTurn.current.playerIndex === currentGame.currentPlayerIndex
+      && lastAutoLoadTurn.current.moveCount === currentGame.moves.length
+    ) {
+      return
+    }
+
     // Auto-load suggestions when it becomes my turn (but not for AI players)
     // AI players have their own suggestion loading in useAIPlayer hook
     if (isMyTurn && !isAIPlayer) {
+      lastAutoLoadTurn.current = {
+        playerIndex: currentGame.currentPlayerIndex,
+        moveCount: currentGame.moves.length,
+      }
       loadSuggestions()
     }
   }, [currentGame?.currentPlayerIndex, playerName, screen, loadSuggestions, currentGame])
