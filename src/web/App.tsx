@@ -214,8 +214,43 @@ export function App() {
 
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
-            {/* Header with Controls */}
-            <div className="bg-gray-800 border-b-2 border-gray-700 px-6 py-4 shadow-depth-3 relative z-10">
+            {/* Main game area - Three column layout */}
+            <div className="flex-1 grid grid-cols-[300px_1fr_300px] gap-6 px-6 py-6 overflow-hidden">
+              {/* Left: Player 1 */}
+              <PlayerPanel
+                game={currentGame}
+                playerIndex={0}
+                currentPlayerName={playerName}
+                isLeft
+              />
+
+              {/* Center: Game Panel */}
+              {playerName && (
+                <GamePanel
+                  game={currentGame}
+                  playerName={playerName}
+                  disabled={!isMyTurn()}
+                  selectedCell={selectedCell}
+                  selectedLetter={selectedLetter}
+                  wordPath={wordPath}
+                  onCellClick={handleCellClick}
+                  onLetterSelect={handleLetterSelect}
+                  suggestions={suggestions}
+                  loadingSuggestions={loadingSuggestions}
+                  onSelectSuggestion={handleSuggestionSelect}
+                />
+              )}
+
+              {/* Right: Player 2 */}
+              <PlayerPanel
+                game={currentGame}
+                playerIndex={1}
+                currentPlayerName={playerName}
+              />
+            </div>
+
+            {/* Bottom Controls Bar */}
+            <div className="bg-gray-800 border-t-2 border-gray-700 px-6 py-4 shadow-depth-3 relative z-10">
               <div className="flex items-center justify-between gap-6">
                 {/* Left: Exit Button */}
                 <button
@@ -287,41 +322,6 @@ export function App() {
                   )}
                 </div>
               </div>
-            </div>
-
-            {/* Main game area - Three column layout */}
-            <div className="flex-1 grid grid-cols-[300px_1fr_300px] gap-6 px-6 py-6 overflow-hidden">
-              {/* Left: Player 1 */}
-              <PlayerPanel
-                game={currentGame}
-                playerIndex={0}
-                currentPlayerName={playerName}
-                isLeft
-              />
-
-              {/* Center: Game Panel */}
-              {playerName && (
-                <GamePanel
-                  game={currentGame}
-                  playerName={playerName}
-                  disabled={!isMyTurn()}
-                  selectedCell={selectedCell}
-                  selectedLetter={selectedLetter}
-                  wordPath={wordPath}
-                  onCellClick={handleCellClick}
-                  onLetterSelect={handleLetterSelect}
-                  suggestions={suggestions}
-                  loadingSuggestions={loadingSuggestions}
-                  onSelectSuggestion={handleSuggestionSelect}
-                />
-              )}
-
-              {/* Right: Player 2 */}
-              <PlayerPanel
-                game={currentGame}
-                playerIndex={1}
-                currentPlayerName={playerName}
-              />
             </div>
           </div>
         )}
