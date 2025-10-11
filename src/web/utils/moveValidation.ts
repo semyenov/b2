@@ -5,7 +5,7 @@
 
 import type { MoveBody } from '../lib/client'
 
-export type Position = { row: number, col: number }
+export interface Position { row: number, col: number }
 export type Board = (string | null)[][]
 
 /**

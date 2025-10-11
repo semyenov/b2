@@ -12,6 +12,7 @@ export interface Suggestion {
 
 export interface SuggestOptions {
   limit?: number
+  usedWords?: string[]
 }
 
 export function suggestWords(
@@ -21,6 +22,7 @@ export function suggestWords(
 ): Suggestion[] {
   const size = board.length
   const limit = Math.max(1, Math.min(MAX_SUGGESTION_LIMIT, options.limit ?? DEFAULT_SUGGESTION_LIMIT))
+  const usedWordsSet = new Set(options.usedWords?.map(w => normalizeWord(w)) ?? [])
 
   // Pre-calculate letter frequency for scoring
   const freq = dict.getLetterFrequency()
@@ -52,6 +54,10 @@ export function suggestWords(
       enumerateAroundOptimized(boardCopy, pos, ch, dict, (word) => {
         const normalized = normalizeWord(word)
         if (!normalized || !dict.has(normalized))
+          return
+
+        // Skip words that have already been used in this game
+        if (usedWordsSet.has(normalized))
           return
 
         const score = calculateWordScore(normalized) + rarity(ch)

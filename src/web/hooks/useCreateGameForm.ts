@@ -34,7 +34,7 @@ export function useCreateGameForm({ onSubmit }: UseCreateGameFormOptions): UseCr
     e.preventDefault()
     setError('')
 
-    const sizeNum = parseInt(size, 10)
+    const sizeNum = Number.parseInt(size, 10)
 
     // Validate word length matches board size
     if (!baseWord || baseWord.length !== sizeNum) {

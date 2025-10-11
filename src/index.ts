@@ -1,6 +1,6 @@
+import { cors } from '@elysiajs/cors'
 import { consola } from 'consola'
 import { Elysia } from 'elysia'
-import { cors } from '@elysiajs/cors'
 import { DictionaryError, GameNotFoundError, InvalidMoveError, InvalidPlacementError } from './errors'
 import { registerRoutes } from './routes'
 import { GameIdParamsSchema } from './schemas'

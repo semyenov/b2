@@ -40,13 +40,15 @@ export function Suggestions({ suggestions, onSelectSuggestion, loading }: Sugges
           >
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <span className="text-gray-500 text-xs font-mono w-6">
-                #{index + 1}
+                #
+                {index + 1}
               </span>
               <span className="text-yellow-400 text-xs font-mono">
                 {posStr}
               </span>
               <span className="text-green-400 font-bold text-sm">
-                +{suggestion.letter}
+                +
+                {suggestion.letter}
               </span>
               <span className="text-gray-600">→</span>
               <span className="text-white font-bold uppercase text-sm truncate">

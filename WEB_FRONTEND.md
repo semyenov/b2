@@ -63,14 +63,24 @@ bun run preview:web
 
 ```
 src/web/
-├── api/
+├── components/         # React presentation components
+│   ├── Board.tsx           # Game board display
+│   ├── BottomControls.tsx  # Move controls panel
+│   ├── CreateGame.tsx      # Game creation form
+│   ├── GameList.tsx        # Available games list
+│   ├── GamePanel.tsx       # Main game interface
+│   └── PlayerPanel.tsx     # Player info sidebar
+├── hooks/              # Custom React hooks
+│   ├── useAIPlayer.ts      # AI automation logic
+│   ├── useCreateGameForm.ts # Form state management
+│   ├── useGameClient.ts    # Game client state
+│   ├── useGameInteraction.ts # UI interaction state
+│   └── useSuggestions.ts   # Suggestions loading
+├── utils/              # Pure utility functions
+│   ├── boardValidation.ts  # Board interaction rules
+│   └── moveValidation.ts   # Move validation logic
+├── lib/
 │   └── client.ts       # API client for backend communication
-├── components/
-│   ├── Board.tsx       # Game board component
-│   ├── CreateGame.tsx  # Game creation form
-│   ├── GameInfo.tsx    # Game state display
-│   ├── GameList.tsx    # Available games list
-│   └── MoveInput.tsx   # Move input form
 ├── App.tsx             # Main application component
 ├── main.tsx            # Application entry point
 ├── index.html          # HTML template
@@ -79,25 +89,92 @@ src/web/
 
 ## Key Components
 
-### Board Component
-- Displays the game board with Russian letter headers
-- Highlights selected positions and preview letters
-- Responsive cell sizing
+### Presentation Components
 
-### MoveInput Component
-- Form for entering moves (position + letter + word)
-- Input validation with error messages
-- Disabled state when not player's turn
+#### Board.tsx
+- Displays the game board with coordinate labels
+- Highlights selected cells and word paths
+- Responsive cell sizing with hover effects
+- Uses `boardValidation` utilities for cell click logic
 
-### GameInfo Component
-- Shows current player, scores, and game statistics
-- Visual indicators for active player
-- Real-time score updates
+#### GamePanel.tsx
+- Main game interface with board and controls
+- Manages move input and submission
+- Integrates suggestions display
+- Uses `moveValidation` utilities for move logic
 
-### API Client
+#### PlayerPanel.tsx
+- Shows player info, scores, and word history
+- Visual indicators for current turn and AI players
+- Compact sidebar design
+
+#### BottomControls.tsx
+- Russian alphabet selection grid
+- Move submission controls
+- Word display and status
+
+#### CreateGame.tsx
+- Game creation form (size + base word)
+- Uses `useCreateGameForm` hook for logic
+- Russian letter validation
+
+#### GameList.tsx
+- Displays available games
+- Join functionality
+- Game status indicators
+
+### Custom Hooks
+
+#### useGameClient.ts
+- Core game client state management
+- API communication wrapper
+- Screen navigation
+- WebSocket connection handling
+
+#### useAIPlayer.ts
+- Automatic AI move execution
+- Uses suggestions API for move selection
+- Thinking delay for better UX
+- Error handling for AI failures
+
+#### useGameInteraction.ts
+- UI interaction state (cell selection, letter input)
+- Word path management
+- Selection clearing logic
+
+#### useSuggestions.ts
+- Auto-loads suggestions on player's turn
+- Caches suggestion results
+- Loading state management
+
+#### useCreateGameForm.ts
+- Form state management
+- Input validation
+- Russian letter checking
+- Submit handling
+
+### Pure Utilities
+
+#### boardValidation.ts
+- `canClickCell()` - Implements Balda cell click rules
+- `isPositionInWordPath()` - Path membership checking
+- `getPositionPathIndex()` - Position lookup in path
+- `isPositionSelected()` - Selection state checking
+
+All functions are pure (no side effects) and fully type-safe.
+
+#### moveValidation.ts
+- `formWordFromPath()` - Constructs word from board positions
+- `canSubmitMove()` - Validates move readiness
+- `buildMoveBody()` - Creates API request object
+
+Composable functions for move workflow.
+
+### API Client (lib/client.ts)
 - Type-safe API communication
 - WebSocket connection management
-- Automatic reconnection on disconnect
+- Automatic game state updates
+- Error handling
 
 ## Game Flow
 
@@ -133,12 +210,58 @@ The app uses a dark theme with color coding:
 - Form validation before submission
 - Network error recovery
 
+## Architecture Pattern
+
+The web frontend follows a clean architecture with strict separation of concerns:
+
+### Layered Structure
+```
+┌─────────────────────────────────────┐
+│   Presentation Layer (Components)   │  ← React components (JSX only)
+├─────────────────────────────────────┤
+│    State Layer (Custom Hooks)       │  ← React hooks (state + effects)
+├─────────────────────────────────────┤
+│   Business Logic (Pure Functions)   │  ← Utilities (no React deps)
+├─────────────────────────────────────┤
+│      API Layer (Client)              │  ← Backend communication
+└─────────────────────────────────────┘
+```
+
+### Design Principles
+1. **Components** - Thin presentation layer, minimal logic
+2. **Hooks** - Encapsulate stateful logic and side effects
+3. **Utilities** - Pure functions for business rules
+4. **Types** - Strict TypeScript throughout
+5. **Testability** - Each layer independently testable
+
+### Benefits
+- ✅ **Maintainable** - Clear separation of concerns
+- ✅ **Testable** - Pure functions easy to test
+- ✅ **Reusable** - Logic shared across components
+- ✅ **Type-safe** - Full TypeScript coverage
+- ✅ **Scalable** - Easy to extend and modify
+
+For detailed refactoring information, see [CLIENT_LOGIC_REFACTOR.md](./CLIENT_LOGIC_REFACTOR.md).
+
+## Recent Updates
+
+### ✅ Client Logic Refactoring (Oct 11, 2025)
+Extracted business logic from components into pure utilities and custom hooks:
+- Created `utils/boardValidation.ts` - Board interaction rules
+- Created `utils/moveValidation.ts` - Move validation logic
+- Created `hooks/useCreateGameForm.ts` - Form state management
+- Reduced component complexity by 17-33%
+- Improved testability and maintainability
+
+See [CLIENT_LOGIC_REFACTOR.md](./CLIENT_LOGIC_REFACTOR.md) for details.
+
 ## Future Enhancements
 
-- [ ] Move suggestions/hints
+- [x] Move suggestions/hints - ✅ Implemented with AI suggestions
 - [ ] Sound effects for moves
 - [ ] Player avatars
 - [ ] Game replay functionality
 - [ ] Statistics and leaderboard
 - [ ] Mobile app with React Native
 - [ ] Internationalization (i18n)
+- [ ] Unit tests for utilities and hooks

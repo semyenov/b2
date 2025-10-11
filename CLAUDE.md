@@ -4,12 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A **Balda** word game implementation with a Bun/Elysia backend server and React Ink CLI frontend. Balda is a word-building game where players take turns adding a single letter to a grid and forming new words using the placed letters.
+A **Balda** word game implementation with:
+- **Backend**: Bun/Elysia server with WebSocket support
+- **CLI Frontend**: React Ink terminal interface
+- **Web Frontend**: React/Vite modern web UI with Tailwind CSS
+
+Balda is a word-building game where players take turns adding a single letter to a grid and forming new words using the placed letters.
 
 ## Development Commands
 
 - `bun run dev` - Start backend server with hot reload (port 3000)
 - `bun run cli` - Launch interactive CLI frontend (requires server running)
+- `bun run dev:web` - Start web frontend dev server (port 5173)
+- `bun run dev:all` - Start both backend and web frontend
+- `bun run build:web` - Build web frontend for production
 - `bun run check` - Type-check the codebase (TypeScript noEmit)
 - `bun run lint` - Check ESLint issues
 - `bun run lint:fix` - Auto-fix ESLint issues
@@ -72,6 +80,54 @@ Interactive terminal UI built with React Ink:
   - `CreateGame.tsx` / `JoinGame.tsx` - Game setup forms
   - `GameList.tsx` - Browse existing games
   - `MainMenu.tsx` - Navigation hub
+
+### Web Frontend (`src/web/`)
+
+Modern React-based web UI built with Vite and Tailwind CSS, following clean architecture principles:
+
+#### Layered Architecture
+- **Presentation Layer** (`components/`): React components (thin, JSX-focused)
+- **State Layer** (`hooks/`): Custom React hooks (state management + side effects)
+- **Business Logic** (`utils/`): Pure functions (no React dependencies)
+- **API Layer** (`lib/`): Backend communication
+
+#### Components (`src/web/components/`)
+- `App.tsx` - Main application with screen routing
+- `Board.tsx` - Game board display with cell highlighting
+- `GamePanel.tsx` - Main game interface
+- `PlayerPanel.tsx` - Player info sidebar with score and word history
+- `BottomControls.tsx` - Move controls and Russian alphabet grid
+- `CreateGame.tsx` - Game creation form
+- `GameList.tsx` - Available games browser
+
+#### Custom Hooks (`src/web/hooks/`)
+- `useGameClient.ts` - Core game client state, API calls, screen navigation
+- `useAIPlayer.ts` - AI player automation (auto-plays moves for AI)
+- `useGameInteraction.ts` - UI interaction state (cell selection, word path)
+- `useSuggestions.ts` - Auto-loads AI move suggestions on player's turn
+- `useCreateGameForm.ts` - Form state management with validation
+
+#### Pure Utilities (`src/web/utils/`)
+- `boardValidation.ts` - Board cell click rules (Balda game logic)
+  - `canClickCell()` - Implements adjacency rules, letter placement validation
+  - `isPositionInWordPath()`, `getPositionPathIndex()`, `isPositionSelected()`
+- `moveValidation.ts` - Move validation and construction
+  - `formWordFromPath()` - Constructs word from selected positions
+  - `canSubmitMove()` - Validates move readiness
+  - `buildMoveBody()` - Creates API request payload
+
+#### API Client (`src/web/lib/client.ts`)
+- Type-safe API methods for all backend endpoints
+- WebSocket connection for real-time game updates
+- Automatic state synchronization
+
+#### Key Features
+- **Real-time Updates**: WebSocket integration for live game state
+- **AI Players**: Automatic move execution for AI opponents
+- **Auto Suggestions**: Suggestions load automatically on player's turn
+- **Dark Theme**: Modern UI styled with Tailwind CSS
+- **Quick Start**: One-click 5x5 game with random Russian words
+- **Separation of Concerns**: Components contain minimal logic, utilities are pure
 
 ### Key Implementation Patterns
 

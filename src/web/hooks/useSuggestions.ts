@@ -1,5 +1,4 @@
-import type { GameState, Suggestion } from '../lib/client'
-import type { ApiClient } from '../lib/client'
+import type { ApiClient, GameState, Suggestion } from '../lib/client'
 import type { Screen } from './useGameClient'
 import { useEffect, useState } from 'react'
 
@@ -34,9 +33,11 @@ export function useSuggestions({
 
     // Check if it's my turn
     const isMyTurn = playerName === currentGame.players[currentGame.currentPlayerIndex]
+    const isAIPlayer = currentGame.aiPlayers.includes(playerName)
 
-    // Auto-load suggestions when it becomes my turn
-    if (isMyTurn && !loadingSuggestions) {
+    // Auto-load suggestions when it becomes my turn (but not for AI players)
+    // AI players have their own suggestion loading in useAIPlayer hook
+    if (isMyTurn && !isAIPlayer && !loadingSuggestions) {
       loadSuggestions()
     }
   }, [currentGame?.currentPlayerIndex, currentGame?.moves.length, playerName, screen])

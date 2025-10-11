@@ -37,10 +37,12 @@ export function SuggestionsGrid({ suggestions, onSelectSuggestion, loading }: Su
           <span>AI ПОДСКАЗКИ</span>
         </h3>
         <span className="text-xs text-gray-500 bg-gray-700 px-2 py-1 rounded-full">
-          {suggestions.length} слов
+          {suggestions.length}
+          {' '}
+          слов
         </span>
       </div>
-      
+
       <div className="flex-1 overflow-y-auto">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
           {suggestions.map((suggestion, index) => {
@@ -89,4 +91,3 @@ export function SuggestionsGrid({ suggestions, onSelectSuggestion, loading }: Su
     </div>
   )
 }
-

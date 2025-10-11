@@ -1,7 +1,7 @@
 import type { GameState, MoveBody, Suggestion } from '../lib/client'
 import { useState } from 'react'
-import { Board } from './Board'
 import { buildMoveBody, canSubmitMove, formWordFromPath } from '../utils/moveValidation'
+import { Board } from './Board'
 
 interface GamePanelProps {
   game: GameState
@@ -206,12 +206,16 @@ export function GamePanel({
                                       <div className={`
                                         w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold
                                         ${index === 0 ? 'bg-yellow-600 text-white' : 'bg-gray-900 text-gray-500 border border-gray-700'}
-                                      `}>
+                                      `}
+                                      >
                                         {index + 1}
                                       </div>
                                       <div className="flex items-baseline gap-1">
                                         <span className="text-yellow-400 font-mono font-bold text-xs">{posStr}</span>
-                                        <span className="text-green-400 font-bold text-sm">+{suggestion.letter}</span>
+                                        <span className="text-green-400 font-bold text-sm">
+                                          +
+                                          {suggestion.letter}
+                                        </span>
                                       </div>
                                     </div>
 

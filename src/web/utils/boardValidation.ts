@@ -3,7 +3,7 @@
  * Contains game rules for cell click validation
  */
 
-export type Position = { row: number, col: number }
+export interface Position { row: number, col: number }
 export type Board = (string | null)[][]
 
 interface CanClickCellParams {

@@ -132,13 +132,13 @@ export function GameList({ games, onWatch, onJoin, onBack }: GameListProps) {
         <Box marginTop={1} flexDirection="column">
           <Text dimColor>Нажмите Enter для присоединения как игрок</Text>
           <Box marginTop={1}>
-          <Text dimColor>
-            Или нажмите
-            {' '}
-            <Text bold>[ц]</Text>
-            {' '}
-            только для просмотра
-          </Text>
+            <Text dimColor>
+              Или нажмите
+              {' '}
+              <Text bold>[ц]</Text>
+              {' '}
+              только для просмотра
+            </Text>
           </Box>
           <Text dimColor>Нажмите ESC для отмены</Text>
         </Box>

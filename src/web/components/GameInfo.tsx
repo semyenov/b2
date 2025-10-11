@@ -52,8 +52,14 @@ export function GameInfo({ game, currentPlayerName }: GameInfoProps) {
 
       {/* Game stats */}
       <div className="text-gray-400 space-y-1">
-        <div>Ходов сделано: {game.moves.length}</div>
-        <div>Слов использовано: {game.usedWords.length}</div>
+        <div>
+          Ходов сделано:
+          {game.moves.length}
+        </div>
+        <div>
+          Слов использовано:
+          {game.usedWords.length}
+        </div>
       </div>
     </div>
   )

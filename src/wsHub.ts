@@ -27,10 +27,73 @@ function isClientReady(client: WsClient): boolean {
 const gameIdToClients = new Map<string, Set<WsClient>>()
 const clientToGameId = new Map<WsClient, string>()
 
+// Track archive timeouts for games with no clients
+const archiveTimeouts = new Map<string, NodeJS.Timeout>()
+
+// Archive delay: 5 minutes after last client disconnects
+const ARCHIVE_DELAY_MS = 5 * 60 * 1000
+
+/**
+ * Callback function to archive a game (injected from routes)
+ */
+let archiveGameCallback: ((gameId: string) => Promise<void>) | null = null
+
+/**
+ * Set the callback function to archive games
+ */
+export function setArchiveCallback(callback: (gameId: string) => Promise<void>): void {
+  archiveGameCallback = callback
+}
+
+/**
+ * Schedule a game for archiving after all clients disconnect
+ */
+function scheduleGameArchive(gameId: string): void {
+  // Clear any existing timeout
+  const existingTimeout = archiveTimeouts.get(gameId)
+  if (existingTimeout) {
+    clearTimeout(existingTimeout)
+  }
+
+  // Schedule new archive timeout
+  const timeout = setTimeout(async () => {
+    consola.info(`Archiving game ${gameId} after all clients disconnected`)
+    archiveTimeouts.delete(gameId)
+
+    if (archiveGameCallback) {
+      try {
+        await archiveGameCallback(gameId)
+        consola.info(`Game ${gameId} archived successfully`)
+      }
+      catch (error) {
+        consola.error(`Failed to archive game ${gameId}:`, error)
+      }
+    }
+  }, ARCHIVE_DELAY_MS)
+
+  archiveTimeouts.set(gameId, timeout)
+  consola.debug(`Game ${gameId} scheduled for archiving in ${ARCHIVE_DELAY_MS / 1000}s`)
+}
+
+/**
+ * Cancel scheduled archive for a game (when clients reconnect)
+ */
+function cancelGameArchive(gameId: string): void {
+  const timeout = archiveTimeouts.get(gameId)
+  if (timeout) {
+    clearTimeout(timeout)
+    archiveTimeouts.delete(gameId)
+    consola.debug(`Cancelled archive for game ${gameId}`)
+  }
+}
+
 /**
  * Add a WebSocket client to a game room for broadcasts
  */
 export function addClient(gameId: string, client: WsClient): void {
+  // Cancel any pending archive for this game
+  cancelGameArchive(gameId)
+
   let set = gameIdToClients.get(gameId)
   if (!set) {
     set = new Set<WsClient>()
@@ -53,7 +116,9 @@ export function removeClient(client: WsClient): void {
       consola.debug(`Client removed from game ${gameId}, remaining: ${set.size}`)
       if (set.size === 0) {
         gameIdToClients.delete(gameId)
-        consola.debug(`No more clients for game ${gameId}, cleaned up room`)
+        consola.debug(`No more clients for game ${gameId}, scheduling archive`)
+        // Schedule game for archiving after delay
+        scheduleGameArchive(gameId)
       }
     }
     clientToGameId.delete(client)

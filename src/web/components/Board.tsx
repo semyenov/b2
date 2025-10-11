@@ -81,23 +81,23 @@ export function Board({
                   w-12 h-12 border-2 flex items-center justify-center text-lg font-bold
                   transition-all relative rounded
                   ${selected
-                    ? 'bg-blue-600 border-blue-400 text-white shadow-lg'
-                    : inPath
-                      ? 'bg-green-600 border-green-400 text-white shadow-md'
-                      : cell
-                        ? 'bg-gray-700 border-gray-500 text-green-400'
-                        : 'bg-gray-900 border-gray-700 text-gray-600'
-                  }
+                ? 'bg-blue-600 border-blue-400 text-white shadow-lg'
+                : inPath
+                  ? 'bg-green-600 border-green-400 text-white shadow-md'
+                  : cell
+                    ? 'bg-gray-700 border-gray-500 text-green-400'
+                    : 'bg-gray-900 border-gray-700 text-gray-600'
+              }
                   ${canClick
-                    ? 'cursor-pointer hover:shadow-lg hover:transform hover:scale-110 hover:bg-gray-800 hover:z-10'
-                    : 'cursor-default'
-                  }
+                ? 'cursor-pointer hover:shadow-lg hover:transform hover:scale-110 hover:bg-gray-800 hover:z-10'
+                : 'cursor-default'
+              }
                   ${isHovered && canClick
-                    ? selected
-                      ? 'ring-2 ring-blue-300'
-                      : 'ring-2 ring-yellow-400 bg-gray-600'
-                    : ''
-                  }
+                ? selected
+                  ? 'ring-2 ring-blue-300'
+                  : 'ring-2 ring-yellow-400 bg-gray-600'
+                : ''
+              }
                 `}
               >
                 {displayContent}

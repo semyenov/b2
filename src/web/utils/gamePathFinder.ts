@@ -3,7 +3,7 @@
  * Uses DFS to find valid word paths on the board
  */
 
-export type Position = { row: number, col: number }
+export interface Position { row: number, col: number }
 export type Board = (string | null)[][]
 
 /**

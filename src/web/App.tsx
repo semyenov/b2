@@ -30,7 +30,7 @@ export function App() {
   } = useGameClient()
 
   // AI player automation
-  const { aiThinking } = useAIPlayer({
+  const { aiThinking, aiError } = useAIPlayer({
     currentGame,
     apiClient,
   })
@@ -97,6 +97,18 @@ export function App() {
           <div className="flex items-center gap-2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
             <span>Loading...</span>
+          </div>
+        </div>
+      )}
+
+      {/* AI Error banner */}
+      {aiError && (
+        <div className="fixed top-16 right-4 bg-yellow-700 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+          <div className="flex items-center gap-2">
+            <span>
+              🤖
+              {aiError}
+            </span>
           </div>
         </div>
       )}

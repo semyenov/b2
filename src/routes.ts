@@ -1,5 +1,6 @@
 import type { SizedDictionary } from './dictionary'
 import { Type } from '@sinclair/typebox'
+import { consola } from 'consola'
 import { Elysia } from 'elysia'
 import { applyMove, createGame, findPlacementsForWord } from './engine/balda'
 import { suggestWords } from './engine/suggest'
@@ -20,7 +21,16 @@ import {
   UpdatePlayerBodySchema,
 } from './schemas'
 import { store } from './store'
-import { broadcastGame } from './wsHub'
+import { broadcastGame, setArchiveCallback } from './wsHub'
+
+// Set up archive callback to delete games when all clients disconnect
+setArchiveCallback(async (gameId: string) => {
+  const game = await store.get(gameId)
+  if (game) {
+    await store.delete(gameId)
+    consola.info(`Archived game ${gameId} (${game.players.join(' vs ')})`)
+  }
+})
 
 let dictionaryPromise: Promise<SizedDictionary> | null = null
 let dictionaryLoadingLock = false
@@ -147,7 +157,7 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
 
     const dict = await getDictionary()
     const limit = query.limit ? Number(query.limit) : undefined
-    return suggestWords(game.board, dict, { limit })
+    return suggestWords(game.board, dict, { limit, usedWords: game.usedWords })
   }, { query: SuggestQuerySchema, response: { 200: SuggestResponseSchema, 404: ErrorSchema } })
   .patch('/:id/player', async ({ params, body }) => {
     const game = await store.get(params.id)

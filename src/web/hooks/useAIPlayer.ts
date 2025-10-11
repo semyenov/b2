@@ -8,6 +8,7 @@ interface UseAIPlayerOptions {
 
 interface UseAIPlayerReturn {
   aiThinking: boolean
+  aiError: string | null
 }
 
 /**
@@ -19,6 +20,7 @@ export function useAIPlayer({
   apiClient,
 }: UseAIPlayerOptions): UseAIPlayerReturn {
   const [aiThinking, setAIThinking] = useState(false)
+  const [aiError, setAIError] = useState<string | null>(null)
   const lastProcessedMoveCount = useRef(0)
 
   useEffect(() => {
@@ -44,7 +46,10 @@ export function useAIPlayer({
     // AI's turn - make a move
     const makeAIMove = async () => {
       setAIThinking(true)
-      lastProcessedMoveCount.current = currentGame.moves.length
+      setAIError(null) // Clear previous errors
+      // Mark this turn as processed BEFORE making move to prevent re-trigger
+      // After move completes, moves.length will be currentGame.moves.length + 1
+      lastProcessedMoveCount.current = currentGame.moves.length + 1
 
       try {
         // Simulate "thinking" delay for better UX
@@ -68,9 +73,20 @@ export function useAIPlayer({
           // Submit the move
           await apiClient.makeMove(currentGame.id, moveBody)
         }
+        else {
+          // No valid moves available - game is stuck
+          setAIError('У AI нет доступных ходов')
+          console.warn('AI has no valid moves available')
+          // Reset to allow future detection if game state changes
+          lastProcessedMoveCount.current = currentGame.moves.length
+        }
       }
       catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Ошибка AI хода'
+        setAIError(errorMessage)
         console.error('AI move failed:', error)
+        // Reset to allow retry on next state change
+        lastProcessedMoveCount.current = currentGame.moves.length
       }
       finally {
         setAIThinking(false)
@@ -87,5 +103,6 @@ export function useAIPlayer({
 
   return {
     aiThinking,
+    aiError,
   }
 }

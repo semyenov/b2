@@ -19,7 +19,7 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
             <label className="block text-sm text-gray-400 mb-1">Board Size</label>
             <select
               value={size}
-              onChange={(e) => setSize(e.target.value)}
+              onChange={e => setSize(e.target.value)}
               className="w-full px-3 py-2 bg-gray-700 rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
             >
               <option value="3">3x3</option>
@@ -32,15 +32,18 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
 
           <div>
             <label className="block text-sm text-gray-400 mb-1">
-              Base Word ({size} Russian letters)
+              Base Word (
+              {size}
+              {' '}
+              Russian letters)
             </label>
             <input
               type="text"
               value={baseWord}
-              onChange={(e) => setBaseWord(e.target.value.toUpperCase())}
+              onChange={e => setBaseWord(e.target.value.toUpperCase())}
               className="w-full px-3 py-2 bg-gray-700 rounded border border-gray-600 focus:border-cyan-400 focus:outline-none uppercase text-center text-xl font-bold"
               placeholder={size === '5' ? 'БАЛДА' : 'СЛОВО'}
-              maxLength={parseInt(size, 10)}
+              maxLength={Number.parseInt(size, 10)}
               required
             />
           </div>

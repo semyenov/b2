@@ -14,6 +14,7 @@ A high-performance word game server built with [Bun](https://bun.sh), [Elysia](h
 - 🧩 **Modular Architecture** - Plugin-based route organization
 - 💾 **Persistent Storage** - Games are saved to disk using unstorage with filesystem driver
 - 🖥️ **CLI Frontend** - Interactive terminal interface built with React Ink
+- 🌐 **Web Frontend** - Modern React web UI with clean architecture (Vite + Tailwind CSS)
 
 ## Quick Start
 
@@ -51,6 +52,33 @@ The CLI provides an interactive interface to:
 **Note:** The server must be running for the CLI to work.
 
 For detailed CLI usage instructions, see [CLI_GUIDE.md](./CLI_GUIDE.md).
+
+### Web Frontend
+
+Run the web frontend:
+
+```bash
+# Start backend (in one terminal)
+bun run dev
+
+# Start web frontend (in another terminal)
+bun run dev:web
+
+# Or start both at once
+bun run dev:all
+```
+
+The web frontend will be available at `http://localhost:5173`
+
+Features:
+- Modern React UI with dark theme
+- Real-time WebSocket updates
+- AI player automation
+- Auto-loading move suggestions
+- Quick start 5x5 games
+- Russian alphabet input grid
+
+For detailed web frontend documentation, see [WEB_FRONTEND.md](./WEB_FRONTEND.md).
 
 ### Linting
 
@@ -114,6 +142,19 @@ NODE_ENV=development
 
 ## Recent Updates
 
+### ✅ Web Frontend Architecture Refactoring (Oct 11, 2025)
+
+Refactored web frontend to follow clean architecture principles with separation of concerns:
+- **Created utilities**: `boardValidation.ts`, `moveValidation.ts` - Pure functions for business logic
+- **Created hooks**: `useCreateGameForm.ts` - Form state management
+- **Reduced component complexity**: 17-33% code reduction in components
+- **Improved testability**: Business logic extracted into testable pure functions
+- **Better maintainability**: Clear separation between presentation, state, and logic layers
+
+Components are now thin presentation layers that delegate to utilities and hooks for all business logic.
+
+For technical details, see [CLIENT_LOGIC_REFACTOR.md](./CLIENT_LOGIC_REFACTOR.md).
+
 ### ✅ Critical Bug Fix: Base Word Not Marked as Used (Oct 11, 2025)
 
 Fixed a game-breaking bug where the base word was not added to `usedWords` when creating a new game. This allowed players to reuse the base word (e.g., "АФИША", "БАЛДА") for points, which violates the rules of Balda.
@@ -148,8 +189,8 @@ See [RUSSIAN_LOCALIZATION.md](./RUSSIAN_LOCALIZATION.md) and [RUSSIAN_KEYBOARD_S
 
 ## Architecture
 
-The codebase follows Elysia best practices with a modular plugin architecture:
-
+### Backend Server
+The backend follows Elysia best practices with a modular plugin architecture:
 - **Custom Error Classes** - Domain-specific errors (`GameNotFoundError`, `InvalidMoveError`, etc.)
 - **TypeBox Schemas** - Runtime validation with detailed error messages
 - **Plugin System** - Organized route handlers (`dictionaryPlugin`, `gamesPlugin`)
@@ -157,7 +198,20 @@ The codebase follows Elysia best practices with a modular plugin architecture:
 - **Dictionary System** - Trie-based dictionary with prefix support
 - **Persistent Storage** - Unstorage with filesystem driver for game data persistence
 
-For detailed architecture information, see [CLAUDE.md](./CLAUDE.md).
+### Web Frontend
+The web frontend follows clean architecture with strict separation of concerns:
+- **Presentation Layer** - React components (thin, JSX-focused)
+- **State Layer** - Custom React hooks (state + side effects)
+- **Business Logic** - Pure utility functions (no React dependencies)
+- **API Layer** - Type-safe backend communication
+
+**Key directories:**
+- `src/web/components/` - React presentation components
+- `src/web/hooks/` - Custom React hooks for state management
+- `src/web/utils/` - Pure functions for game rules and validation
+- `src/web/lib/` - API client and WebSocket integration
+
+For detailed architecture information, see [CLAUDE.md](./CLAUDE.md) and [CLIENT_LOGIC_REFACTOR.md](./CLIENT_LOGIC_REFACTOR.md).
 
 ## Code Quality
 
