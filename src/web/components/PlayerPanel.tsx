@@ -1,4 +1,5 @@
 import type { GameState } from '../lib/client'
+import { memo } from 'react'
 
 interface PlayerPanelProps {
   game: GameState
@@ -6,11 +7,11 @@ interface PlayerPanelProps {
   currentPlayerName: string
 }
 
-export function PlayerPanel({ game, playerIndex, currentPlayerName }: PlayerPanelProps) {
+export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName }: PlayerPanelProps) => {
   const player = game.players[playerIndex]
   const score = game.scores[player] || 0
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
-  const isMe = player === currentPlayerName
+  const _isMe = player === currentPlayerName // Reserved for future use
   const isAI = game.aiPlayers.includes(player)
 
   // Get words played by this player from moves history
@@ -78,4 +79,4 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName }: PlayerPane
       </div>
     </div>
   )
-}
+})

@@ -4,7 +4,7 @@ interface StatusMessageProps {
 }
 
 const stepConfig = {
-  waiting: {
+  'waiting': {
     icon: '⏳',
     text: 'Ждите хода...',
     color: 'text-orange-300',
@@ -32,7 +32,7 @@ const stepConfig = {
     bg: 'bg-purple-900 bg-opacity-30',
     border: 'border-purple-700',
   },
-  ready: {
+  'ready': {
     icon: '📤',
     text: 'send:',
     color: 'text-green-300',

@@ -1,5 +1,5 @@
 import type { GameState, Suggestion } from '../lib/client'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { findWordPath } from '../utils/gamePathFinder'
 
 interface UseGameInteractionOptions {
@@ -31,7 +31,7 @@ export function useGameInteraction({
     Array<{ row: number, col: number }>
   >([])
 
-  const handleCellClick = (row: number, col: number) => {
+  const handleCellClick = useCallback((row: number, col: number) => {
     if (!currentGame || !isMyTurn()) {
       return
     }
@@ -86,23 +86,23 @@ export function useGameInteraction({
         }
       }
     }
-  }
+  }, [currentGame, isMyTurn, selectedCell, selectedLetter, wordPath])
 
-  const handleLetterSelect = (letter: string) => {
+  const handleLetterSelect = useCallback((letter: string) => {
     if (selectedCell && !selectedLetter) {
       setSelectedLetter(letter)
       // DO NOT auto-add to path - user must explicitly click cells to build word
       setWordPath([])
     }
-  }
+  }, [selectedCell, selectedLetter])
 
-  const handleClearSelection = () => {
+  const handleClearSelection = useCallback(() => {
     setSelectedCell(undefined)
     setSelectedLetter('')
     setWordPath([])
-  }
+  }, [])
 
-  const handleSuggestionSelect = (suggestion: Suggestion) => {
+  const handleSuggestionSelect = useCallback((suggestion: Suggestion) => {
     if (!currentGame) {
       return
     }
@@ -121,13 +121,13 @@ export function useGameInteraction({
     if (path) {
       setWordPath(path)
     }
-  }
+  }, [currentGame])
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setSelectedCell(undefined)
     setSelectedLetter('')
     setWordPath([])
-  }
+  }, [])
 
   return {
     selectedCell,

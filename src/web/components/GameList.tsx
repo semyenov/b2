@@ -118,7 +118,16 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                     return (
                       <div
                         key={game.id}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => handleJoin(game)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            handleJoin(game)
+                          }
+                        }}
+                        aria-label={`Присоединиться к игре ${baseWord}, размер ${game.size}×${game.size}, ${statusInfo.label}`}
                         className="bg-gray-800 border-2 border-gray-700 p-6 cursor-pointer transition-all duration-200 hover:border-cyan-500 hover:shadow-depth-3 hover:scale-105 hover:bg-gray-750 shadow-depth-1"
                       >
                         {/* Header: Status + Time */}

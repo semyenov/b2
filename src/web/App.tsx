@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Banner } from './components/Banner'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
@@ -6,10 +6,12 @@ import { GamePanel } from './components/GamePanel'
 import { MenuButton } from './components/MenuButton'
 import { PlayerPanel } from './components/PlayerPanel'
 import { StatusMessage } from './components/StatusMessage'
+import { A11Y_LABELS, GAME_CONFIG } from './constants/game'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameInteraction } from './hooks/useGameInteraction'
 import { useSuggestions } from './hooks/useSuggestions'
+import { cn } from './utils/classNames'
 import { buildMoveBody, canSubmitMove, formWordFromPath } from './utils/moveValidation'
 
 export function App() {
@@ -71,40 +73,74 @@ export function App() {
   // Suggestions visibility toggle
   const [showSuggestions, setShowSuggestions] = useState(false)
 
+  // Live region announcements for screen readers
+  const [liveRegionMessage, setLiveRegionMessage] = useState<string>('')
+  const previousTurnRef = useRef<number | null>(null)
+
+  // Announce turn changes to screen readers
+  useEffect(() => {
+    if (!currentGame || screen !== 'play') {
+      return
+    }
+
+    const currentTurn = currentGame.currentPlayerIndex
+    if (previousTurnRef.current !== currentTurn) {
+      previousTurnRef.current = currentTurn
+      const currentPlayer = currentGame.players[currentTurn]
+
+      if (isMyTurn()) {
+        setLiveRegionMessage(A11Y_LABELS.YOUR_TURN)
+      }
+      else {
+        setLiveRegionMessage(A11Y_LABELS.WAITING_FOR_OPPONENT(currentPlayer))
+      }
+    }
+  }, [currentGame, screen, isMyTurn])
+
   // Toggle suggestions and load if not already loaded
-  const toggleSuggestions = () => {
+  const toggleSuggestions = useCallback(() => {
     if (!showSuggestions && suggestions.length === 0 && !loadingSuggestions) {
       loadSuggestions()
     }
-    setShowSuggestions(!showSuggestions)
-  }
+    setShowSuggestions(prev => !prev)
+  }, [showSuggestions, suggestions.length, loadingSuggestions, loadSuggestions])
 
   // Wrapper to clear selections after move
-  const makeMove = async (move: Parameters<typeof makeApiMove>[0]) => {
+  const makeMove = useCallback(async (move: Parameters<typeof makeApiMove>[0]) => {
     await makeApiMove(move)
     clearSuggestions()
     clearAll()
     setShowSuggestions(false) // Hide suggestions after move
-  }
+  }, [makeApiMove, clearSuggestions, clearAll])
 
   // Handle exit to menu
-  const handleExitToMenu = () => {
+  const handleExitToMenu = useCallback(() => {
     setScreen('menu')
     clearSuggestions()
     clearAll()
     setShowSuggestions(false)
-  }
+  }, [setScreen, clearSuggestions, clearAll])
 
   // Calculate formed word for display
-  const getFormedWord = () => {
+  const getFormedWord = useCallback(() => {
     if (!currentGame || !selectedCell || !selectedLetter || wordPath.length < 2) {
       return ''
     }
     return formWordFromPath(wordPath, currentGame.board, selectedCell, selectedLetter)
-  }
+  }, [currentGame, selectedCell, selectedLetter, wordPath])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+      {/* Screen reader live region for game announcements */}
+      <div
+        className="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {liveRegionMessage}
+      </div>
+
       {/* Banners */}
       {error && <Banner variant="error" message={error} onClose={() => setError('')} />}
       {loading && <Banner variant="loading" message="Loading..." />}
@@ -173,7 +209,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Three column layout - fills available space */}
-            <div className="flex-1 grid grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-md)] px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-sm)] overflow-hidden">
+            <div className="flex-1 grid grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-md)] px-[var(--spacing-resp-lg)] overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}
@@ -219,156 +255,162 @@ export function App() {
                   {/* Center: Control Buttons or Status Messages */}
                   {playerName && currentGame && (
                     <div className="flex items-center gap-[var(--spacing-resp-sm)] flex-1 justify-center min-w-0">
-                    {/* Conditional rendering: Status messages */}
-                    {!isMyTurn()
-                      ? <StatusMessage step="waiting" />
-                      : !selectedCell
-                        ? <StatusMessage step="select-cell" />
-                        : !selectedLetter
-                          ? <StatusMessage step="select-letter" />
-                          : wordPath.length < 2
-                            ? <StatusMessage step="build-word" />
-                            : (
-                                <button
-                                  onClick={() => {
-                                    if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
-                                      const wordFormed = getFormedWord()
-                                      const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, wordFormed)
-                                      makeMove(moveBody)
-                                    }
-                                  }}
-                                  className="px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-xs)] bg-green-900 bg-opacity-30 hover:bg-green-900 hover:bg-opacity-50 border-2 border-green-700 text-green-300 font-bold text-[var(--text-resp-sm)] transition-all duration-200 shadow-depth-2 hover:shadow-depth-3 hover:scale-105 flex items-center gap-2"
-                                >
-                                  <span>📤 send:</span>
-                                  <span className="text-[var(--text-resp-base)] font-black tracking-wider">{getFormedWord()}</span>
-                                </button>
-                              )}
+                      {/* Conditional rendering: Status messages */}
+                      {!isMyTurn()
+                        ? <StatusMessage step="waiting" />
+                        : !selectedCell
+                            ? <StatusMessage step="select-cell" />
+                            : !selectedLetter
+                                ? <StatusMessage step="select-letter" />
+                                : wordPath.length < 2
+                                  ? <StatusMessage step="build-word" />
+                                  : (
+                                      <button
+                                        onClick={() => {
+                                          if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
+                                            const wordFormed = getFormedWord()
+                                            const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, wordFormed)
+                                            makeMove(moveBody)
+                                          }
+                                        }}
+                                        className="px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-xs)] bg-green-900 bg-opacity-30 hover:bg-green-900 hover:bg-opacity-50 border-2 border-green-700 text-green-300 font-bold text-[var(--text-resp-sm)] transition-all duration-200 shadow-depth-2 hover:shadow-depth-3 hover:scale-105 flex items-center gap-2"
+                                      >
+                                        <span>📤 send:</span>
+                                        <span className="text-[var(--text-resp-base)] font-black tracking-wider">{getFormedWord()}</span>
+                                      </button>
+                                    )}
 
-                    <button
-                      onClick={handleClearSelection}
-                      disabled={!isMyTurn() || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-                      className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-600 hover:bg-gray-500 text-white font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
-                    >
-                      ✕ Отмена
-                    </button>
+                      <button
+                        onClick={handleClearSelection}
+                        disabled={!isMyTurn() || (!selectedCell && !selectedLetter && wordPath.length === 0)}
+                        className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-600 hover:bg-gray-500 text-white font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+                      >
+                        ✕ Отмена
+                      </button>
 
-                    <button
-                      onClick={toggleSuggestions}
-                      disabled={!isMyTurn()}
-                      className={`px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative flex-shrink-0 ${
-                        showSuggestions
+                      <button
+                        onClick={toggleSuggestions}
+                        disabled={!isMyTurn()}
+                        className={`px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative flex-shrink-0 ${showSuggestions
                           ? 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3'
                           : 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                      }`}
-                    >
-                      💡 {showSuggestions ? 'Скрыть' : 'AI'}
-                      {!showSuggestions && suggestions.length > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2">
-                          {suggestions.length}
-                        </span>
-                      )}
-                    </button>
-                  </div>
-                )}
+                        }`}
+                      >
+                        💡
+                        {' '}
+                        {showSuggestions ? 'Скрыть' : 'AI'}
+                        {!showSuggestions && suggestions.length > 0 && (
+                          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2">
+                            {suggestions.length}
+                          </span>
+                        )}
+                      </button>
+                    </div>
+                  )}
 
-                {/* Right: Info Badges */}
-                <div className="flex items-center gap-[var(--spacing-resp-sm)] min-w-0 flex-shrink-0">
-                  <div className="text-[var(--text-resp-xs)] font-bold text-gray-200 bg-gray-700 px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] shadow-depth-1 border-2 border-gray-600 flex-shrink-0">
-                    Ход
-                    {' '}
-                    {Math.floor(currentGame.moves.length / 2) + 1}
+                  {/* Right: Info Badges */}
+                  <div className="flex items-center gap-[var(--spacing-resp-sm)] min-w-0 flex-shrink-0">
+                    <div className="text-[var(--text-resp-xs)] font-bold text-gray-200 bg-gray-700 px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] shadow-depth-1 border-2 border-gray-600 flex-shrink-0">
+                      Ход
+                      {' '}
+                      {Math.floor(currentGame.moves.length / 2) + 1}
+                    </div>
+                    {aiThinking && (
+                      <div className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse flex-shrink-0">
+                        <span className="text-yellow-300 font-bold text-[var(--text-resp-sm)]">🤖 AI</span>
+                      </div>
+                    )}
+                    {playerName && (
+                      <div className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1 max-w-[clamp(150px,20vw,200px)] flex-shrink-0 min-w-0">
+                        <span className="text-cyan-300 font-bold text-[var(--text-resp-xs)] truncate block" title={playerName}>
+                          {playerName}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  {aiThinking && (
-                    <div className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse flex-shrink-0">
-                      <span className="text-yellow-300 font-bold text-[var(--text-resp-sm)]">🤖 AI</span>
-                    </div>
-                  )}
-                  {playerName && (
-                    <div className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1 max-w-[clamp(150px,20vw,200px)] flex-shrink-0 min-w-0">
-                      <span className="text-cyan-300 font-bold text-[var(--text-resp-xs)] truncate block" title={playerName}>
-                        {playerName}
-                      </span>
-                    </div>
-                  )}
-                </div>
                 </div>
               </div>
             </div>
 
-            {/* Suggestions Panel - Expands when visible, up to 50% of viewport */}
+            {/* Suggestions Panel - Expands when visible */}
             {showSuggestions && playerName && currentGame && (
-              <div className="shrink-0 max-h-[50vh] min-h-0 overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)] shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
-                  {loadingSuggestions
+              <div className={cn('shrink-0 min-h-0 overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)] shadow-[0_-8px_24px_rgba(0,0,0,0.5)]')} style={{ maxHeight: GAME_CONFIG.SUGGESTIONS_PANEL_MAX_HEIGHT }}>
+                {loadingSuggestions
+                  ? (
+                      <div className="flex items-center justify-center py-2">
+                        <div className="animate-spin h-8 w-8 border-b-4 border-yellow-400 mr-3"></div>
+                        <div className="text-gray-400 font-semibold">Загрузка подсказок...</div>
+                      </div>
+                    )
+                  : suggestions.length === 0
                     ? (
-                        <div className="flex items-center justify-center py-2">
-                          <div className="animate-spin h-8 w-8 border-b-4 border-yellow-400 mr-3"></div>
-                          <div className="text-gray-400 font-semibold">Загрузка подсказок...</div>
+                        <div className="text-center py-2 text-gray-500">
+                          Нет доступных подсказок
                         </div>
                       )
-                    : suggestions.length === 0
-                      ? (
-                          <div className="text-center py-2 text-gray-500">
-                            Нет доступных подсказок
+                    : (
+                        <div className="flex flex-col">
+                          <div className="text-sm text-gray-300 mb-4 font-bold uppercase tracking-wide flex items-center justify-between shrink-0">
+                            <span className="flex items-center gap-2">
+                              💡 Подсказки AI
+                            </span>
+                            <span className="text-yellow-400 text-lg">
+                              {suggestions.length}
+                              {' '}
+                              доступно
+                            </span>
                           </div>
-                        )
-                      : (
-                          <div className="flex flex-col">
-                            <div className="text-sm text-gray-300 mb-4 font-bold uppercase tracking-wide flex items-center justify-between shrink-0">
-                              <span className="flex items-center gap-2">
-                                💡 Подсказки AI
-                              </span>
-                              <span className="text-yellow-400 text-lg">
-                                {suggestions.length}
-                                {' '}
-                                доступно
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-2">
-                              {suggestions.slice(0, 100).map((suggestion, index) => {
-                                const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
-                                const scoreColor = suggestion.score >= 10 ? 'text-green-400' : suggestion.score >= 5 ? 'text-yellow-400' : 'text-gray-400'
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-2">
+                            {suggestions.slice(0, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY).map((suggestion, index) => {
+                              const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
+                              const scoreColor = suggestion.score >= GAME_CONFIG.SCORE_THRESHOLDS.HIGH
+                                ? 'text-green-400'
+                                : suggestion.score >= GAME_CONFIG.SCORE_THRESHOLDS.MEDIUM
+                                  ? 'text-yellow-400'
+                                  : 'text-gray-400'
 
-                                return (
-                                  <button
-                                    key={index}
-                                    onClick={() => {
-                                      handleSuggestionSelect(suggestion)
-                                      setShowSuggestions(false)
-                                    }}
-                                    className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 px-3 py-2.5 flex items-center gap-3"
-                                  >
-                                    {/* Rank Badge */}
-                                    <div className="bg-gray-800 text-gray-500 font-black text-xs px-2 py-1 shrink-0">
-                                      #{index + 1}
-                                    </div>
+                              return (
+                                <button
+                                  key={index}
+                                  onClick={() => {
+                                    handleSuggestionSelect(suggestion)
+                                    setShowSuggestions(false)
+                                  }}
+                                  className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 px-3 py-2.5 flex items-center gap-3"
+                                >
+                                  {/* Rank Badge */}
+                                  <div className="bg-gray-800 text-gray-500 font-black text-xs px-2 py-1 shrink-0">
+                                    #
+                                    {index + 1}
+                                  </div>
 
-                                    {/* Word - Hero Element */}
-                                    <div className="flex-1 text-white font-black uppercase text-lg tracking-wider text-left truncate">
-                                      {suggestion.word}
-                                    </div>
+                                  {/* Word - Hero Element */}
+                                  <div className="flex-1 text-white font-black uppercase text-lg tracking-wider text-left truncate">
+                                    {suggestion.word}
+                                  </div>
 
-                                    {/* Position + Letter */}
-                                    <div className="flex items-center gap-1.5 shrink-0">
-                                      <span className="text-cyan-400 font-mono font-bold text-xs bg-gray-800 bg-opacity-50 px-1.5 py-0.5">
-                                        {posStr}
-                                      </span>
-                                      <span className="text-green-400 font-black text-2xl leading-none">
-                                        {suggestion.letter}
-                                      </span>
-                                    </div>
+                                  {/* Position + Letter */}
+                                  <div className="flex items-center gap-1.5 shrink-0">
+                                    <span className="text-cyan-400 font-mono font-bold text-xs bg-gray-800 bg-opacity-50 px-1.5 py-0.5">
+                                      {posStr}
+                                    </span>
+                                    <span className="text-green-400 font-black text-2xl leading-none">
+                                      {suggestion.letter}
+                                    </span>
+                                  </div>
 
-                                    {/* Score */}
-                                    <div className={`${scoreColor} font-black text-xl shrink-0 min-w-[32px] text-right`}>
-                                      {suggestion.score.toFixed(0)}
-                                    </div>
-                                  </button>
-                                )
-                              })}
-                            </div>
+                                  {/* Score */}
+                                  <div className={`${scoreColor} font-black text-xl shrink-0 min-w-[32px] text-right`}>
+                                    {suggestion.score.toFixed(0)}
+                                  </div>
+                                </button>
+                              )
+                            })}
                           </div>
-                        )}
-                </div>
-              )}
+                        </div>
+                      )}
+              </div>
+            )}
           </div>
         )}
       </div>

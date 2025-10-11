@@ -1,4 +1,5 @@
 import type { CreateGameBody } from '../lib/client'
+import { BOARD_SIZES } from '../constants/game'
 import { useCreateGameForm } from '../hooks/useCreateGameForm'
 
 interface CreateGameProps {
@@ -24,20 +25,27 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
       {/* Form Card */}
       <div className="w-full max-w-lg">
         <div className="bg-gradient-to-br from-gray-800 to-gray-900 shadow-depth-3 p-8 border-2 border-gray-700">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" aria-label="Форма создания новой игры">
             {/* Board Size */}
             <div>
-              <label className="block text-base font-bold text-gray-300 mb-3">
+              <label id="board-size-label" className="block text-base font-bold text-gray-300 mb-3">
                 📐 Размер доски
               </label>
-              <div className="grid grid-cols-5 gap-2">
-                {['3', '4', '5', '6', '7'].map(s => (
+              <div
+                className="grid grid-cols-5 gap-2"
+                role="radiogroup"
+                aria-labelledby="board-size-label"
+              >
+                {BOARD_SIZES.map(s => (
                   <button
                     key={s}
                     type="button"
-                    onClick={() => setSize(s)}
+                    role="radio"
+                    aria-checked={size === String(s)}
+                    aria-label={`Размер доски ${s} на ${s}`}
+                    onClick={() => setSize(String(s))}
                     className={`py-3 font-bold text-base transition-all duration-200 ${
-                      size === s
+                      size === String(s)
                         ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-depth-2 scale-105 ring-2 ring-cyan-400'
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:scale-105'
                     }`}
@@ -52,30 +60,38 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
 
             {/* Base Word */}
             <div>
-              <label className="block text-base font-bold text-gray-300 mb-3">
+              <label htmlFor="base-word-input" className="block text-base font-bold text-gray-300 mb-3">
                 📝 Базовое слово (
                 {size}
                 {' '}
                 русских букв)
               </label>
               <input
+                id="base-word-input"
                 type="text"
                 value={baseWord}
                 onChange={e => setBaseWord(e.target.value.toUpperCase())}
+                aria-required="true"
+                aria-invalid={error ? 'true' : 'false'}
+                aria-describedby="base-word-help"
                 className="w-full px-6 py-4 bg-gray-900 border-2 border-gray-700 focus:border-cyan-400 focus:outline-none uppercase text-center text-2xl font-bold tracking-widest text-cyan-400 placeholder-gray-600 transition-all duration-200"
                 placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
                 maxLength={Number.parseInt(size, 10)}
                 required
               />
-              <p className="text-xs text-gray-500 mt-2 text-center">
+              <p id="base-word-help" className="text-xs text-gray-500 mt-2 text-center">
                 Слово будет размещено в центре доски
               </p>
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-900 bg-opacity-40 border-2 border-red-600 p-4 flex items-center gap-3">
-                <span className="text-2xl">⚠️</span>
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="bg-red-900 bg-opacity-40 border-2 border-red-600 p-4 flex items-center gap-3"
+              >
+                <span className="text-2xl" aria-hidden="true">⚠️</span>
                 <span className="text-red-300 font-medium">{error}</span>
               </div>
             )}

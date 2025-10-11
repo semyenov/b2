@@ -19,8 +19,8 @@ interface UseSuggestionsReturn {
 export function useSuggestions({
   apiClient,
   currentGame,
-  playerName,
-  screen,
+  playerName: _playerName, // Reserved for future auto-load logic
+  screen: _screen, // Reserved for future auto-load logic
 }: UseSuggestionsOptions): UseSuggestionsReturn {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
