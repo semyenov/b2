@@ -23,16 +23,14 @@ export function Board({
   const [hoveredCell, setHoveredCell] = useState<{ row: number, col: number } | null>(null)
 
   return (
-    <div className="bg-gray-800 pl-3 pr-8 py-8 rounded-lg shadow-2xl border-2 border-gray-700">
+    <div className="bg-gray-800 px-6 py-6 rounded-lg shadow-depth-3 border-2 border-gray-700">
       {/* Column headers */}
-      <div className="flex mb-1">
-        <div className="w-8 h-8" />
-        {' '}
+      <div className="flex mb-2">
+        <div className="w-10 h-10" />
         {/* Empty corner */}
         {Array.from({ length: size }, (_, i) => (
-          <div key={i} className="w-14 h-8 flex items-center justify-center text-cyan-400 font-bold text-sm">
+          <div key={i} className="w-14 h-10 flex items-center justify-center text-cyan-400 font-bold text-base">
             {String.fromCharCode(1040 + i)}
-            {' '}
             {/* Russian letters А-Я */}
           </div>
         ))}
@@ -42,7 +40,7 @@ export function Board({
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {/* Row number */}
-          <div className="w-8 h-14 flex items-center justify-center text-cyan-400 font-bold text-sm">
+          <div className="w-10 h-14 flex items-center justify-center text-cyan-400 font-bold text-base">
             {rowIndex}
           </div>
 
@@ -79,17 +77,17 @@ export function Board({
                 onMouseLeave={() => setHoveredCell(null)}
                 className={`
                   w-14 h-14 border-2 flex items-center justify-center text-xl font-bold
-                  transition-all relative rounded-lg
+                  transition-all duration-200 relative rounded-lg
                   ${selected
-                ? 'bg-blue-600 border-blue-400 text-white shadow-lg'
+                ? 'bg-blue-600 border-blue-400 text-white shadow-depth-2'
                 : inPath
-                  ? 'bg-green-600 border-green-400 text-white shadow-md'
+                  ? 'bg-green-600 border-green-400 text-white shadow-depth-2'
                   : cell
-                    ? 'bg-gray-700 border-gray-500 text-green-400'
+                    ? 'bg-gray-700 border-gray-600 text-green-400'
                     : 'bg-gray-900 border-gray-700 text-gray-600'
               }
                   ${canClick
-                ? 'cursor-pointer hover:shadow-xl hover:transform hover:scale-110 hover:bg-gray-800 hover:z-10'
+                ? 'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-gray-700 hover:z-10'
                 : 'cursor-default'
               }
                   ${isHovered && canClick
@@ -113,17 +111,17 @@ export function Board({
       ))}
 
       {/* Legend */}
-      <div className="mt-2 flex gap-2 text-[9px] text-gray-500 justify-center">
-        <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 bg-blue-600 border border-blue-400 rounded"></div>
+      <div className="mt-4 flex gap-4 text-xs text-gray-400 justify-center">
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 bg-blue-600 border-2 border-blue-400 rounded"></div>
           <span>Выбрана</span>
         </div>
-        <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 bg-green-600 border border-green-400 rounded"></div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 bg-green-600 border-2 border-green-400 rounded"></div>
           <span>Путь</span>
         </div>
-        <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 bg-gray-600 border border-yellow-400 rounded"></div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 bg-gray-600 border-2 border-yellow-400 rounded"></div>
           <span>Доступно</span>
         </div>
       </div>

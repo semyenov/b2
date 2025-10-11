@@ -1,5 +1,74 @@
 @import "tailwindcss";
 
+/* ========================================
+   DESIGN SYSTEM TOKENS
+   ======================================== */
+:root {
+  /* Semantic Colors */
+  --color-primary: #22d3ee;        /* cyan-400 */
+  --color-primary-light: #67e8f9;  /* cyan-300 */
+  --color-primary-dark: #06b6d4;   /* cyan-500 */
+
+  --color-secondary: #3b82f6;      /* blue-500 */
+  --color-secondary-light: #60a5fa;/* blue-400 */
+  --color-secondary-dark: #2563eb; /* blue-600 */
+
+  --color-success: #10b981;        /* green-600 */
+  --color-success-light: #34d399;  /* green-500 */
+  --color-success-dark: #059669;   /* green-700 */
+
+  --color-warning: #f59e0b;        /* amber-500 */
+  --color-warning-light: #fbbf24;  /* amber-400 */
+  --color-warning-dark: #d97706;   /* amber-600 */
+
+  --color-danger: #ef4444;         /* red-500 */
+  --color-danger-light: #f87171;   /* red-400 */
+  --color-danger-dark: #dc2626;    /* red-600 */
+
+  /* Neutrals */
+  --color-bg-primary: #111827;     /* gray-900 */
+  --color-bg-secondary: #1f2937;   /* gray-800 */
+  --color-bg-tertiary: #374151;    /* gray-700 */
+  --color-bg-elevated: #2d3748;    /* gray-750 */
+
+  --color-border: #4b5563;         /* gray-600 */
+  --color-border-light: #6b7280;   /* gray-500 */
+
+  --color-text-primary: #f9fafb;   /* gray-50 */
+  --color-text-secondary: #e5e7eb; /* gray-200 */
+  --color-text-tertiary: #9ca3af;  /* gray-400 */
+
+  /* Spacing Scale (8px grid) */
+  --space-xs: 0.5rem;   /* 8px */
+  --space-sm: 0.75rem;  /* 12px */
+  --space-md: 1rem;     /* 16px */
+  --space-lg: 1.5rem;   /* 24px */
+  --space-xl: 2rem;     /* 32px */
+  --space-2xl: 3rem;    /* 48px */
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;  /* 8px */
+  --radius-md: 0.75rem; /* 12px */
+  --radius-lg: 1rem;    /* 16px */
+  --radius-xl: 1.25rem; /* 20px */
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Shadows (Material Design inspired) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+
+  /* Glow Effects */
+  --glow-primary: 0 0 20px rgba(34, 211, 238, 0.4);
+  --glow-success: 0 0 20px rgba(16, 185, 129, 0.4);
+  --glow-warning: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
 /* Global styles */
 * {
   box-sizing: border-box;
@@ -468,15 +537,6 @@ button:focus-visible {
   background: #6b7280;
 }
 
-/* Additional modern utilities */
-.bg-gray-750 {
-  background-color: #2d3748;
-}
-
-.bg-gray-850 {
-  background-color: #1a202c;
-}
-
 /* Grid card hover effects */
 @keyframes card-float {
   0%, 100% {
@@ -491,40 +551,57 @@ button:focus-visible {
   animation: card-float 0.3s ease-in-out;
 }
 
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
 /* Smooth transitions */
 * {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Enhanced shadow hierarchy */
+/* Shadow hierarchy */
 .shadow-depth-1 {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .shadow-depth-2 {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-md);
 }
 
 .shadow-depth-3 {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lg);
 }
 
 .shadow-depth-4 {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-xl);
 }
 
 /* Glow effects */
-.glow-blue {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+.glow-primary {
+  box-shadow: var(--glow-primary);
 }
 
-.glow-green {
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+.glow-success {
+  box-shadow: var(--glow-success);
 }
 
-.glow-yellow {
-  box-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
+.glow-warning {
+  box-shadow: var(--glow-warning);
 }
+
+/* Custom background shades */
+.bg-gray-750 {
+  background-color: var(--color-bg-elevated);
+}
+
+.bg-gray-850 {
+  background-color: #1a202c;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
 
 /* Smooth pop animation */
 @keyframes pop-in {

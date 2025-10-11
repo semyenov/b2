@@ -245,6 +245,18 @@ For detailed refactoring information, see [CLIENT_LOGIC_REFACTOR.md](./CLIENT_LO
 
 ## Recent Updates
 
+### ✅ UI Redesign V2 - Complete Interface Overhaul (Oct 11, 2025)
+Major redesign with modern, elegant interface:
+- **Menu Screen**: Gradient title, modern button cards, smooth animations
+- **Game Layout**: Centered single-column design, horizontal score bar
+- **Game Controls**: Step-by-step guidance, larger word display, AI modal
+- **Create Form**: Visual size selector, large input field, help text
+- **Animations**: Fade-in, slide-up, hover-lift, shimmer effects
+- **Mobile**: Enhanced responsive design, touch-friendly targets
+- **Board**: Larger cells (14×14), better spacing, enhanced shadows
+
+See [UI_REDESIGN_V2.md](./UI_REDESIGN_V2.md) for complete details.
+
 ### ✅ Client Logic Refactoring (Oct 11, 2025)
 Extracted business logic from components into pure utilities and custom hooks:
 - Created `utils/boardValidation.ts` - Board interaction rules

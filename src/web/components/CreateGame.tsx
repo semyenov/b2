@@ -13,21 +13,21 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-3">
+        <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-3">
           Создать игру
         </h1>
-        <p className="text-gray-400 text-lg">
+        <p className="text-gray-400 text-base">
           Настройте параметры новой игры
         </p>
       </div>
 
       {/* Form Card */}
       <div className="w-full max-w-lg">
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl p-8 border-2 border-gray-700">
+        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-depth-3 p-8 border-2 border-gray-700">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Board Size */}
             <div>
-              <label className="block text-sm font-bold text-gray-300 mb-3">
+              <label className="block text-base font-bold text-gray-300 mb-3">
                 📐 Размер доски
               </label>
               <div className="grid grid-cols-5 gap-2">
@@ -36,9 +36,9 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
                     key={s}
                     type="button"
                     onClick={() => setSize(s)}
-                    className={`py-3 rounded-lg font-bold text-lg transition-all duration-200 ${
+                    className={`py-3 rounded-lg font-bold text-base transition-all duration-200 ${
                       size === s
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg scale-110 ring-2 ring-cyan-400'
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-depth-2 scale-105 ring-2 ring-cyan-400'
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:scale-105'
                     }`}
                   >
@@ -50,14 +50,14 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
 
             {/* Base Word */}
             <div>
-              <label className="block text-sm font-bold text-gray-300 mb-3">
+              <label className="block text-base font-bold text-gray-300 mb-3">
                 📝 Базовое слово ({size} русских букв)
               </label>
               <input
                 type="text"
                 value={baseWord}
                 onChange={e => setBaseWord(e.target.value.toUpperCase())}
-                className="w-full px-6 py-4 bg-gray-900 rounded-xl border-2 border-gray-700 focus:border-cyan-400 focus:outline-none uppercase text-center text-3xl font-bold tracking-widest text-cyan-400 placeholder-gray-600 transition-all"
+                className="w-full px-6 py-4 bg-gray-900 rounded-lg border-2 border-gray-700 focus:border-cyan-400 focus:outline-none uppercase text-center text-2xl font-bold tracking-widest text-cyan-400 placeholder-gray-600 transition-all duration-200"
                 placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
                 maxLength={Number.parseInt(size, 10)}
                 required
@@ -80,13 +80,13 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
               <button
                 type="button"
                 onClick={onBack}
-                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 rounded-xl font-bold text-lg text-gray-200 transition-all duration-200 hover:scale-105 shadow-lg"
+                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 rounded-lg font-bold text-base text-gray-200 transition-all duration-200 hover:scale-105 shadow-depth-2"
               >
                 ← Назад
               </button>
               <button
                 type="submit"
-                className="flex-1 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-xl font-bold text-lg text-white transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+                className="flex-1 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-lg font-bold text-base text-white transition-all duration-200 hover:scale-105 shadow-depth-2 hover:shadow-depth-3"
               >
                 ✓ Создать
               </button>

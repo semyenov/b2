@@ -22,21 +22,21 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
   return (
     <div className={`
       flex flex-col h-full bg-gray-800 border-2 rounded-lg
-      transition-all duration-300
+      transition-all duration-200
       ${isCurrentTurn ? 'border-yellow-500 shadow-depth-3 animate-pulse-glow' : 'border-gray-600 shadow-depth-2'}
     `}
     >
       {/* Header with player info */}
       <div className={`
-        p-2 flex items-center justify-between border-b border-gray-700
+        p-3 flex items-center justify-between border-b-2 border-gray-700
         ${isCurrentTurn ? 'bg-yellow-900 bg-opacity-30' : 'bg-gray-750'}
       `}
       >
-        <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          {isCurrentTurn && <span className="text-yellow-400 text-sm">▶</span>}
-          {isAI && <span className="text-yellow-500 text-xs">🤖</span>}
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          {isCurrentTurn && <span className="text-yellow-400 text-base">▶</span>}
+          {isAI && <span className="text-yellow-500 text-sm">🤖</span>}
           <h3 className={`
-            font-bold text-sm truncate
+            font-bold text-base truncate
             ${isMe ? 'text-cyan-400' : isAI ? 'text-yellow-300' : 'text-gray-300'}
           `}
           >
@@ -49,13 +49,13 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
       </div>
 
       {/* Words list */}
-      <div className="flex-1 p-2 overflow-y-auto">
-        <div className="text-xs text-gray-500 mb-1">
+      <div className="flex-1 p-3 overflow-y-auto">
+        <div className="text-xs text-gray-500 mb-2">
           {playerWords.length}
           {' '}
           слов
         </div>
-        <div className="space-y-0.5">
+        <div className="space-y-1">
           {playerWords.length === 0
             ? (
                 <div className="text-gray-600 text-xs italic">—</div>
@@ -64,7 +64,7 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-1.5 py-0.5 bg-gray-750 hover:bg-gray-700 rounded text-xs font-mono text-gray-300 transition-colors duration-150 border border-transparent hover:border-gray-600"
+                    className="px-2 py-1 bg-gray-750 hover:bg-gray-700 rounded text-xs font-mono text-gray-300 transition-all duration-200 border border-transparent hover:border-gray-600 hover:shadow-depth-1"
                   >
                     {word}
                   </div>

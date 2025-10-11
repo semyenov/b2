@@ -91,18 +91,18 @@ export function GamePanel({
                 )}
           </div>
 
-          {/* Word Display - Large and Prominent */}
+          {/* Word Display - Balanced and Prominent */}
           {wordFormed && (
-            <div className="bg-gray-900 rounded-lg border-2 border-gray-600 p-4">
+            <div className="bg-gray-900 rounded-lg border-2 border-gray-600 p-4 shadow-depth-2">
               <div className="text-xs text-gray-500 mb-2 text-center uppercase tracking-wider">Сформированное слово:</div>
-              <div className="text-5xl font-bold font-mono tracking-widest text-center text-cyan-400">
+              <div className="text-3xl font-bold font-mono tracking-widest text-center text-cyan-400">
                 {wordFormed}
               </div>
             </div>
           )}
         </div>
 
-        {/* Alphabet Grid - Wider */}
+        {/* Alphabet Grid - Clean and Consistent */}
         <div className="p-4">
           <div className="grid grid-cols-11 gap-2 max-w-4xl mx-auto">
             {RUSSIAN_ALPHABET.map(letter => (
@@ -112,14 +112,14 @@ export function GamePanel({
                 onMouseEnter={() => setHoveredLetter(letter)}
                 onMouseLeave={() => setHoveredLetter('')}
                 disabled={disabled || !selectedCell || !!selectedLetter}
-                className={`aspect-square rounded-lg font-bold text-xl transition-all ${selectedLetter === letter
-                  ? 'bg-blue-600 text-white shadow-lg ring-4 ring-blue-400 transform scale-110'
+                className={`aspect-square rounded-lg font-bold text-xl transition-all duration-200 ${selectedLetter === letter
+                  ? 'bg-blue-600 text-white shadow-depth-2 ring-2 ring-blue-400 transform scale-105'
                   : hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
-                    ? 'bg-yellow-500 text-gray-900 transform scale-110 shadow-lg'
+                    ? 'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-2'
                     : 'bg-gray-700 text-gray-200 border-2 border-gray-600 hover:bg-gray-600'
                 } ${(disabled || !selectedCell || !!selectedLetter) && selectedLetter !== letter
                   ? 'opacity-30 cursor-not-allowed'
-                  : 'cursor-pointer hover:shadow-lg'
+                  : 'cursor-pointer hover:shadow-depth-2'
                 }`}
               >
                 {letter}
@@ -128,15 +128,15 @@ export function GamePanel({
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="p-4 bg-gray-750 border-t border-gray-700">
+        {/* Action Buttons - Unified Styling */}
+        <div className="p-4 bg-gray-750 border-t-2 border-gray-700">
           <div className="flex gap-3 max-w-2xl mx-auto">
             <button
               onClick={handleSubmit}
               disabled={!canSubmit || disabled}
-              className={`flex-1 py-4 px-6 rounded-lg font-bold text-xl transition-all duration-200 ${canSubmit && !disabled
-                ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl hover:scale-105 glow-green'
-                : 'bg-gray-700 text-gray-500 cursor-not-allowed shadow-md'
+              className={`flex-1 py-4 px-6 rounded-lg font-bold text-lg transition-all duration-200 ${canSubmit && !disabled
+                ? 'bg-green-600 hover:bg-green-700 text-white shadow-depth-2 hover:shadow-depth-3 hover:scale-105 glow-success'
+                : 'bg-gray-700 text-gray-500 cursor-not-allowed shadow-depth-1'
               }`}
             >
               ✓ Подтвердить ход
@@ -145,7 +145,7 @@ export function GamePanel({
             <button
               onClick={onClearSelection}
               disabled={disabled || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-              className="px-6 py-4 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold text-lg transition-all hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-6 py-4 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               ✕ Отмена
             </button>
@@ -156,11 +156,11 @@ export function GamePanel({
                 setShowSuggestions(true)
               }}
               disabled={disabled}
-              className="px-6 py-4 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-bold text-lg transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
+              className="px-6 py-4 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
             >
               💡 AI
               {suggestions.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full font-bold shadow-depth-2">
                   {suggestions.length}
                 </span>
               )}
@@ -169,10 +169,10 @@ export function GamePanel({
         </div>
       </div>
 
-      {/* AI Suggestions Modal */}
+      {/* AI Suggestions Modal - Unified Styling */}
       {showSuggestions && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={() => setShowSuggestions(false)}>
-          <div className="bg-gray-800 rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden border-2 border-yellow-500" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 backdrop-blur-sm" onClick={() => setShowSuggestions(false)}>
+          <div className="bg-gray-800 rounded-lg shadow-depth-4 max-w-2xl w-full max-h-[80vh] overflow-hidden border-2 border-yellow-500" onClick={(e) => e.stopPropagation()}>
             {/* Modal Header */}
             <div className="bg-yellow-900 bg-opacity-40 border-b-2 border-yellow-600 px-6 py-4 flex justify-between items-center">
               <h3 className="text-2xl font-bold text-yellow-300 flex items-center gap-2">
@@ -183,7 +183,7 @@ export function GamePanel({
               </h3>
               <button
                 onClick={() => setShowSuggestions(false)}
-                className="text-gray-400 hover:text-white text-2xl font-bold hover:bg-gray-700 w-10 h-10 rounded-lg transition-all"
+                className="text-gray-400 hover:text-white text-2xl font-bold hover:bg-gray-700 w-10 h-10 rounded-lg transition-all duration-200 hover:scale-105"
               >
                 ✕
               </button>
@@ -222,8 +222,8 @@ export function GamePanel({
                                 w-full group relative bg-gradient-to-br from-gray-750 to-gray-800 hover:from-gray-700 hover:to-gray-750
                                 border-2 ${index === 0 ? 'border-yellow-500' : 'border-gray-600'} hover:border-yellow-400
                                 rounded-lg p-4 transition-all duration-200
-                                hover:shadow-xl hover:scale-102 cursor-pointer text-left
-                                ${index === 0 ? 'shadow-lg ring-2 ring-yellow-500 ring-opacity-50' : ''}
+                                hover:shadow-depth-3 hover:scale-105 cursor-pointer text-left
+                                ${index === 0 ? 'shadow-depth-2 ring-2 ring-yellow-500 ring-opacity-50' : 'shadow-depth-1'}
                               `}
                             >
                               <div className="flex items-center justify-between">

@@ -81,10 +81,10 @@ export function App() {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Error banner */}
       {error && (
-        <div className="fixed top-4 right-4 bg-red-700 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+        <div className="fixed top-4 right-4 bg-red-700 text-white px-4 py-3 rounded-lg shadow-depth-3 z-50 border-2 border-red-600">
           <div className="flex items-center gap-2">
-            <span>{error}</span>
-            <button onClick={() => setError('')} className="ml-4 hover:bg-red-700 px-2 py-1 rounded">
+            <span className="text-base">{error}</span>
+            <button onClick={() => setError('')} className="ml-4 hover:bg-red-800 px-2 py-1 rounded transition-all duration-200">
               ✕
             </button>
           </div>
@@ -93,19 +93,19 @@ export function App() {
 
       {/* Loading indicator */}
       {loading && (
-        <div className="fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+        <div className="fixed top-4 right-4 bg-blue-600 text-white px-4 py-3 rounded-lg shadow-depth-3 z-50 border-2 border-blue-500">
           <div className="flex items-center gap-2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            <span>Loading...</span>
+            <span className="text-base">Loading...</span>
           </div>
         </div>
       )}
 
       {/* AI Error banner */}
       {aiError && (
-        <div className="fixed top-16 right-4 bg-yellow-700 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+        <div className="fixed top-16 right-4 bg-yellow-700 text-white px-4 py-3 rounded-lg shadow-depth-3 z-50 border-2 border-yellow-600">
           <div className="flex items-center gap-2">
-            <span>
+            <span className="text-base">
               🤖
               {aiError}
             </span>
@@ -119,26 +119,26 @@ export function App() {
           <div className="flex flex-col items-center justify-center min-h-screen px-4">
             {/* Hero Section */}
             <div className="text-center mb-12 animate-fade-in">
-              <h1 className="text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 mb-4 tracking-tight drop-shadow-2xl">
+              <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 mb-4 tracking-tight drop-shadow-2xl">
                 БАЛДА
               </h1>
-              <p className="text-gray-400 text-lg md:text-xl font-medium tracking-wide">
+              <p className="text-gray-400 text-base md:text-lg font-medium tracking-wide">
                 Словесная игра для ума
               </p>
             </div>
 
             {/* Menu Card */}
             <div className="w-full max-w-md">
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl p-8 border-2 border-gray-700 backdrop-blur-sm">
+              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-depth-4 p-8 border-2 border-gray-700 backdrop-blur-sm">
                 <div className="space-y-3">
                   {/* Quick Start */}
                   <button
                     onClick={quickStart}
-                    className="w-full group relative px-8 py-5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-xl text-xl font-bold text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
+                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-lg text-lg font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden"
                   >
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
                     <div className="relative flex items-center justify-center gap-3">
-                      <span className="text-2xl">⚡</span>
+                      <span className="text-xl">⚡</span>
                       <span>Быстрая игра 5×5</span>
                     </div>
                   </button>
@@ -146,11 +146,11 @@ export function App() {
                   {/* AI Game */}
                   <button
                     onClick={quickStartVsAI}
-                    className="w-full group relative px-8 py-5 bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 rounded-xl text-xl font-bold text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
+                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 rounded-lg text-lg font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden"
                   >
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
                     <div className="relative flex items-center justify-center gap-3">
-                      <span className="text-2xl">🤖</span>
+                      <span className="text-xl">🤖</span>
                       <span>Играть с AI</span>
                     </div>
                   </button>
@@ -165,11 +165,11 @@ export function App() {
                   {/* Create Game */}
                   <button
                     onClick={() => setScreen('create')}
-                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-xl text-lg font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
+                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg text-base font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden"
                   >
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
                     <div className="relative flex items-center justify-center gap-3">
-                      <span className="text-xl">➕</span>
+                      <span className="text-lg">➕</span>
                       <span>Создать игру</span>
                     </div>
                   </button>
@@ -177,11 +177,11 @@ export function App() {
                   {/* Join Game */}
                   <button
                     onClick={loadGames}
-                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 rounded-xl text-lg font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
+                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 rounded-lg text-base font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden"
                   >
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
                     <div className="relative flex items-center justify-center gap-3">
-                      <span className="text-xl">🎮</span>
+                      <span className="text-lg">🎮</span>
                       <span>Присоединиться</span>
                     </div>
                   </button>
@@ -214,30 +214,30 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Compact Header */}
-            <div className="bg-gray-800 border-b-2 border-gray-700 px-6 py-3 flex justify-between items-center shadow-depth-4 relative z-10">
+            <div className="bg-gray-800 border-b-2 border-gray-700 px-6 py-3 flex justify-between items-center shadow-depth-3 relative z-10">
               <button
                 onClick={handleExitToMenu}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg text-sm font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 rounded-lg text-base font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
               >
                 ← Выход
               </button>
 
               <div className="flex items-center gap-4">
-                <div className="text-lg font-bold text-gray-200 bg-gray-700 px-4 py-2 rounded-lg shadow-depth-1 border border-gray-600">
+                <div className="text-base font-bold text-gray-200 bg-gray-700 px-4 py-2 rounded-lg shadow-depth-1 border-2 border-gray-600">
                   Ход
                   {' '}
                   {Math.floor(currentGame.moves.length / 2) + 1}
                 </div>
                 {aiThinking && (
-                  <div className="px-3 py-2 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 rounded-lg shadow-depth-1 glow-yellow animate-pulse">
-                    <span className="text-yellow-300 font-bold text-sm">🤖 AI думает...</span>
+                  <div className="px-3 py-2 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 rounded-lg shadow-depth-2 glow-warning animate-pulse">
+                    <span className="text-yellow-300 font-bold text-base">🤖 AI думает...</span>
                   </div>
                 )}
               </div>
 
               {playerName && (
-                <div className="px-4 py-2 bg-green-900 bg-opacity-40 border-2 border-green-600 rounded-lg shadow-depth-1 glow-green">
-                  <span className="text-green-300 font-bold text-sm">{playerName}</span>
+                <div className="px-4 py-2 bg-green-900 bg-opacity-40 border-2 border-green-600 rounded-lg shadow-depth-1 glow-success">
+                  <span className="text-green-300 font-bold text-base">{playerName}</span>
                 </div>
               )}
             </div>
