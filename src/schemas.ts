@@ -77,9 +77,15 @@ export const DictionaryStatsSchema = Type.Object({
 })
 
 export const SuggestQuerySchema = Type.Object({
-  limit: Type.Optional(Type.Integer({
-    minimum: 1,
-    maximum: 200,
+  limit: Type.Optional(Type.Union([
+    Type.Integer({
+      minimum: 1,
+      maximum: 200,
+    }),
+    Type.String({
+      pattern: '^[0-9]+$',
+    }),
+  ], {
     error: 'Limit must be between 1 and 200',
   })),
 })
