@@ -228,8 +228,8 @@ export function App() {
 
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
-            {/* Main game area - Three column layout */}
-            <div className="flex-1 grid grid-cols-[300px_1fr_300px] gap-4 px-4 py-4 overflow-hidden">
+            {/* Main game area - Three column layout - fills available space */}
+            <div className="flex-1 grid grid-cols-[240px_1fr_240px] gap-6 px-6 py-5 overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}
@@ -260,9 +260,9 @@ export function App() {
               />
             </div>
 
-            {/* Bottom Controls Bar */}
-            <div className="bg-gray-800 border-t-2 border-gray-700 px-4 pt-4 pb-3 shadow-depth-3 relative z-10 mt-4">
-              <div className="flex items-center justify-between gap-4">
+            {/* Control buttons bar - fixed at bottom */}
+            <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 px-6 py-4 shadow-depth-3">
+              <div className="flex items-center justify-between gap-6">
                 {/* Left: Exit Button */}
                 <button
                   onClick={handleExitToMenu}
@@ -319,8 +319,8 @@ export function App() {
                 )}
 
                 {/* Right: Info Badges */}
-                <div className="flex items-center gap-4">
-                  <div className="text-lg font-bold text-gray-200 bg-gray-700 px-5 py-2 shadow-depth-1 border-2 border-gray-600">
+                <div className="flex items-center gap-3">
+                  <div className="text-base font-bold text-gray-200 bg-gray-700 px-4 py-2 shadow-depth-1 border-2 border-gray-600">
                     Ход
                     {' '}
                     {Math.floor(currentGame.moves.length / 2) + 1}
@@ -331,16 +331,19 @@ export function App() {
                     </div>
                   )}
                   {playerName && (
-                    <div className="px-5 py-2 bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1">
-                      <span className="text-cyan-300 font-bold text-lg">{playerName}</span>
+                    <div className="px-4 py-2 bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1 max-w-[180px]">
+                      <span className="text-cyan-300 font-bold text-base truncate block" title={playerName}>
+                        {playerName}
+                      </span>
                     </div>
                   )}
                 </div>
               </div>
+            </div>
 
-              {/* Suggestions Panel - Collapsible */}
-              {showSuggestions && playerName && currentGame && (
-                <div className="border-t-2 border-gray-700 bg-gray-750 px-4 py-3 mt-3">
+            {/* Suggestions Panel - Expands when visible, up to 50% of viewport */}
+            {showSuggestions && playerName && currentGame && (
+              <div className="shrink-0 max-h-[50vh] overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-6 py-5 shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
                   {loadingSuggestions
                     ? (
                         <div className="flex items-center justify-center py-2">
@@ -355,14 +358,19 @@ export function App() {
                           </div>
                         )
                       : (
-                          <div>
-                            <div className="text-xs text-gray-400 mb-2 font-semibold uppercase">
-                              💡 Подсказки:
-                              {' '}
-                              {suggestions.length}
+                          <div className="h-full flex flex-col">
+                            <div className="text-sm text-gray-300 mb-4 font-bold uppercase tracking-wide flex items-center justify-between">
+                              <span className="flex items-center gap-2">
+                                💡 Подсказки AI
+                              </span>
+                              <span className="text-yellow-400 text-lg">
+                                {suggestions.length}
+                                {' '}
+                                доступно
+                              </span>
                             </div>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1.5 max-h-32 overflow-y-auto">
-                              {suggestions.slice(0, 50).map((suggestion, index) => {
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pb-2">
+                              {suggestions.slice(0, 100).map((suggestion, index) => {
                                 const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
                                 const scoreColor = suggestion.score >= 10 ? 'text-green-400' : suggestion.score >= 5 ? 'text-yellow-400' : 'text-gray-400'
 
@@ -373,20 +381,34 @@ export function App() {
                                       handleSuggestionSelect(suggestion)
                                       setShowSuggestions(false)
                                     }}
-                                    className="group flex flex-col bg-gray-700 hover:bg-gray-650 border border-gray-600 hover:border-yellow-500 p-2 transition-all duration-200 hover:shadow-depth-2"
+                                    className="group relative bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 hover:scale-[1.02] overflow-hidden"
                                   >
-                                    <div className="flex items-center justify-between mb-0.5">
-                                      <div className="flex items-center gap-1">
-                                        <span className="text-xs font-bold text-gray-500">#{index + 1}</span>
-                                        <span className="text-yellow-400 font-mono font-bold text-xs">{posStr}</span>
-                                        <span className="text-green-400 font-bold text-sm">+{suggestion.letter}</span>
-                                      </div>
-                                      <div className={`${scoreColor} font-bold text-sm`}>
-                                        {suggestion.score.toFixed(0)}
-                                      </div>
+                                    {/* Rank Badge - Top Left Corner */}
+                                    <div className="absolute top-0 left-0 bg-gray-800 text-gray-500 font-black text-xs px-2 py-0.5 border-r border-b border-gray-600">
+                                      #{index + 1}
                                     </div>
-                                    <div className="text-white font-bold uppercase text-xs tracking-wide truncate">
-                                      {suggestion.word}
+
+                                    {/* Score - Top Right */}
+                                    <div className={`absolute top-2 right-2 ${scoreColor} font-black text-2xl leading-none`}>
+                                      {suggestion.score.toFixed(0)}
+                                    </div>
+
+                                    {/* Main Content */}
+                                    <div className="pt-8 pb-3 px-3">
+                                      {/* Action: Position + Letter - Hero Section */}
+                                      <div className="flex items-center justify-center gap-2 mb-3">
+                                        <span className="text-cyan-400 font-mono font-bold text-sm bg-gray-800 bg-opacity-50 px-2 py-1">
+                                          {posStr}
+                                        </span>
+                                        <span className="text-green-400 font-black text-4xl leading-none">
+                                          {suggestion.letter}
+                                        </span>
+                                      </div>
+
+                                      {/* Result: Word */}
+                                      <div className="text-white font-black uppercase text-base tracking-widest text-center border-t border-gray-600 pt-2">
+                                        {suggestion.word}
+                                      </div>
                                     </div>
                                   </button>
                                 )
@@ -396,7 +418,6 @@ export function App() {
                         )}
                 </div>
               )}
-            </div>
           </div>
         )}
       </div>

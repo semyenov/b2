@@ -28,30 +28,30 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
     >
       {/* Header with player info */}
       <div className={`
-        p-4 flex flex-col gap-3 border-b-2 border-gray-700
+        p-3 flex flex-col gap-2 border-b-2 border-gray-700
         ${isCurrentTurn ? 'bg-yellow-900 bg-opacity-30' : 'bg-gray-750'}
       `}
       >
         {/* Indicators only - no player label */}
         {(isCurrentTurn || isAI) && (
-          <div className="flex items-center justify-center gap-2">
-            {isCurrentTurn && <span className="text-yellow-400 text-2xl">▶</span>}
-            {isAI && <span className="text-yellow-500 text-2xl">🤖</span>}
+          <div className="flex items-center justify-center gap-1.5">
+            {isCurrentTurn && <span className="text-yellow-400 text-xl">▶</span>}
+            {isAI && <span className="text-yellow-500 text-xl">🤖</span>}
           </div>
         )}
         <div className="flex items-center justify-center">
-          <span className="text-6xl font-black text-gray-100 tabular-nums">
+          <span className="text-6xl font-black text-gray-100 tabular-nums tracking-tight">
             {score}
           </span>
         </div>
-        <div className="text-center text-xs text-gray-500 uppercase tracking-wider">
+        <div className="text-center text-[10px] text-gray-500 uppercase tracking-wider">
           Счёт
         </div>
       </div>
 
       {/* Words list */}
       <div className="flex-1 overflow-y-auto p-3">
-        <div className="text-xs text-gray-500 mb-3 font-semibold uppercase tracking-wide">
+        <div className="text-xs text-gray-500 mb-2 font-semibold uppercase tracking-wide">
           Слова:
           {' '}
           {playerWords.length}
@@ -59,13 +59,13 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
         <div className="space-y-1.5">
           {playerWords.length === 0
             ? (
-                <div className="text-gray-600 text-sm italic py-8 text-center">Пока нет слов</div>
+                <div className="text-gray-600 text-sm italic py-4 text-center">Пока нет слов</div>
               )
             : (
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-3 py-2 bg-gray-750 hover:bg-gray-700 text-sm font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
+                    className="px-2.5 py-2 bg-gray-750 hover:bg-gray-700 text-sm font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
                   >
                     <span className="font-bold">{word}</span>
                     <span className="text-xs text-gray-500 group-hover:text-gray-400">

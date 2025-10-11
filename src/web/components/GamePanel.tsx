@@ -36,7 +36,7 @@ export function GamePanel({
   return (
     <div className="flex flex-col h-full">
       {/* Board Section - Centered */}
-      <div className="flex justify-center mb-3">
+      <div className="flex justify-center mb-4">
         <Board
           game={game}
           selectedCell={selectedCell}
@@ -54,7 +54,7 @@ export function GamePanel({
           {wordFormed
             ? (
               /* Word Display - Hero Element */
-                <div className="flex flex-col items-center justify-center gap-1 w-full py-2 bg-gray-700">
+                <div className="flex flex-col items-center justify-center gap-1 w-full py-3 bg-gray-700">
                   <div className="text-4xl font-black font-mono tracking-widest text-center text-cyan-400">
                     {wordFormed}
                   </div>
@@ -116,8 +116,8 @@ export function GamePanel({
         </div>
 
         {/* Alphabet Grid - Enhanced Visibility */}
-        <div className="p-3">
-          <div className="grid grid-cols-11 gap-1.5 max-w-4xl mx-auto">
+        <div className="p-4">
+          <div className="grid grid-cols-11 gap-2.5 max-w-4xl mx-auto">
             {RUSSIAN_ALPHABET.map(letter => (
               <button
                 key={letter}
@@ -125,7 +125,7 @@ export function GamePanel({
                 onMouseEnter={() => setHoveredLetter(letter)}
                 onMouseLeave={() => setHoveredLetter('')}
                 disabled={disabled || !selectedCell || !!selectedLetter}
-                className={`aspect-square font-black text-2xl transition-all duration-200 ${selectedLetter === letter
+                className={`aspect-square font-black text-3xl transition-all duration-200 ${selectedLetter === letter
                   ? 'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105'
                   : hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
                     ? 'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3'

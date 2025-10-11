@@ -51,9 +51,9 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-8">
-      <div className="mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-cyan-400 mb-2">Available Games</h1>
             <p className="text-gray-400 text-base">Join an existing game or create a new one</p>
@@ -90,7 +90,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                   {' '}
                   available
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {games.map((game) => {
                     const status = getGameStatus(game)
                     const baseWord = getBaseWord(game)
@@ -119,10 +119,10 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                       <div
                         key={game.id}
                         onClick={() => handleJoin(game)}
-                        className="bg-gray-800 border-2 border-gray-700 p-5 cursor-pointer transition-all duration-200 hover:border-cyan-500 hover:shadow-depth-3 hover:scale-105 hover:bg-gray-750 shadow-depth-1"
+                        className="bg-gray-800 border-2 border-gray-700 p-6 cursor-pointer transition-all duration-200 hover:border-cyan-500 hover:shadow-depth-3 hover:scale-105 hover:bg-gray-750 shadow-depth-1"
                       >
                         {/* Header: Status + Time */}
-                        <div className="flex justify-between items-start mb-3">
+                        <div className="flex justify-between items-start mb-4">
                           <div className={`px-2.5 py-1 text-xs font-bold border ${statusInfo.color}`}>
                             {statusInfo.label}
                           </div>
@@ -130,7 +130,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                         </div>
 
                         {/* Base Word */}
-                        <div className="mb-3">
+                        <div className="mb-4">
                           <div className="text-2xl font-bold text-cyan-400 tracking-wider mb-1">
                             {baseWord}
                           </div>
@@ -141,7 +141,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                         </div>
 
                         {/* Game Info */}
-                        <div className="space-y-2 mb-4 text-sm">
+                        <div className="space-y-2 mb-5 text-sm">
                           <div className="flex items-center justify-between">
                             <span className="text-gray-400">Board:</span>
                             <span className="text-gray-200 font-mono">
@@ -166,8 +166,8 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                         </div>
 
                         {/* Players & Scores */}
-                        <div className="border-t border-gray-700 pt-3 mb-4">
-                          <div className="space-y-1.5">
+                        <div className="border-t border-gray-700 pt-4 mb-5">
+                          <div className="space-y-2">
                             {game.players.map((player, idx) => (
                               <div
                                 key={player}

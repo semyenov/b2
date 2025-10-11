@@ -23,13 +23,13 @@ export function Board({
   const [hoveredCell, setHoveredCell] = useState<{ row: number, col: number } | null>(null)
 
   return (
-    <div className="bg-gray-750 px-6 py-6 shadow-depth-4 border-2 border-gray-600">
+    <div className="px-4 py-4 max-w-4xl mx-auto">
       {/* Column headers */}
       <div className="flex mb-3">
-        <div className="w-10 h-10" />
+        <div className="w-14 h-14" />
         {/* Empty corner */}
         {Array.from({ length: size }, (_, i) => (
-          <div key={i} className="w-14 h-10 flex items-center justify-center text-cyan-300 font-black text-xl bg-gray-800 bg-opacity-40">
+          <div key={i} className="w-18 h-14 flex items-center justify-center text-cyan-300 font-black text-xl">
             {String.fromCharCode(1040 + i)}
             {/* Russian letters А-Я */}
           </div>
@@ -40,7 +40,7 @@ export function Board({
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {/* Row number */}
-          <div className="w-10 h-14 flex items-center justify-center text-cyan-300 font-black text-xl bg-gray-800 bg-opacity-40">
+          <div className="w-14 h-18 flex items-center justify-center text-cyan-300 font-black text-xl">
             {rowIndex}
           </div>
 
@@ -76,7 +76,7 @@ export function Board({
                 onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
                 onMouseLeave={() => setHoveredCell(null)}
                 className={`
-                  w-14 h-14 border-2 flex items-center justify-center text-3xl font-black
+                  w-18 h-18 border-2 flex items-center justify-center text-4xl font-black
                   transition-all duration-200 relative
                   ${selected
                 ? 'bg-blue-600 border-blue-400 text-white shadow-depth-3'
@@ -109,22 +109,6 @@ export function Board({
           })}
         </div>
       ))}
-
-      {/* Legend - Enhanced Visibility */}
-      <div className="mt-5 flex gap-6 text-base text-gray-300 justify-center items-center bg-gray-800 bg-opacity-60 py-3 px-4">
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 bg-blue-600 border-2 border-blue-400 shadow-sm"></div>
-          <span className="font-semibold">Выбрана</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 bg-green-600 border-2 border-green-400 shadow-sm"></div>
-          <span className="font-semibold">Путь</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 bg-gray-650 border-2 border-yellow-400 shadow-sm"></div>
-          <span className="font-semibold">Доступно</span>
-        </div>
-      </div>
     </div>
   )
 }
