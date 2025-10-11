@@ -23,13 +23,13 @@ export function Board({
   const [hoveredCell, setHoveredCell] = useState<{ row: number, col: number } | null>(null)
 
   return (
-    <div className="px-3 py-2 max-w-4xl mx-auto">
+    <div className="px-[clamp(0.5rem,1vw,1rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] w-full max-w-[min(90vw,1200px)] mx-auto overflow-hidden">
       {/* Column headers */}
       <div className="flex mb-2">
-        <div className="w-14 h-14" />
+        <div className="w-[clamp(3rem,4vw,4rem)] h-[clamp(3rem,4vw,4rem)]" />
         {/* Empty corner */}
         {Array.from({ length: size }, (_, i) => (
-          <div key={i} className="w-18 h-14 flex items-center justify-center text-cyan-300 font-black text-xl">
+          <div key={i} className="w-[clamp(3rem,6vw,6rem)] h-[clamp(3rem,4vw,4rem)] flex items-center justify-center text-cyan-300 font-black text-[clamp(1rem,2vw,1.5rem)]">
             {String.fromCharCode(1040 + i)}
             {/* Russian letters А-Я */}
           </div>
@@ -40,7 +40,7 @@ export function Board({
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {/* Row number */}
-          <div className="w-14 h-18 flex items-center justify-center text-cyan-300 font-black text-xl">
+          <div className="w-[clamp(3rem,4vw,4rem)] h-[clamp(3rem,6vw,6rem)] flex items-center justify-center text-cyan-300 font-black text-[clamp(1rem,2vw,1.5rem)]">
             {rowIndex}
           </div>
 
@@ -76,7 +76,7 @@ export function Board({
                 onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
                 onMouseLeave={() => setHoveredCell(null)}
                 className={`
-                  w-18 h-18 border-2 flex items-center justify-center text-4xl font-black
+                  w-[clamp(3rem,6vw,6rem)] h-[clamp(3rem,6vw,6rem)] border-2 flex items-center justify-center text-[clamp(2rem,4vw,4rem)] font-black
                   transition-all duration-200 relative
                   ${selected
                 ? 'bg-blue-600 border-blue-400 text-white shadow-depth-3'

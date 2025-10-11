@@ -229,7 +229,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Three column layout - fills available space */}
-            <div className="flex-1 grid grid-cols-[250px_1fr_250px] gap-6 px-6 py-3 overflow-hidden">
+            <div className="flex-1 grid grid-cols-[clamp(200px,15vw,320px)_1fr_clamp(200px,15vw,320px)] gap-[clamp(1rem,1.5vw,2rem)] px-[clamp(1rem,2vw,2rem)] py-[clamp(0.5rem,1vw,1rem)] overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}
@@ -261,19 +261,19 @@ export function App() {
             </div>
 
             {/* Control buttons bar - fixed at bottom */}
-            <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 px-6 py-4 shadow-depth-3">
-              <div className="flex items-center justify-between gap-6">
+            <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 px-[clamp(1rem,2vw,2rem)] py-[clamp(0.75rem,1.5vw,1.5rem)] shadow-depth-3 overflow-hidden">
+              <div className="flex items-center justify-between gap-[clamp(0.5rem,1.5vw,1.5rem)] min-w-0">
                 {/* Left: Exit Button */}
                 <button
                   onClick={handleExitToMenu}
-                  className="px-5 py-2 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-lg font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
+                  className="px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[clamp(0.875rem,1.5vw,1.125rem)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0"
                 >
                   ← Выход
                 </button>
 
                 {/* Center: Control Buttons */}
                 {playerName && currentGame && (
-                  <div className="flex items-center gap-3 flex-1 justify-center">
+                  <div className="flex items-center gap-[clamp(0.5rem,1vw,1rem)] flex-1 justify-center min-w-0">
                     <button
                       onClick={() => {
                         if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
@@ -283,7 +283,7 @@ export function App() {
                         }
                       }}
                       disabled={!canSubmitMove(selectedCell, selectedLetter, wordPath) || !isMyTurn()}
-                      className={`px-8 py-2 font-bold text-lg transition-all duration-200 ${canSubmitMove(selectedCell, selectedLetter, wordPath) && isMyTurn()
+                      className={`px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] transition-all duration-200 flex-shrink-0 ${canSubmitMove(selectedCell, selectedLetter, wordPath) && isMyTurn()
                         ? 'bg-green-600 hover:bg-green-700 text-white shadow-depth-2 hover:shadow-depth-3 hover:scale-105'
                         : 'bg-gray-700 text-gray-500 cursor-not-allowed shadow-depth-1'
                       }`}
@@ -294,7 +294,7 @@ export function App() {
                     <button
                       onClick={handleClearSelection}
                       disabled={!isMyTurn() || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-                      className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-gray-600 hover:bg-gray-500 text-white font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
                     >
                       ✕ Отмена
                     </button>
@@ -302,7 +302,7 @@ export function App() {
                     <button
                       onClick={toggleSuggestions}
                       disabled={!isMyTurn()}
-                      className={`px-6 py-2 font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative ${
+                      className={`px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative flex-shrink-0 ${
                         showSuggestions
                           ? 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3'
                           : 'bg-yellow-600 hover:bg-yellow-700 text-white'
@@ -319,20 +319,20 @@ export function App() {
                 )}
 
                 {/* Right: Info Badges */}
-                <div className="flex items-center gap-3">
-                  <div className="text-base font-bold text-gray-200 bg-gray-700 px-4 py-2 shadow-depth-1 border-2 border-gray-600">
+                <div className="flex items-center gap-[clamp(0.5rem,1vw,1rem)] min-w-0 flex-shrink-0">
+                  <div className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold text-gray-200 bg-gray-700 px-[clamp(0.75rem,1.5vw,1rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] shadow-depth-1 border-2 border-gray-600 flex-shrink-0">
                     Ход
                     {' '}
                     {Math.floor(currentGame.moves.length / 2) + 1}
                   </div>
                   {aiThinking && (
-                    <div className="px-4 py-2 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse">
-                      <span className="text-yellow-300 font-bold text-lg">🤖 AI</span>
+                    <div className="px-[clamp(0.75rem,1.5vw,1rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse flex-shrink-0">
+                      <span className="text-yellow-300 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)]">🤖 AI</span>
                     </div>
                   )}
                   {playerName && (
-                    <div className="px-4 py-2 bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1 max-w-[180px]">
-                      <span className="text-cyan-300 font-bold text-base truncate block" title={playerName}>
+                    <div className="px-[clamp(0.75rem,1.5vw,1rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1 max-w-[clamp(150px,20vw,200px)] flex-shrink-0 min-w-0">
+                      <span className="text-cyan-300 font-bold text-[clamp(0.875rem,1.5vw,1rem)] truncate block" title={playerName}>
                         {playerName}
                       </span>
                     </div>
@@ -343,7 +343,7 @@ export function App() {
 
             {/* Suggestions Panel - Expands when visible, up to 50% of viewport */}
             {showSuggestions && playerName && currentGame && (
-              <div className="shrink-0 max-h-[50vh] overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-6 py-5 shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+              <div className="shrink-0 max-h-[50vh] min-h-0 overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-[clamp(1rem,2vw,2rem)] py-[clamp(1rem,1.5vw,1.5rem)] shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
                   {loadingSuggestions
                     ? (
                         <div className="flex items-center justify-center py-2">

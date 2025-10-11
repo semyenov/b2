@@ -40,7 +40,7 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
           </div>
         )}
         <div className="flex items-center justify-center">
-          <span className="text-6xl font-black text-gray-100 tabular-nums tracking-tight">
+          <span className="text-[clamp(3rem,5vw,5rem)] font-black text-gray-100 tabular-nums tracking-tight">
             {score}
           </span>
         </div>
@@ -50,8 +50,8 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
       </div>
 
       {/* Words list */}
-      <div className="flex-1 overflow-y-auto p-2 min-h-0">
-        <div className="text-sm text-gray-400 mb-2 font-bold uppercase tracking-wide">
+      <div className="flex-1 overflow-y-auto p-[clamp(0.25rem,0.5vw,0.75rem)] min-h-0">
+        <div className="text-[clamp(0.75rem,1.2vw,1rem)] text-gray-400 mb-2 font-bold uppercase tracking-wide">
           Слова:
           {' '}
           {playerWords.length}
@@ -59,13 +59,13 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
         <div className="space-y-2">
           {playerWords.length === 0
             ? (
-                <div className="text-gray-600 text-sm italic py-4 text-center">Пока нет слов</div>
+                <div className="text-gray-600 text-[clamp(0.75rem,1.2vw,1rem)] italic py-4 text-center">Пока нет слов</div>
               )
             : (
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-3 py-2.5 bg-gray-750 hover:bg-gray-700 text-base font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
+                    className="px-[clamp(0.5rem,1vw,1rem)] py-[clamp(0.5rem,0.8vw,0.75rem)] bg-gray-750 hover:bg-gray-700 text-[clamp(0.875rem,1.5vw,1.125rem)] font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
                   >
                     <span className="font-black tracking-wide">{word}</span>
                     <span className="text-xs text-gray-500 group-hover:text-gray-400 font-bold">
