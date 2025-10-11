@@ -23,13 +23,13 @@ export function Board({
   const [hoveredCell, setHoveredCell] = useState<{ row: number, col: number } | null>(null)
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-[clamp(0.5rem,1vh,1rem)]" style={{ maxWidth: 'fit-content', maxHeight: '100%' }}>
+    <div className="flex flex-col items-center justify-center h-full w-full p-[clamp(0.5rem,1vh,1rem)]" style={{ maxWidth: 'fit-content', maxHeight: '95%' }}>
       {/* Column headers */}
       <div className="flex mb-1">
-        <div className="w-[clamp(2.5rem,3.5vw,3.5rem)] h-[clamp(2.5rem,3.5vw,3.5rem)]" />
+        <div className="w-[clamp(2.5rem,4vw,4rem)] h-[clamp(2.5rem,3.5vw,3.5rem)]" />
         {/* Empty corner */}
         {Array.from({ length: size }, (_, i) => (
-          <div key={i} className="w-[clamp(3.5rem,6vw,5.5rem)] h-[clamp(2.5rem,3.5vw,3.5rem)] flex items-center justify-center text-cyan-300 font-black text-[clamp(1rem,1.75vw,1.5rem)]">
+          <div key={i} className="w-[clamp(3.5rem,6.5vw,6rem)] h-[clamp(2.5rem,3.5vw,3.5rem)] flex items-center justify-center text-cyan-200 font-black text-[clamp(1.125rem,2vw,1.75rem)]">
             {String.fromCharCode(1040 + i)}
             {/* Russian letters А-Я */}
           </div>
@@ -40,7 +40,7 @@ export function Board({
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {/* Row number */}
-          <div className="w-[clamp(2.5rem,3.5vw,3.5rem)] h-[clamp(3.5rem,6vw,5.5rem)] flex items-center justify-center text-cyan-300 font-black text-[clamp(1rem,1.75vw,1.5rem)]">
+          <div className="w-[clamp(2.5rem,4vw,4rem)] h-[clamp(3.5rem,6.5vw,6rem)] flex items-center justify-center text-cyan-200 font-black text-[clamp(1.125rem,2vw,1.75rem)]">
             {rowIndex}
           </div>
 
@@ -76,7 +76,7 @@ export function Board({
                 onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
                 onMouseLeave={() => setHoveredCell(null)}
                 className={`
-                  w-[clamp(3.5rem,6vw,5.5rem)] h-[clamp(3.5rem,6vw,5.5rem)] border-2 flex items-center justify-center text-[clamp(1.75rem,3.5vw,3rem)] font-black
+                  w-[clamp(3.5rem,6.5vw,6rem)] h-[clamp(3.5rem,6.5vw,6rem)] border-2 flex items-center justify-center text-[clamp(1.75rem,3.75vw,3.25rem)] font-black
                   transition-all duration-200 relative
                   ${selected
                 ? 'bg-blue-600 border-blue-400 text-white shadow-depth-3'

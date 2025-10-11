@@ -229,7 +229,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Three column layout - fills available space */}
-            <div className="flex-1 grid grid-cols-[clamp(250px,15vw,320px)_1fr_clamp(250px,15vw,320px)] gap-[clamp(1rem,1.5vw,2rem)] px-[clamp(1rem,2vw,2rem)] py-[clamp(0.5rem,1vw,1rem)] overflow-hidden">
+            <div className="flex-1 grid grid-cols-[clamp(300px,15vw,320px)_1fr_clamp(300px,15vw,320px)] gap-[clamp(1rem,1.5vw,2rem)] px-[clamp(1rem,2vw,2rem)] py-[clamp(0.5rem,1vw,1rem)] overflow-hidden">
               {/* Left: Player 1 */}
               <PlayerPanel
                 game={currentGame}
@@ -262,53 +262,6 @@ export function App() {
 
             {/* Control buttons bar - fixed at bottom */}
             <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 shadow-depth-3 overflow-hidden">
-              {/* Status Message Bar */}
-              {playerName && currentGame && (
-                <div className="border-b-2 border-gray-700 px-[clamp(1rem,2vw,2rem)] py-[clamp(0.5rem,1vh,0.75rem)]">
-                  {!isMyTurn()
-                    ? (
-                        <div className="text-orange-300 font-bold text-[clamp(1rem,2vw,1.5rem)] text-center bg-orange-900 bg-opacity-40 py-[clamp(0.25rem,0.5vh,0.5rem)]">
-                          ⏳ Ждите хода...
-                        </div>
-                      )
-                    : !selectedCell
-                      ? (
-                          <div className="text-cyan-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold text-center bg-cyan-900 bg-opacity-20 py-[clamp(0.25rem,0.5vh,0.5rem)]">
-                            👆
-                            {' '}
-                            <span className="font-black">Шаг 1:</span>
-                            {' '}
-                            Выберите пустую клетку
-                          </div>
-                        )
-                      : !selectedLetter
-                        ? (
-                            <div className="text-blue-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold text-center bg-blue-900 bg-opacity-20 py-[clamp(0.25rem,0.5vh,0.5rem)]">
-                              🔤
-                              {' '}
-                              <span className="font-black">Шаг 2:</span>
-                              {' '}
-                              Выберите букву
-                            </div>
-                          )
-                        : wordPath.length < 2
-                          ? (
-                              <div className="text-purple-200 text-[clamp(1rem,2vw,1.5rem)] font-semibold text-center bg-purple-900 bg-opacity-20 py-[clamp(0.25rem,0.5vh,0.5rem)]">
-                                ✍️
-                                {' '}
-                                <span className="font-black">Шаг 3:</span>
-                                {' '}
-                                Составьте слово из букв
-                              </div>
-                            )
-                          : (
-                              <div className="text-green-300 text-[clamp(1rem,2vw,1.5rem)] font-bold text-center bg-green-900 bg-opacity-20 py-[clamp(0.25rem,0.5vh,0.5rem)]">
-                                ✓ Готово! Нажмите "Подтвердить ход"
-                              </div>
-                            )}
-                </div>
-              )}
-
               {/* Buttons Bar */}
               <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.75rem,1.5vw,1.5rem)]">
                 <div className="flex items-center justify-between gap-[clamp(0.5rem,1.5vw,1.5rem)] min-w-0">
@@ -320,25 +273,48 @@ export function App() {
                     ← Выход
                   </button>
 
-                  {/* Center: Control Buttons */}
+                  {/* Center: Control Buttons or Status Messages */}
                   {playerName && currentGame && (
                     <div className="flex items-center gap-[clamp(0.5rem,1vw,1rem)] flex-1 justify-center min-w-0">
-                    <button
-                      onClick={() => {
-                        if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
-                          const wordFormed = formWordFromPath(wordPath, currentGame.board, selectedCell, selectedLetter)
-                          const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, wordFormed)
-                          makeMove(moveBody)
-                        }
-                      }}
-                      disabled={!canSubmitMove(selectedCell, selectedLetter, wordPath) || !isMyTurn()}
-                      className={`px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] transition-all duration-200 flex-shrink-0 ${canSubmitMove(selectedCell, selectedLetter, wordPath) && isMyTurn()
-                        ? 'bg-green-600 hover:bg-green-700 text-white shadow-depth-2 hover:shadow-depth-3 hover:scale-105'
-                        : 'bg-gray-700 text-gray-500 cursor-not-allowed shadow-depth-1'
-                      }`}
-                    >
-                      ✓ Подтвердить ход
-                    </button>
+                    {/* Conditional rendering: Status message or Submit button */}
+                    {!isMyTurn()
+                      ? (
+                          <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] text-orange-300 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] bg-orange-900 bg-opacity-50 border-2 border-orange-700 shadow-depth-1 flex-shrink-0">
+                            ⏳ Ждите хода...
+                          </div>
+                        )
+                      : !selectedCell
+                        ? (
+                            <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] text-cyan-200 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] bg-cyan-900 bg-opacity-30 border-2 border-cyan-700 shadow-depth-1 flex-shrink-0">
+                              👆 Шаг 1: Выберите пустую клетку
+                            </div>
+                          )
+                        : !selectedLetter
+                          ? (
+                              <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] text-blue-200 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] bg-blue-900 bg-opacity-30 border-2 border-blue-700 shadow-depth-1 flex-shrink-0">
+                                🔤 Шаг 2: Выберите букву
+                              </div>
+                            )
+                          : wordPath.length < 2
+                            ? (
+                                <div className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] text-purple-200 font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] bg-purple-900 bg-opacity-30 border-2 border-purple-700 shadow-depth-1 flex-shrink-0">
+                                  ✍️ Шаг 3: Составьте слово из букв
+                                </div>
+                              )
+                            : (
+                                <button
+                                  onClick={() => {
+                                    if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
+                                      const wordFormed = formWordFromPath(wordPath, currentGame.board, selectedCell, selectedLetter)
+                                      const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, wordFormed)
+                                      makeMove(moveBody)
+                                    }
+                                  }}
+                                  className="px-[clamp(1rem,2vw,2rem)] py-[clamp(0.25rem,0.5vw,0.75rem)] bg-green-600 hover:bg-green-700 text-white font-bold text-[clamp(0.875rem,1.5vw,1.125rem)] transition-all duration-200 shadow-depth-2 hover:shadow-depth-3 hover:scale-105 flex-shrink-0"
+                                >
+                                  ✓ Подтвердить ход
+                                </button>
+                              )}
 
                     <button
                       onClick={handleClearSelection}
