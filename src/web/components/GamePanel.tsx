@@ -79,12 +79,12 @@ export function GamePanel({
           <div className="text-center">
             {disabled
               ? (
-                  <div className="text-orange-300 font-bold text-xl py-2 px-4 bg-orange-900 bg-opacity-30 border-2 border-orange-600 inline-block">⏳ Ждите хода...</div>
+                  <div className="text-orange-300 font-bold text-2xl py-3 px-5 bg-orange-900 bg-opacity-30 border-2 border-orange-600 inline-block">⏳ Ждите хода...</div>
                 )
               : (
                   <>
                     {currentStep === 1 && (
-                      <div className="text-cyan-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-cyan-600 border-opacity-40 inline-block">
+                      <div className="text-cyan-200 text-2xl font-semibold py-3 px-5 bg-gray-800 bg-opacity-60 border-2 border-cyan-600 border-opacity-40 inline-block">
                         👆
                         <span className="font-black">Шаг 1:</span>
                         {' '}
@@ -92,7 +92,7 @@ export function GamePanel({
                       </div>
                     )}
                     {currentStep === 2 && (
-                      <div className="text-blue-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-blue-500 border-opacity-40 inline-block">
+                      <div className="text-blue-200 text-2xl font-semibold py-3 px-5 bg-gray-800 bg-opacity-60 border-2 border-blue-500 border-opacity-40 inline-block">
                         🔤
                         <span className="font-black">Шаг 2:</span>
                         {' '}
@@ -100,23 +100,27 @@ export function GamePanel({
                       </div>
                     )}
                     {currentStep === 3 && (
-                      <div className="text-purple-200 text-xl font-semibold py-2 px-4 bg-gray-800 bg-opacity-60 border-2 border-purple-500 border-opacity-40 inline-block">
+                      <div className="text-purple-200 text-2xl font-semibold py-3 px-5 bg-gray-800 bg-opacity-60 border-2 border-purple-500 border-opacity-40 inline-block">
                         ✍️
                         <span className="font-black">Шаг 3:</span>
                         {' '}
                         Составьте слово из букв
                       </div>
                     )}
-                    {currentStep === 4 && <div className="text-green-200 font-black text-2xl py-2 px-4 bg-green-900 bg-opacity-40 border-2 border-green-500 inline-block shadow-depth-2">✓ Готово к отправке!</div>}
+                    {currentStep === 4 && (
+                      <div className="text-green-200 font-black text-3xl py-3 px-5 bg-green-900 bg-opacity-40 border-2 border-green-500 inline-block shadow-depth-2">
+                        ✓ Готово к отправке!
+                      </div>
+                    )}
                   </>
                 )}
           </div>
 
           {/* Word Display - Balanced and Prominent */}
           {wordFormed && (
-            <div className="bg-gray-900 border-2 border-gray-600 p-4 shadow-depth-2">
-              <div className="text-xs text-gray-500 mb-2 text-center uppercase tracking-wider">Сформированное слово:</div>
-              <div className="text-3xl font-bold font-mono tracking-widest text-center text-cyan-400">
+            <div className="bg-gray-900 border-2 border-gray-600 p-4 shadow-depth-2 mt-4">
+              <div className="text-sm text-gray-500 mb-2 text-center uppercase tracking-wider font-semibold">Сформированное слово:</div>
+              <div className="text-4xl font-bold font-mono tracking-widest text-center text-cyan-400">
                 {wordFormed}
               </div>
             </div>
@@ -133,7 +137,7 @@ export function GamePanel({
                 onMouseEnter={() => setHoveredLetter(letter)}
                 onMouseLeave={() => setHoveredLetter('')}
                 disabled={disabled || !selectedCell || !!selectedLetter}
-                className={`aspect-square font-black text-xl transition-all duration-200 ${selectedLetter === letter
+                className={`aspect-square font-black text-2xl transition-all duration-200 ${selectedLetter === letter
                   ? 'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105'
                   : hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
                     ? 'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3'
@@ -155,7 +159,7 @@ export function GamePanel({
             <button
               onClick={handleSubmit}
               disabled={!canSubmit || disabled}
-              className={`flex-1 py-4 px-6 font-bold text-lg transition-all duration-200 ${canSubmit && !disabled
+              className={`flex-1 py-4 px-6 font-bold text-xl transition-all duration-200 ${canSubmit && !disabled
                 ? 'bg-green-600 hover:bg-green-700 text-white shadow-depth-2 hover:shadow-depth-3 hover:scale-105 glow-success'
                 : 'bg-gray-700 text-gray-500 cursor-not-allowed shadow-depth-1'
               }`}
@@ -166,7 +170,7 @@ export function GamePanel({
             <button
               onClick={onClearSelection}
               disabled={disabled || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-              className="px-6 py-4 bg-gray-600 hover:bg-gray-500 text-white font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-6 py-4 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               ✕ Отмена
             </button>
@@ -177,11 +181,11 @@ export function GamePanel({
                 setShowSuggestions(true)
               }}
               disabled={disabled}
-              className="px-6 py-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
+              className="px-6 py-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-xl transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
             >
               💡 AI
               {suggestions.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 font-bold shadow-depth-2">
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2">
                   {suggestions.length}
                 </span>
               )}

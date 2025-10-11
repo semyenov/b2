@@ -217,27 +217,27 @@ export function App() {
             <div className="bg-gray-800 border-b-2 border-gray-700 px-6 py-4 flex justify-between items-center shadow-depth-3 relative z-10">
               <button
                 onClick={handleExitToMenu}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-base font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
+                className="px-5 py-2 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-lg font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
               >
                 ← Выход
               </button>
 
               <div className="flex items-center gap-4">
-                <div className="text-base font-bold text-gray-200 bg-gray-700 px-4 py-2 shadow-depth-1 border-2 border-gray-600">
+                <div className="text-lg font-bold text-gray-200 bg-gray-700 px-5 py-2 shadow-depth-1 border-2 border-gray-600">
                   Ход
                   {' '}
                   {Math.floor(currentGame.moves.length / 2) + 1}
                 </div>
                 {aiThinking && (
-                  <div className="px-3 py-2 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse">
-                    <span className="text-yellow-300 font-bold text-base">🤖 AI думает...</span>
+                  <div className="px-4 py-2 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse">
+                    <span className="text-yellow-300 font-bold text-lg">🤖 AI думает...</span>
                   </div>
                 )}
               </div>
 
               {playerName && (
-                <div className="px-4 py-2 bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1">
-                  <span className="text-cyan-300 font-bold text-base">{playerName}</span>
+                <div className="px-5 py-2 bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1">
+                  <span className="text-cyan-300 font-bold text-lg">{playerName}</span>
                 </div>
               )}
             </div>
