@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
 import { GamePanel } from './components/GamePanel'
@@ -64,11 +65,23 @@ export function App() {
     isMyTurn,
   })
 
+  // Suggestions visibility toggle
+  const [showSuggestions, setShowSuggestions] = useState(false)
+
+  // Toggle suggestions and load if not already loaded
+  const toggleSuggestions = () => {
+    if (!showSuggestions && suggestions.length === 0 && !loadingSuggestions) {
+      loadSuggestions()
+    }
+    setShowSuggestions(!showSuggestions)
+  }
+
   // Wrapper to clear selections after move
   const makeMove = async (move: Parameters<typeof makeApiMove>[0]) => {
     await makeApiMove(move)
     clearSuggestions()
     clearAll()
+    setShowSuggestions(false) // Hide suggestions after move
   }
 
   // Handle exit to menu
@@ -76,6 +89,7 @@ export function App() {
     setScreen('menu')
     clearSuggestions()
     clearAll()
+    setShowSuggestions(false)
   }
 
   return (
@@ -235,9 +249,6 @@ export function App() {
                   wordPath={wordPath}
                   onCellClick={handleCellClick}
                   onLetterSelect={handleLetterSelect}
-                  suggestions={suggestions}
-                  loadingSuggestions={loadingSuggestions}
-                  onSelectSuggestion={handleSuggestionSelect}
                 />
               )}
 
@@ -289,12 +300,16 @@ export function App() {
                     </button>
 
                     <button
-                      onClick={loadSuggestions}
+                      onClick={toggleSuggestions}
                       disabled={!isMyTurn()}
-                      className="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative"
+                      className={`px-6 py-2 font-bold text-lg transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative ${
+                        showSuggestions
+                          ? 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3'
+                          : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                      }`}
                     >
-                      💡 AI
-                      {suggestions.length > 0 && (
+                      💡 {showSuggestions ? 'Скрыть' : 'AI'}
+                      {!showSuggestions && suggestions.length > 0 && (
                         <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2">
                           {suggestions.length}
                         </span>
@@ -322,6 +337,65 @@ export function App() {
                   )}
                 </div>
               </div>
+
+              {/* Suggestions Panel - Collapsible */}
+              {showSuggestions && playerName && currentGame && (
+                <div className="border-t-2 border-gray-700 bg-gray-750 px-6 py-4">
+                  {loadingSuggestions
+                    ? (
+                        <div className="flex items-center justify-center py-4">
+                          <div className="animate-spin h-8 w-8 border-b-4 border-yellow-400 mr-3"></div>
+                          <div className="text-gray-400 font-semibold">Загрузка подсказок...</div>
+                        </div>
+                      )
+                    : suggestions.length === 0
+                      ? (
+                          <div className="text-center py-4 text-gray-500">
+                            Нет доступных подсказок
+                          </div>
+                        )
+                      : (
+                          <div>
+                            <div className="text-sm text-gray-400 mb-3 font-semibold">
+                              AI Подсказки (
+                              {suggestions.length}
+                              )
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
+                              {suggestions.map((suggestion, index) => {
+                                const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
+                                const scoreColor = suggestion.score >= 10 ? 'text-green-400' : suggestion.score >= 5 ? 'text-yellow-400' : 'text-gray-400'
+
+                                return (
+                                  <button
+                                    key={index}
+                                    onClick={() => {
+                                      handleSuggestionSelect(suggestion)
+                                      setShowSuggestions(false)
+                                    }}
+                                    className="group bg-gray-700 hover:bg-gray-650 border border-gray-600 hover:border-yellow-500 p-3 transition-all duration-200 hover:shadow-depth-2 text-left"
+                                  >
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-xs font-bold text-gray-500">#{index + 1}</span>
+                                        <span className="text-yellow-400 font-mono font-bold text-sm">{posStr}</span>
+                                        <span className="text-green-400 font-bold text-base">+{suggestion.letter}</span>
+                                      </div>
+                                      <div className={`${scoreColor} font-bold text-lg`}>
+                                        {suggestion.score.toFixed(0)}
+                                      </div>
+                                    </div>
+                                    <div className="text-white font-bold uppercase text-sm tracking-wide">
+                                      {suggestion.word}
+                                    </div>
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )}
+                </div>
+              )}
             </div>
           </div>
         )}

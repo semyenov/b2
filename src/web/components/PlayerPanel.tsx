@@ -32,19 +32,13 @@ export function PlayerPanel({ game, playerIndex, currentPlayerName, isLeft: _isL
         ${isCurrentTurn ? 'bg-yellow-900 bg-opacity-30' : 'bg-gray-750'}
       `}
       >
-        <div className="flex items-center gap-2">
-          {isCurrentTurn && <span className="text-yellow-400 text-xl">▶</span>}
-          <h3 className={`
-            font-bold text-xl
-            ${isMe ? 'text-cyan-400' : 'text-gray-300'}
-          `}
-          >
-            Игрок
-            {' '}
-            {playerIndex + 1}
-          </h3>
-          {isAI && <span className="text-yellow-500 text-lg">🤖</span>}
-        </div>
+        {/* Indicators only - no player label */}
+        {(isCurrentTurn || isAI) && (
+          <div className="flex items-center justify-center gap-2">
+            {isCurrentTurn && <span className="text-yellow-400 text-2xl">▶</span>}
+            {isAI && <span className="text-yellow-500 text-2xl">🤖</span>}
+          </div>
+        )}
         <div className="flex items-center justify-center">
           <span className="text-6xl font-black text-gray-100 tabular-nums">
             {score}
