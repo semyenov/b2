@@ -172,7 +172,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
-            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-lg)] p-[var(--spacing-resp-md)] lg:p-[var(--spacing-resp-xl)] overflow-hidden">
+            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-lg)] p-[var(--spacing-resp-md)] pb-0 lg:p-[var(--spacing-resp-xl)] overflow-hidden">
               {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
               <div className="flex lg:contents gap-[var(--spacing-resp-sm)] min-h-0">
                 <div className="flex-1 lg:flex-none min-h-0">

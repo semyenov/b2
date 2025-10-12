@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import type { UseFullscreenReturn } from '../types/hooks'
 
 /**
  * Custom hook for managing fullscreen mode
@@ -6,7 +7,7 @@ import { useEffect, useState } from 'react'
  *
  * @returns Object containing fullscreen state and toggle function
  */
-export function useFullscreen() {
+export function useFullscreen(): UseFullscreenReturn {
   const [isFullscreen, setIsFullscreen] = useState(false)
 
   // Update state when fullscreen changes (via F11, ESC, etc.)

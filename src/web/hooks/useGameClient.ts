@@ -1,33 +1,10 @@
 import type { CreateGameBody, GameState, MoveBody } from '../lib/client'
+import type { Screen, UseGameClientReturn } from '../types/hooks'
 import { useEffect, useRef, useState } from 'react'
 import { ApiClient } from '../lib/client'
 
-export type Screen = 'menu' | 'list' | 'create' | 'play'
-
-interface UseGameClientReturn {
-  // State
-  screen: Screen
-  gameId: string
-  games: GameState[]
-  currentGame: GameState | null
-  playerName: string
-  loading: boolean
-  error: string
-
-  // Actions
-  setScreen: (screen: Screen) => void
-  setError: (error: string) => void
-  loadGames: () => Promise<void>
-  createGame: (body: CreateGameBody) => Promise<void>
-  joinGame: (id: string, name: string) => Promise<void>
-  makeMove: (move: MoveBody) => Promise<void>
-  quickStart: () => Promise<void>
-  quickStartVsAI: () => Promise<void>
-
-  // Helpers
-  isMyTurn: () => boolean
-  apiClient: ApiClient
-}
+// Re-export for backwards compatibility
+export type { Screen, UseGameClientReturn } from '../types/hooks'
 
 export function useGameClient(): UseGameClientReturn {
   // Core state

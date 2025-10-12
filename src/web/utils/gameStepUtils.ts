@@ -4,8 +4,10 @@
  */
 
 import type { Position } from '../types/game'
+import type { GameStep } from '../types/ui'
 
-export type GameStep = 'waiting' | 'select-cell' | 'select-letter' | 'build-word' | 'ready-to-submit'
+// Re-export for backwards compatibility
+export type { GameStep } from '../types/ui'
 
 interface GameStepParams {
   isMyTurn: boolean
