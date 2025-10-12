@@ -42,7 +42,7 @@ export function GamePanel({
   }, [onLetterSelect])
 
   return (
-    <div className="flex flex-col h-full min-h-0 justify-center gap-[var(--spacing-resp-md)]">
+    <div className="flex flex-col h-full min-h-0 justify-center">
       {/* Board Section */}
       <div className="flex items-center justify-center min-h-0 overflow-hidden max-h-[65%]">
         <Board
@@ -56,7 +56,7 @@ export function GamePanel({
       </div>
 
       {/* Alphabet Section */}
-      <div className="bg-gray-800 border-2 border-gray-700 shadow-depth-3 flex flex-col max-h-[32%] min-h-[180px]">
+      <div className="bg-gray-800 border-2 border-t-0 border-gray-700 flex flex-col max-h-[32%] min-h-[180px]">
         {/* Alphabet Grid */}
         <div
           className="flex-1 min-h-0 flex items-center justify-center py-[var(--spacing-resp-sm)] px-[var(--spacing-resp-sm)]"
@@ -81,7 +81,7 @@ export function GamePanel({
                   aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
                   aria-pressed={isSelected}
                   className={cn(
-                    'aspect-square font-black text-[var(--text-resp-xl)] transition-all duration-200',
+                    'aspect-square font-black text-[var(--text-resp-2xl)] transition-all duration-200',
                     {
                       'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105': isSelected,
                       'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3': isHovered,

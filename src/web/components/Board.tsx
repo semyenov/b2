@@ -17,7 +17,7 @@ interface BoardProps {
 function getCellClassName(selected: boolean, inPath: boolean, hasCell: boolean, canClick: boolean, isHovered: boolean): string {
   return cn(
     // Base classes
-    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-board)] font-black transition-all duration-200 relative',
+    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-3xl)] font-black transition-all duration-200 relative',
 
     // State-based styling
     {
@@ -107,7 +107,7 @@ export const Board = memo(({
       <div className="flex mb-1">
         <div className="w-[var(--size-resp-label)] h-[var(--size-resp-header)]" />
         {Array.from({ length: size }, (_, i) => (
-          <div key={i} className="w-[var(--size-resp-cell)] h-[var(--size-resp-header)] flex items-center justify-center text-cyan-200 font-black text-[var(--text-resp-lg)]">
+          <div key={i} className="w-[var(--size-resp-cell)] h-[var(--size-resp-header)] flex items-center justify-center text-cyan-200 font-black text-[var(--text-resp-xl)]">
             {String.fromCharCode(1040 + i)}
           </div>
         ))}
@@ -117,7 +117,7 @@ export const Board = memo(({
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {/* Row number */}
-          <div className="w-[var(--size-resp-label)] h-[var(--size-resp-cell)] flex items-center justify-center text-cyan-200 font-black text-[var(--text-resp-lg)]">
+          <div className="w-[var(--size-resp-label)] h-[var(--size-resp-cell)] flex items-center justify-center text-cyan-200 font-black text-[var(--text-resp-xl)]">
             {rowIndex}
           </div>
 
@@ -174,3 +174,5 @@ export const Board = memo(({
     </div>
   )
 })
+
+Board.displayName = 'Board'

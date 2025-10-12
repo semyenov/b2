@@ -11,7 +11,6 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName }: Playe
   const player = game.players[playerIndex]
   const score = game.scores[player] || 0
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
-  const _isMe = player === currentPlayerName // Reserved for future use
   const isAI = game.aiPlayers.includes(player)
 
   // Get words played by this player from moves history
@@ -75,3 +74,5 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName }: Playe
     </div>
   )
 })
+
+PlayerPanel.displayName = 'PlayerPanel'

@@ -1,6 +1,5 @@
 interface StatusMessageProps {
-  step: 'waiting' | 'select-cell' | 'select-letter' | 'build-word' | 'ready'
-  word?: string
+  step: 'waiting' | 'select-cell' | 'select-letter' | 'build-word'
 }
 
 const stepConfig = {
@@ -32,16 +31,9 @@ const stepConfig = {
     bg: 'bg-purple-900 bg-opacity-30',
     border: 'border-purple-700',
   },
-  'ready': {
-    icon: '📤',
-    text: 'ОТПРАВИТЬ:',
-    color: 'text-green-300',
-    bg: 'bg-green-900 bg-opacity-30',
-    border: 'border-green-700',
-  },
 }
 
-export function StatusMessage({ step, word }: StatusMessageProps) {
+export function StatusMessage({ step }: StatusMessageProps) {
   const config = stepConfig[step]
 
   return (
@@ -49,12 +41,6 @@ export function StatusMessage({ step, word }: StatusMessageProps) {
       {config.icon}
       {' '}
       {config.text}
-      {step === 'ready' && word && (
-        <>
-          {' '}
-          <span className="text-[var(--text-resp-base)] font-black tracking-wider">{word}</span>
-        </>
-      )}
     </div>
   )
 }

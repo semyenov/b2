@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback } from 'react'
 import { Banner } from './components/Banner'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
@@ -6,10 +6,12 @@ import { GamePanel } from './components/GamePanel'
 import { MenuButton } from './components/MenuButton'
 import { PlayerPanel } from './components/PlayerPanel'
 import { StatusMessage } from './components/StatusMessage'
-import { A11Y_LABELS, GAME_CONFIG } from './constants/game'
+import { GAME_CONFIG } from './constants/game'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
+import { useGameControls } from './hooks/useGameControls'
 import { useGameInteraction } from './hooks/useGameInteraction'
+import { useLiveRegion } from './hooks/useLiveRegion'
 import { useSuggestions } from './hooks/useSuggestions'
 import { cn } from './utils/classNames'
 import { buildMoveBody, canSubmitMove, formWordFromPath } from './utils/moveValidation'
@@ -18,7 +20,6 @@ export function App() {
   // Core game client logic
   const {
     screen,
-    // gameId,
     games,
     currentGame,
     playerName,
@@ -70,56 +71,25 @@ export function App() {
     isMyTurn,
   })
 
-  // Suggestions visibility toggle
-  const [showSuggestions, setShowSuggestions] = useState(false)
+  // Game controls (extracted to hook)
+  const { showSuggestions, toggleSuggestions, hideSuggestions, makeMove, handleExitToMenu } = useGameControls({
+    currentGame,
+    playerName,
+    makeApiMove,
+    clearSuggestions,
+    clearInteraction: clearAll,
+    setScreen,
+    loadSuggestions,
+    suggestions,
+    loadingSuggestions,
+  })
 
-  // Live region announcements for screen readers
-  const [liveRegionMessage, setLiveRegionMessage] = useState<string>('')
-  const previousTurnRef = useRef<number | null>(null)
-
-  // Announce turn changes to screen readers
-  useEffect(() => {
-    if (!currentGame || screen !== 'play') {
-      return
-    }
-
-    const currentTurn = currentGame.currentPlayerIndex
-    if (previousTurnRef.current !== currentTurn) {
-      previousTurnRef.current = currentTurn
-      const currentPlayer = currentGame.players[currentTurn]
-
-      if (isMyTurn()) {
-        setLiveRegionMessage(A11Y_LABELS.YOUR_TURN)
-      }
-      else {
-        setLiveRegionMessage(A11Y_LABELS.WAITING_FOR_OPPONENT(currentPlayer))
-      }
-    }
-  }, [currentGame, screen, isMyTurn])
-
-  // Toggle suggestions and load if not already loaded
-  const toggleSuggestions = useCallback(() => {
-    if (!showSuggestions && suggestions.length === 0 && !loadingSuggestions) {
-      loadSuggestions()
-    }
-    setShowSuggestions(prev => !prev)
-  }, [showSuggestions, suggestions.length, loadingSuggestions, loadSuggestions])
-
-  // Wrapper to clear selections after move
-  const makeMove = useCallback(async (move: Parameters<typeof makeApiMove>[0]) => {
-    await makeApiMove(move)
-    clearSuggestions()
-    clearAll()
-    setShowSuggestions(false) // Hide suggestions after move
-  }, [makeApiMove, clearSuggestions, clearAll])
-
-  // Handle exit to menu
-  const handleExitToMenu = useCallback(() => {
-    setScreen('menu')
-    clearSuggestions()
-    clearAll()
-    setShowSuggestions(false)
-  }, [setScreen, clearSuggestions, clearAll])
+  // Live region for accessibility (extracted to hook)
+  const liveRegionMessage = useLiveRegion({
+    currentGame,
+    screen,
+    isMyTurn,
+  })
 
   // Calculate formed word for display
   const getFormedWord = useCallback(() => {
@@ -208,14 +178,25 @@ export function App() {
 
         {screen === 'play' && currentGame && (
           <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
-            {/* Main game area - Three column layout - fills available space */}
-            <div className="flex-1 grid grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-md)] px-[var(--spacing-resp-lg)] overflow-hidden">
-              {/* Left: Player 1 */}
-              <PlayerPanel
-                game={currentGame}
-                playerIndex={0}
-                currentPlayerName={playerName}
-              />
+            {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
+            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-md)] px-[var(--spacing-resp-sm)] lg:px-[var(--spacing-resp-lg)] overflow-hidden">
+              {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
+              <div className="flex lg:contents gap-[var(--spacing-resp-sm)] min-h-0">
+                <div className="flex-1 lg:flex-none min-h-0">
+                  <PlayerPanel
+                    game={currentGame}
+                    playerIndex={0}
+                    currentPlayerName={playerName}
+                  />
+                </div>
+                <div className="flex-1 lg:hidden min-h-0">
+                  <PlayerPanel
+                    game={currentGame}
+                    playerIndex={1}
+                    currentPlayerName={playerName}
+                  />
+                </div>
+              </div>
 
               {/* Center: Game Panel */}
               {playerName && (
@@ -231,12 +212,14 @@ export function App() {
                 />
               )}
 
-              {/* Right: Player 2 */}
-              <PlayerPanel
-                game={currentGame}
-                playerIndex={1}
-                currentPlayerName={playerName}
-              />
+              {/* Desktop only: Player 2 right sidebar */}
+              <div className="hidden lg:block min-h-0">
+                <PlayerPanel
+                  game={currentGame}
+                  playerIndex={1}
+                  currentPlayerName={playerName}
+                />
+              </div>
             </div>
 
             {/* Control buttons bar - fixed at bottom */}
@@ -246,7 +229,9 @@ export function App() {
                 <div className="flex items-center justify-between gap-[var(--spacing-resp-md)] min-w-0">
                   {/* Left: Exit Button */}
                   <button
+                    type="button"
                     onClick={handleExitToMenu}
+                    aria-label="Выйти в главное меню"
                     className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[var(--text-resp-sm)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0"
                   >
                     ← Выход
@@ -284,16 +269,21 @@ export function App() {
                                     )}
 
                       <button
+                        type="button"
                         onClick={handleClearSelection}
                         disabled={!isMyTurn() || (!selectedCell && !selectedLetter && wordPath.length === 0)}
+                        aria-label="Отменить выбор ячейки и буквы"
                         className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-600 hover:bg-gray-500 text-white font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
                       >
                         ✕ Отмена
                       </button>
 
                       <button
+                        type="button"
                         onClick={toggleSuggestions}
                         disabled={!isMyTurn()}
+                        aria-label={showSuggestions ? 'Скрыть подсказки AI' : 'Показать подсказки AI'}
+                        aria-pressed={showSuggestions}
                         className={`px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative flex-shrink-0 ${showSuggestions
                           ? 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3'
                           : 'bg-yellow-600 hover:bg-yellow-700 text-white'
@@ -303,7 +293,7 @@ export function App() {
                         {' '}
                         {showSuggestions ? 'Скрыть' : 'AI'}
                         {!showSuggestions && suggestions.length > 0 && (
-                          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2">
+                          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2" aria-hidden="true">
                             {suggestions.length}
                           </span>
                         )}
@@ -377,7 +367,7 @@ export function App() {
                                   key={index}
                                   onClick={() => {
                                     handleSuggestionSelect(suggestion)
-                                    setShowSuggestions(false)
+                                    hideSuggestions()
                                   }}
                                   className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 px-3 py-2.5 flex items-center gap-3"
                                 >

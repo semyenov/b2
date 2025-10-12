@@ -6,6 +6,7 @@ import type {
   PlacementSchema,
   SuggestionSchema,
 } from '../../schemas'
+import { logger } from '../utils/logger'
 
 export type GameState = Static<typeof GameStateSchema>
 export type CreateGameBody = Static<typeof CreateGameBodySchema>
@@ -13,9 +14,23 @@ export type MoveBody = Static<typeof MoveBodySchema>
 export type Placement = Static<typeof PlacementSchema>
 export type Suggestion = Static<typeof SuggestionSchema>
 
+/**
+ * API Client for Balda Game Backend
+ * Handles all HTTP and WebSocket communication with the game server
+ */
 export class ApiClient {
+  /**
+   * @param baseUrl - Base URL for API endpoints (default: '/api')
+   */
   constructor(private baseUrl: string = '/api') { }
 
+  /**
+   * Fetch JSON from API with error handling
+   * @param url - Request URL
+   * @param options - Fetch options
+   * @returns Parsed JSON response
+   * @throws Error with user-friendly message on failure
+   */
   private async fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
     const response = await fetch(url, options)
     if (!response.ok) {
@@ -32,6 +47,13 @@ export class ApiClient {
     return response.json()
   }
 
+  /**
+   * Establish WebSocket connection for real-time game updates
+   * @param gameId - Game ID to connect to
+   * @param onMessage - Callback for game state updates
+   * @param onClose - Optional callback when connection closes
+   * @returns WebSocket instance
+   */
   connectWebSocket(
     gameId: string,
     onMessage: (game: GameState) => void,
@@ -54,12 +76,12 @@ export class ApiClient {
         }
       }
       catch (error) {
-        console.error('Failed to parse WebSocket message:', error)
+        logger.error('Failed to parse WebSocket message', error as Error)
       }
     }
 
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error)
+    ws.onerror = () => {
+      logger.warn('WebSocket connection error')
     }
 
     ws.onclose = () => {
