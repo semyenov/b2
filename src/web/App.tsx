@@ -37,7 +37,7 @@ export function App() {
   } = useGameClient()
 
   // AI player automation
-  const { aiThinking, aiError } = useAIPlayer({
+  const { aiError } = useAIPlayer({
     currentGame,
     apiClient,
   })
@@ -226,59 +226,26 @@ export function App() {
             <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 shadow-depth-3 overflow-hidden">
               {/* Buttons Bar */}
               <div className="px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-sm)] sm:py-[var(--spacing-resp-md)]">
-                <div className="flex items-center justify-between gap-[var(--spacing-resp-sm)] sm:gap-[var(--spacing-resp-md)] min-w-0 flex-col sm:flex-row">
-                  {/* Left: Exit Button */}
-                  <button
-                    type="button"
-                    onClick={handleExitToMenu}
-                    aria-label="Выйти в главное меню"
-                    className="px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[var(--text-resp-xs)] sm:text-[var(--text-resp-sm)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0 w-full sm:w-auto"
-                  >
-                    ← Выход
-                  </button>
-
-                  {/* Center: Control Buttons or Status Messages */}
-                  {playerName && currentGame && (
-                    <ControlButtons
-                      isMyTurn={isMyTurn()}
-                      selectedCell={selectedCell}
-                      selectedLetter={selectedLetter}
-                      wordPath={wordPath}
-                      formedWord={formedWord}
-                      showSuggestions={showSuggestions}
-                      suggestions={suggestions}
-                      onSubmitMove={() => {
-                        if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
-                          const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, formedWord)
-                          makeMove(moveBody)
-                        }
-                      }}
-                      onClearSelection={handleClearSelection}
-                      onToggleSuggestions={toggleSuggestions}
-                    />
-                  )}
-
-                  {/* Right: Info Badges */}
-                  <div className="flex items-center gap-[var(--spacing-resp-sm)] min-w-0 flex-shrink-0">
-                    <div className="text-[var(--text-resp-xs)] font-bold text-gray-200 bg-gray-700 px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] shadow-depth-1 border-2 border-gray-600 flex-shrink-0">
-                      Ход
-                      {' '}
-                      {Math.floor(currentGame.moves.length / 2) + 1}
-                    </div>
-                    {aiThinking && (
-                      <div className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 shadow-depth-2 glow-warning animate-pulse flex-shrink-0">
-                        <span className="text-yellow-300 font-bold text-[var(--text-resp-sm)]">🤖 AI</span>
-                      </div>
-                    )}
-                    {playerName && (
-                      <div className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-700 border-2 border-cyan-600 border-opacity-50 shadow-depth-1 max-w-[clamp(150px,20vw,200px)] flex-shrink-0 min-w-0">
-                        <span className="text-cyan-300 font-bold text-[var(--text-resp-xs)] truncate block" title={playerName}>
-                          {playerName}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                {playerName && currentGame && (
+                  <ControlButtons
+                    isMyTurn={isMyTurn()}
+                    selectedCell={selectedCell}
+                    selectedLetter={selectedLetter}
+                    wordPath={wordPath}
+                    formedWord={formedWord}
+                    showSuggestions={showSuggestions}
+                    suggestions={suggestions}
+                    onSubmitMove={() => {
+                      if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
+                        const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, formedWord)
+                        makeMove(moveBody)
+                      }
+                    }}
+                    onClearSelection={handleClearSelection}
+                    onToggleSuggestions={toggleSuggestions}
+                    onExit={handleExitToMenu}
+                  />
+                )}
               </div>
             </div>
 

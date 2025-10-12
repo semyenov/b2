@@ -17,7 +17,7 @@ interface BoardProps {
 function getCellClassName(selected: boolean, inPath: boolean, hasCell: boolean, canClick: boolean, isHovered: boolean): string {
   return cn(
     // Base classes
-    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-3xl)] font-black transition-all duration-200 relative',
+    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border flex items-center justify-center text-[var(--text-resp-board)] text-3xl font-black transition-all duration-200 relative leading-none',
 
     // State-based styling
     {
@@ -35,8 +35,8 @@ function getCellClassName(selected: boolean, inPath: boolean, hasCell: boolean, 
 
     // Hover ring
     {
-      'ring-2 ring-blue-300': isHovered && canClick && selected,
-      'ring-2 ring-yellow-400 bg-gray-650': isHovered && canClick && !selected,
+      'ring ring-blue-300': isHovered && canClick && selected,
+      'ring ring-yellow-400 bg-gray-650': isHovered && canClick && !selected,
     },
   )
 }
@@ -49,7 +49,7 @@ export const Board = memo(({
   onCellClick,
   disabled,
 }: BoardProps) => {
-  const { board, size } = game
+  const { board } = game
   const [hoveredCell, setHoveredCell] = useState<{ row: number, col: number } | null>(null)
 
   // Keyboard navigation handler
@@ -102,7 +102,7 @@ export const Board = memo(({
   }, [selectedLetter, getCoordLabel])
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-[clamp(0.5rem,1vh,1rem)]" style={{ maxWidth: 'fit-content', maxHeight: '90%' }}>
+    <div className="flex flex-col items-center justify-center h-full w-full p-2" style={{ maxWidth: 'fit-content', maxHeight: '90%' }}>
       {/* Board rows */}
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">

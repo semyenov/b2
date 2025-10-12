@@ -57,7 +57,7 @@ export function GamePanel({
   return (
     <div className="relative h-full min-h-0 flex items-center justify-center">
       {/* Board Section - Always full height */}
-      <div className="h-full w-full flex items-center justify-center px-4 py-2">
+      <div className="h-full w-full flex items-center justify-center px-2 py-1">
         <Board
           game={game}
           selectedCell={selectedCell}

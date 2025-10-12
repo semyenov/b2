@@ -24,7 +24,6 @@ export const Banner = memo(({ variant, message, onClose }: BannerProps) => {
         {variant === 'loading' && (
           <div className="animate-spin h-4 w-4 border-b-2 border-white" />
         )}
-        {variant === 'warning' && <span className="text-base">🤖</span>}
         <span className="text-base">{message}</span>
         {onClose && (
           <button
