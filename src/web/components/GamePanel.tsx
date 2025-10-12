@@ -3,7 +3,6 @@ import { useCallback, useState } from 'react'
 import { A11Y_LABELS, GAME_CONFIG, RUSSIAN_ALPHABET } from '../constants/game'
 import { cn } from '../utils/classNames'
 import { isLetterButtonDisabled, shouldShowAlphabetPanel } from '../utils/uiHelpers'
-import { Board } from './Board'
 import { SuggestionsPanel } from './SuggestionsPanel'
 
 interface GamePanelProps {
@@ -13,7 +12,6 @@ interface GamePanelProps {
   selectedCell?: { row: number, col: number }
   selectedLetter?: string
   wordPath?: Array<{ row: number, col: number }>
-  onCellClick?: (row: number, col: number) => void
   onLetterSelect?: (letter: string) => void
   showSuggestions?: boolean
   suggestions?: Suggestion[]
@@ -26,8 +24,6 @@ export function GamePanel({
   disabled,
   selectedCell,
   selectedLetter,
-  wordPath = [],
-  onCellClick,
   onLetterSelect,
   showSuggestions = false,
   suggestions = [],
@@ -53,31 +49,26 @@ export function GamePanel({
     }
   }, [onLetterSelect])
 
-  return (
-    <div className="relative h-full min-h-0 flex items-center justify-center">
-      {/* Board Section - Always full height */}
-      <div className="h-full w-full flex items-center justify-center px-2 py-1">
-        <Board
-          game={game}
-          selectedCell={selectedCell}
-          selectedLetter={selectedLetter}
-          wordPath={wordPath}
-          onCellClick={onCellClick}
-          disabled={disabled}
-        />
-      </div>
+  // Only render the panel when it should be shown
+  if (!shouldShowPanel) {
+    return null
+  }
 
-      {/* Alphabet / Suggestions Panel - Absolute positioned overlay */}
-      <div className={cn(
-        'absolute bottom-0 left-0 right-0 z-10',
-        'bg-gray-800 border-2 border-gray-700 flex flex-col min-h-[180px] max-h-[280px]',
+  return (
+    <div
+      className={cn(
+        'absolute bottom-0 left-0 right-0 z-40',
+        'bg-gray-800 flex flex-col',
         'shadow-[0_-8px_24px_rgba(0,0,0,0.5)]',
-        'transition-transform duration-300 ease-in-out',
-        shouldShowPanel ? 'translate-y-0' : 'translate-y-full',
-      )}>
-        {showSuggestions
-          ? (
-            /* Suggestions View */
+      )}
+      style={{
+        height: showSuggestions ? 'min(50vh, 400px)' : 'min(35vh, 280px)',
+        paddingBottom: '70px', // Reserve space for control bar
+      }}
+    >
+      {showSuggestions
+        ? (
+          /* Suggestions View */
             <div className="flex-1 min-h-0 overflow-y-auto">
               <SuggestionsPanel
                 suggestions={suggestions}
@@ -87,8 +78,8 @@ export function GamePanel({
               />
             </div>
           )
-          : (
-            /* Alphabet Grid */
+        : (
+          /* Alphabet Grid */
             <div
               className="flex-1 min-h-0 flex items-center justify-center py-[var(--spacing-resp-sm)] px-[var(--spacing-resp-sm)]"
               role="group"
@@ -129,7 +120,6 @@ export function GamePanel({
               </div>
             </div>
           )}
-      </div>
     </div>
   )
 }

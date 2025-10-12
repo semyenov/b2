@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Banner } from './components/Banner'
+import { Board } from './components/Board'
 import { ControlButtons } from './components/ControlButtons'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
@@ -170,9 +171,9 @@ export function App() {
         )}
 
         {screen === 'play' && currentGame && (
-          <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
+          <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
-            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-lg)] p-[var(--spacing-resp-md)] pb-0 lg:p-[var(--spacing-resp-xl)] overflow-hidden">
+            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-lg)] p-[var(--spacing-resp-md)] pb-0 lg:p-[var(--spacing-resp-xl)] overflow-hidden relative">
               {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
               <div className="flex lg:contents gap-[var(--spacing-resp-sm)] min-h-0">
                 <div className="flex-1 lg:flex-none min-h-0">
@@ -191,26 +192,17 @@ export function App() {
                 </div>
               </div>
 
-              {/* Center: Game Panel */}
-              {playerName && (
-                <GamePanel
+              {/* Center: Board Only */}
+              <div className="h-full min-h-0 flex items-center justify-center">
+                <Board
                   game={currentGame}
-                  playerName={playerName}
-                  disabled={!isMyTurn()}
                   selectedCell={selectedCell}
                   selectedLetter={selectedLetter}
                   wordPath={wordPath}
                   onCellClick={handleCellClick}
-                  onLetterSelect={handleLetterSelect}
-                  showSuggestions={showSuggestions}
-                  suggestions={suggestions}
-                  loadingSuggestions={loadingSuggestions}
-                  onSuggestionSelect={(suggestion) => {
-                    handleSuggestionSelect(suggestion)
-                    hideSuggestions()
-                  }}
+                  disabled={!isMyTurn()}
                 />
-              )}
+              </div>
 
               {/* Desktop only: Player 2 right sidebar */}
               <div className="hidden lg:block min-h-0">
@@ -222,10 +214,32 @@ export function App() {
               </div>
             </div>
 
-            {/* Control buttons bar - fixed at bottom */}
-            <div className="shrink-0 bg-gray-800 border-t-2 border-gray-700 shadow-depth-3 overflow-hidden">
-              {/* Buttons Bar */}
-              <div className="px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-sm)] sm:py-[var(--spacing-resp-md)]">
+            {/* Alphabet / Suggestions Panel - absolutely positioned at bottom */}
+            {playerName && currentGame && (
+              <GamePanel
+                game={currentGame}
+                playerName={playerName}
+                disabled={!isMyTurn()}
+                selectedCell={selectedCell}
+                selectedLetter={selectedLetter}
+                wordPath={wordPath}
+                onLetterSelect={handleLetterSelect}
+                showSuggestions={showSuggestions}
+                suggestions={suggestions}
+                loadingSuggestions={loadingSuggestions}
+                onSuggestionSelect={(suggestion) => {
+                  handleSuggestionSelect(suggestion)
+                  hideSuggestions()
+                }}
+              />
+            )}
+
+            {/* Bottom control panel - fixed at bottom */}
+            <div className="shrink-0 shadow-depth-3 overflow-hidden relative z-50">
+              {/* Control Buttons Bar */}
+              <div
+                className="bg-gray-800 border-t-2 border-gray-700 px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-sm)] sm:py-[var(--spacing-resp-md)]"
+              >
                 {playerName && currentGame && (
                   <ControlButtons
                     isMyTurn={isMyTurn()}
