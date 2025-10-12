@@ -61,7 +61,7 @@ export function ControlButtons({
           aria-label={showSuggestions ? 'Скрыть подсказки AI' : 'Показать подсказки AI'}
           aria-pressed={showSuggestions}
           className={cn(
-            'px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] font-bold text-[var(--text-resp-xs)] sm:text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-1 sm:gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative flex-shrink-0',
+            'px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] font-bold text-[var(--text-resp-xs)] sm:text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-1 sm:gap-2 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0',
             showSuggestions
               ? 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3'
               : 'bg-yellow-600 hover:bg-yellow-700 text-white',
@@ -69,12 +69,7 @@ export function ControlButtons({
         >
           💡
           {' '}
-          {showSuggestions ? 'Скрыть' : 'AI'}
-          {!showSuggestions && suggestions.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2" aria-hidden="true">
-              {suggestions.length}
-            </span>
-          )}
+          AI
         </button>
       </div>
 
