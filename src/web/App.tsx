@@ -207,6 +207,13 @@ export function App() {
                   wordPath={wordPath}
                   onCellClick={handleCellClick}
                   onLetterSelect={handleLetterSelect}
+                  showSuggestions={showSuggestions}
+                  suggestions={suggestions}
+                  loadingSuggestions={loadingSuggestions}
+                  onSuggestionSelect={(suggestion) => {
+                    handleSuggestionSelect(suggestion)
+                    hideSuggestions()
+                  }}
                 />
               )}
 
@@ -321,20 +328,6 @@ export function App() {
               </div>
             </div>
 
-            {/* Suggestions Panel - Expands when visible */}
-            {showSuggestions && playerName && currentGame && (
-              <div className={cn('shrink-0 min-h-0 overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)] shadow-[0_-8px_24px_rgba(0,0,0,0.5)]')} style={{ maxHeight: GAME_CONFIG.SUGGESTIONS_PANEL_MAX_HEIGHT }}>
-                <SuggestionsPanel
-                  suggestions={suggestions}
-                  loadingSuggestions={loadingSuggestions}
-                  onSuggestionSelect={(suggestion) => {
-                    handleSuggestionSelect(suggestion)
-                    hideSuggestions()
-                  }}
-                  currentGame={currentGame}
-                />
-              </div>
-            )}
           </div>
         )}
       </div>
