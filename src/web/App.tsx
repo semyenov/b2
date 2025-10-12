@@ -173,7 +173,7 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
-            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[minmax(280px,var(--size-resp-panel))_1fr_minmax(280px,var(--size-resp-panel))] gap-0 p-0 overflow-hidden relative lg:border-l lg:border-r lg:border-slate-700 lg:max-w-7xl lg:mx-auto">
+            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[minmax(300px,var(--size-resp-panel))_1fr_minmax(300px,var(--size-resp-panel))] gap-0 p-0 overflow-hidden relative w-full">
               {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
               <div className="flex lg:contents gap-0 min-h-0 lg:col-start-1 lg:col-end-2">
                 <div className="flex-1 lg:flex-none min-h-0 border-r border-slate-700 p-[var(--spacing-resp-sm)]">
@@ -192,22 +192,24 @@ export function App() {
                 </div>
               </div>
 
-              {/* Center: Board Only - Aligned with side panels */}
+              {/* Center: Board Only - Enhanced symmetrical design */}
               <div className="h-full min-h-0 flex items-center justify-center relative lg:col-start-2 lg:col-end-3 p-[var(--spacing-resp-sm)]">
-                <div className="board-container max-w-full max-h-full w-full h-full">
-                  <Board
-                    game={currentGame}
-                    selectedCell={selectedCell}
-                    selectedLetter={selectedLetter}
-                    wordPath={wordPath}
-                    onCellClick={handleCellClick}
-                    disabled={!isMyTurn()}
-                  />
+                <div className="board-container max-w-full max-h-full w-full h-full flex items-center justify-center">
+                  <div className="board-wrapper shadow-depth-3 rounded-xl overflow-hidden">
+                    <Board
+                      game={currentGame}
+                      selectedCell={selectedCell}
+                      selectedLetter={selectedLetter}
+                      wordPath={wordPath}
+                      onCellClick={handleCellClick}
+                      disabled={!isMyTurn()}
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Desktop only: Player 2 right sidebar */}
-              <div className="hidden lg:block min-h-0 lg:col-start-3 lg:col-end-4 p-[var(--spacing-resp-sm)]">
+              <div className="hidden lg:block min-h-0 lg:col-start-3 lg:col-end-4 border-l border-slate-700 p-[var(--spacing-resp-sm)]">
                 <PlayerPanel
                   game={currentGame}
                   playerIndex={1}
@@ -236,10 +238,10 @@ export function App() {
               />
             )}
 
-            {/* Bottom control panel - fixed at bottom */}
+            {/* Bottom control panel - Enhanced symmetrical design */}
             <div className="shrink-0 shadow-depth-3 overflow-hidden relative z-control-bar">
               {/* Control Buttons Bar */}
-              <div className="bg-slate-900 border-t-2 border-slate-700 px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-sm)]">
+              <div className="bg-slate-900 border-t-2 border-slate-700 px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-sm)] w-full">
                 {playerName && currentGame && (
                   <ControlButtons
                     isMyTurn={isMyTurn()}

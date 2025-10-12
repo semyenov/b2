@@ -104,7 +104,7 @@ export const Board = memo(({
   return (
     <div className="board-container">
       {/* Board - flat design, optimized for maximum vertical space */}
-      <div className="board-inner bg-slate-800 border-2 border-slate-700 p-2 w-full h-full max-w-full max-h-full">
+      <div className="board-inner bg-slate-800 p-2 w-full h-full max-w-full max-h-full">
         {/* Board rows */}
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="flex">

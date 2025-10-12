@@ -56,7 +56,7 @@ export function GamePanel({
 
   return (
     <div
-      className="absolute bottom-0 left-0 right-0 z-game-panel bg-slate-800 flex flex-col border-t-2 border-slate-700"
+      className="absolute bottom-0 left-0 right-0 z-game-panel bg-slate-800 flex flex-col border-t-2 border-slate-700 shadow-depth-3"
       style={{
         height: showSuggestions ? 'min(55vh, 450px)' : 'min(40vh, 320px)',
         paddingBottom: 'calc(var(--spacing-resp-md) * 2 + 48px)', // Exact control bar space
@@ -64,62 +64,63 @@ export function GamePanel({
         marginRight: '0',
         paddingLeft: 'var(--spacing-resp-sm)',
         paddingRight: 'var(--spacing-resp-sm)',
+        borderRadius: '1rem 1rem 0 0',
       }}
     >
       {showSuggestions
         ? (
           /* Suggestions View */
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            <SuggestionsPanel
-              suggestions={suggestions}
-              loadingSuggestions={loadingSuggestions}
-              onSuggestionSelect={onSuggestionSelect!}
-              currentGame={game}
-            />
-          </div>
-        )
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <SuggestionsPanel
+                suggestions={suggestions}
+                loadingSuggestions={loadingSuggestions}
+                onSuggestionSelect={onSuggestionSelect!}
+                currentGame={game}
+              />
+            </div>
+          )
         : (
           /* Alphabet Grid */
-          <div
-            className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)]"
-            role="group"
-            aria-label="Выбор буквы для размещения на доске"
-          >
-            <div className="alphabet-grid grid w-full h-full">
-              {RUSSIAN_ALPHABET.map((letter) => {
-                const isSelected = selectedLetter === letter
-                const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
-                const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
+            <div
+              className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)]"
+              role="group"
+              aria-label="Выбор буквы для размещения на доске"
+            >
+              <div className="alphabet-grid grid w-full h-full">
+                {RUSSIAN_ALPHABET.map((letter) => {
+                  const isSelected = selectedLetter === letter
+                  const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
+                  const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
 
-                return (
-                  <button
-                    key={letter}
-                    type="button"
-                    onClick={() => onLetterSelect?.(letter)}
-                    onKeyDown={e => handleLetterKeyDown(e, letter, buttonDisabled)}
-                    onMouseEnter={() => setHoveredLetter(letter)}
-                    onMouseLeave={() => setHoveredLetter('')}
-                    disabled={buttonDisabled}
-                    aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
-                    aria-pressed={isSelected}
-                    className={cn(
-                      'h-full w-full font-black text-[var(--text-resp-2xl)] transition-all duration-200 border-2',
-                      {
-                        'bg-blue-600 border-blue-300 text-white shadow-depth-3 ring-4 ring-blue-400/70 transform scale-105': isSelected,
-                        'bg-yellow-400 border-yellow-300 text-gray-900 transform scale-105 shadow-depth-3 ring-4 ring-yellow-400/70': isHovered,
-                        'bg-slate-700 text-gray-100 border-slate-600 hover:bg-slate-600 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-400/50': !isSelected && !isHovered,
-                        'opacity-30 cursor-not-allowed': buttonDisabled,
-                        'cursor-pointer hover:shadow-depth-2 hover:scale-105 active:scale-95': !buttonDisabled,
-                      },
-                    )}
-                  >
-                    {letter}
-                  </button>
-                )
-              })}
+                  return (
+                    <button
+                      key={letter}
+                      type="button"
+                      onClick={() => onLetterSelect?.(letter)}
+                      onKeyDown={e => handleLetterKeyDown(e, letter, buttonDisabled)}
+                      onMouseEnter={() => setHoveredLetter(letter)}
+                      onMouseLeave={() => setHoveredLetter('')}
+                      disabled={buttonDisabled}
+                      aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
+                      aria-pressed={isSelected}
+                      className={cn(
+                        'h-full w-full font-black text-[var(--text-resp-2xl)] transition-all duration-200 border-2',
+                        {
+                          'bg-blue-600 border-blue-300 text-white shadow-depth-3 ring-4 ring-blue-400/70 transform scale-105': isSelected,
+                          'bg-yellow-400 border-yellow-300 text-gray-900 transform scale-105 shadow-depth-3 ring-4 ring-yellow-400/70': isHovered,
+                          'bg-slate-700 text-gray-100 border-slate-600 hover:bg-slate-600 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-400/50': !isSelected && !isHovered,
+                          'opacity-30 cursor-not-allowed': buttonDisabled,
+                          'cursor-pointer hover:shadow-depth-2 hover:scale-105 active:scale-95': !buttonDisabled,
+                        },
+                      )}
+                    >
+                      {letter}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        )}
+          )}
     </div>
   )
 }
