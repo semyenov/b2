@@ -46,7 +46,7 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
     >
       {/* Header with player info */}
       <div className={cn(
-        'px-2 py-2 flex flex-col gap-1 border-b-2 shrink-0',
+        'px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)] flex flex-col gap-1 border-b-2 shrink-0',
         {
           'bg-yellow-900/40 border-yellow-600': isCurrentTurn,
           'bg-slate-900 border-slate-700': !isCurrentTurn,
@@ -55,7 +55,7 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
       >
         {/* Score display with status indicator */}
         <div className="flex items-center justify-center gap-2">
-          <span className={cn('text-3xl font-black tabular-nums tracking-tight transition-colors duration-300', scoreColor)}>
+          <span className={cn('text-[var(--text-resp-score)] font-black tabular-nums tracking-tight transition-colors duration-300', scoreColor)}>
             {game.moves.filter(move => move.playerId === player).reduce((acc, move) => acc + move.word.length, 0)}
             /
             {score}
@@ -63,7 +63,7 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
           {/* Status indicator */}
           {!isTied && (
             <div className={cn(
-              'text-2xl font-black leading-none transition-colors duration-150',
+              'text-[var(--text-resp-lg)] font-black leading-none transition-colors duration-150',
               isWinning ? 'text-green-400' : 'text-red-400',
             )}
             >
@@ -74,26 +74,26 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
       </div>
 
       {/* Words list */}
-      <div className="flex-1 overflow-y-auto px-2 py-4 min-h-0">
+      <div className="flex-1 overflow-y-auto px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-md)] min-h-0">
         <div className="space-y-2">
           {playerWords.length === 0
             ? (
-                <div className="text-slate-500 text-sm italic py-2 text-center">Пока нет слов</div>
+                <div className="text-slate-500 text-[var(--text-resp-sm)] italic py-[var(--spacing-resp-sm)] text-center">Пока нет слов</div>
               )
             : (
-                playerWords.map((word, i) => (
-                  <div
-                    key={i}
-                    className="px-2 py-1.5 bg-slate-900 hover:bg-slate-700 text-sm font-mono text-gray-100 transition-all duration-200 border-2 border-slate-700 hover:border-cyan-500 flex items-center justify-between group"
-                  >
-                    <span className="font-black tracking-wide">{word}</span>
-                    <span className="text-xs text-gray-400 group-hover:text-cyan-400 font-bold">
-                      #
-                      {i + 1}
-                    </span>
-                  </div>
-                ))
-              )}
+              playerWords.map((word, i) => (
+                <div
+                  key={i}
+                  className="px-[var(--spacing-resp-word-item)] py-[var(--spacing-resp-word-padding)] bg-slate-900 hover:bg-slate-700 text-[var(--text-resp-word)] font-mono text-gray-100 transition-all duration-200 border-2 border-slate-700 hover:border-cyan-500 flex items-center justify-between group"
+                >
+                  <span className="font-black tracking-wide">{word}</span>
+                  <span className="text-xs text-gray-400 group-hover:text-cyan-400 font-bold">
+                    #
+                    {i + 1}
+                  </span>
+                </div>
+              ))
+            )}
         </div>
       </div>
     </div>

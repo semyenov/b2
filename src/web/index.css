@@ -4,34 +4,44 @@
    RESPONSIVE UTILITIES (replacing clamp)
    ======================================== */
 @theme {
-  /* Responsive spacing utilities */
-  --spacing-resp-xs: clamp(0.25rem, 0.5vw, 0.5rem);  /* 4-8px - Tight spacing */
-  --spacing-resp-sm: clamp(0.5rem, 1vw, 1rem);       /* 8-16px - Standard spacing */
-  --spacing-resp-md: clamp(0.75rem, 1.5vw, 1.5rem);  /* 12-24px - Medium spacing */
-  --spacing-resp-lg: clamp(1rem, 2vw, 2rem);         /* 16-32px - Large spacing */
-  --spacing-resp-xl: clamp(1.5rem, 3vw, 3rem);       /* 24-48px - Extra large spacing */
+  /* Responsive spacing utilities - increased for better visual breathing room */
+  --spacing-resp-xs: clamp(0.25rem, 0.5vw, 0.5rem);    /* 4-8px - Minimal spacing */
+  --spacing-resp-sm: clamp(0.5rem, 1vw, 1rem);         /* 8-16px - Compact spacing */
+  --spacing-resp-md: clamp(0.75rem, 1.5vw, 1.5rem);    /* 12-24px - Medium spacing */
+  --spacing-resp-lg: clamp(1rem, 2vw, 2rem);             /* 16-32px - Large spacing */
+  --spacing-resp-xl: clamp(1.5rem, 3vw, 3rem);         /* 24-48px - Extra large spacing */
 
   /* Responsive text sizes - increased for better readability */
-  --text-resp-xs: clamp(0.875rem, 1.5vw, 1.125rem);    /* Small text (buttons, labels) */
-  --text-resp-sm: clamp(1rem, 1.75vw, 1.25rem);        /* Standard text */
-  --text-resp-base: clamp(1.125rem, 2.25vw, 1.625rem); /* Base body text */
-  --text-resp-lg: clamp(1.25rem, 2.5vw, 2rem);         /* Large text */
-  --text-resp-xl: clamp(1.75rem, 3.5vw, 3rem);         /* Extra large */
-  --text-resp-2xl: clamp(2rem, 4.5vw, 3.75rem);        /* Alphabet grid letters */
-  --text-resp-3xl: clamp(3.5rem, 6.5vw, 5.5rem);       /* Game board letters */
-  --text-resp-board: clamp(3.5rem, 6.5vw, 5.5rem);     /* Board cell text (alias for 3xl) */
+  --text-resp-xs: clamp(1rem, 2vw, 1.375rem);          /* Small text (buttons, labels) */
+  --text-resp-sm: clamp(1.125rem, 2.25vw, 1.5rem);     /* Standard text */
+  --text-resp-base: clamp(1.25rem, 2.5vw, 1.75rem);    /* Base body text */
+  --text-resp-lg: clamp(1.5rem, 3vw, 2.25rem);         /* Large text */
+  --text-resp-xl: clamp(2rem, 4vw, 3.5rem);            /* Extra large */
+  --text-resp-2xl: clamp(2.5rem, 5vw, 4.5rem);        /* Alphabet grid letters */
+  --text-resp-3xl: clamp(3rem, 8vw, 8rem);        /* Game board letters */
+  --text-resp-board: clamp(3rem, 8vw, 8rem);     /* Board cell text (alias for 3xl) */
 
   /* Responsive dimensions - optimized for maximum board size */
-  --size-resp-cell: clamp(4.5rem, 9vw, 8.5rem);
+  --size-resp-cell: clamp(4rem, 12vw, 12rem);
   --size-resp-header: clamp(3rem, 4.5vw, 4.5rem);
   --size-resp-label: clamp(3rem, 5vw, 5rem);
-  --size-resp-panel: clamp(280px, 15vw, 320px);
+  --size-resp-panel: clamp(260px, 14vw, 300px);
 
   /* PlayerPanel specific sizes */
   --text-resp-score: clamp(3rem, 5vw, 5rem);
   --text-resp-word: clamp(0.875rem, 1.5vw, 1.125rem);
   --spacing-resp-word-item: clamp(0.5rem, 1vw, 1rem);
   --spacing-resp-word-padding: clamp(0.5rem, 0.8vw, 0.75rem);
+  
+  /* Harmonized border widths */
+  --border-width-thin: 1px;
+  --border-width-standard: 2px;
+  --border-width-thick: 4px;
+  
+  /* Harmonized shadow depths */
+  --shadow-depth-1: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-depth-2: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-depth-3: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* ========================================
@@ -148,17 +158,82 @@ button:focus-visible {
   background-color: #2d3748; /* Between gray-700 and gray-800 */
 }
 
-/* Alphabet Grid - responsive layout */
+/* Alphabet Grid - responsive layout optimized for maximum space */
 .alphabet-grid {
   grid-template-columns: repeat(11, minmax(0, 1fr));
   grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem; /* Increased gap for better visual separation */
 }
 
 @media (max-width: 640px) {
   .alphabet-grid {
     grid-template-columns: repeat(17, minmax(0, 1fr));
     grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem;
   }
+}
+
+/* Board positioning utilities - Enhanced for better centering and sizing */
+.board-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
+.board-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: fit-content;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+  position: relative;
+}
+
+/* Harmonized shadow utilities */
+.shadow-depth-1 {
+  box-shadow: var(--shadow-depth-1);
+}
+
+.shadow-depth-2 {
+  box-shadow: var(--shadow-depth-2);
+}
+
+.shadow-depth-3 {
+  box-shadow: var(--shadow-depth-3);
+}
+
+/* Maximum space optimization utilities */
+.max-space-container {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Prevent overlapping with z-index management */
+.z-game-panel {
+  z-index: 40;
+}
+
+.z-control-bar {
+  z-index: 50;
+}
+
+.z-board {
+  z-index: 10;
+}
+
+.z-panels {
+  z-index: 20;
 }
 
 /* Slide up animation for GamePanel - smoother from bottom */

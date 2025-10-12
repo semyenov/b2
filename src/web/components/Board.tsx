@@ -102,9 +102,9 @@ export const Board = memo(({
   }, [selectedLetter, getCoordLabel])
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-2" style={{ maxWidth: 'fit-content', maxHeight: '100%' }}>
-      {/* Board - flat design */}
-      <div className="bg-slate-800 border-2 border-slate-700">
+    <div className="board-container">
+      {/* Board - flat design, optimized for maximum vertical space */}
+      <div className="board-inner bg-slate-800 border-2 border-slate-700 p-2">
         {/* Board rows */}
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="flex">
