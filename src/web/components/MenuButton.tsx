@@ -10,10 +10,10 @@ interface MenuButtonProps {
 }
 
 const variantStyles = {
-  primary: 'from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600',
-  secondary: 'from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600',
-  success: 'from-green-600 to-green-700 hover:from-green-500 hover:to-green-600',
-  warning: 'from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500',
+  primary: 'bg-blue-600 hover:bg-blue-500 border-blue-500',
+  secondary: 'bg-purple-600 hover:bg-purple-500 border-purple-500',
+  success: 'bg-green-600 hover:bg-green-500 border-green-500',
+  warning: 'bg-yellow-600 hover:bg-yellow-500 border-yellow-500',
 }
 
 export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick }: MenuButtonProps) => {
@@ -21,7 +21,7 @@ export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick
     <button
       onClick={onClick}
       className={cn(
-        'w-full group relative px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)] bg-gradient-to-r font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden',
+        'w-full px-4 py-3 border font-bold text-white transition-colors duration-150',
         variantStyles[variant],
         {
           'text-lg': size === 'large',
@@ -29,8 +29,7 @@ export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick
         }
       )}
     >
-      <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
-      <div className="relative flex items-center justify-center gap-[var(--spacing-resp-sm)]">
+      <div className="flex items-center justify-center gap-2">
         <span className={cn({
           'text-xl': size === 'large',
           'text-lg': size === 'normal',

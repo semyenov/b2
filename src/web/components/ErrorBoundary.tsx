@@ -63,8 +63,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default fallback UI
       return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center px-4">
-          <div className="max-w-2xl w-full bg-gray-800 border-2 border-red-600 p-8 shadow-depth-4">
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+          <div className="max-w-2xl w-full bg-gray-800 border border-red-600 p-8">
             {/* Header */}
             <div className="text-center mb-6">
               <div className="text-6xl mb-4">⚠️</div>
@@ -94,13 +94,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="flex gap-3">
               <button
                 onClick={this.handleReset}
-                className="flex-1 py-4 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 font-bold text-lg text-white transition-all duration-200 hover:shadow-depth-3 hover:scale-105"
+                className="flex-1 py-4 bg-blue-600 hover:bg-blue-500 border border-blue-500 font-bold text-lg text-white transition-colors duration-150"
               >
                 🔄 Попробовать снова
               </button>
               <button
                 onClick={() => window.location.href = '/'}
-                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 font-bold text-lg text-gray-200 transition-all duration-200 hover:shadow-depth-2 hover:scale-105"
+                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 border border-gray-600 font-bold text-lg text-gray-200 transition-colors duration-150"
               >
                 🏠 На главную
               </button>

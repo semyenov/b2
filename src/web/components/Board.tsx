@@ -16,27 +16,27 @@ interface BoardProps {
 // Helper function to determine cell styling (memoized for performance)
 function getCellClassName(selected: boolean, inPath: boolean, hasCell: boolean, canClick: boolean, isHovered: boolean): string {
   return cn(
-    // Base classes
-    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border flex items-center justify-center text-[var(--text-resp-board)] text-3xl font-black transition-colors duration-150 relative leading-none',
+    // Base classes - flat design
+    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-board)] text-3xl font-black transition-all duration-200 relative leading-none',
 
-    // State-based styling
+    // State-based styling - high contrast
     {
-      'bg-blue-600 border-blue-500 text-white': selected,
-      'bg-emerald-600 border-emerald-500 text-white': !selected && inPath,
-      'bg-gray-700 border-gray-600 text-cyan-300': !selected && !inPath && hasCell,
-      'bg-gray-900 border-gray-800 text-gray-700': !selected && !inPath && !hasCell,
+      'bg-blue-600 border-blue-300 text-white': selected,
+      'bg-emerald-600 border-emerald-300 text-white': !selected && inPath,
+      'bg-slate-700 border-slate-500 text-cyan-300': !selected && !inPath && hasCell,
+      'bg-slate-900 border-slate-700 text-slate-600': !selected && !inPath && !hasCell,
     },
 
-    // Interactive styling
+    // Interactive styling - flat hover
     {
-      'cursor-pointer hover:bg-gray-600 hover:border-cyan-400': canClick,
+      'cursor-pointer hover:bg-slate-600 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-400/50': canClick,
       'cursor-default': !canClick,
     },
 
-    // Hover
+    // Hover states - flat design
     {
-      'border-blue-400': isHovered && canClick && selected,
-      'bg-gray-600 border-yellow-500': isHovered && canClick && !selected,
+      'ring-4 ring-blue-400': isHovered && canClick && selected,
+      'ring-4 ring-yellow-400 bg-slate-700 border-yellow-500': isHovered && canClick && !selected,
     },
   )
 }
@@ -102,9 +102,9 @@ export const Board = memo(({
   }, [selectedLetter, getCoordLabel])
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full" style={{ maxWidth: 'fit-content' }}>
-      {/* Board */}
-      <div className="bg-gray-800 border border-gray-700">
+    <div className="flex flex-col items-center justify-center h-full w-full p-2" style={{ maxWidth: 'fit-content', maxHeight: '100%' }}>
+      {/* Board - flat design */}
+      <div className="bg-slate-800 border-2 border-slate-700">
         {/* Board rows */}
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="flex">
@@ -149,7 +149,7 @@ export const Board = memo(({
                 >
                   {displayContent}
                   {inPath && pathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-5 h-5 bg-emerald-700 text-white text-[10px] flex items-center justify-center font-bold">
+                    <div className="absolute top-0 right-0 w-5 h-5 bg-green-800 text-white text-[10px] flex items-center justify-center font-bold border border-green-600">
                       {pathIdx + 1}
                     </div>
                   )}

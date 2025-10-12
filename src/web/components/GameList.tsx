@@ -15,7 +15,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-8">
+    <div className="min-h-screen bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -25,7 +25,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
           </div>
           <button
             onClick={onBack}
-            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 font-bold text-base transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
+            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 border border-gray-600 font-bold text-base transition-colors duration-150 text-gray-200"
           >
             ← Назад в меню
           </button>
@@ -34,13 +34,13 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
         {/* Games Grid */}
         {games.length === 0
           ? (
-              <div className="bg-gray-800 border-2 border-gray-700 p-12 text-center shadow-depth-2">
+              <div className="bg-gray-800 border border-gray-700 p-12 text-center">
                 <div className="text-6xl mb-4">🎮</div>
                 <h3 className="text-xl font-bold text-gray-300 mb-2">Нет доступных игр</h3>
                 <p className="text-gray-400 text-base mb-6">Станьте первым, кто создаст игру!</p>
                 <button
                   onClick={onBack}
-                  className="px-8 py-3 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 font-bold text-base text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105"
+                  className="px-8 py-3 bg-blue-600 hover:bg-blue-500 border border-blue-500 font-bold text-base text-white transition-colors duration-150"
                 >
                   Создать новую игру
                 </button>
@@ -55,7 +55,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                   {' '}
                   {getRussianPluralForm(games.length, ['доступна', 'доступно', 'доступно'])}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                   {games.map((game) => {
                     const status = getGameStatus(game)
                     const baseWord = getBaseWord(game)
@@ -93,7 +93,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                           }
                         }}
                         aria-label={`Присоединиться к игре ${baseWord}, размер ${game.size}×${game.size}, ${statusInfo.label}`}
-                        className="bg-gray-800 border-2 border-gray-700 p-6 cursor-pointer transition-all duration-200 hover:border-cyan-500 hover:shadow-depth-3 hover:scale-105 hover:bg-gray-750 shadow-depth-1"
+                        className="bg-gray-800 border border-gray-700 p-6 cursor-pointer transition-colors duration-150 hover:border-cyan-500 hover:bg-gray-750"
                       >
                         {/* Header: Status + Time */}
                         <div className="flex justify-between items-start mb-4">
@@ -166,7 +166,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
 
                         {/* Join Button */}
                         <button
-                          className="w-full py-2.5 bg-green-600 hover:bg-green-700 border-2 border-green-500 font-bold text-base text-white transition-all duration-200 hover:shadow-depth-2 hover:scale-105"
+                          className="w-full py-2.5 bg-green-600 hover:bg-green-500 border border-green-500 font-bold text-base text-white transition-colors duration-150"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleJoin(game)

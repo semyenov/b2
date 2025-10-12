@@ -94,7 +94,7 @@ export function App() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+    <div className="min-h-screen bg-gray-900">
       {/* Screen reader live region for game announcements */}
       <div
         className="sr-only"
@@ -119,8 +119,8 @@ export function App() {
         {screen === 'menu' && (
           <div className="flex flex-col items-center justify-center min-h-screen px-4">
             {/* Hero Section */}
-            <div className="text-center mb-12 animate-fade-in">
-              <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 mb-4 tracking-tight drop-shadow-2xl">
+            <div className="text-center mb-12">
+              <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 mb-4 tracking-tight">
                 БАЛДА
               </h1>
               <p className="text-gray-400 text-base md:text-lg font-medium tracking-wide">
@@ -130,16 +130,16 @@ export function App() {
 
             {/* Menu Card */}
             <div className="w-full max-w-md">
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 shadow-depth-4 p-8 border-2 border-gray-700 backdrop-blur-sm">
+              <div className="bg-gray-800 p-8 border border-gray-700">
                 <div className="space-y-3">
                   <MenuButton icon="⚡" label="Быстрая игра 5×5" variant="success" size="large" onClick={quickStart} />
                   <MenuButton icon="🤖" label="Играть с AI" variant="warning" size="large" onClick={quickStartVsAI} />
 
                   {/* Divider */}
                   <div className="flex items-center gap-3 py-2">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+                    <div className="flex-1 h-px bg-gray-600"></div>
                     <span className="text-gray-500 text-sm font-medium">или</span>
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+                    <div className="flex-1 h-px bg-gray-600"></div>
                   </div>
 
                   <MenuButton icon="➕" label="Создать игру" variant="primary" onClick={() => setScreen('create')} />
@@ -171,9 +171,9 @@ export function App() {
         )}
 
         {screen === 'play' && currentGame && (
-          <div className="relative h-screen flex flex-col bg-gray-900">
+          <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
-            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-2 p-2 pb-0 overflow-hidden relative">
+            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-4 p-4 pb-0 overflow-hidden relative">
               {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
               <div className="flex lg:contents gap-2 min-h-0">
                 <div className="flex-1 lg:flex-none min-h-0">
@@ -193,7 +193,7 @@ export function App() {
               </div>
 
               {/* Center: Board Only */}
-              <div className="h-full min-h-0 flex items-center justify-center">
+              <div className="h-full min-h-0 flex items-start justify-center">
                 <Board
                   game={currentGame}
                   selectedCell={selectedCell}
@@ -235,9 +235,9 @@ export function App() {
             )}
 
             {/* Bottom control panel - fixed at bottom */}
-            <div className="shrink-0 overflow-hidden relative z-50">
+            <div className="shrink-0 shadow-depth-3 overflow-hidden relative z-50">
               {/* Control Buttons Bar */}
-              <div className="bg-gray-800 border-t border-gray-700 px-2 sm:px-4 py-2">
+              <div className="bg-slate-900 border-t-2 border-slate-700 px-4 sm:px-6 py-3">
                 {playerName && currentGame && (
                   <ControlButtons
                     isMyTurn={isMyTurn()}
