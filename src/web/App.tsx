@@ -73,8 +73,6 @@ export function App() {
 
   // Game controls (extracted to hook)
   const { showSuggestions, toggleSuggestions, hideSuggestions, makeMove, handleExitToMenu } = useGameControls({
-    currentGame,
-    playerName,
     makeApiMove,
     clearSuggestions,
     clearInteraction: clearAll,

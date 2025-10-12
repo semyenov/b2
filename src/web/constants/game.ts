@@ -14,9 +14,6 @@ export const GAME_CONFIG = {
   // Alphabet
   ALPHABET_GRID_COLUMNS: 11,
 
-  // UI
-  SUGGESTIONS_PANEL_MAX_HEIGHT: '50vh',
-
   // AI
   AI_THINKING_DELAY_MS: 1500,
 
@@ -50,9 +47,6 @@ export const A11Y_LABELS = {
   MOVE_SUCCESS: (word: string, score: number) => `Слово ${word} принято, ${score} очков`,
   MOVE_ERROR: (error: string) => `Ошибка: ${error}`,
 } as const
-
-// Nested in GAME_CONFIG for easier access
-// (moved below)
 
 /**
  * Game status types

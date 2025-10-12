@@ -19,13 +19,18 @@
   --text-resp-xl: clamp(1.75rem, 3.5vw, 3rem);
   --text-resp-2xl: clamp(2rem, 4.5vw, 3.75rem);
   --text-resp-3xl: clamp(2.5rem, 5vw, 4rem);
-  --text-resp-board: clamp(3.2rem, 6vw, 5.5rem);
 
   /* Responsive dimensions */
   --size-resp-cell: clamp(3.5rem, 6.5vw, 6rem);
   --size-resp-header: clamp(3rem, 4.5vw, 4.5rem);
   --size-resp-label: clamp(3rem, 5vw, 5rem);
   --size-resp-panel: clamp(300px, 15vw, 320px);
+
+  /* PlayerPanel specific sizes */
+  --text-resp-score: clamp(3rem, 5vw, 5rem);
+  --text-resp-word: clamp(0.875rem, 1.5vw, 1.125rem);
+  --spacing-resp-word-item: clamp(0.5rem, 1vw, 1rem);
+  --spacing-resp-word-padding: clamp(0.5rem, 0.8vw, 0.75rem);
 }
 
 /* ========================================

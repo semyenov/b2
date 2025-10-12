@@ -1,3 +1,5 @@
+import { cn } from '../utils/classNames'
+
 interface BannerProps {
   variant: 'error' | 'loading' | 'warning'
   message: string
@@ -5,25 +7,18 @@ interface BannerProps {
 }
 
 const variantStyles = {
-  error: {
-    bg: 'bg-red-700',
-    border: 'border-red-600',
-  },
-  loading: {
-    bg: 'bg-blue-600',
-    border: 'border-blue-500',
-  },
-  warning: {
-    bg: 'bg-yellow-700',
-    border: 'border-yellow-600',
-  },
+  error: 'bg-red-700 border-red-600',
+  loading: 'bg-blue-600 border-blue-500',
+  warning: 'bg-yellow-700 border-yellow-600',
 }
 
 export function Banner({ variant, message, onClose }: BannerProps) {
-  const styles = variantStyles[variant]
-
   return (
-    <div className={`fixed top-4 right-4 ${styles.bg} text-white px-4 py-3 shadow-depth-3 z-50 border-2 ${styles.border}`}>
+    <div className={cn(
+      'fixed top-4 right-4 text-white px-4 py-3 shadow-depth-3 z-50 border-2',
+      variantStyles[variant],
+    )}
+    >
       <div className="flex items-center gap-2">
         {variant === 'loading' && (
           <div className="animate-spin h-4 w-4 border-b-2 border-white" />

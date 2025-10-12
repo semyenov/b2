@@ -1,10 +1,8 @@
-import type { GameState, MoveBody } from '../lib/client'
+import type { MoveBody } from '../lib/client'
 import type { Screen } from './useGameClient'
 import { useCallback, useState } from 'react'
 
 interface UseGameControlsOptions {
-  currentGame: GameState | null
-  playerName: string
   makeApiMove: (move: MoveBody) => Promise<void>
   clearSuggestions: () => void
   clearInteraction: () => void

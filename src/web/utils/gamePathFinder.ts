@@ -3,18 +3,10 @@
  * Uses DFS to find valid word paths on the board
  */
 
-export interface Position { row: number, col: number }
-export type Board = (string | null)[][]
+import type { Board, Position } from '../types/game'
 
 /**
- * DFS search for word path on board
- * @param board Game board
- * @param word Target word to find
- * @param row Current row position
- * @param col Current column position
- * @param visited Set of visited cell keys
- * @param path Current path being built
- * @returns Valid path if found, null otherwise
+ * DFS search for word path on board (orthogonal adjacency only)
  */
 function dfsWordSearch(
   board: Board,
@@ -24,16 +16,14 @@ function dfsWordSearch(
   visited: Set<string>,
   path: Position[],
 ): Position[] | null {
-  // Found complete word
-  if (path.length === word.length) {
+  if (path.length === word.length)
     return path
-  }
 
   const key = `${row},${col}`
   visited.add(key)
 
   const nextChar = word[path.length]
-  const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]] // orthogonal only
+  const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
 
   for (const [dr, dc] of directions) {
     const newRow = row + dr
@@ -56,9 +46,8 @@ function dfsWordSearch(
         new Set(visited),
         [...path, { row: newRow, col: newCol }],
       )
-      if (result) {
+      if (result)
         return result
-      }
     }
   }
 
@@ -67,11 +56,6 @@ function dfsWordSearch(
 
 /**
  * Find path for a word on the board (with new letter placed)
- * @param board Current game board
- * @param newLetterPos Position where new letter will be placed
- * @param newLetter The new letter to place
- * @param word Target word to find
- * @returns Valid path if found, null otherwise
  */
 export function findWordPath(
   board: Board,
@@ -79,28 +63,24 @@ export function findWordPath(
   newLetter: string,
   word: string,
 ): Position[] | null {
-  const rows = board.length
-  const cols = board[0].length
-
-  // Create a copy of board with the new letter
+  // Create board copy with new letter
   const tempBoard = board.map(row => [...row])
   tempBoard[newLetterPos.row][newLetterPos.col] = newLetter
 
-  // Try to find the word starting from each cell
-  for (let startRow = 0; startRow < rows; startRow++) {
-    for (let startCol = 0; startCol < cols; startCol++) {
-      if (tempBoard[startRow][startCol] === word[0]) {
+  // Try to find word starting from each matching cell
+  for (let row = 0; row < board.length; row++) {
+    for (let col = 0; col < board[0].length; col++) {
+      if (tempBoard[row][col] === word[0]) {
         const path = dfsWordSearch(
           tempBoard,
           word,
-          startRow,
-          startCol,
+          row,
+          col,
           new Set<string>(),
-          [{ row: startRow, col: startCol }],
+          [{ row, col }],
         )
-        if (path) {
+        if (path)
           return path
-        }
       }
     }
   }

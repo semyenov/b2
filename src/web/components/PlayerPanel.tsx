@@ -27,19 +27,19 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName }: Playe
     >
       {/* Header with player info */}
       <div className={`
-        p-2 flex flex-col gap-1 border-b-2 border-gray-700 shrink-0
+        p-[var(--spacing-resp-sm)] flex flex-col gap-[var(--spacing-resp-xs)] border-b-2 border-gray-700 shrink-0
         ${isCurrentTurn ? 'bg-yellow-900 bg-opacity-30' : 'bg-gray-750'}
       `}
       >
         {/* Indicators only - no player label */}
         {(isCurrentTurn || isAI) && (
-          <div className="flex items-center justify-center gap-1.5">
+          <div className="flex items-center justify-center gap-[var(--spacing-resp-xs)]">
             {isCurrentTurn && <span className="text-yellow-400 text-xl">▶</span>}
             {isAI && <span className="text-yellow-500 text-xl">🤖</span>}
           </div>
         )}
         <div className="flex items-center justify-center">
-          <span className="text-[clamp(3rem,5vw,5rem)] font-black text-gray-100 tabular-nums tracking-tight">
+          <span className="text-[var(--text-resp-score)] font-black text-gray-100 tabular-nums tracking-tight">
             {score}
           </span>
         </div>
@@ -49,17 +49,17 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName }: Playe
       </div>
 
       {/* Words list */}
-      <div className="flex-1 overflow-y-auto p-[clamp(0.25rem,0.5vw,0.75rem)] min-h-0">
-        <div className="space-y-2">
+      <div className="flex-1 overflow-y-auto p-[var(--spacing-resp-sm)] min-h-0">
+        <div className="space-y-[var(--spacing-resp-sm)]">
           {playerWords.length === 0
             ? (
-                <div className="text-gray-600 text-[clamp(0.75rem,1.2vw,1rem)] italic py-4 text-center">Пока нет слов</div>
+                <div className="text-gray-600 text-[var(--text-resp-xs)] italic py-[var(--spacing-resp-md)] text-center">Пока нет слов</div>
               )
             : (
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-[clamp(0.5rem,1vw,1rem)] py-[clamp(0.5rem,0.8vw,0.75rem)] bg-gray-750 hover:bg-gray-700 text-[clamp(0.875rem,1.5vw,1.125rem)] font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
+                    className="px-[var(--spacing-resp-word-item)] py-[var(--spacing-resp-word-padding)] bg-gray-750 hover:bg-gray-700 text-[var(--text-resp-word)] font-mono text-gray-200 transition-all duration-200 border border-gray-600 hover:border-gray-500 hover:shadow-depth-1 flex items-center justify-between group"
                   >
                     <span className="font-black tracking-wide">{word}</span>
                     <span className="text-xs text-gray-500 group-hover:text-gray-400 font-bold">

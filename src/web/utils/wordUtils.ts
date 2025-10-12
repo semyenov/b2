@@ -1,4 +1,5 @@
 import type { GameState } from '../lib/client'
+import type { Board, Position } from '../types/game'
 
 /**
  * Word utility functions
@@ -14,24 +15,20 @@ import type { GameState } from '../lib/client'
  * @returns Formed word as uppercase string
  */
 export function formWordFromPath(
-  wordPath: Array<{ row: number, col: number }>,
-  board: (string | null)[][],
-  selectedCell?: { row: number, col: number },
+  wordPath: Position[],
+  board: Board,
+  selectedCell?: Position,
   selectedLetter?: string,
 ): string {
   return wordPath
     .map((pos) => {
-      // If this position is the selected cell, use the selected letter
-      if (
-        selectedCell
-        && pos.row === selectedCell.row
-        && pos.col === selectedCell.col
-        && selectedLetter
-      ) {
-        return selectedLetter
+      const cell = board[pos.row]?.[pos.col]
+      // If this position is the selected cell and it's empty, use the selected letter
+      if (pos.row === selectedCell?.row && pos.col === selectedCell?.col && !cell) {
+        return selectedLetter || ''
       }
       // Otherwise use the letter from the board
-      return board[pos.row][pos.col] || ''
+      return cell || ''
     })
     .join('')
     .toUpperCase()
@@ -47,9 +44,9 @@ export function formWordFromPath(
  */
 export function getFormedWord(
   currentGame: GameState | null,
-  selectedCell: { row: number, col: number } | undefined,
+  selectedCell: Position | undefined,
   selectedLetter: string,
-  wordPath: Array<{ row: number, col: number }>,
+  wordPath: Position[],
 ): string {
   if (!currentGame || !selectedCell || !selectedLetter || wordPath.length < 2) {
     return ''
