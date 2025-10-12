@@ -16,7 +16,7 @@ const variantStyles = {
 export const Banner = memo(({ variant, message, onClose }: BannerProps) => {
   return (
     <div className={cn(
-      'fixed top-4 right-4 text-white px-4 py-3 shadow-depth-3 z-50 border-2',
+      'fixed top-4 right-4 text-white px-4 py-3 z-50 border',
       variantStyles[variant],
     )}
     >
@@ -28,7 +28,7 @@ export const Banner = memo(({ variant, message, onClose }: BannerProps) => {
         {onClose && (
           <button
             onClick={onClose}
-            className="ml-4 hover:bg-opacity-80 px-2 py-1 transition-all duration-200"
+            className="ml-4 hover:bg-opacity-80 px-2 py-1 transition-opacity duration-150"
           >
             ✕
           </button>

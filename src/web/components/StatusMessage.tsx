@@ -33,7 +33,7 @@ export const StatusMessage = memo(({ step }: StatusMessageProps) => {
 
   return (
     <div className={cn(
-      'px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-xs)] border-2 shadow-depth-1 font-bold text-[var(--text-resp-sm)]',
+      'px-4 py-1.5 border font-bold text-sm',
       config.className,
     )}
     >

@@ -22,8 +22,8 @@ export const SuggestionsPanel = memo(({
 }: SuggestionsPanelProps) => {
   if (loadingSuggestions) {
     return (
-      <div className="flex items-center justify-center py-[var(--spacing-resp-sm)]">
-        <div className="animate-spin h-8 w-8 border-b-4 border-yellow-400 mr-[var(--spacing-resp-sm)]"></div>
+      <div className="flex items-center justify-center py-4">
+        <div className="animate-spin h-8 w-8 border-b-2 border-yellow-500 mr-2"></div>
         <div className="text-gray-400 font-semibold">Загрузка подсказок...</div>
       </div>
     )
@@ -31,25 +31,25 @@ export const SuggestionsPanel = memo(({
 
   if (suggestions.length === 0) {
     return (
-      <div className="text-center py-[var(--spacing-resp-sm)] text-gray-500">
+      <div className="text-center py-4 text-gray-500">
         Нет доступных подсказок
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col pt-[var(--spacing-resp-sm)]">
-      <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 text-sm text-gray-300 mb-[var(--spacing-resp-sm)] font-bold uppercase tracking-wide flex items-center justify-between shrink-0 py-[var(--spacing-resp-xs)] px-[var(--spacing-resp-sm)] -mt-[var(--spacing-resp-sm)]">
-        <span className="flex items-center gap-[var(--spacing-resp-xs)]">
+    <div className="flex flex-col pt-2">
+      <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 text-sm text-gray-300 mb-2 font-bold uppercase tracking-wide flex items-center justify-between shrink-0 py-1 px-2 -mt-2">
+        <span className="flex items-center gap-1">
           💡 Подсказки AI
         </span>
-        <span className="text-yellow-400 text-lg">
+        <span className="text-yellow-500 text-base">
           {suggestions.length}
           {' '}
           доступно
         </span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--spacing-resp-xs)] px-[var(--spacing-resp-sm)] pb-[var(--spacing-resp-sm)]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-1 px-2 pb-2">
         {suggestions.slice(0, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY).map((suggestion, index) => {
           const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
           const scoreColor = suggestion.score >= GAME_CONFIG.SCORE_THRESHOLDS.HIGH
@@ -64,7 +64,7 @@ export const SuggestionsPanel = memo(({
               type="button"
               onClick={() => onSuggestionSelect(suggestion)}
               aria-label={`Подсказка ${index + 1}: ${suggestion.word}, буква ${suggestion.letter} на позиции ${posStr}, ${suggestion.score} очков`}
-              className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 px-2 py-1.5 flex items-center gap-1.5"
+              className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-colors duration-150 px-2 py-1.5 flex items-center gap-1.5"
             >
               {/* Rank Badge */}
               <div className="bg-gray-800 text-gray-500 font-bold text-[10px] px-1 py-0.5 shrink-0 leading-none" aria-hidden="true">
