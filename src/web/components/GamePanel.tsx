@@ -2,6 +2,7 @@ import type { GameState, Suggestion } from '../lib/client'
 import { useCallback, useState } from 'react'
 import { A11Y_LABELS, GAME_CONFIG, RUSSIAN_ALPHABET } from '../constants/game'
 import { cn } from '../utils/classNames'
+import { isLetterButtonDisabled, shouldShowAlphabetPanel } from '../utils/uiHelpers'
 import { Board } from './Board'
 import { SuggestionsPanel } from './SuggestionsPanel'
 
@@ -35,9 +36,7 @@ export function GamePanel({
 }: GamePanelProps) {
   const [hoveredLetter, setHoveredLetter] = useState<string>('')
 
-  // Determine if panel should be visible
-  // Show when: suggestions active OR user needs to select a letter
-  const shouldShowPanel = showSuggestions || (selectedCell && !selectedLetter)
+  const shouldShowPanel = shouldShowAlphabetPanel(showSuggestions, selectedCell, selectedLetter)
 
   // Keyboard handler for letter buttons
   const handleLetterKeyDown = useCallback((
@@ -97,8 +96,8 @@ export function GamePanel({
             >
               <div className="grid gap-[var(--spacing-resp-xs)] w-full max-w-[min(100%,1200px)] h-full" style={{ gridTemplateColumns: `repeat(${GAME_CONFIG.ALPHABET_GRID_COLUMNS}, minmax(0, 1fr))` }}>
                 {RUSSIAN_ALPHABET.map((letter) => {
-                  const isDisabled = disabled || !selectedCell || !!selectedLetter
                   const isSelected = selectedLetter === letter
+                  const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
                   const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
 
                   return (
@@ -106,10 +105,10 @@ export function GamePanel({
                       key={letter}
                       type="button"
                       onClick={() => onLetterSelect?.(letter)}
-                      onKeyDown={e => handleLetterKeyDown(e, letter, isDisabled && !isSelected)}
+                      onKeyDown={e => handleLetterKeyDown(e, letter, buttonDisabled)}
                       onMouseEnter={() => setHoveredLetter(letter)}
                       onMouseLeave={() => setHoveredLetter('')}
-                      disabled={isDisabled && !isSelected}
+                      disabled={buttonDisabled}
                       aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
                       aria-pressed={isSelected}
                       className={cn(
@@ -118,8 +117,8 @@ export function GamePanel({
                           'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105': isSelected,
                           'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3': isHovered,
                           'bg-gray-650 text-gray-100 border-2 border-gray-600 hover:bg-gray-600 hover:border-gray-500': !isSelected && !isHovered,
-                          'opacity-30 cursor-not-allowed': isDisabled && !isSelected,
-                          'cursor-pointer hover:shadow-depth-2 hover:scale-105': !isDisabled || isSelected,
+                          'opacity-30 cursor-not-allowed': buttonDisabled,
+                          'cursor-pointer hover:shadow-depth-2 hover:scale-105': !buttonDisabled,
                         },
                       )}
                     >

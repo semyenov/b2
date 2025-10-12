@@ -1,7 +1,10 @@
 import type { Suggestion } from '../lib/client'
 import type { Position } from '../types/game'
+import { BUTTON_STYLES } from '../constants/styles'
+import { useFullscreen } from '../hooks/useFullscreen'
 import { cn } from '../utils/classNames'
 import { getGameStep } from '../utils/gameStepUtils'
+import { isClearButtonDisabled } from '../utils/uiHelpers'
 import { StatusMessage } from './StatusMessage'
 
 interface ControlButtonsProps {
@@ -31,6 +34,8 @@ export function ControlButtons({
   onToggleSuggestions,
   onExit,
 }: ControlButtonsProps) {
+  const { toggleFullscreen } = useFullscreen()
+
   const gameStep = getGameStep({
     isMyTurn,
     selectedCell,
@@ -38,7 +43,7 @@ export function ControlButtons({
     wordPathLength: wordPath.length,
   })
 
-  const isClearDisabled = !isMyTurn || (!selectedCell && !selectedLetter && wordPath.length === 0)
+  const isClearDisabled = isClearButtonDisabled(isMyTurn, selectedCell, selectedLetter, wordPath)
 
   return (
     <div className="flex items-center gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)] flex-1 min-w-0 flex-wrap sm:flex-nowrap">
@@ -48,22 +53,15 @@ export function ControlButtons({
           type="button"
           onClick={onExit}
           aria-label="Выйти в главное меню"
-          className="px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[var(--text-resp-xs)] sm:text-[var(--text-resp-sm)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0"
+          className={cn(BUTTON_STYLES.base, BUTTON_STYLES.padding.standard, BUTTON_STYLES.textSize.standard, BUTTON_STYLES.variants.gray)}
         >
           ← Выход
         </button>
         <button
           type="button"
-          onClick={() => {
-            if (!document.fullscreenElement) {
-              document.documentElement.requestFullscreen()
-            }
-            else {
-              document.exitFullscreen()
-            }
-          }}
+          onClick={toggleFullscreen}
           aria-label="Полноэкранный режим"
-          className="px-[var(--spacing-resp-xs)] sm:px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-xs)] bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 text-[var(--text-resp-base)] font-bold transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200 flex-shrink-0"
+          className={cn(BUTTON_STYLES.base, BUTTON_STYLES.padding.compact, BUTTON_STYLES.textSize.base, BUTTON_STYLES.variants.gray)}
         >
           ⛶
         </button>
@@ -80,10 +78,17 @@ export function ControlButtons({
             type="button"
             onClick={onSubmitMove}
             aria-label={`Отправить слово ${formedWord}`}
-            className="px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 border-2 border-green-400 text-white font-bold text-[var(--text-resp-xs)] sm:text-[var(--text-resp-sm)] transition-all duration-200 shadow-depth-3 hover:shadow-depth-4 hover:scale-110 flex items-center gap-1 sm:gap-2 animate-pulse-glow whitespace-nowrap flex-shrink-0"
+            className={cn(
+              BUTTON_STYLES.base,
+              BUTTON_STYLES.padding.standard,
+              BUTTON_STYLES.textSize.standard,
+              BUTTON_STYLES.variants.success,
+              BUTTON_STYLES.layout.row,
+              BUTTON_STYLES.content.nowrap,
+            )}
           >
             <span aria-hidden="true">📤</span>
-            <span className="uppercase tracking-wider">
+            <span className={BUTTON_STYLES.content.uppercase}>
               Отправить слово
               {' '}
               &quot;
@@ -104,10 +109,12 @@ export function ControlButtons({
           aria-label={showSuggestions ? 'Скрыть подсказки AI' : 'Показать подсказки AI'}
           aria-pressed={showSuggestions}
           className={cn(
-            'px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] font-bold text-[var(--text-resp-xs)] sm:text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-1 sm:gap-2 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0',
-            showSuggestions
-              ? 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3'
-              : 'bg-yellow-600 hover:bg-yellow-700 text-white',
+            BUTTON_STYLES.base,
+            BUTTON_STYLES.padding.standard,
+            BUTTON_STYLES.textSize.standard,
+            BUTTON_STYLES.layout.centered,
+            BUTTON_STYLES.disabled,
+            showSuggestions ? BUTTON_STYLES.variants.warningActive : BUTTON_STYLES.variants.warningInactive,
           )}
         >
           AI
@@ -119,7 +126,13 @@ export function ControlButtons({
           onClick={onClearSelection}
           disabled={isClearDisabled}
           aria-label="Отменить выбор ячейки и буквы"
-          className="px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-600 hover:bg-gray-500 text-white font-bold text-[var(--text-resp-xs)] sm:text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+          className={cn(
+            BUTTON_STYLES.base,
+            BUTTON_STYLES.padding.standard,
+            BUTTON_STYLES.textSize.standard,
+            BUTTON_STYLES.variants.muted,
+            BUTTON_STYLES.disabled,
+          )}
         >
           ✕ Отмена
         </button>
