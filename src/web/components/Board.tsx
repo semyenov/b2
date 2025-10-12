@@ -17,26 +17,26 @@ interface BoardProps {
 function getCellClassName(selected: boolean, inPath: boolean, hasCell: boolean, canClick: boolean, isHovered: boolean): string {
   return cn(
     // Base classes
-    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border flex items-center justify-center text-[var(--text-resp-board)] text-3xl font-black transition-all duration-200 relative leading-none',
+    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-board)] text-3xl font-black transition-all duration-200 relative leading-none',
 
     // State-based styling
     {
-      'bg-blue-600 border-blue-400 text-white shadow-depth-3': selected,
-      'bg-green-600 border-green-400 text-white shadow-depth-3': !selected && inPath,
-      'bg-gray-650 border-gray-500 text-emerald-300 shadow-depth-1': !selected && !inPath && hasCell,
-      'bg-gray-800 border-gray-650 text-gray-500': !selected && !inPath && !hasCell,
+      'bg-blue-600 border-blue-300 text-white shadow-depth-3 ring-2 ring-blue-400/50': selected,
+      'bg-emerald-600 border-emerald-300 text-white shadow-depth-3 ring-2 ring-emerald-400/50': !selected && inPath,
+      'bg-slate-700 border-slate-500 text-cyan-300 shadow-depth-2': !selected && !inPath && hasCell,
+      'bg-slate-900 border-slate-700 text-slate-600': !selected && !inPath && !hasCell,
     },
 
     // Interactive styling
     {
-      'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-gray-650 hover:z-10 hover:border-cyan-500': canClick,
+      'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-slate-700 hover:z-10 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-500/50': canClick,
       'cursor-default': !canClick,
     },
 
     // Hover ring
     {
-      'ring ring-blue-300': isHovered && canClick && selected,
-      'ring ring-yellow-400 bg-gray-650': isHovered && canClick && !selected,
+      'ring-4 ring-blue-400': isHovered && canClick && selected,
+      'ring-4 ring-yellow-400 bg-slate-700 border-yellow-500': isHovered && canClick && !selected,
     },
   )
 }
@@ -103,59 +103,62 @@ export const Board = memo(({
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-2" style={{ maxWidth: 'fit-content', maxHeight: '90%' }}>
-      {/* Board rows */}
-      {board.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex">
-          {/* Cells */}
-          {row.map((cell, colIndex) => {
-            const canClick = canClickCell({
-              row: rowIndex,
-              col: colIndex,
-              board,
-              disabled: !!disabled,
-              selectedCell,
-              selectedLetter,
-              wordPath,
-            })
-            const isHovered = hoveredCell?.row === rowIndex && hoveredCell?.col === colIndex
-            const inPath = isPositionInWordPath(rowIndex, colIndex, wordPath)
-            const pathIdx = getPositionPathIndex(rowIndex, colIndex, wordPath)
-            const selected = isPositionSelected(rowIndex, colIndex, selectedCell)
+      {/* Board with depth effect */}
+      <div className="shadow-[0_20px_60px_rgba(0,0,0,0.8)] p-2 bg-gradient-to-br from-slate-800 to-slate-950 ring-4 ring-slate-700/50">
+        {/* Board rows */}
+        {board.map((row, rowIndex) => (
+          <div key={rowIndex} className="flex">
+            {/* Cells */}
+            {row.map((cell, colIndex) => {
+              const canClick = canClickCell({
+                row: rowIndex,
+                col: colIndex,
+                board,
+                disabled: !!disabled,
+                selectedCell,
+                selectedLetter,
+                wordPath,
+              })
+              const isHovered = hoveredCell?.row === rowIndex && hoveredCell?.col === colIndex
+              const inPath = isPositionInWordPath(rowIndex, colIndex, wordPath)
+              const pathIdx = getPositionPathIndex(rowIndex, colIndex, wordPath)
+              const selected = isPositionSelected(rowIndex, colIndex, selectedCell)
 
-            // Display content
-            let displayContent = cell
-            if (selected && !cell && selectedLetter) {
-              displayContent = selectedLetter
-            }
-            if (!displayContent) {
-              displayContent = '·'
-            }
+              // Display content
+              let displayContent = cell
+              if (selected && !cell && selectedLetter) {
+                displayContent = selectedLetter
+              }
+              if (!displayContent) {
+                displayContent = '·'
+              }
 
-            return (
-              <div
-                key={colIndex}
-                role="button"
-                tabIndex={canClick ? 0 : -1}
-                aria-label={getCellAriaLabel(rowIndex, colIndex, cell, selected, inPath, pathIdx)}
-                aria-pressed={selected}
-                aria-disabled={!canClick}
-                onClick={() => canClick && onCellClick?.(rowIndex, colIndex)}
-                onKeyDown={e => handleCellKeyDown(e, rowIndex, colIndex, canClick)}
-                onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
-                onMouseLeave={() => setHoveredCell(null)}
-                className={getCellClassName(selected, inPath, !!cell, canClick, isHovered)}
-              >
-                {displayContent}
-                {inPath && pathIdx >= 0 && (
-                  <div className="absolute top-0 right-0 w-5 h-5 bg-green-800 text-white text-[10px] flex items-center justify-center font-bold border border-green-600">
-                    {pathIdx + 1}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      ))}
+              return (
+                <div
+                  key={colIndex}
+                  role="button"
+                  tabIndex={canClick ? 0 : -1}
+                  aria-label={getCellAriaLabel(rowIndex, colIndex, cell, selected, inPath, pathIdx)}
+                  aria-pressed={selected}
+                  aria-disabled={!canClick}
+                  onClick={() => canClick && onCellClick?.(rowIndex, colIndex)}
+                  onKeyDown={e => handleCellKeyDown(e, rowIndex, colIndex, canClick)}
+                  onMouseEnter={() => setHoveredCell({ row: rowIndex, col: colIndex })}
+                  onMouseLeave={() => setHoveredCell(null)}
+                  className={getCellClassName(selected, inPath, !!cell, canClick, isHovered)}
+                >
+                  {displayContent}
+                  {inPath && pathIdx >= 0 && (
+                    <div className="absolute top-0 right-0 w-5 h-5 bg-green-800 text-white text-[10px] flex items-center justify-center font-bold border border-green-600">
+                      {pathIdx + 1}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        ))}
+      </div>
     </div>
   )
 })

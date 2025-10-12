@@ -1,6 +1,6 @@
 import type { GameState, Suggestion } from '../lib/client'
 import { useCallback, useState } from 'react'
-import { A11Y_LABELS, GAME_CONFIG, RUSSIAN_ALPHABET } from '../constants/game'
+import { A11Y_LABELS, RUSSIAN_ALPHABET } from '../constants/game'
 import { cn } from '../utils/classNames'
 import { isLetterButtonDisabled, shouldShowAlphabetPanel } from '../utils/uiHelpers'
 import { SuggestionsPanel } from './SuggestionsPanel'
@@ -58,68 +58,72 @@ export function GamePanel({
     <div
       className={cn(
         'absolute bottom-0 left-0 right-0 z-40',
-        'bg-gray-800 flex flex-col',
-        'shadow-[0_-8px_24px_rgba(0,0,0,0.5)]',
+        'bg-slate-900 flex flex-col border-t-4 border-cyan-400/30',
+        'shadow-[0_-8px_24px_rgba(0,0,0,0.7)]',
+        'animate-slide-up-panel',
       )}
       style={{
         height: showSuggestions ? 'min(50vh, 400px)' : 'min(35vh, 280px)',
-        paddingBottom: '88px', // Reserve space for control bar (~88px measured)
+        paddingBottom: 'calc(var(--spacing-resp-md) * 2 + 48px)', // Exact control bar space
       }}
     >
       {showSuggestions
         ? (
           /* Suggestions View */
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            <SuggestionsPanel
-              suggestions={suggestions}
-              loadingSuggestions={loadingSuggestions}
-              onSuggestionSelect={onSuggestionSelect!}
-              currentGame={game}
-            />
-          </div>
-        )
+            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-custom relative">
+              {/* Scroll indicator shadows */}
+              <div className="sticky top-0 h-4 bg-gradient-to-b from-gray-800 to-transparent pointer-events-none z-20" />
+              <SuggestionsPanel
+                suggestions={suggestions}
+                loadingSuggestions={loadingSuggestions}
+                onSuggestionSelect={onSuggestionSelect!}
+                currentGame={game}
+              />
+              <div className="sticky bottom-0 h-4 bg-gradient-to-t from-gray-800 to-transparent pointer-events-none z-20" />
+            </div>
+          )
         : (
           /* Alphabet Grid */
-          <div
-            className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-2"
-            role="group"
-            aria-label="Выбор буквы для размещения на доске"
-          >
-            <div className="grid gap-1.5 w-full h-full" style={{ gridTemplateColumns: `repeat(${GAME_CONFIG.ALPHABET_GRID_COLUMNS}, minmax(0, 1fr))`, gridTemplateRows: 'repeat(3, minmax(0, 1fr))' }}>
-              {RUSSIAN_ALPHABET.map((letter) => {
-                const isSelected = selectedLetter === letter
-                const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
-                const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
+            <div
+              className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-2"
+              role="group"
+              aria-label="Выбор буквы для размещения на доске"
+            >
+              <div className="alphabet-grid grid gap-1.5 w-full h-full">
+                {RUSSIAN_ALPHABET.map((letter) => {
+                  const isSelected = selectedLetter === letter
+                  const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
+                  const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
 
-                return (
-                  <button
-                    key={letter}
-                    type="button"
-                    onClick={() => onLetterSelect?.(letter)}
-                    onKeyDown={e => handleLetterKeyDown(e, letter, buttonDisabled)}
-                    onMouseEnter={() => setHoveredLetter(letter)}
-                    onMouseLeave={() => setHoveredLetter('')}
-                    disabled={buttonDisabled}
-                    aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
-                    aria-pressed={isSelected}
-                    className={cn(
-                      'h-full w-full font-black text-xl sm:text-2xl transition-all duration-200',
-                      {
-                        'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105': isSelected,
-                        'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3': isHovered,
-                        'bg-gray-650 text-gray-100 border-2 border-gray-600 hover:bg-gray-600 hover:border-gray-500': !isSelected && !isHovered,
-                        'opacity-30 cursor-not-allowed': buttonDisabled,
-                        'cursor-pointer hover:shadow-depth-2 hover:scale-105': !buttonDisabled,
-                      },
-                    )}
-                  >
-                    {letter}
-                  </button>
-                )
-              })}
+                  return (
+                    <button
+                      key={letter}
+                      type="button"
+                      onClick={() => onLetterSelect?.(letter)}
+                      onKeyDown={e => handleLetterKeyDown(e, letter, buttonDisabled)}
+                      onMouseEnter={() => setHoveredLetter(letter)}
+                      onMouseLeave={() => setHoveredLetter('')}
+                      disabled={buttonDisabled}
+                      aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
+                      aria-pressed={isSelected}
+                      className={cn(
+                        'h-full w-full font-black text-xl sm:text-2xl transition-all duration-200 border-2',
+                        {
+                          'bg-blue-600 border-blue-300 text-white shadow-depth-3 ring-4 ring-blue-400/70 transform scale-105': isSelected,
+                          'bg-yellow-400 border-yellow-300 text-gray-900 transform scale-105 shadow-depth-3 ring-4 ring-yellow-400/70': isHovered,
+                          'bg-slate-700 text-gray-100 border-slate-600 hover:bg-slate-600 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-400/50': !isSelected && !isHovered,
+                          'opacity-30 cursor-not-allowed': buttonDisabled,
+                          'cursor-pointer hover:shadow-depth-2 hover:scale-105 active:scale-95': !buttonDisabled,
+                        },
+                      )}
+                    >
+                      {letter}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        )}
+          )}
     </div>
   )
 }

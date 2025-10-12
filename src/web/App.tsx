@@ -193,7 +193,7 @@ export function App() {
               </div>
 
               {/* Center: Board Only */}
-              <div className="h-full min-h-0 flex items-center justify-center">
+              <div className="h-full min-h-0 flex items-start justify-center pt-4">
                 <Board
                   game={currentGame}
                   selectedCell={selectedCell}
@@ -238,7 +238,7 @@ export function App() {
             <div className="shrink-0 shadow-depth-3 overflow-hidden relative z-50">
               {/* Control Buttons Bar */}
               <div
-                className="bg-gray-800 border-t-2 border-gray-700 px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-sm)] sm:py-[var(--spacing-resp-md)]"
+                className="bg-slate-900 border-t-2 border-slate-700 px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-sm)] sm:py-[var(--spacing-resp-md)]"
               >
                 {playerName && currentGame && (
                   <ControlButtons
