@@ -1,20 +1,17 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Banner } from './components/Banner'
+import { ControlButtons } from './components/ControlButtons'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
 import { GamePanel } from './components/GamePanel'
 import { MenuButton } from './components/MenuButton'
 import { PlayerPanel } from './components/PlayerPanel'
-import { StatusMessage } from './components/StatusMessage'
-import { SuggestionsPanel } from './components/SuggestionsPanel'
-import { GAME_CONFIG } from './constants/game'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameControls } from './hooks/useGameControls'
 import { useGameInteraction } from './hooks/useGameInteraction'
 import { useLiveRegion } from './hooks/useLiveRegion'
 import { useSuggestions } from './hooks/useSuggestions'
-import { cn } from './utils/classNames'
 import { buildMoveBody, canSubmitMove } from './utils/moveValidation'
 import { getFormedWord } from './utils/wordUtils'
 
@@ -242,64 +239,23 @@ export function App() {
 
                   {/* Center: Control Buttons or Status Messages */}
                   {playerName && currentGame && (
-                    <div className="flex items-center gap-[var(--spacing-resp-sm)] flex-1 justify-center min-w-0">
-                      {/* Conditional rendering: Status messages */}
-                      {!isMyTurn()
-                        ? <StatusMessage step="waiting" />
-                        : !selectedCell
-                            ? <StatusMessage step="select-cell" />
-                            : !selectedLetter
-                                ? <StatusMessage step="select-letter" />
-                                : wordPath.length < 2
-                                  ? <StatusMessage step="build-word" />
-                                  : (
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
-                                            const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, formedWord)
-                                            makeMove(moveBody)
-                                          }
-                                        }}
-                                        aria-label={`Отправить слово ${formedWord}`}
-                                        className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 border-2 border-green-400 text-white font-bold text-[var(--text-resp-sm)] transition-all duration-200 shadow-depth-3 hover:shadow-depth-4 hover:scale-110 flex items-center gap-2 animate-pulse-glow whitespace-nowrap flex-shrink-0"
-                                      >
-                                        <span aria-hidden="true">📤</span>
-                                        <span className="uppercase tracking-wider">ОТПРАВИТЬ: {formedWord}</span>
-                                      </button>
-                                    )}
-
-                      <button
-                        type="button"
-                        onClick={handleClearSelection}
-                        disabled={!isMyTurn() || (!selectedCell && !selectedLetter && wordPath.length === 0)}
-                        aria-label="Отменить выбор ячейки и буквы"
-                        className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gray-600 hover:bg-gray-500 text-white font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
-                      >
-                        ✕ Отмена
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={toggleSuggestions}
-                        disabled={!isMyTurn()}
-                        aria-label={showSuggestions ? 'Скрыть подсказки AI' : 'Показать подсказки AI'}
-                        aria-pressed={showSuggestions}
-                        className={`px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] font-bold text-[var(--text-resp-sm)] transition-all duration-200 hover:shadow-depth-2 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed relative flex-shrink-0 ${showSuggestions
-                          ? 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3'
-                          : 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                        }`}
-                      >
-                        💡
-                        {' '}
-                        {showSuggestions ? 'Скрыть' : 'AI'}
-                        {!showSuggestions && suggestions.length > 0 && (
-                          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-sm px-2 py-1 font-bold shadow-depth-2" aria-hidden="true">
-                            {suggestions.length}
-                          </span>
-                        )}
-                      </button>
-                    </div>
+                    <ControlButtons
+                      isMyTurn={isMyTurn()}
+                      selectedCell={selectedCell}
+                      selectedLetter={selectedLetter}
+                      wordPath={wordPath}
+                      formedWord={formedWord}
+                      showSuggestions={showSuggestions}
+                      suggestions={suggestions}
+                      onSubmitMove={() => {
+                        if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
+                          const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, formedWord)
+                          makeMove(moveBody)
+                        }
+                      }}
+                      onClearSelection={handleClearSelection}
+                      onToggleSuggestions={toggleSuggestions}
+                    />
                   )}
 
                   {/* Right: Info Badges */}

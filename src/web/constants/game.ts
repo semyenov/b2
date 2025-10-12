@@ -29,6 +29,25 @@ export const BOARD_SIZES = [3, 4, 5, 6, 7] as const
 export const RUSSIAN_ALPHABET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split('')
 
 /**
+ * Game status configuration
+ * Maps status to display label and styling classes
+ */
+export const GAME_STATUS_CONFIG = {
+  waiting: {
+    label: 'Ожидание',
+    className: 'bg-yellow-900 text-yellow-300 border-yellow-600',
+  },
+  in_progress: {
+    label: 'В процессе',
+    className: 'bg-green-900 text-green-300 border-green-600',
+  },
+  finished: {
+    label: 'Завершена',
+    className: 'bg-gray-700 text-gray-300 border-gray-600',
+  },
+} as const
+
+/**
  * Accessibility labels
  */
 export const A11Y_LABELS = {

@@ -1,4 +1,5 @@
 import type { GameState } from '../lib/client'
+import { GAME_STATUS_CONFIG } from '../constants/game'
 import { formatTimeAgo, getBaseWord, getGameStatus } from '../utils/gameHelpers'
 import { promptPlayerName } from '../utils/playerNameUtils'
 import { getRussianPluralForm } from '../utils/russianPlural'
@@ -63,23 +64,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                   const turnNumber = Math.floor(game.moves.length / 2) + 1
                   const currentPlayer = game.players[game.currentPlayerIndex]
                   const timeAgo = formatTimeAgo(game.createdAt)
-
-                  const statusConfig = {
-                    waiting: {
-                      label: 'Ожидание',
-                      color: 'bg-yellow-900 text-yellow-300 border-yellow-600',
-                    },
-                    in_progress: {
-                      label: 'В процессе',
-                      color: 'bg-green-900 text-green-300 border-green-600',
-                    },
-                    finished: {
-                      label: 'Завершена',
-                      color: 'bg-gray-700 text-gray-300 border-gray-600',
-                    },
-                  }
-
-                  const statusInfo = statusConfig[status]
+                  const statusInfo = GAME_STATUS_CONFIG[status]
 
                   return (
                     <div
@@ -88,7 +73,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                     >
                       {/* Header: Status + Time */}
                       <div className="flex justify-between items-start mb-4">
-                        <div className={`px-2.5 py-1 text-xs font-bold border ${statusInfo.color}`}>
+                        <div className={`px-2.5 py-1 text-xs font-bold border ${statusInfo.className}`}>
                           {statusInfo.label}
                         </div>
                         <div className="text-xs text-gray-500">{timeAgo}</div>

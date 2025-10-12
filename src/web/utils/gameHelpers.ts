@@ -5,13 +5,10 @@
 
 import type { GameState } from '../lib/client'
 
-/** Game status type */
 export type GameStatus = 'waiting' | 'in_progress' | 'finished'
 
 /**
  * Extract the base word from the center row of the game board
- * @param game - The game state
- * @returns The base word as a string
  */
 export function getBaseWord(game: GameState): string {
   const centerRow = Math.floor(game.size / 2)
@@ -23,27 +20,21 @@ export function getBaseWord(game: GameState): string {
 
 /**
  * Determine the current status of a game
- * @param game - The game state
- * @returns Game status: 'waiting', 'in_progress', or 'finished'
  */
 export function getGameStatus(game: GameState): GameStatus {
-  if (game.moves.length === 0) {
+  if (game.moves.length === 0)
     return 'waiting'
-  }
 
-  // Game is finished if board is nearly full (rough heuristic)
+  // Game is finished if board is nearly full
   const emptyCount = game.board.flat().filter(cell => cell === null).length
-  if (emptyCount <= 2) {
+  if (emptyCount <= 2)
     return 'finished'
-  }
 
   return 'in_progress'
 }
 
 /**
  * Format timestamp as time ago string (e.g., "5m ago", "2h ago")
- * @param timestamp - Unix timestamp in milliseconds
- * @returns Formatted time ago string
  */
 export function formatTimeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000)
