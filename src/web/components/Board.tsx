@@ -102,25 +102,10 @@ export const Board = memo(({
   }, [selectedLetter, getCoordLabel])
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-[clamp(0.5rem,1vh,1rem)]" style={{ maxWidth: 'fit-content', maxHeight: '95%' }}>
-      {/* Column headers */}
-      <div className="flex mb-1">
-        <div className="w-[var(--size-resp-label)] h-[var(--size-resp-header)]" />
-        {Array.from({ length: size }, (_, i) => (
-          <div key={i} className="w-[var(--size-resp-cell)] h-[var(--size-resp-header)] flex items-center justify-center text-cyan-200 font-black text-[var(--text-resp-xl)]">
-            {String.fromCharCode(1040 + i)}
-          </div>
-        ))}
-      </div>
-
+    <div className="flex flex-col items-center justify-center h-full w-full p-[clamp(0.5rem,1vh,1rem)]" style={{ maxWidth: 'fit-content', maxHeight: '90%' }}>
       {/* Board rows */}
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
-          {/* Row number */}
-          <div className="w-[var(--size-resp-label)] h-[var(--size-resp-cell)] flex items-center justify-center text-cyan-200 font-black text-[var(--text-resp-xl)]">
-            {rowIndex}
-          </div>
-
           {/* Cells */}
           {row.map((cell, colIndex) => {
             const canClick = canClickCell({

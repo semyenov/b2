@@ -38,9 +38,9 @@ export const SuggestionsPanel = memo(({
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="text-sm text-gray-300 mb-[var(--spacing-resp-md)] font-bold uppercase tracking-wide flex items-center justify-between shrink-0">
-        <span className="flex items-center gap-[var(--spacing-resp-sm)]">
+    <div className="flex flex-col pt-[var(--spacing-resp-sm)]">
+      <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 text-sm text-gray-300 mb-[var(--spacing-resp-sm)] font-bold uppercase tracking-wide flex items-center justify-between shrink-0 py-[var(--spacing-resp-xs)] px-[var(--spacing-resp-sm)] -mt-[var(--spacing-resp-sm)]">
+        <span className="flex items-center gap-[var(--spacing-resp-xs)]">
           💡 Подсказки AI
         </span>
         <span className="text-yellow-400 text-lg">
@@ -49,7 +49,7 @@ export const SuggestionsPanel = memo(({
           доступно
         </span>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--spacing-resp-sm)] pb-[var(--spacing-resp-sm)]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)] px-[var(--spacing-resp-sm)] pb-[var(--spacing-resp-sm)]">
         {suggestions.slice(0, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY).map((suggestion, index) => {
           const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
           const scoreColor = suggestion.score >= GAME_CONFIG.SCORE_THRESHOLDS.HIGH
@@ -64,31 +64,31 @@ export const SuggestionsPanel = memo(({
               type="button"
               onClick={() => onSuggestionSelect(suggestion)}
               aria-label={`Подсказка ${index + 1}: ${suggestion.word}, буква ${suggestion.letter} на позиции ${posStr}, ${suggestion.score} очков`}
-              className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)] flex items-center gap-[var(--spacing-resp-sm)]"
+              className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 px-[var(--spacing-resp-xs)] sm:px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-xs)] sm:py-[var(--spacing-resp-sm)] flex items-center gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)]"
             >
               {/* Rank Badge */}
-              <div className="bg-gray-800 text-gray-500 font-black text-xs px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-xs)] shrink-0" aria-hidden="true">
+              <div className="bg-gray-800 text-gray-500 font-black text-xs px-[var(--spacing-resp-xs)] sm:px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-xs)] shrink-0" aria-hidden="true">
                 #
                 {index + 1}
               </div>
 
               {/* Word - Hero Element */}
-              <div className="flex-1 text-white font-black uppercase text-lg tracking-wider text-left truncate">
+              <div className="flex-1 text-white font-black uppercase text-sm sm:text-lg tracking-wider text-left truncate">
                 {suggestion.word}
               </div>
 
               {/* Position + Letter */}
-              <div className="flex items-center gap-[var(--spacing-resp-xs)] shrink-0">
+              <div className="flex items-center gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-xs)] shrink-0">
                 <span className="text-cyan-400 font-mono font-bold text-xs bg-gray-800 bg-opacity-50 px-[var(--spacing-resp-xs)] py-[var(--spacing-resp-xs)]">
                   {posStr}
                 </span>
-                <span className="text-green-400 font-black text-2xl leading-none">
+                <span className="text-green-400 font-black text-lg sm:text-2xl leading-none">
                   {suggestion.letter}
                 </span>
               </div>
 
               {/* Score */}
-              <div className={cn(scoreColor, 'font-black text-xl shrink-0 min-w-[32px] text-right')}>
+              <div className={cn(scoreColor, 'font-black text-lg sm:text-xl shrink-0 min-w-[28px] sm:min-w-[32px] text-right')}>
                 {suggestion.score.toFixed(0)}
               </div>
             </button>

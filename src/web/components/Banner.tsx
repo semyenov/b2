@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { cn } from '../utils/classNames'
 
 interface BannerProps {
@@ -12,7 +13,7 @@ const variantStyles = {
   warning: 'bg-yellow-700 border-yellow-600',
 }
 
-export function Banner({ variant, message, onClose }: BannerProps) {
+export const Banner = memo(({ variant, message, onClose }: BannerProps) => {
   return (
     <div className={cn(
       'fixed top-4 right-4 text-white px-4 py-3 shadow-depth-3 z-50 border-2',
@@ -36,4 +37,6 @@ export function Banner({ variant, message, onClose }: BannerProps) {
       </div>
     </div>
   )
-}
+})
+
+Banner.displayName = 'Banner'

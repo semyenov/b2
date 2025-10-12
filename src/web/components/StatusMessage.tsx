@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { cn } from '../utils/classNames'
 
 interface StatusMessageProps {
@@ -27,7 +28,7 @@ const stepConfig = {
   },
 }
 
-export function StatusMessage({ step }: StatusMessageProps) {
+export const StatusMessage = memo(({ step }: StatusMessageProps) => {
   const config = stepConfig[step]
 
   return (
@@ -41,4 +42,6 @@ export function StatusMessage({ step }: StatusMessageProps) {
       {config.text}
     </div>
   )
-}
+})
+
+StatusMessage.displayName = 'StatusMessage'

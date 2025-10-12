@@ -1,4 +1,5 @@
 import type { CreateGameBody } from '../lib/client'
+import { memo } from 'react'
 import { BOARD_SIZES } from '../constants/game'
 import { useCreateGameForm } from '../hooks/useCreateGameForm'
 import { cn } from '../utils/classNames'
@@ -8,7 +9,7 @@ interface CreateGameProps {
   onBack: () => void
 }
 
-export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
+export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
   const { size, baseWord, error, setSize, setBaseWord, handleSubmit } = useCreateGameForm({ onSubmit })
 
   return (
@@ -125,4 +126,6 @@ export function CreateGame({ onSubmit, onBack }: CreateGameProps) {
       </div>
     </div>
   )
-}
+})
+
+CreateGame.displayName = 'CreateGame'
