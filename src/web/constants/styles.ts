@@ -34,20 +34,20 @@ export const BUTTON_STYLES = {
    * Color variants for different button types
    */
   variants: {
-    /** Gray button (exit, secondary actions) */
-    gray: 'bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-200',
+    /** Slate button (exit, secondary actions) */
+    gray: 'bg-slate-700 hover:bg-slate-600 border-2 border-slate-600 text-slate-200',
 
     /** Clear/cancel button */
-    muted: 'bg-gray-600 hover:bg-gray-500 border border-gray-500 text-white',
+    muted: 'bg-slate-600 hover:bg-slate-500 border-2 border-slate-500 text-white',
 
     /** Success/submit button */
-    success: 'bg-green-600 hover:bg-green-500 border border-green-500 text-white',
+    success: 'bg-green-600 hover:bg-green-500 border-2 border-green-500 text-white',
 
     /** Warning/AI button (active state) */
-    warningActive: 'bg-yellow-600 hover:bg-yellow-500 border border-yellow-500 text-white',
+    warningActive: 'bg-yellow-600 hover:bg-yellow-500 border-2 border-yellow-500 text-white',
 
     /** Warning/AI button (inactive state) */
-    warningInactive: 'bg-yellow-700 hover:bg-yellow-600 border border-yellow-600 text-white',
+    warningInactive: 'bg-yellow-700 hover:bg-yellow-600 border-2 border-yellow-600 text-white',
   },
 
   /**
@@ -79,21 +79,21 @@ export const CARD_STYLES = {
   /**
    * Base card styling
    */
-  base: 'bg-gray-800 border-2 border-gray-700',
+  base: 'bg-slate-800 border-2 border-slate-700',
 
   /**
    * Card padding variants
    */
   padding: {
-    small: 'p-4',
-    medium: 'p-6',
-    large: 'p-8',
+    small: 'p-[var(--spacing-resp-sm)]',
+    medium: 'p-[var(--spacing-resp-md)]',
+    large: 'p-[var(--spacing-resp-lg)]',
   },
 
   /**
    * Hover states for interactive cards
    */
-  hover: 'hover:border-cyan-500 hover:bg-gray-750 transition-colors duration-150',
+  hover: 'hover:border-cyan-500 hover:bg-slate-700 transition-colors duration-150',
 
   /**
    * Interactive card (clickable)
@@ -108,13 +108,13 @@ export const INPUT_STYLES = {
   /**
    * Base text input styling
    */
-  base: 'w-full px-6 py-4 bg-gray-900 border-2 border-gray-700 focus:border-cyan-500 focus:outline-none transition-colors duration-150',
+  base: 'w-full px-6 py-4 bg-slate-900 border-2 border-slate-700 focus:border-cyan-500 focus:outline-none transition-colors duration-150',
 
   /**
    * Input text styling
    */
   text: {
-    standard: 'text-base font-medium text-gray-200',
+    standard: 'text-base font-medium text-slate-200',
     large: 'text-2xl font-bold text-cyan-400',
     centered: 'text-center',
     uppercase: 'uppercase tracking-widest',
@@ -123,7 +123,7 @@ export const INPUT_STYLES = {
   /**
    * Placeholder styling
    */
-  placeholder: 'placeholder-gray-600',
+  placeholder: 'placeholder-slate-600',
 } as const
 
 /**
@@ -155,8 +155,8 @@ export const TEXT_STYLES = {
    */
   color: {
     primary: 'text-cyan-400',
-    secondary: 'text-gray-400',
-    muted: 'text-gray-500',
+    secondary: 'text-slate-400',
+    muted: 'text-slate-500',
     error: 'text-red-400',
     success: 'text-green-400',
     warning: 'text-yellow-400',
@@ -178,5 +178,58 @@ export const SPACING_STYLES = {
     sm: 'space-y-3',
     md: 'space-y-4',
     lg: 'space-y-6',
+  },
+} as const
+
+/**
+ * Padding patterns using CSS variables
+ */
+export const PADDING_STYLES = {
+  /**
+   * Container/wrapper padding
+   */
+  container: 'p-[var(--spacing-resp-md)]',
+
+  /**
+   * Card padding variants
+   */
+  card: {
+    small: 'p-[var(--spacing-resp-sm)]',
+    medium: 'p-[var(--spacing-resp-md)]',
+    large: 'p-[var(--spacing-resp-lg)]',
+  },
+
+  /**
+   * Section padding (directional)
+   */
+  section: {
+    x: 'px-[var(--spacing-resp-md)]',
+    y: 'py-[var(--spacing-resp-md)]',
+    both: 'px-[var(--spacing-resp-md)] py-[var(--spacing-resp-md)]',
+  },
+} as const
+
+/**
+ * Margin patterns (standardized Tailwind values)
+ */
+export const MARGIN_STYLES = {
+  /**
+   * Bottom margins
+   */
+  bottom: {
+    xs: 'mb-2',
+    sm: 'mb-4',
+    md: 'mb-6',
+    lg: 'mb-8',
+  },
+
+  /**
+   * Top margins
+   */
+  top: {
+    xs: 'mt-2',
+    sm: 'mt-4',
+    md: 'mt-6',
+    lg: 'mt-8',
   },
 } as const

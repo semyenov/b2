@@ -4,12 +4,12 @@
    RESPONSIVE UTILITIES (replacing clamp)
    ======================================== */
 @theme {
-  /* Responsive spacing utilities - increased for better visual breathing room */
-  --spacing-resp-xs: clamp(0.25rem, 0.5vw, 0.5rem);    /* 4-8px - Minimal spacing */
-  --spacing-resp-sm: clamp(0.5rem, 1vw, 1rem);         /* 8-16px - Compact spacing */
-  --spacing-resp-md: clamp(0.75rem, 1.5vw, 1.5rem);    /* 12-24px - Medium spacing */
-  --spacing-resp-lg: clamp(1rem, 2vw, 2rem);             /* 16-32px - Large spacing */
-  --spacing-resp-xl: clamp(1.5rem, 3vw, 3rem);         /* 24-48px - Extra large spacing */
+  /* Responsive spacing utilities - standardized with increased base values */
+  --spacing-resp-xs: clamp(0.5rem, 1vw, 1rem);         /* 8-16px - Minimal spacing */
+  --spacing-resp-sm: clamp(0.75rem, 1.5vw, 1.5rem);    /* 12-24px - Compact spacing */
+  --spacing-resp-md: clamp(1rem, 2vw, 2rem);           /* 16-32px - Medium spacing */
+  --spacing-resp-lg: clamp(1.5rem, 3vw, 3rem);         /* 24-48px - Large spacing */
+  --spacing-resp-xl: clamp(2rem, 4vw, 4rem);           /* 32-64px - Extra large spacing */
 
   /* Responsive text sizes - increased for better readability */
   --text-resp-xs: clamp(1rem, 2vw, 1.375rem);          /* Small text (buttons, labels) */
@@ -18,11 +18,11 @@
   --text-resp-lg: clamp(1.5rem, 3vw, 2.25rem);         /* Large text */
   --text-resp-xl: clamp(2rem, 4vw, 3.5rem);            /* Extra large */
   --text-resp-2xl: clamp(2.5rem, 5vw, 4.5rem);        /* Alphabet grid letters */
-  --text-resp-3xl: clamp(2.5rem, min(10vw, 10vh), 12rem);        /* Game board letters */
-  --text-resp-board: clamp(2.5rem, min(10vw, 10vh), 12rem);     /* Board cell text (alias for 3xl) */
+  --text-resp-3xl: clamp(1.5rem, 5vw, 3.5rem);        /* Game board letters */
+  --text-resp-board: clamp(1.5rem, 5vw, 3.5rem);      /* Board cell text (alias for 3xl) */
 
-  /* Responsive dimensions - optimized for maximum board size with vertical responsiveness */
-  --size-resp-cell: clamp(3.5rem, min(15vw, 18vh), 18rem);
+  /* Responsive dimensions - balanced proportions for optimal visibility */
+  --size-resp-cell: clamp(2.5rem, 8vw, 6rem);
   --size-resp-header: clamp(3rem, 4.5vw, 4.5rem);
   --size-resp-label: clamp(3rem, 5vw, 5rem);
   --size-resp-panel: clamp(260px, 13vw, 320px);
@@ -231,72 +231,25 @@ button:focus-visible {
   box-shadow: var(--shadow-depth-3);
 }
 
-/* Maximum space optimization utilities */
-.max-space-container {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  min-width: 0;
-}
-
-/* Alignment utilities for consistent element alignment */
-.align-elements {
-  padding: var(--spacing-resp-sm);
-}
-
-.align-elements-consistent {
-  padding-left: var(--spacing-resp-sm);
-  padding-right: var(--spacing-resp-sm);
-  padding-top: var(--spacing-resp-sm);
-  padding-bottom: var(--spacing-resp-sm);
-}
-
-/* Symmetrical design utilities */
-.symmetrical-layout {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.symmetrical-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-}
-
-.symmetrical-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  min-height: 0;
-}
-
 /* Vertical responsiveness utilities */
 @media (max-height: 800px) {
   :root {
-    --size-resp-cell: clamp(3.5rem, min(13vw, 14vh), 14rem);
-    --text-resp-board: clamp(2.5rem, min(9vw, 9vh), 10rem);
+    --size-resp-cell: clamp(2.25rem, 7vw, 5.5rem);
+    --text-resp-board: clamp(1.375rem, 4.5vw, 3rem);
   }
 }
 
 @media (max-height: 650px) {
   :root {
-    --size-resp-cell: clamp(3rem, min(11vw, 11vh), 11rem);
-    --text-resp-board: clamp(2rem, min(8vw, 8vh), 8rem);
+    --size-resp-cell: clamp(2rem, 6vw, 4.5rem);
+    --text-resp-board: clamp(1.25rem, 4vw, 2.5rem);
   }
 }
 
 @media (max-height: 500px) {
   :root {
-    --size-resp-cell: clamp(2.5rem, min(9vw, 9vh), 9rem);
-    --text-resp-board: clamp(1.75rem, min(7vw, 7vh), 7rem);
+    --size-resp-cell: clamp(1.75rem, 5vw, 3.5rem);
+    --text-resp-board: clamp(1rem, 3vw, 2rem);
   }
 }
 

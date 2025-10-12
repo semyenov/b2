@@ -62,8 +62,8 @@ export function GamePanel({
         paddingBottom: 'calc(var(--spacing-resp-md) * 2 + 48px)', // Exact control bar space
         marginLeft: '0',
         marginRight: '0',
-        paddingLeft: 'var(--spacing-resp-xs)',
-        paddingRight: 'var(--spacing-resp-xs)',
+        paddingLeft: 'var(--spacing-resp-sm)',
+        paddingRight: 'var(--spacing-resp-sm)',
       }}
     >
       {showSuggestions
@@ -81,7 +81,7 @@ export function GamePanel({
         : (
           /* Alphabet Grid */
             <div
-              className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-xs)] py-[var(--spacing-resp-xs)]"
+              className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)]"
               role="group"
               aria-label="Выбор буквы для размещения на доске"
             >
