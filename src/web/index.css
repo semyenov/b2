@@ -21,11 +21,11 @@
   --text-resp-3xl: clamp(3.5rem, 6.5vw, 5.5rem);       /* Game board letters */
   --text-resp-board: clamp(3.5rem, 6.5vw, 5.5rem);     /* Board cell text (alias for 3xl) */
 
-  /* Responsive dimensions */
-  --size-resp-cell: clamp(3.5rem, 6.5vw, 6rem);
+  /* Responsive dimensions - optimized for perfect board fit */
+  --size-resp-cell: clamp(4rem, 8vw, 7.5rem);
   --size-resp-header: clamp(3rem, 4.5vw, 4.5rem);
   --size-resp-label: clamp(3rem, 5vw, 5rem);
-  --size-resp-panel: clamp(300px, 15vw, 320px);
+  --size-resp-panel: clamp(280px, 15vw, 320px);
 
   /* PlayerPanel specific sizes */
   --text-resp-score: clamp(3rem, 5vw, 5rem);

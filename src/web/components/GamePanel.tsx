@@ -63,63 +63,63 @@ export function GamePanel({
       )}
       style={{
         height: showSuggestions ? 'min(50vh, 400px)' : 'min(35vh, 280px)',
-        paddingBottom: '70px', // Reserve space for control bar
+        paddingBottom: '88px', // Reserve space for control bar (~88px measured)
       }}
     >
       {showSuggestions
         ? (
           /* Suggestions View */
-            <div className="flex-1 min-h-0 overflow-y-auto">
-              <SuggestionsPanel
-                suggestions={suggestions}
-                loadingSuggestions={loadingSuggestions}
-                onSuggestionSelect={onSuggestionSelect!}
-                currentGame={game}
-              />
-            </div>
-          )
+          <div className="flex-1 min-h-0 overflow-y-auto">
+            <SuggestionsPanel
+              suggestions={suggestions}
+              loadingSuggestions={loadingSuggestions}
+              onSuggestionSelect={onSuggestionSelect!}
+              currentGame={game}
+            />
+          </div>
+        )
         : (
           /* Alphabet Grid */
-            <div
-              className="flex-1 min-h-0 flex items-center justify-center py-[var(--spacing-resp-sm)] px-[var(--spacing-resp-sm)]"
-              role="group"
-              aria-label="Выбор буквы для размещения на доске"
-            >
-              <div className="grid gap-[var(--spacing-resp-xs)] w-full max-w-[min(100%,1200px)] h-full" style={{ gridTemplateColumns: `repeat(${GAME_CONFIG.ALPHABET_GRID_COLUMNS}, minmax(0, 1fr))` }}>
-                {RUSSIAN_ALPHABET.map((letter) => {
-                  const isSelected = selectedLetter === letter
-                  const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
-                  const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
+          <div
+            className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-2"
+            role="group"
+            aria-label="Выбор буквы для размещения на доске"
+          >
+            <div className="grid gap-1.5 w-full h-full" style={{ gridTemplateColumns: `repeat(${GAME_CONFIG.ALPHABET_GRID_COLUMNS}, minmax(0, 1fr))`, gridTemplateRows: 'repeat(3, minmax(0, 1fr))' }}>
+              {RUSSIAN_ALPHABET.map((letter) => {
+                const isSelected = selectedLetter === letter
+                const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
+                const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
 
-                  return (
-                    <button
-                      key={letter}
-                      type="button"
-                      onClick={() => onLetterSelect?.(letter)}
-                      onKeyDown={e => handleLetterKeyDown(e, letter, buttonDisabled)}
-                      onMouseEnter={() => setHoveredLetter(letter)}
-                      onMouseLeave={() => setHoveredLetter('')}
-                      disabled={buttonDisabled}
-                      aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
-                      aria-pressed={isSelected}
-                      className={cn(
-                        'aspect-square font-black text-[var(--text-resp-2xl)] transition-all duration-200',
-                        {
-                          'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105': isSelected,
-                          'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3': isHovered,
-                          'bg-gray-650 text-gray-100 border-2 border-gray-600 hover:bg-gray-600 hover:border-gray-500': !isSelected && !isHovered,
-                          'opacity-30 cursor-not-allowed': buttonDisabled,
-                          'cursor-pointer hover:shadow-depth-2 hover:scale-105': !buttonDisabled,
-                        },
-                      )}
-                    >
-                      {letter}
-                    </button>
-                  )
-                })}
-              </div>
+                return (
+                  <button
+                    key={letter}
+                    type="button"
+                    onClick={() => onLetterSelect?.(letter)}
+                    onKeyDown={e => handleLetterKeyDown(e, letter, buttonDisabled)}
+                    onMouseEnter={() => setHoveredLetter(letter)}
+                    onMouseLeave={() => setHoveredLetter('')}
+                    disabled={buttonDisabled}
+                    aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
+                    aria-pressed={isSelected}
+                    className={cn(
+                      'h-full w-full font-black text-xl sm:text-2xl transition-all duration-200',
+                      {
+                        'bg-blue-600 text-white shadow-depth-3 ring-2 ring-blue-400 transform scale-105': isSelected,
+                        'bg-yellow-500 text-gray-900 transform scale-105 shadow-depth-3': isHovered,
+                        'bg-gray-650 text-gray-100 border-2 border-gray-600 hover:bg-gray-600 hover:border-gray-500': !isSelected && !isHovered,
+                        'opacity-30 cursor-not-allowed': buttonDisabled,
+                        'cursor-pointer hover:shadow-depth-2 hover:scale-105': !buttonDisabled,
+                      },
+                    )}
+                  >
+                    {letter}
+                  </button>
+                )
+              })}
             </div>
-          )}
+          </div>
+        )}
     </div>
   )
 }
