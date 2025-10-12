@@ -103,11 +103,11 @@ export function GamePanel({
                       aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
                       aria-pressed={isSelected}
                       className={cn(
-                        'h-full w-full font-black text-[var(--text-resp-2xl)] transition-all duration-200 border-2',
+                        'h-full w-full font-black text-[var(--text-resp-2xl)] transition-all duration-150 border-2',
                         {
                           'bg-blue-600 border-blue-300 text-white shadow-depth-3 ring-4 ring-blue-400/70 transform scale-105': isSelected,
                           'bg-yellow-400 border-yellow-300 text-gray-900 transform scale-105 shadow-depth-3 ring-4 ring-yellow-400/70': isHovered,
-                          'bg-slate-700 text-gray-100 border-slate-600 hover:bg-slate-600 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-400/50': !isSelected && !isHovered,
+                          'bg-slate-700 text-slate-100 border-slate-600 hover:bg-slate-600 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-400/50': !isSelected && !isHovered,
                           'opacity-30 cursor-not-allowed': buttonDisabled,
                           'cursor-pointer hover:shadow-depth-2 hover:scale-105 active:scale-95': !buttonDisabled,
                         },

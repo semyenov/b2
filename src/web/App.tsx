@@ -94,7 +94,7 @@ export function App() {
   )
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-slate-900">
       {/* Screen reader live region for game announcements */}
       <div
         className="sr-only"
@@ -123,23 +123,23 @@ export function App() {
               <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 mb-4 tracking-tight">
                 БАЛДА
               </h1>
-              <p className="text-gray-400 text-base md:text-lg font-medium tracking-wide">
+              <p className="text-slate-400 text-base md:text-lg font-medium tracking-wide">
                 Словесная игра для ума
               </p>
             </div>
 
             {/* Menu Card */}
             <div className="w-full max-w-md">
-              <div className="bg-gray-800 p-8 border border-gray-700">
+              <div className="bg-slate-800 p-8 border-2 border-slate-700">
                 <div className="space-y-3">
                   <MenuButton label="Быстрая игра 5×5" variant="success" size="large" onClick={quickStart} />
                   <MenuButton label="Играть с AI" variant="warning" size="large" onClick={quickStartVsAI} />
 
                   {/* Divider */}
                   <div className="flex items-center gap-3 py-2">
-                    <div className="flex-1 h-px bg-gray-600"></div>
-                    <span className="text-gray-500 text-sm font-medium">или</span>
-                    <div className="flex-1 h-px bg-gray-600"></div>
+                    <div className="flex-1 h-px bg-slate-600"></div>
+                    <span className="text-slate-500 text-sm font-medium">или</span>
+                    <div className="flex-1 h-px bg-slate-600"></div>
                   </div>
 
                   <MenuButton label="Создать игру" variant="primary" onClick={() => setScreen('create')} />
@@ -148,7 +148,7 @@ export function App() {
               </div>
 
               {/* Version/Footer */}
-              <div className="text-center mt-6 text-gray-600 text-sm">
+              <div className="text-center mt-6 text-slate-600 text-sm">
                 Версия 2.0
               </div>
             </div>
@@ -171,19 +171,19 @@ export function App() {
         )}
 
         {screen === 'play' && currentGame && (
-          <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
+          <div className="relative h-screen flex flex-col bg-gradient-to-b from-slate-900 to-slate-800">
             {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
-            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[minmax(280px,var(--size-resp-panel))_1fr_minmax(280px,var(--size-resp-panel))] gap-0 p-0 overflow-hidden relative w-full">
+            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[minmax(260px,var(--size-resp-panel))_1fr_minmax(260px,var(--size-resp-panel))] gap-0 p-0 overflow-hidden relative w-full">
               {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
               <div className="flex lg:contents gap-0 min-h-0 lg:col-start-1 lg:col-end-2 h-full">
-                <div className="flex-1 lg:flex-none min-h-0 h-full p-[var(--spacing-resp-xs)]">
+                <div className="flex-1 lg:flex-none min-h-0 h-full p-[var(--spacing-resp-sm)]">
                   <PlayerPanel
                     game={currentGame}
                     playerIndex={0}
                     currentPlayerName={playerName}
                   />
                 </div>
-                <div className="flex-1 lg:hidden min-h-0 h-full p-[var(--spacing-resp-xs)]">
+                <div className="flex-1 lg:hidden min-h-0 h-full p-[var(--spacing-resp-sm)]">
                   <PlayerPanel
                     game={currentGame}
                     playerIndex={1}
@@ -193,7 +193,7 @@ export function App() {
               </div>
 
               {/* Center: Board Only - Enhanced symmetrical design */}
-              <div className="h-full min-h-0 flex items-center justify-center relative lg:col-start-2 lg:col-end-3 p-[var(--spacing-resp-xs)]">
+              <div className="h-full min-h-0 flex items-center justify-center relative lg:col-start-2 lg:col-end-3 p-[var(--spacing-resp-sm)]">
                 <div className="board-container max-w-full max-h-full w-full h-full flex items-center justify-center">
                   <div className="board-wrapper shadow-depth-3 overflow-hidden">
                     <Board
@@ -209,7 +209,7 @@ export function App() {
               </div>
 
               {/* Desktop only: Player 2 right sidebar */}
-              <div className="hidden lg:block min-h-0 h-full lg:col-start-3 lg:col-end-4 p-[var(--spacing-resp-xs)]">
+              <div className="hidden lg:block min-h-0 h-full lg:col-start-3 lg:col-end-4 p-[var(--spacing-resp-sm)]">
                 <PlayerPanel
                   game={currentGame}
                   playerIndex={1}

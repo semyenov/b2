@@ -15,32 +15,31 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 py-8">
+    <div className="min-h-screen bg-slate-900 py-8">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-cyan-400 mb-2">Доступные игры</h1>
-            <p className="text-gray-400 text-base">Присоединитесь к существующей игре или создайте новую</p>
+            <p className="text-slate-400 text-base">Присоединитесь к существующей игре или создайте новую</p>
           </div>
           <button
             onClick={onBack}
-            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 border border-gray-600 font-bold text-base transition-colors duration-150 text-gray-200"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-700 hover:bg-slate-600 border-2 border-slate-600 font-bold text-base sm:text-lg transition-colors duration-150 text-slate-200"
           >
-            ← Назад в меню
+            Назад в меню
           </button>
         </div>
 
         {/* Games Grid */}
         {games.length === 0
           ? (
-              <div className="bg-gray-800 border border-gray-700 p-12 text-center">
-                <div className="text-6xl mb-4">🎮</div>
-                <h3 className="text-xl font-bold text-gray-300 mb-2">Нет доступных игр</h3>
-                <p className="text-gray-400 text-base mb-6">Станьте первым, кто создаст игру!</p>
+              <div className="bg-slate-800 border-2 border-slate-700 p-12 text-center">
+                <h3 className="text-xl font-bold text-slate-300 mb-2">Нет доступных игр</h3>
+                <p className="text-slate-400 text-base mb-6">Станьте первым, кто создаст игру!</p>
                 <button
                   onClick={onBack}
-                  className="px-8 py-3 bg-blue-600 hover:bg-blue-500 border border-blue-500 font-bold text-base text-white transition-colors duration-150"
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-500 border-2 border-blue-500 font-bold text-base sm:text-lg text-white transition-colors duration-150"
                 >
                   Создать новую игру
                 </button>
@@ -48,7 +47,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
             )
           : (
               <>
-                <div className="text-gray-400 mb-4">
+                <div className="text-slate-400 mb-4">
                   {games.length}
                   {' '}
                   {getRussianPluralForm(games.length, ['игра', 'игры', 'игр'])}
@@ -74,7 +73,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                       },
                       finished: {
                         label: 'Завершена',
-                        color: 'bg-gray-700 text-gray-300 border-gray-600',
+                        color: 'bg-slate-700 text-slate-300 border-slate-600',
                       },
                     }
 
@@ -93,14 +92,14 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                           }
                         }}
                         aria-label={`Присоединиться к игре ${baseWord}, размер ${game.size}×${game.size}, ${statusInfo.label}`}
-                        className="bg-gray-800 border border-gray-700 p-6 cursor-pointer transition-colors duration-150 hover:border-cyan-500 hover:bg-gray-750"
+                        className="bg-slate-800 border-2 border-slate-700 p-6 cursor-pointer transition-colors duration-150 hover:border-cyan-500 hover:bg-slate-700"
                       >
                         {/* Header: Status + Time */}
                         <div className="flex justify-between items-start mb-4">
-                          <div className={`px-2.5 py-1 text-xs font-bold border ${statusInfo.color}`}>
+                          <div className={`px-2.5 py-1 text-xs font-bold border-2 ${statusInfo.color}`}>
                             {statusInfo.label}
                           </div>
-                          <div className="text-xs text-gray-500">{timeAgo}</div>
+                          <div className="text-xs text-slate-500">{timeAgo}</div>
                         </div>
 
                         {/* Base Word */}
@@ -108,7 +107,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                           <div className="text-2xl font-bold text-cyan-400 tracking-wider mb-1">
                             {baseWord}
                           </div>
-                          <div className="text-xs text-gray-500 font-mono">
+                          <div className="text-xs text-slate-500 font-mono">
                             {game.id.substring(0, 8)}
                             ...
                           </div>
@@ -117,20 +116,20 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                         {/* Game Info */}
                         <div className="space-y-2 mb-5 text-sm">
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-400">Доска:</span>
-                            <span className="text-gray-200 font-mono">
+                            <span className="text-slate-400">Доска:</span>
+                            <span className="text-slate-200 font-mono">
                               {game.size}
                               ×
                               {game.size}
                             </span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-400">Ход:</span>
-                            <span className="text-gray-200 font-bold">{turnNumber}</span>
+                            <span className="text-slate-400">Ход:</span>
+                            <span className="text-slate-200 font-bold">{turnNumber}</span>
                           </div>
                           {status === 'in_progress' && (
                             <div className="flex items-center justify-between">
-                              <span className="text-gray-400">Сейчас:</span>
+                              <span className="text-slate-400">Сейчас:</span>
                               <span className="text-yellow-300 font-bold text-xs">
                                 {currentPlayer}
                               </span>
@@ -139,7 +138,7 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                         </div>
 
                         {/* Players & Scores */}
-                        <div className="border-t border-gray-700 pt-4 mb-5">
+                        <div className="border-t border-slate-700 pt-4 mb-5">
                           <div className="space-y-2">
                             {game.players.map((player, idx) => (
                               <div
@@ -150,13 +149,13 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                                   <span className={
                                     idx === game.currentPlayerIndex
                                       ? 'text-yellow-300 font-bold'
-                                      : 'text-gray-400'
+                                      : 'text-slate-400'
                                   }
                                   >
                                     {player}
                                   </span>
                                 </div>
-                                <span className="font-mono font-bold text-xl text-gray-200">
+                                <span className="font-mono font-bold text-xl text-slate-200">
                                   {game.scores[player] || 0}
                                 </span>
                               </div>
@@ -166,13 +165,13 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
 
                         {/* Join Button */}
                         <button
-                          className="w-full py-2.5 bg-green-600 hover:bg-green-500 border border-green-500 font-bold text-base text-white transition-colors duration-150"
+                          className="w-full py-2.5 sm:py-3 bg-green-600 hover:bg-green-500 border-2 border-green-500 font-bold text-base sm:text-lg text-white transition-colors duration-150"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleJoin(game)
                           }}
                         >
-                          Присоединиться →
+                          Присоединиться
                         </button>
                       </div>
                     )

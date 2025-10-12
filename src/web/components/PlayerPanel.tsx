@@ -27,7 +27,7 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
   const scoreColor = isWinning
     ? 'text-green-400'
     : isTied
-      ? 'text-gray-100'
+      ? 'text-slate-100'
       : 'text-red-400'
 
   // Get words played by this player from moves history
@@ -37,7 +37,7 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
 
   return (
     <div className={cn(
-      'flex flex-col bg-slate-800 border-2 h-full min-h-0 transition-all duration-200 shadow-depth-2',
+      'flex flex-col bg-slate-800 border-2 h-full min-h-0 transition-all duration-150 shadow-depth-2',
       {
         'border-yellow-400 shadow-yellow-400/20': isCurrentTurn,
         'border-slate-600': !isCurrentTurn,
@@ -84,10 +84,10 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-[var(--spacing-resp-word-item)] py-[var(--spacing-resp-word-padding)] bg-slate-900 hover:bg-slate-700 text-[var(--text-resp-word)] font-mono text-gray-100 transition-all duration-200 border-2 border-slate-700 hover:border-cyan-500 flex items-center justify-between group"
+                    className="px-[var(--spacing-resp-word-item)] py-[var(--spacing-resp-word-padding)] bg-slate-900 hover:bg-slate-700 text-[var(--text-resp-word)] font-mono text-slate-100 transition-all duration-150 border-2 border-slate-700 hover:border-cyan-500 flex items-center justify-between group"
                   >
                     <span className="font-black tracking-wide">{word}</span>
-                    <span className="text-xs text-gray-400 group-hover:text-cyan-400 font-bold">
+                    <span className="text-xs text-slate-400 group-hover:text-cyan-400 font-bold">
                       #
                       {i + 1}
                     </span>

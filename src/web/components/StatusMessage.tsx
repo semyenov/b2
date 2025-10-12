@@ -29,7 +29,7 @@ export const StatusMessage = memo(({ step }: StatusMessageProps) => {
 
   return (
     <div className={cn(
-      'px-4 sm:px-6 py-2.5 sm:py-3 border font-bold text-base sm:text-lg',
+      'px-4 sm:px-6 py-2.5 sm:py-3 border-2 font-bold text-base sm:text-lg',
       config.className,
     )}
     >

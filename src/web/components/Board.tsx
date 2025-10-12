@@ -17,7 +17,7 @@ interface BoardProps {
 function getCellClassName(selected: boolean, inPath: boolean, hasCell: boolean, canClick: boolean, isHovered: boolean): string {
   return cn(
     // Base classes - flat design
-    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-board)] text-3xl font-black transition-all duration-200 relative leading-none',
+    'w-[var(--size-resp-cell)] h-[var(--size-resp-cell)] border-2 flex items-center justify-center text-[var(--text-resp-board)] text-3xl font-black transition-all duration-150 relative leading-none',
 
     // State-based styling - high contrast
     {
@@ -104,7 +104,7 @@ export const Board = memo(({
   return (
     <div className="board-container">
       {/* Board - flat design, optimized for maximum vertical space */}
-      <div className="board-inner bg-slate-800 p-1 w-full h-full max-w-full max-h-full">
+      <div className="board-inner bg-slate-800 w-full h-full max-w-full max-h-full">
         {/* Board rows */}
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="flex">
@@ -149,7 +149,7 @@ export const Board = memo(({
                 >
                   {displayContent}
                   {inPath && pathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-5 h-5 bg-green-800 text-white text-[10px] flex items-center justify-center font-bold border border-green-600">
+                    <div className="absolute top-0 right-0 w-5 h-5 bg-green-800 text-white text-[10px] flex items-center justify-center font-bold border-2 border-green-600">
                       {pathIdx + 1}
                     </div>
                   )}

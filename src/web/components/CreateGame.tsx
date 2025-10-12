@@ -19,19 +19,19 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
         <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-3">
           Создать игру
         </h1>
-        <p className="text-gray-400 text-base">
+        <p className="text-slate-400 text-base">
           Настройте параметры новой игры
         </p>
       </div>
 
       {/* Form Card */}
       <div className="w-full max-w-lg">
-        <div className="bg-gray-800 p-8 border border-gray-700">
+        <div className="bg-slate-800 p-8 border-2 border-slate-700">
           <form onSubmit={handleSubmit} className="space-y-6" aria-label="Форма создания новой игры">
             {/* Board Size */}
             <div>
-              <label id="board-size-label" className="block text-base font-bold text-gray-300 mb-3">
-                📐 Размер доски
+              <label id="board-size-label" className="block text-base font-bold text-slate-300 mb-3">
+                Размер доски
               </label>
               <div
                 className="grid grid-cols-3 sm:grid-cols-5 gap-2"
@@ -47,10 +47,10 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
                     aria-label={`Размер доски ${s} на ${s}`}
                     onClick={() => setSize(String(s))}
                     className={cn(
-                      'py-3 font-bold text-base transition-colors duration-150 border',
+                      'py-3 font-bold text-base transition-colors duration-150 border-2',
                       size === String(s)
                         ? 'bg-blue-600 border-blue-500 text-white'
-                        : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600',
+                        : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600',
                     )}
                   >
                     {s}
@@ -63,8 +63,8 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
 
             {/* Base Word */}
             <div>
-              <label htmlFor="base-word-input" className="block text-base font-bold text-gray-300 mb-3">
-                📝 Базовое слово (
+              <label htmlFor="base-word-input" className="block text-base font-bold text-slate-300 mb-3">
+                Базовое слово (
                 {size}
                 {' '}
                 русских букв)
@@ -77,12 +77,12 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
                 aria-required="true"
                 aria-invalid={error ? 'true' : 'false'}
                 aria-describedby="base-word-help"
-                className="w-full px-6 py-4 bg-gray-900 border border-gray-700 focus:border-cyan-500 focus:outline-none uppercase text-center text-2xl font-bold tracking-widest text-cyan-400 placeholder-gray-600 transition-colors duration-150"
+                className="w-full px-6 py-4 bg-slate-900 border-2 border-slate-700 focus:border-cyan-500 focus:outline-none uppercase text-center text-2xl font-bold tracking-widest text-cyan-400 placeholder-slate-600 transition-colors duration-150"
                 placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
                 maxLength={Number.parseInt(size, 10)}
                 required
               />
-              <p id="base-word-help" className="text-xs text-gray-500 mt-2 text-center">
+              <p id="base-word-help" className="text-xs text-slate-500 mt-2 text-center">
                 Слово будет размещено в центре доски
               </p>
             </div>
@@ -92,9 +92,8 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
               <div
                 role="alert"
                 aria-live="assertive"
-                className="bg-red-900 bg-opacity-40 border border-red-600 p-4 flex items-center gap-3"
+                className="bg-red-900 bg-opacity-40 border-2 border-red-600 p-4 flex items-center gap-3"
               >
-                <span className="text-2xl" aria-hidden="true">⚠️</span>
                 <span className="text-red-300 font-medium">{error}</span>
               </div>
             )}
@@ -104,24 +103,24 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
               <button
                 type="button"
                 onClick={onBack}
-                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 border border-gray-600 font-bold text-base text-gray-200 transition-colors duration-150"
+                className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 border-2 border-slate-600 font-bold text-base sm:text-lg text-slate-200 transition-colors duration-150"
               >
-                ← Назад
+                Назад
               </button>
               <button
                 type="submit"
-                className="flex-1 py-4 bg-green-600 hover:bg-green-500 border border-green-500 font-bold text-base text-white transition-colors duration-150"
+                className="flex-1 py-3 bg-green-600 hover:bg-green-500 border-2 border-green-500 font-bold text-base sm:text-lg text-white transition-colors duration-150"
               >
-                ✓ Создать
+                Создать
               </button>
             </div>
           </form>
         </div>
 
         {/* Help Text */}
-        <div className="mt-6 text-center text-gray-500 text-sm space-y-1">
-          <p>💡 Совет: Выберите интересное слово для лучшей игры</p>
-          <p>🎮 Игра начнётся автоматически после создания</p>
+        <div className="mt-6 text-center text-slate-500 text-sm space-y-1">
+          <p>Совет: Выберите интересное слово для лучшей игры</p>
+          <p>Игра начнётся автоматически после создания</p>
         </div>
       </div>
     </div>
