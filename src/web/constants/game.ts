@@ -17,6 +17,9 @@ export const GAME_CONFIG = {
   // UI
   SUGGESTIONS_PANEL_MAX_HEIGHT: '50vh',
 
+  // AI
+  AI_THINKING_DELAY_MS: 1500,
+
   // Score thresholds for suggestion coloring
   SCORE_THRESHOLDS: {
     HIGH: 10,

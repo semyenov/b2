@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Banner } from './components/Banner'
 import { CreateGame } from './components/CreateGame'
 import { GameList } from './components/GameList'
@@ -6,6 +6,7 @@ import { GamePanel } from './components/GamePanel'
 import { MenuButton } from './components/MenuButton'
 import { PlayerPanel } from './components/PlayerPanel'
 import { StatusMessage } from './components/StatusMessage'
+import { SuggestionsPanel } from './components/SuggestionsPanel'
 import { GAME_CONFIG } from './constants/game'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
@@ -14,7 +15,8 @@ import { useGameInteraction } from './hooks/useGameInteraction'
 import { useLiveRegion } from './hooks/useLiveRegion'
 import { useSuggestions } from './hooks/useSuggestions'
 import { cn } from './utils/classNames'
-import { buildMoveBody, canSubmitMove, formWordFromPath } from './utils/moveValidation'
+import { buildMoveBody, canSubmitMove } from './utils/moveValidation'
+import { getFormedWord } from './utils/wordUtils'
 
 export function App() {
   // Core game client logic
@@ -52,8 +54,6 @@ export function App() {
   } = useSuggestions({
     apiClient,
     currentGame,
-    playerName,
-    screen,
   })
 
   // UI interaction logic
@@ -91,13 +91,11 @@ export function App() {
     isMyTurn,
   })
 
-  // Calculate formed word for display
-  const getFormedWord = useCallback(() => {
-    if (!currentGame || !selectedCell || !selectedLetter || wordPath.length < 2) {
-      return ''
-    }
-    return formWordFromPath(wordPath, currentGame.board, selectedCell, selectedLetter)
-  }, [currentGame, selectedCell, selectedLetter, wordPath])
+  // Memoize formed word for display
+  const formedWord = useMemo(
+    () => getFormedWord(currentGame, selectedCell, selectedLetter, wordPath),
+    [currentGame, selectedCell, selectedLetter, wordPath],
+  )
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -251,20 +249,18 @@ export function App() {
                                   ? <StatusMessage step="build-word" />
                                   : (
                                       <button
+                                        type="button"
                                         onClick={() => {
                                           if (canSubmitMove(selectedCell, selectedLetter, wordPath)) {
-                                            const wordFormed = getFormedWord()
-                                            const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, wordFormed)
+                                            const moveBody = buildMoveBody(playerName, selectedCell!, selectedLetter!, formedWord)
                                             makeMove(moveBody)
                                           }
                                         }}
-                                        className="px-[var(--spacing-resp-xl)] py-[var(--spacing-resp-sm)] bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 border-2 border-green-400 text-white font-black text-[var(--text-resp-base)] transition-all duration-200 shadow-depth-3 hover:shadow-depth-4 hover:scale-110 flex items-center gap-3 animate-pulse-glow"
+                                        aria-label={`Отправить слово ${formedWord}`}
+                                        className="px-[var(--spacing-resp-md)] py-[var(--spacing-resp-xs)] bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 border-2 border-green-400 text-white font-bold text-[var(--text-resp-sm)] transition-all duration-200 shadow-depth-3 hover:shadow-depth-4 hover:scale-110 flex items-center gap-2 animate-pulse-glow whitespace-nowrap flex-shrink-0"
                                       >
-                                        <span className="text-2xl">📤</span>
-                                        <div className="flex flex-col items-start">
-                                          <span className="text-xs uppercase tracking-widest opacity-90">ОТПРАВИТЬ</span>
-                                          <span className="text-[var(--text-resp-lg)] font-black tracking-wider">{getFormedWord()}</span>
-                                        </div>
+                                        <span aria-hidden="true">📤</span>
+                                        <span className="uppercase tracking-wider">ОТПРАВИТЬ: {formedWord}</span>
                                       </button>
                                     )}
 
@@ -328,80 +324,15 @@ export function App() {
             {/* Suggestions Panel - Expands when visible */}
             {showSuggestions && playerName && currentGame && (
               <div className={cn('shrink-0 min-h-0 overflow-y-auto border-t-2 border-gray-700 bg-gray-750 px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)] shadow-[0_-8px_24px_rgba(0,0,0,0.5)]')} style={{ maxHeight: GAME_CONFIG.SUGGESTIONS_PANEL_MAX_HEIGHT }}>
-                {loadingSuggestions
-                  ? (
-                      <div className="flex items-center justify-center py-2">
-                        <div className="animate-spin h-8 w-8 border-b-4 border-yellow-400 mr-3"></div>
-                        <div className="text-gray-400 font-semibold">Загрузка подсказок...</div>
-                      </div>
-                    )
-                  : suggestions.length === 0
-                    ? (
-                        <div className="text-center py-2 text-gray-500">
-                          Нет доступных подсказок
-                        </div>
-                      )
-                    : (
-                        <div className="flex flex-col">
-                          <div className="text-sm text-gray-300 mb-4 font-bold uppercase tracking-wide flex items-center justify-between shrink-0">
-                            <span className="flex items-center gap-2">
-                              💡 Подсказки AI
-                            </span>
-                            <span className="text-yellow-400 text-lg">
-                              {suggestions.length}
-                              {' '}
-                              доступно
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-2">
-                            {suggestions.slice(0, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY).map((suggestion, index) => {
-                              const posStr = `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
-                              const scoreColor = suggestion.score >= GAME_CONFIG.SCORE_THRESHOLDS.HIGH
-                                ? 'text-green-400'
-                                : suggestion.score >= GAME_CONFIG.SCORE_THRESHOLDS.MEDIUM
-                                  ? 'text-yellow-400'
-                                  : 'text-gray-400'
-
-                              return (
-                                <button
-                                  key={index}
-                                  onClick={() => {
-                                    handleSuggestionSelect(suggestion)
-                                    hideSuggestions()
-                                  }}
-                                  className="group bg-gray-750 hover:bg-gray-700 border border-gray-600 hover:border-yellow-500 transition-all duration-200 hover:shadow-depth-3 px-3 py-2.5 flex items-center gap-3"
-                                >
-                                  {/* Rank Badge */}
-                                  <div className="bg-gray-800 text-gray-500 font-black text-xs px-2 py-1 shrink-0">
-                                    #
-                                    {index + 1}
-                                  </div>
-
-                                  {/* Word - Hero Element */}
-                                  <div className="flex-1 text-white font-black uppercase text-lg tracking-wider text-left truncate">
-                                    {suggestion.word}
-                                  </div>
-
-                                  {/* Position + Letter */}
-                                  <div className="flex items-center gap-1.5 shrink-0">
-                                    <span className="text-cyan-400 font-mono font-bold text-xs bg-gray-800 bg-opacity-50 px-1.5 py-0.5">
-                                      {posStr}
-                                    </span>
-                                    <span className="text-green-400 font-black text-2xl leading-none">
-                                      {suggestion.letter}
-                                    </span>
-                                  </div>
-
-                                  {/* Score */}
-                                  <div className={`${scoreColor} font-black text-xl shrink-0 min-w-[32px] text-right`}>
-                                    {suggestion.score.toFixed(0)}
-                                  </div>
-                                </button>
-                              )
-                            })}
-                          </div>
-                        </div>
-                      )}
+                <SuggestionsPanel
+                  suggestions={suggestions}
+                  loadingSuggestions={loadingSuggestions}
+                  onSuggestionSelect={(suggestion) => {
+                    handleSuggestionSelect(suggestion)
+                    hideSuggestions()
+                  }}
+                  currentGame={currentGame}
+                />
               </div>
             )}
           </div>

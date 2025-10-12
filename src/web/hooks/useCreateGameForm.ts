@@ -1,5 +1,6 @@
 import type { CreateGameBody } from '../lib/client'
 import { useState } from 'react'
+import { generatePlayerName } from '../utils/playerNameUtils'
 import { getRussianPluralForm } from '../utils/russianPlural'
 
 interface UseCreateGameFormOptions {
@@ -17,6 +18,8 @@ interface UseCreateGameFormReturn {
 
 /**
  * Form validation for Russian letters only
+ * @param word - Word to validate
+ * @returns True if word contains only Russian letters
  */
 function isValidRussianWord(word: string): boolean {
   return /^[А-ЯЁ]+$/i.test(word)
@@ -25,6 +28,9 @@ function isValidRussianWord(word: string): boolean {
 /**
  * Custom hook for create game form logic
  * Handles form state, validation, and submission
+ *
+ * @param options - Form submission callback
+ * @returns Form state and handlers
  */
 export function useCreateGameForm({ onSubmit }: UseCreateGameFormOptions): UseCreateGameFormReturn {
   const [size, setSize] = useState('5')
@@ -49,11 +55,11 @@ export function useCreateGameForm({ onSubmit }: UseCreateGameFormOptions): UseCr
       return
     }
 
-    // Submit valid game
+    // Submit valid game with generated player names
     onSubmit({
       size: sizeNum,
       baseWord: baseWord.toUpperCase(),
-      players: [`Player_${Date.now()}`, 'Player 2'],
+      players: [generatePlayerName(), generatePlayerName()],
     })
   }
 

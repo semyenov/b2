@@ -1,12 +1,10 @@
 import type { ApiClient, GameState, Suggestion } from '../lib/client'
-import type { Screen } from './useGameClient'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import { logger } from '../utils/logger'
 
 interface UseSuggestionsOptions {
   apiClient: ApiClient
   currentGame: GameState | null
-  playerName: string
-  screen: Screen
 }
 
 interface UseSuggestionsReturn {
@@ -16,40 +14,42 @@ interface UseSuggestionsReturn {
   clearSuggestions: () => void
 }
 
+/**
+ * Custom hook to manage AI move suggestions
+ * Provides loading, caching, and clearing of suggestions
+ */
 export function useSuggestions({
   apiClient,
   currentGame,
-  playerName: _playerName, // Reserved for future auto-load logic
-  screen: _screen, // Reserved for future auto-load logic
 }: UseSuggestionsOptions): UseSuggestionsReturn {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
 
+  // Memoize game ID to prevent unnecessary re-renders
+  const gameId = useMemo(() => currentGame?.id, [currentGame?.id])
+
   const loadSuggestions = useCallback(async () => {
-    if (!currentGame) {
+    if (!gameId) {
       return
     }
 
     setLoadingSuggestions(true)
     try {
-      const result = await apiClient.getSuggestions(currentGame.id, 20)
+      const result = await apiClient.getSuggestions(gameId, 20)
       setSuggestions(result)
     }
     catch (err) {
-      console.error('Failed to load suggestions:', err)
+      logger.error('Failed to load suggestions', err as Error, { gameId })
       setSuggestions([])
     }
     finally {
       setLoadingSuggestions(false)
     }
-  }, [currentGame?.id, apiClient])
+  }, [gameId, apiClient])
 
-  // Auto-load disabled - suggestions now load only on manual button click
-  // Users found auto-loading intrusive and distracting
-
-  const clearSuggestions = () => {
+  const clearSuggestions = useCallback(() => {
     setSuggestions([])
-  }
+  }, [])
 
   return {
     suggestions,

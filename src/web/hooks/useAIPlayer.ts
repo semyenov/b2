@@ -1,5 +1,7 @@
 import type { ApiClient, GameState, MoveBody } from '../lib/client'
 import { useEffect, useRef, useState } from 'react'
+import { GAME_CONFIG } from '../constants/game'
+import { logger } from '../utils/logger'
 
 interface UseAIPlayerOptions {
   currentGame: GameState | null
@@ -14,6 +16,9 @@ interface UseAIPlayerReturn {
 /**
  * AI Player automation hook
  * Automatically plays moves for AI players using suggestions API
+ *
+ * @param options - Current game state and API client
+ * @returns AI thinking state and error messages
  */
 export function useAIPlayer({
   currentGame,
@@ -53,10 +58,10 @@ export function useAIPlayer({
 
       try {
         // Simulate "thinking" delay for better UX
-        await new Promise(resolve => setTimeout(resolve, 1500))
+        await new Promise(resolve => setTimeout(resolve, GAME_CONFIG.AI_THINKING_DELAY_MS))
 
         // Load suggestions
-        const suggestions = await apiClient.getSuggestions(currentGame.id, 20)
+        const suggestions = await apiClient.getSuggestions(currentGame.id, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY)
 
         if (suggestions.length > 0) {
           // Select best suggestion (first one is highest scored)
@@ -76,7 +81,10 @@ export function useAIPlayer({
         else {
           // No valid moves available - game is stuck
           setAIError('У AI нет доступных ходов')
-          console.warn('AI has no valid moves available')
+          logger.warn('AI has no valid moves available', {
+            gameId: currentGame.id,
+            player: currentPlayer,
+          })
           // Reset to allow future detection if game state changes
           lastProcessedMoveCount.current = currentGame.moves.length
         }
@@ -84,7 +92,10 @@ export function useAIPlayer({
       catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Ошибка AI хода'
         setAIError(errorMessage)
-        console.error('AI move failed:', error)
+        logger.error('AI move failed', error as Error, {
+          gameId: currentGame.id,
+          player: currentPlayer,
+        })
         // Reset to allow retry on next state change
         lastProcessedMoveCount.current = currentGame.moves.length
       }
