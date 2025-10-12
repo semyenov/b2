@@ -56,36 +56,49 @@ export function GamePanel({
 
   return (
     <div
-      className="absolute bottom-0 left-0 right-0 z-game-panel bg-slate-800 flex flex-col border-t-2 border-slate-700 shadow-depth-3"
+      className="absolute left-0 right-0 z-game-panel bg-slate-800 flex flex-col border-t-2 border-slate-700 shadow-depth-3"
       style={{
-        height: showSuggestions ? 'min(45vh, 400px)' : 'min(32vh, 260px)',
-        paddingBottom: 'calc(var(--spacing-resp-md) * 2 + 48px)', // Exact control bar space
+        height: 'min(60vh, 500px)',
+        bottom: '80px', // Position above control bar
         marginLeft: '0',
         marginRight: '0',
-        paddingLeft: 'var(--spacing-resp-sm)',
-        paddingRight: 'var(--spacing-resp-sm)',
+        paddingLeft: '0',
+        paddingRight: '0',
       }}
     >
       {showSuggestions
         ? (
           /* Suggestions View */
-            <div className="flex-1 min-h-0 overflow-y-auto">
-              <SuggestionsPanel
-                suggestions={suggestions}
-                loadingSuggestions={loadingSuggestions}
-                onSuggestionSelect={onSuggestionSelect!}
-                currentGame={game}
-              />
-            </div>
-          )
+          <div className="flex-1 min-h-0 overflow-y-auto">
+            <SuggestionsPanel
+              suggestions={suggestions}
+              loadingSuggestions={loadingSuggestions}
+              onSuggestionSelect={onSuggestionSelect!}
+              currentGame={game}
+            />
+          </div>
+        )
         : (
-          /* Alphabet Grid */
-            <div
-              className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)]"
-              role="group"
-              aria-label="Выбор буквы для размещения на доске"
-            >
-              <div className="alphabet-grid grid w-full h-full">
+          <>
+            {/* Title Panel - Outside padding zone */}
+            <div className="sticky top-0 z-10 bg-slate-800 border-b-2 border-slate-700 shrink-0">
+              <div className="flex items-center justify-between py-3 px-4">
+                <span className="text-slate-300 font-bold uppercase tracking-wide text-sm">
+                  Выбор буквы
+                </span>
+                <span className="text-yellow-500 text-sm font-black">
+                  {selectedLetter ? `Выбрано: ${selectedLetter}` : 'Выберите букву'}
+                </span>
+              </div>
+            </div>
+
+            {/* Alphabet Grid - Inside padding zone */}
+            <div className="flex-1 min-h-0 p-4">
+              <div
+                className="alphabet-grid grid w-full h-full gap-3"
+                role="group"
+                aria-label="Выбор буквы для размещения на доске"
+              >
                 {RUSSIAN_ALPHABET.map((letter) => {
                   const isSelected = selectedLetter === letter
                   const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
@@ -103,7 +116,7 @@ export function GamePanel({
                       aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
                       aria-pressed={isSelected}
                       className={cn(
-                        'h-full w-full font-black text-[var(--text-resp-2xl)] transition-all duration-150 border-2',
+                        'h-full w-full font-black text-[var(--text-resp-2xl)] transition-all duration-150 border-2 rounded',
                         {
                           'bg-blue-600 border-blue-300 text-white shadow-depth-3 ring-4 ring-blue-400/70 transform scale-105': isSelected,
                           'bg-yellow-400 border-yellow-300 text-gray-900 transform scale-105 shadow-depth-3 ring-4 ring-yellow-400/70': isHovered,
@@ -119,7 +132,8 @@ export function GamePanel({
                 })}
               </div>
             </div>
-          )}
+          </>
+        )}
     </div>
   )
 }

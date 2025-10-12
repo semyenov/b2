@@ -162,14 +162,12 @@ button:focus-visible {
 .alphabet-grid {
   grid-template-columns: repeat(11, minmax(0, 1fr));
   grid-template-rows: repeat(3, minmax(0, 1fr));
-  gap: 0.25rem; /* Increased gap for better visual separation */
 }
 
 @media (max-width: 640px) {
   .alphabet-grid {
     grid-template-columns: repeat(17, minmax(0, 1fr));
     grid-template-rows: repeat(2, minmax(0, 1fr));
-    gap: 0.25rem;
   }
 }
 
