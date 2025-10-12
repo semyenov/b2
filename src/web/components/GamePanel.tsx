@@ -58,13 +58,12 @@ export function GamePanel({
     <div
       className="absolute bottom-0 left-0 right-0 z-game-panel bg-slate-800 flex flex-col border-t-2 border-slate-700 shadow-depth-3"
       style={{
-        height: showSuggestions ? 'min(55vh, 450px)' : 'min(40vh, 320px)',
+        height: showSuggestions ? 'min(45vh, 400px)' : 'min(32vh, 260px)',
         paddingBottom: 'calc(var(--spacing-resp-md) * 2 + 48px)', // Exact control bar space
         marginLeft: '0',
         marginRight: '0',
-        paddingLeft: 'var(--spacing-resp-sm)',
-        paddingRight: 'var(--spacing-resp-sm)',
-        borderRadius: '1rem 1rem 0 0',
+        paddingLeft: 'var(--spacing-resp-xs)',
+        paddingRight: 'var(--spacing-resp-xs)',
       }}
     >
       {showSuggestions
@@ -82,7 +81,7 @@ export function GamePanel({
         : (
           /* Alphabet Grid */
             <div
-              className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)]"
+              className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-xs)] py-[var(--spacing-resp-xs)]"
               role="group"
               aria-label="Выбор буквы для размещения на доске"
             >

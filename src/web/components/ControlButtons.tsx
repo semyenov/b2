@@ -46,24 +46,24 @@ export function ControlButtons({
   const isClearDisabled = isClearButtonDisabled(isMyTurn, selectedCell, selectedLetter, wordPath)
 
   return (
-    <div className="flex items-center gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)] flex-1 min-w-0 flex-wrap sm:flex-nowrap">
+    <div className="flex items-center gap-[var(--spacing-resp-sm)] sm:gap-[var(--spacing-resp-md)] flex-1 min-w-0 flex-wrap sm:flex-nowrap">
       {/* Left: Exit and Fullscreen buttons */}
-      <div className="flex items-center gap-[var(--spacing-resp-xs)] flex-shrink-0">
+      <div className="flex items-center gap-[var(--spacing-resp-sm)] flex-shrink-0">
         <button
           type="button"
           onClick={onExit}
           aria-label="Выйти в главное меню"
           className={cn(BUTTON_STYLES.base, BUTTON_STYLES.padding.standard, BUTTON_STYLES.textSize.standard, BUTTON_STYLES.variants.gray)}
         >
-          ← Выход
+          Выход
         </button>
         <button
           type="button"
           onClick={toggleFullscreen}
           aria-label="Полноэкранный режим"
-          className={cn(BUTTON_STYLES.base, BUTTON_STYLES.padding.compact, BUTTON_STYLES.textSize.base, BUTTON_STYLES.variants.gray)}
+          className={cn(BUTTON_STYLES.base, BUTTON_STYLES.padding.standard, BUTTON_STYLES.textSize.standard, BUTTON_STYLES.variants.gray)}
         >
-          ⛶
+          [ ]
         </button>
       </div>
 
@@ -87,7 +87,6 @@ export function ControlButtons({
               BUTTON_STYLES.content.nowrap,
             )}
           >
-            <span aria-hidden="true">📤</span>
             <span className={BUTTON_STYLES.content.uppercase}>
               Отправить слово
               {' '}
@@ -100,7 +99,7 @@ export function ControlButtons({
       </div>
 
       {/* Right side: Empty for now, can be used for future controls */}
-      <div className="flex flex-shrink-0 w-0 sm:w-auto flex-row gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)]">
+      <div className="flex flex-shrink-0 w-0 sm:w-auto flex-row gap-[var(--spacing-resp-sm)] sm:gap-[var(--spacing-resp-md)]">
         {/* AI suggestions toggle button */}
         <button
           type="button"
@@ -134,7 +133,7 @@ export function ControlButtons({
             BUTTON_STYLES.disabled,
           )}
         >
-          ✕ Отмена
+          Отмена
         </button>
 
       </div>

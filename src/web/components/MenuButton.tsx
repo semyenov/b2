@@ -2,7 +2,6 @@ import { memo } from 'react'
 import { cn } from '../utils/classNames'
 
 interface MenuButtonProps {
-  icon: string
   label: string
   variant: 'primary' | 'secondary' | 'success' | 'warning'
   size?: 'large' | 'normal'
@@ -16,7 +15,7 @@ const variantStyles = {
   warning: 'bg-yellow-600 hover:bg-yellow-500 border-yellow-500',
 }
 
-export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick }: MenuButtonProps) => {
+export const MenuButton = memo(({ label, variant, size = 'normal', onClick }: MenuButtonProps) => {
   return (
     <button
       onClick={onClick}
@@ -29,16 +28,7 @@ export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick
         },
       )}
     >
-      <div className="flex items-center justify-center gap-2">
-        <span className={cn({
-          'text-xl': size === 'large',
-          'text-lg': size === 'normal',
-        })}
-        >
-          {icon}
-        </span>
-        <span>{label}</span>
-      </div>
+      <span>{label}</span>
     </button>
   )
 })

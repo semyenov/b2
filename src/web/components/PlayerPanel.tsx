@@ -37,7 +37,7 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
 
   return (
     <div className={cn(
-      'flex flex-col bg-slate-800 border-2 h-full min-h-0 transition-all duration-200 rounded-lg shadow-depth-2',
+      'flex flex-col bg-slate-800 border-2 h-full min-h-0 transition-all duration-200 shadow-depth-2',
       {
         'border-yellow-400 shadow-yellow-400/20': isCurrentTurn,
         'border-slate-600': !isCurrentTurn,
@@ -46,7 +46,7 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
     >
       {/* Header with player info - Enhanced symmetry */}
       <div className={cn(
-        'px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)] flex flex-col gap-2 border-b-2 shrink-0 rounded-t-lg',
+        'px-[var(--spacing-resp-sm)] py-[var(--spacing-resp-sm)] flex flex-col gap-2 border-b-2 shrink-0',
         {
           'bg-yellow-900/40 border-yellow-600': isCurrentTurn,
           'bg-slate-900 border-slate-700': !isCurrentTurn,

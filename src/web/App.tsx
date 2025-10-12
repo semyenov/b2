@@ -132,8 +132,8 @@ export function App() {
             <div className="w-full max-w-md">
               <div className="bg-gray-800 p-8 border border-gray-700">
                 <div className="space-y-3">
-                  <MenuButton icon="⚡" label="Быстрая игра 5×5" variant="success" size="large" onClick={quickStart} />
-                  <MenuButton icon="🤖" label="Играть с AI" variant="warning" size="large" onClick={quickStartVsAI} />
+                  <MenuButton label="Быстрая игра 5×5" variant="success" size="large" onClick={quickStart} />
+                  <MenuButton label="Играть с AI" variant="warning" size="large" onClick={quickStartVsAI} />
 
                   {/* Divider */}
                   <div className="flex items-center gap-3 py-2">
@@ -142,14 +142,14 @@ export function App() {
                     <div className="flex-1 h-px bg-gray-600"></div>
                   </div>
 
-                  <MenuButton icon="➕" label="Создать игру" variant="primary" onClick={() => setScreen('create')} />
-                  <MenuButton icon="🎮" label="Присоединиться" variant="secondary" onClick={loadGames} />
+                  <MenuButton label="Создать игру" variant="primary" onClick={() => setScreen('create')} />
+                  <MenuButton label="Присоединиться" variant="secondary" onClick={loadGames} />
                 </div>
               </div>
 
               {/* Version/Footer */}
               <div className="text-center mt-6 text-gray-600 text-sm">
-                Версия 2.0 • Сделано с ❤️
+                Версия 2.0
               </div>
             </div>
           </div>
@@ -173,17 +173,17 @@ export function App() {
         {screen === 'play' && currentGame && (
           <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
             {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
-            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[minmax(300px,var(--size-resp-panel))_1fr_minmax(300px,var(--size-resp-panel))] gap-0 p-0 overflow-hidden relative w-full">
+            <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[minmax(280px,var(--size-resp-panel))_1fr_minmax(280px,var(--size-resp-panel))] gap-0 p-0 overflow-hidden relative w-full">
               {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
-              <div className="flex lg:contents gap-0 min-h-0 lg:col-start-1 lg:col-end-2">
-                <div className="flex-1 lg:flex-none min-h-0 border-r border-slate-700 p-[var(--spacing-resp-sm)]">
+              <div className="flex lg:contents gap-0 min-h-0 lg:col-start-1 lg:col-end-2 h-full">
+                <div className="flex-1 lg:flex-none min-h-0 h-full p-[var(--spacing-resp-xs)]">
                   <PlayerPanel
                     game={currentGame}
                     playerIndex={0}
                     currentPlayerName={playerName}
                   />
                 </div>
-                <div className="flex-1 lg:hidden min-h-0 p-[var(--spacing-resp-sm)]">
+                <div className="flex-1 lg:hidden min-h-0 h-full p-[var(--spacing-resp-xs)]">
                   <PlayerPanel
                     game={currentGame}
                     playerIndex={1}
@@ -193,9 +193,9 @@ export function App() {
               </div>
 
               {/* Center: Board Only - Enhanced symmetrical design */}
-              <div className="h-full min-h-0 flex items-center justify-center relative lg:col-start-2 lg:col-end-3 p-[var(--spacing-resp-sm)]">
+              <div className="h-full min-h-0 flex items-center justify-center relative lg:col-start-2 lg:col-end-3 p-[var(--spacing-resp-xs)]">
                 <div className="board-container max-w-full max-h-full w-full h-full flex items-center justify-center">
-                  <div className="board-wrapper shadow-depth-3 rounded-xl overflow-hidden">
+                  <div className="board-wrapper shadow-depth-3 overflow-hidden">
                     <Board
                       game={currentGame}
                       selectedCell={selectedCell}
@@ -209,7 +209,7 @@ export function App() {
               </div>
 
               {/* Desktop only: Player 2 right sidebar */}
-              <div className="hidden lg:block min-h-0 lg:col-start-3 lg:col-end-4 border-l border-slate-700 p-[var(--spacing-resp-sm)]">
+              <div className="hidden lg:block min-h-0 h-full lg:col-start-3 lg:col-end-4 p-[var(--spacing-resp-xs)]">
                 <PlayerPanel
                   game={currentGame}
                   playerIndex={1}
@@ -241,7 +241,7 @@ export function App() {
             {/* Bottom control panel - Enhanced symmetrical design */}
             <div className="shrink-0 shadow-depth-3 overflow-hidden relative z-control-bar">
               {/* Control Buttons Bar */}
-              <div className="bg-slate-900 border-t-2 border-slate-700 px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-md)] py-[var(--spacing-resp-sm)] w-full">
+              <div className="bg-slate-900 border-t-2 border-slate-700 px-[var(--spacing-resp-md)] sm:px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)] w-full">
                 {playerName && currentGame && (
                   <ControlButtons
                     isMyTurn={isMyTurn()}

@@ -18,16 +18,16 @@ export const BUTTON_STYLES = {
    * Standard button padding
    */
   padding: {
-    standard: 'px-2 sm:px-4 py-1.5',
-    compact: 'px-2 py-1.5',
+    standard: 'px-4 sm:px-6 py-2.5 sm:py-3',
+    compact: 'px-3 py-2.5',
   },
 
   /**
    * Text size variants
    */
   textSize: {
-    standard: 'text-sm sm:text-base',
-    base: 'text-base',
+    standard: 'text-base sm:text-lg',
+    base: 'text-lg',
   },
 
   /**
@@ -59,8 +59,8 @@ export const BUTTON_STYLES = {
    * Flex layout helpers for button content
    */
   layout: {
-    row: 'flex items-center gap-1 sm:gap-2',
-    centered: 'flex items-center justify-center gap-1 sm:gap-2',
+    row: 'flex items-center gap-2 sm:gap-3',
+    centered: 'flex items-center justify-center gap-2 sm:gap-3',
   },
 
   /**

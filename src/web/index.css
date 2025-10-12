@@ -18,14 +18,14 @@
   --text-resp-lg: clamp(1.5rem, 3vw, 2.25rem);         /* Large text */
   --text-resp-xl: clamp(2rem, 4vw, 3.5rem);            /* Extra large */
   --text-resp-2xl: clamp(2.5rem, 5vw, 4.5rem);        /* Alphabet grid letters */
-  --text-resp-3xl: clamp(2rem, min(8vw, 6vh), 8rem);        /* Game board letters */
-  --text-resp-board: clamp(2rem, min(8vw, 6vh), 8rem);     /* Board cell text (alias for 3xl) */
+  --text-resp-3xl: clamp(2.5rem, min(9vw, 8vh), 10rem);        /* Game board letters */
+  --text-resp-board: clamp(2.5rem, min(9vw, 8vh), 10rem);     /* Board cell text (alias for 3xl) */
 
   /* Responsive dimensions - optimized for maximum board size with vertical responsiveness */
-  --size-resp-cell: clamp(3rem, min(12vw, 10vh), 12rem);
+  --size-resp-cell: clamp(3.5rem, min(13vw, 13vh), 14rem);
   --size-resp-header: clamp(3rem, 4.5vw, 4.5rem);
   --size-resp-label: clamp(3rem, 5vw, 5rem);
-  --size-resp-panel: clamp(300px, 16vw, 400px);
+  --size-resp-panel: clamp(280px, 15vw, 350px);
 
   /* PlayerPanel specific sizes */
   --text-resp-score: clamp(3rem, 5vw, 5rem);
@@ -186,6 +186,11 @@ button:focus-visible {
   overflow: hidden;
 }
 
+/* Ensure grid columns have equal height */
+.lg\:grid {
+  grid-template-rows: 1fr;
+}
+
 .board-wrapper {
   display: flex;
   align-items: center;
@@ -208,9 +213,9 @@ button:focus-visible {
   max-height: 100%;
   aspect-ratio: 1;
   position: relative;
-  /* Ensure board fits in available vertical space */
-  max-height: min(100%, 80vh);
-  max-width: min(100%, 80vw);
+  /* Ensure board fits in available vertical space - increased limits for larger board */
+  max-height: min(100%, 95vh);
+  max-width: min(100%, 95vw);
   /* Align with other elements */
   margin: 0 auto;
 }
@@ -276,24 +281,24 @@ button:focus-visible {
 }
 
 /* Vertical responsiveness utilities */
-@media (max-height: 600px) {
+@media (max-height: 700px) {
   :root {
-    --size-resp-cell: clamp(2.5rem, min(10vw, 8vh), 8rem);
-    --text-resp-board: clamp(1.5rem, min(6vw, 4vh), 6rem);
+    --size-resp-cell: clamp(3rem, min(11vw, 10vh), 10rem);
+    --text-resp-board: clamp(2rem, min(7vw, 6vh), 8rem);
   }
 }
 
-@media (max-height: 500px) {
+@media (max-height: 550px) {
   :root {
-    --size-resp-cell: clamp(2rem, min(8vw, 6vh), 6rem);
-    --text-resp-board: clamp(1.25rem, min(5vw, 3vh), 4rem);
+    --size-resp-cell: clamp(2.5rem, min(9vw, 8vh), 8rem);
+    --text-resp-board: clamp(1.75rem, min(6vw, 5vh), 6rem);
   }
 }
 
-@media (max-height: 400px) {
+@media (max-height: 450px) {
   :root {
-    --size-resp-cell: clamp(1.5rem, min(6vw, 4vh), 4rem);
-    --text-resp-board: clamp(1rem, min(4vw, 2.5vh), 3rem);
+    --size-resp-cell: clamp(2rem, min(7vw, 6vh), 6rem);
+    --text-resp-board: clamp(1.5rem, min(5vw, 4vh), 5rem);
   }
 }
 

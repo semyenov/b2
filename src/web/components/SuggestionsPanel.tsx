@@ -41,7 +41,7 @@ export const SuggestionsPanel = memo(({
     <div className="flex flex-col pt-2">
       <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 text-sm text-gray-300 mb-2 font-bold uppercase tracking-wide flex items-center justify-between shrink-0 py-1 px-2 -mt-2">
         <span className="flex items-center gap-1">
-          💡 Подсказки AI
+          Подсказки AI
         </span>
         <span className="text-yellow-500 text-base">
           {suggestions.length}
