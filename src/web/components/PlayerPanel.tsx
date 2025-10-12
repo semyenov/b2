@@ -37,9 +37,9 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
 
   return (
     <div className={cn(
-      'flex flex-col bg-slate-800 border-2 h-full min-h-0 transition-all duration-200',
+      'flex flex-col bg-slate-800 border-2 h-full min-h-0 transition-all duration-200 rounded-lg shadow-depth-2',
       {
-        'border-yellow-400': isCurrentTurn,
+        'border-yellow-400 shadow-yellow-400/20': isCurrentTurn,
         'border-slate-600': !isCurrentTurn,
       },
     )}
@@ -81,19 +81,19 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
                 <div className="text-slate-500 text-[var(--text-resp-sm)] italic py-[var(--spacing-resp-sm)] text-center">Пока нет слов</div>
               )
             : (
-              playerWords.map((word, i) => (
-                <div
-                  key={i}
-                  className="px-[var(--spacing-resp-word-item)] py-[var(--spacing-resp-word-padding)] bg-slate-900 hover:bg-slate-700 text-[var(--text-resp-word)] font-mono text-gray-100 transition-all duration-200 border-2 border-slate-700 hover:border-cyan-500 flex items-center justify-between group"
-                >
-                  <span className="font-black tracking-wide">{word}</span>
-                  <span className="text-xs text-gray-400 group-hover:text-cyan-400 font-bold">
-                    #
-                    {i + 1}
-                  </span>
-                </div>
-              ))
-            )}
+                playerWords.map((word, i) => (
+                  <div
+                    key={i}
+                    className="px-[var(--spacing-resp-word-item)] py-[var(--spacing-resp-word-padding)] bg-slate-900 hover:bg-slate-700 text-[var(--text-resp-word)] font-mono text-gray-100 transition-all duration-200 border-2 border-slate-700 hover:border-cyan-500 flex items-center justify-between group"
+                  >
+                    <span className="font-black tracking-wide">{word}</span>
+                    <span className="text-xs text-gray-400 group-hover:text-cyan-400 font-bold">
+                      #
+                      {i + 1}
+                    </span>
+                  </div>
+                ))
+              )}
         </div>
       </div>
     </div>

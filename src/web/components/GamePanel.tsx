@@ -62,6 +62,8 @@ export function GamePanel({
         paddingBottom: 'calc(var(--spacing-resp-md) * 2 + 48px)', // Exact control bar space
         marginLeft: '0',
         marginRight: '0',
+        paddingLeft: 'var(--spacing-resp-sm)',
+        paddingRight: 'var(--spacing-resp-sm)',
       }}
     >
       {showSuggestions

@@ -28,7 +28,7 @@ export function ControlButtons({
   wordPath,
   formedWord,
   showSuggestions,
-  suggestions,
+  suggestions: _suggestions,
   onSubmitMove,
   onClearSelection,
   onToggleSuggestions,

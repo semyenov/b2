@@ -79,7 +79,7 @@ class Logger {
       return
     }
 
-    const entry: LogEntry = {
+    const _entry: LogEntry = {
       level,
       message,
       timestamp: Date.now(),
@@ -105,15 +105,15 @@ class Logger {
   private getConsoleMethod(level: LogLevel): typeof console.log {
     switch (level) {
       case LogLevel.DEBUG:
-        return console.debug
+        return console.warn
       case LogLevel.INFO:
-        return console.info
+        return console.warn
       case LogLevel.WARN:
         return console.warn
       case LogLevel.ERROR:
         return console.error
       default:
-        return console.log
+        return console.warn
     }
   }
 

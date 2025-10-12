@@ -26,14 +26,17 @@ export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick
         {
           'text-lg': size === 'large',
           'text-base': size === 'normal',
-        }
+        },
       )}
     >
       <div className="flex items-center justify-center gap-2">
         <span className={cn({
           'text-xl': size === 'large',
           'text-lg': size === 'normal',
-        })}>{icon}</span>
+        })}
+        >
+          {icon}
+        </span>
         <span>{label}</span>
       </div>
     </button>

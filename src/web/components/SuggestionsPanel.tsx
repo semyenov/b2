@@ -18,7 +18,7 @@ export const SuggestionsPanel = memo(({
   suggestions,
   loadingSuggestions,
   onSuggestionSelect,
-  currentGame,
+  currentGame: _currentGame,
 }: SuggestionsPanelProps) => {
   if (loadingSuggestions) {
     return (
