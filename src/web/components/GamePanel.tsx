@@ -1,17 +1,15 @@
-import type { GameState, Suggestion } from '../lib/client'
-import { useCallback, useState } from 'react'
+import type { Suggestion } from '../lib/client'
 import { A11Y_LABELS, RUSSIAN_ALPHABET } from '../constants/game'
+import { useHover } from '../hooks/useHover'
+import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 import { cn } from '../utils/classNames'
 import { isLetterButtonDisabled, shouldShowAlphabetPanel } from '../utils/uiHelpers'
 import { SuggestionsPanel } from './SuggestionsPanel'
 
 interface GamePanelProps {
-  game: GameState
-  playerName: string
   disabled?: boolean
   selectedCell?: { row: number, col: number }
   selectedLetter?: string
-  wordPath?: Array<{ row: number, col: number }>
   onLetterSelect?: (letter: string) => void
   showSuggestions?: boolean
   suggestions?: Suggestion[]
@@ -20,7 +18,6 @@ interface GamePanelProps {
 }
 
 export function GamePanel({
-  game,
   disabled,
   selectedCell,
   selectedLetter,
@@ -30,24 +27,11 @@ export function GamePanel({
   loadingSuggestions = false,
   onSuggestionSelect,
 }: GamePanelProps) {
-  const [hoveredLetter, setHoveredLetter] = useState<string>('')
+  // Use extracted hooks
+  const { hoveredItem: hoveredLetter, handleMouseEnter, handleMouseLeave } = useHover<string>()
+  const { handleKeyDown } = useKeyboardNavigation()
 
   const shouldShowPanel = shouldShowAlphabetPanel(showSuggestions, selectedCell, selectedLetter)
-
-  // Keyboard handler for letter buttons
-  const handleLetterKeyDown = useCallback((
-    event: React.KeyboardEvent,
-    letter: string,
-    isDisabled: boolean,
-  ) => {
-    if (isDisabled)
-      return
-
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      onLetterSelect?.(letter)
-    }
-  }, [onLetterSelect])
 
   // Only render the panel when it should be shown
   if (!shouldShowPanel) {
@@ -64,7 +48,7 @@ export function GamePanel({
       )}
       style={{
         height: showSuggestions ? 'min(50vh, 400px)' : 'min(35vh, 280px)',
-        paddingBottom: 'calc(var(--spacing-resp-md) * 2 + 48px)', // Exact control bar space
+        paddingBottom: 'var(--height-control-panel)', // Match control panel height
       }}
     >
       {showSuggestions
@@ -77,7 +61,6 @@ export function GamePanel({
                 suggestions={suggestions}
                 loadingSuggestions={loadingSuggestions}
                 onSuggestionSelect={onSuggestionSelect!}
-                currentGame={game}
               />
               <div className="sticky bottom-0 h-4 bg-gradient-to-t from-gray-800 to-transparent pointer-events-none z-20" />
             </div>
@@ -100,9 +83,9 @@ export function GamePanel({
                       key={letter}
                       type="button"
                       onClick={() => onLetterSelect?.(letter)}
-                      onKeyDown={e => handleLetterKeyDown(e, letter, buttonDisabled)}
-                      onMouseEnter={() => setHoveredLetter(letter)}
-                      onMouseLeave={() => setHoveredLetter('')}
+                      onKeyDown={e => handleKeyDown(e, () => onLetterSelect?.(letter), buttonDisabled)}
+                      onMouseEnter={() => handleMouseEnter(letter)}
+                      onMouseLeave={handleMouseLeave}
                       disabled={buttonDisabled}
                       aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
                       aria-pressed={isSelected}

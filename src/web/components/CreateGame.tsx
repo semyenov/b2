@@ -3,6 +3,7 @@ import { memo } from 'react'
 import { BOARD_SIZES } from '../constants/game'
 import { useCreateGameForm } from '../hooks/useCreateGameForm'
 import { cn } from '../utils/classNames'
+import { Button, Card, Input } from './ui'
 
 interface CreateGameProps {
   onSubmit: (body: CreateGameBody) => void
@@ -26,7 +27,7 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
 
       {/* Form Card */}
       <div className="w-full max-w-lg">
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 shadow-depth-3 p-8 border-2 border-gray-700">
+        <Card variant="gradient" padding="spacious">
           <form onSubmit={handleSubmit} className="space-y-6" aria-label="Форма создания новой игры">
             {/* Board Size */}
             <div>
@@ -62,61 +63,42 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
             </div>
 
             {/* Base Word */}
-            <div>
-              <label htmlFor="base-word-input" className="block text-base font-bold text-gray-300 mb-3">
-                📝 Базовое слово (
-                {size}
-                {' '}
-                русских букв)
-              </label>
-              <input
-                id="base-word-input"
-                type="text"
-                value={baseWord}
-                onChange={e => setBaseWord(e.target.value.toUpperCase())}
-                aria-required="true"
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby="base-word-help"
-                className="w-full px-6 py-4 bg-gray-900 border-2 border-gray-700 focus:border-cyan-400 focus:outline-none uppercase text-center text-2xl font-bold tracking-widest text-cyan-400 placeholder-gray-600 transition-all duration-200"
-                placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
-                maxLength={Number.parseInt(size, 10)}
-                required
-              />
-              <p id="base-word-help" className="text-xs text-gray-500 mt-2 text-center">
-                Слово будет размещено в центре доски
-              </p>
-            </div>
-
-            {/* Error Message */}
-            {error && (
-              <div
-                role="alert"
-                aria-live="assertive"
-                className="bg-red-900 bg-opacity-40 border-2 border-red-600 p-4 flex items-center gap-3"
-              >
-                <span className="text-2xl" aria-hidden="true">⚠️</span>
-                <span className="text-red-300 font-medium">{error}</span>
-              </div>
-            )}
+            <Input
+              id="base-word-input"
+              label={`📝 Базовое слово (${size} русских букв)`}
+              type="text"
+              value={baseWord}
+              onChange={e => setBaseWord(e.target.value.toUpperCase())}
+              error={error}
+              helpText="Слово будет размещено в центре доски"
+              className="uppercase text-center text-2xl tracking-widest text-cyan-400"
+              placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
+              maxLength={Number.parseInt(size, 10)}
+              required
+            />
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-2">
-              <button
+              <Button
                 type="button"
+                variant="gray"
+                size="lg"
                 onClick={onBack}
-                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 font-bold text-base text-gray-200 transition-all duration-200 hover:scale-105 shadow-depth-2"
+                className="flex-1"
               >
                 ← Назад
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                className="flex-1 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 font-bold text-base text-white transition-all duration-200 hover:scale-105 shadow-depth-2 hover:shadow-depth-3"
+                variant="success"
+                size="lg"
+                className="flex-1"
               >
                 ✓ Создать
-              </button>
+              </Button>
             </div>
           </form>
-        </div>
+        </Card>
 
         {/* Help Text */}
         <div className="mt-6 text-center text-gray-500 text-sm space-y-1">

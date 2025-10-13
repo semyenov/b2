@@ -1,11 +1,9 @@
-import type { Suggestion } from '../lib/client'
 import type { Position } from '../types/game'
-import { BUTTON_STYLES } from '../constants/styles'
 import { useFullscreen } from '../hooks/useFullscreen'
-import { cn } from '../utils/classNames'
 import { getGameStep } from '../utils/gameStepUtils'
 import { isClearButtonDisabled } from '../utils/uiHelpers'
 import { StatusMessage } from './StatusMessage'
+import { Button } from './ui'
 
 interface ControlButtonsProps {
   isMyTurn: boolean
@@ -14,7 +12,6 @@ interface ControlButtonsProps {
   wordPath: Position[]
   formedWord: string
   showSuggestions: boolean
-  suggestions: Suggestion[]
   onSubmitMove: () => void
   onClearSelection: () => void
   onToggleSuggestions: () => void
@@ -28,7 +25,6 @@ export function ControlButtons({
   wordPath,
   formedWord,
   showSuggestions,
-  suggestions,
   onSubmitMove,
   onClearSelection,
   onToggleSuggestions,
@@ -49,22 +45,24 @@ export function ControlButtons({
     <div className="flex items-center gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)] flex-1 min-w-0 flex-wrap sm:flex-nowrap">
       {/* Left: Exit and Fullscreen buttons */}
       <div className="flex items-center gap-[var(--spacing-resp-xs)] flex-shrink-0">
-        <button
+        <Button
           type="button"
+          variant="gray"
+          size="sm"
           onClick={onExit}
           aria-label="Выйти в главное меню"
-          className={cn(BUTTON_STYLES.base, BUTTON_STYLES.padding.standard, BUTTON_STYLES.textSize.standard, BUTTON_STYLES.variants.gray)}
         >
           ← Выход
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="gray"
+          size="sm"
           onClick={toggleFullscreen}
           aria-label="Полноэкранный режим"
-          className={cn(BUTTON_STYLES.base, BUTTON_STYLES.padding.compact, BUTTON_STYLES.textSize.base, BUTTON_STYLES.variants.gray)}
         >
           ⛶
-        </button>
+        </Button>
       </div>
 
       {/* Center: Status message or submit button */}
@@ -74,69 +72,49 @@ export function ControlButtons({
         {gameStep === 'select-letter' && <StatusMessage step="select-letter" />}
         {gameStep === 'build-word' && <StatusMessage step="build-word" />}
         {gameStep === 'ready-to-submit' && (
-          <button
+          <Button
             type="button"
+            variant="success"
+            size="sm"
             onClick={onSubmitMove}
             aria-label={`Отправить слово ${formedWord}`}
-            className={cn(
-              BUTTON_STYLES.base,
-              BUTTON_STYLES.padding.standard,
-              BUTTON_STYLES.textSize.standard,
-              BUTTON_STYLES.variants.success,
-              BUTTON_STYLES.layout.row,
-              BUTTON_STYLES.content.nowrap,
-            )}
+            leftIcon="📤"
+            className="whitespace-nowrap uppercase tracking-wider"
           >
-            <span aria-hidden="true">📤</span>
-            <span className={BUTTON_STYLES.content.uppercase}>
-              Отправить слово
-              {' '}
-              &quot;
-              {formedWord}
-              &quot;
-            </span>
-          </button>
+            Отправить слово &quot;
+            {formedWord}
+            &quot;
+          </Button>
         )}
       </div>
 
-      {/* Right side: Empty for now, can be used for future controls */}
+      {/* Right side: AI and Clear buttons */}
       <div className="flex flex-shrink-0 w-0 sm:w-auto flex-row gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)]">
         {/* AI suggestions toggle button */}
-        <button
+        <Button
           type="button"
+          variant="warning"
+          size="sm"
           onClick={onToggleSuggestions}
           disabled={!isMyTurn}
           aria-label={showSuggestions ? 'Скрыть подсказки AI' : 'Показать подсказки AI'}
           aria-pressed={showSuggestions}
-          className={cn(
-            BUTTON_STYLES.base,
-            BUTTON_STYLES.padding.standard,
-            BUTTON_STYLES.textSize.standard,
-            BUTTON_STYLES.layout.centered,
-            BUTTON_STYLES.disabled,
-            showSuggestions ? BUTTON_STYLES.variants.warningActive : BUTTON_STYLES.variants.warningInactive,
-          )}
+          className={showSuggestions ? 'shadow-depth-3' : ''}
         >
           AI
-        </button>
+        </Button>
 
         {/* Clear button */}
-        <button
+        <Button
           type="button"
+          variant="muted"
+          size="sm"
           onClick={onClearSelection}
           disabled={isClearDisabled}
           aria-label="Отменить выбор ячейки и буквы"
-          className={cn(
-            BUTTON_STYLES.base,
-            BUTTON_STYLES.padding.standard,
-            BUTTON_STYLES.textSize.standard,
-            BUTTON_STYLES.variants.muted,
-            BUTTON_STYLES.disabled,
-          )}
         >
           ✕ Отмена
-        </button>
-
+        </Button>
       </div>
     </div>
   )

@@ -1,6 +1,10 @@
 import type { GameState } from '../lib/client'
+import type { BadgeVariant } from './ui'
+import { STATUS_CONFIG } from '../constants/statusConfig'
+import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 import { formatTimeAgo, getBaseWord, getGameStatus } from '../utils/gameHelpers'
 import { getRussianPluralForm } from '../utils/russianPlural'
+import { Badge, Button, Card } from './ui'
 
 interface GameListProps {
   games: GameState[]
@@ -9,6 +13,8 @@ interface GameListProps {
 }
 
 export function GameList({ games, onJoin, onBack }: GameListProps) {
+  const { handleKeyDown } = useKeyboardNavigation()
+
   const handleJoin = (game: GameState) => {
     const playerName = `Player_${Date.now()}`
     onJoin(game.id, playerName)
@@ -23,28 +29,22 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
             <h1 className="text-3xl font-bold text-cyan-400 mb-2">Доступные игры</h1>
             <p className="text-gray-400 text-base">Присоединитесь к существующей игре или создайте новую</p>
           </div>
-          <button
-            onClick={onBack}
-            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 border-2 border-gray-600 font-bold text-base transition-all duration-200 hover:shadow-depth-2 hover:scale-105 text-gray-200"
-          >
+          <Button variant="gray" size="md" onClick={onBack}>
             ← Назад в меню
-          </button>
+          </Button>
         </div>
 
         {/* Games Grid */}
         {games.length === 0
           ? (
-              <div className="bg-gray-800 border-2 border-gray-700 p-12 text-center shadow-depth-2">
+              <Card variant="default" padding="spacious" className="text-center">
                 <div className="text-6xl mb-4">🎮</div>
                 <h3 className="text-xl font-bold text-gray-300 mb-2">Нет доступных игр</h3>
                 <p className="text-gray-400 text-base mb-6">Станьте первым, кто создаст игру!</p>
-                <button
-                  onClick={onBack}
-                  className="px-8 py-3 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 font-bold text-base text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105"
-                >
+                <Button variant="primary" size="lg" onClick={onBack}>
                   Создать новую игру
-                </button>
-              </div>
+                </Button>
+              </Card>
             )
           : (
               <>
@@ -63,43 +63,32 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                     const currentPlayer = game.players[game.currentPlayerIndex]
                     const timeAgo = formatTimeAgo(game.createdAt)
 
-                    const statusConfig = {
-                      waiting: {
-                        label: 'Ожидание',
-                        color: 'bg-yellow-900 text-yellow-300 border-yellow-600',
-                      },
-                      in_progress: {
-                        label: 'В процессе',
-                        color: 'bg-green-900 text-green-300 border-green-600',
-                      },
-                      finished: {
-                        label: 'Завершена',
-                        color: 'bg-gray-700 text-gray-300 border-gray-600',
-                      },
-                    }
+                    const statusInfo = STATUS_CONFIG[status]
 
-                    const statusInfo = statusConfig[status]
+                    // Map status to badge variant
+                    const badgeVariant: BadgeVariant = status === 'waiting'
+                      ? 'warning'
+                      : status === 'in_progress'
+                        ? 'success'
+                        : 'gray'
 
                     return (
-                      <div
+                      <Card
                         key={game.id}
+                        variant="default"
+                        padding="default"
+                        interactive
                         role="button"
                         tabIndex={0}
                         onClick={() => handleJoin(game)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault()
-                            handleJoin(game)
-                          }
-                        }}
+                        onKeyDown={e => handleKeyDown(e, () => handleJoin(game))}
                         aria-label={`Присоединиться к игре ${baseWord}, размер ${game.size}×${game.size}, ${statusInfo.label}`}
-                        className="bg-gray-800 border-2 border-gray-700 p-6 cursor-pointer transition-all duration-200 hover:border-cyan-500 hover:shadow-depth-3 hover:scale-105 hover:bg-gray-750 shadow-depth-1"
                       >
                         {/* Header: Status + Time */}
                         <div className="flex justify-between items-start mb-4">
-                          <div className={`px-2.5 py-1 text-xs font-bold border ${statusInfo.color}`}>
+                          <Badge variant={badgeVariant} size="md">
                             {statusInfo.label}
-                          </div>
+                          </Badge>
                           <div className="text-xs text-gray-500">{timeAgo}</div>
                         </div>
 
@@ -165,16 +154,18 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
                         </div>
 
                         {/* Join Button */}
-                        <button
-                          className="w-full py-2.5 bg-green-600 hover:bg-green-700 border-2 border-green-500 font-bold text-base text-white transition-all duration-200 hover:shadow-depth-2 hover:scale-105"
+                        <Button
+                          variant="success"
+                          size="md"
+                          fullWidth
                           onClick={(e) => {
                             e.stopPropagation()
                             handleJoin(game)
                           }}
                         >
                           Присоединиться →
-                        </button>
-                      </div>
+                        </Button>
+                      </Card>
                     )
                   })}
                 </div>

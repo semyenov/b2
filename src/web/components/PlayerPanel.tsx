@@ -1,5 +1,6 @@
 import type { GameState } from '../lib/client'
 import { memo } from 'react'
+import { usePlayerStats } from '../hooks/usePlayerStats'
 import { cn } from '../utils/classNames'
 
 interface PlayerPanelProps {
@@ -9,31 +10,10 @@ interface PlayerPanelProps {
 }
 
 export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _currentPlayerName }: PlayerPanelProps) => {
-  const player = game.players[playerIndex]
-  const score = game.scores[player] || 0
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
-  // const _isAI = game.aiPlayers.includes(player)
 
-  // Calculate opponent score for comparison
-  const opponentIndex = playerIndex === 0 ? 1 : 0
-  const opponentPlayer = game.players[opponentIndex]
-  const opponentScore = game.scores[opponentPlayer] || 0
-
-  // Determine score status
-  const isWinning = score > opponentScore
-  const isTied = score === opponentScore
-
-  // Score color based on status (green for winning, gray for tied, red for losing)
-  const scoreColor = isWinning
-    ? 'text-green-400'
-    : isTied
-      ? 'text-gray-100'
-      : 'text-red-400'
-
-  // Get words played by this player from moves history
-  const playerWords = game.moves
-    .filter(move => move.playerId === player)
-    .map(move => move.word)
+  // Use extracted hook for player statistics
+  const { scoreColor, playerWords, letterCount, isTied, isWinning, score } = usePlayerStats({ game, playerIndex })
 
   return (
     <div className={cn(
@@ -56,7 +36,7 @@ export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _curren
         {/* Score display with status indicator */}
         <div className="flex items-center justify-center gap-2">
           <span className={cn('text-3xl font-black tabular-nums tracking-tight transition-colors duration-300', scoreColor)}>
-            {game.moves.filter(move => move.playerId === player).reduce((acc, move) => acc + move.word.length, 0)}
+            {letterCount}
             /
             {score}
           </span>

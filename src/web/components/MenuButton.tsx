@@ -26,7 +26,7 @@ export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick
         {
           'text-lg': size === 'large',
           'text-base': size === 'normal',
-        }
+        },
       )}
     >
       <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
@@ -34,7 +34,10 @@ export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick
         <span className={cn({
           'text-xl': size === 'large',
           'text-lg': size === 'normal',
-        })}>{icon}</span>
+        })}
+        >
+          {icon}
+        </span>
         <span>{label}</span>
       </div>
     </button>
