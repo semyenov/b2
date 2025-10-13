@@ -10,7 +10,7 @@
   --text-resp-score: clamp(3rem, 5vw, 5rem);            /* Player score display */
 
   /* Essential responsive dimensions */
-  --size-resp-panel: clamp(260px, 20vw, 320px);  /* Player panel width - wider for better space utilization */
+  --size-resp-panel: 1fr;  /* Player panel width - flexible to use available space */
   --height-control-panel: 80px;  /* Bottom control panel height */
 }
 

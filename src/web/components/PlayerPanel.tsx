@@ -21,7 +21,7 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
 
   return (
     <div className={cn(
-      'flex flex-col h-full min-h-0 transition-all duration-300',
+      'flex flex-col h-full w-full min-h-0 transition-all duration-300',
       'bg-slate-800 border-2 shadow-lg',
       {
         'border-slate-600 shadow-gray-500/20 animate-pulse-glow': isCurrentTurn,
