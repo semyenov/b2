@@ -93,8 +93,8 @@ export const GameScreen = memo(({
           </div>
         </div>
 
-        {/* Center: Board Only - aligned to bottom with panels */}
-        <div className="h-full min-h-0 flex items-end justify-center pb-[var(--height-control-panel)]">
+        {/* Center: Board Only - centered vertically */}
+        <div className="h-full min-h-0 flex items-center justify-center max-w-full overflow-hidden">
           <Board
             game={game}
             selectedCell={selectedCell}

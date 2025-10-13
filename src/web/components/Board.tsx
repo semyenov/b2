@@ -32,8 +32,8 @@ export const Board = memo(({
   const gridSize = board.length
 
   return (
-    <div className="w-full h-full max-w-[90vh] max-h-[90vh] aspect-square mx-auto">
-      {/* Board grid - no wrappers, maximum space */}
+    <div className="h-full aspect-square mx-auto" style={{ maxHeight: '100%' }}>
+      {/* Board grid - height-driven, maintains square aspect */}
       <div
         className="w-full h-full grid gap-0.5 bg-slate-950 p-1"
         style={{
