@@ -103,7 +103,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
 
       {/* Enhanced words list */}
       <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0 relative">
-        <div className="space-y-3">
+        <div className="space-y-2">
           {playerWords.length === 0
             ? (
                 <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -124,7 +124,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                     key={playerWords.length - i}
                     className={cn(
                       'group relative transition-all duration-300',
-                      'bg-slate-900/50n border border-slate-700 hover:border-cyan-400',
+                      'bg-slate-900/80 border border-slate-700 hover:border-cyan-400',
                       'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
                       'hover:bg-slate-700',
                       'animate-fade-slide-in',
@@ -136,7 +136,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                         <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
                           {playerWords.length - i}
                         </div>
-                        <span className="font-bold text-xl text-slate-300 group-hover:text-slate-300 transition-colors duration-200">
+                        <span className="font-bold text-xl text-slate-300 group-hover:text-cyan-100 transition-colors duration-200 tracking-wider">
                           {word}
                         </span>
                       </div>

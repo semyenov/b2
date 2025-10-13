@@ -123,7 +123,7 @@ export const Board = memo(({
                             displayContent
                           )}
                   {inPath && pathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-6 h-6 bg-emerald-800 text-white text-base flex items-center justify-center font-bold border-l border-b border-emerald-400">
+                    <div className="absolute top-0 right-0 w-8 h-8 text-white text-base flex items-center justify-center font-bold">
                       {pathIdx + 1}
                     </div>
                   )}

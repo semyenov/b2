@@ -19,17 +19,17 @@ const stepConfig = {
   'select-cell': {
     icon: '',
     text: 'Выбери пустую клетку',
-    className: 'text-cyan-200',
+    className: 'text-cyan-100',
   },
   'select-letter': {
     icon: '',
     text: 'Выбери букву',
-    className: 'text-cyan-200',
+    className: 'text-cyan-100',
   },
   'build-word': {
     icon: '',
     text: 'Составь слово',
-    className: 'text-purple-200',
+    className: 'text-purple-100',
   },
 }
 
