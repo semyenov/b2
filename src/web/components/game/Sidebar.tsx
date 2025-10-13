@@ -26,27 +26,21 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
     )}
     >
       {/* Clean Header Panel */}
-      <div className="px-4 py-4 border-b shrink-0 transition-all duration-300 bg-slate-900 border-slate-700">
-        {/* Player header */}
-        <div className="flex items-center justify-between mb-4">
-          {/* Player indicator */}
-          <div className="flex items-center gap-3">
+      <div className="px-4 py-4 border-b shrink-0 transition-all duration-300 bg-slate-900 border-slate-700 relative">
+        {/* Move indicator - absolutely positioned at vertical center */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col gap-1">
+          {Array.from({ length: 18 }, (_, i) => (
             <div
+              key={i}
               className={cn(
-                'w-3 h-3 rounded-full transition-all duration-300',
+                'w-[3px] h-[3px] transition-all duration-300',
                 {
-                  'bg-yellow-400 animate-pulse': isCurrentTurn,
-                  'bg-slate-500': !isCurrentTurn,
+                  'bg-yellow-500/30 animate-pulse': isCurrentTurn,
+                  'bg-slate-600/40': !isCurrentTurn,
                 },
               )}
             />
-            <div className="text-sm font-bold text-slate-300">
-              Игрок
-              {' '}
-              {playerIndex + 1}
-            </div>
-          </div>
-
+          ))}
         </div>
 
         {/* Stats display */}
@@ -54,24 +48,26 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
           {/* Letters count */}
           <div className="bg-slate-800 border border-slate-700 p-4 transition-all duration-300 hover:bg-slate-700">
             <div className="text-center">
-              <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
-                Буквы
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <div className="text-2xl font-bold text-slate-300 transition-colors duration-300">
+              <div className="flex flex-col items-center gap-2">
+                <div className="text-4xl font-bold text-slate-300 transition-colors duration-300">
                   {letterCount}
                 </div>
-                {!isLetterCountTied && (
-                  <div className={cn(
-                    'text-xs font-bold transition-all duration-300',
-                    isWinningByLetters
-                      ? 'text-emerald-400'
-                      : 'text-red-400',
-                  )}
-                  >
-                    {isWinningByLetters ? '▲' : '▼'}
+                <div className="flex items-center gap-1">
+                  <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    Буквы
                   </div>
-                )}
+                  {!isLetterCountTied && (
+                    <div className={cn(
+                      'text-xs font-bold transition-all duration-300',
+                      isWinningByLetters
+                        ? 'text-emerald-400'
+                        : 'text-red-400',
+                    )}
+                    >
+                      {isWinningByLetters ? '▲' : '▼'}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -79,24 +75,26 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
           {/* Score */}
           <div className="bg-slate-800 border border-slate-700 p-4 transition-all duration-300 hover:bg-slate-700">
             <div className="text-center">
-              <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
-                Счёт
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <div className="text-2xl font-bold text-slate-300 transition-colors duration-300">
+              <div className="flex flex-col items-center gap-2">
+                <div className="text-4xl font-bold text-slate-300 transition-colors duration-300">
                   {score}
                 </div>
-                {!isScoreTied && (
-                  <div className={cn(
-                    'text-xs font-bold transition-all duration-300',
-                    isWinningByScore
-                      ? 'text-emerald-400'
-                      : 'text-red-400',
-                  )}
-                  >
-                    {isWinningByScore ? '▲' : '▼'}
+                <div className="flex items-center gap-1">
+                  <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    Счёт
                   </div>
-                )}
+                  {!isScoreTied && (
+                    <div className={cn(
+                      'text-xs font-bold transition-all duration-300',
+                      isWinningByScore
+                        ? 'text-emerald-400'
+                        : 'text-red-400',
+                    )}
+                    >
+                      {isWinningByScore ? '▲' : '▼'}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
