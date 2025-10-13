@@ -39,7 +39,7 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <div className="text-5xl mb-3" aria-hidden="true">🤔</div>
-          <p className="text-gray-400 text-sm">Нет доступных подсказок</p>
+          <p className="text-slate-400 text-sm">Нет доступных подсказок</p>
         </div>
       </div>
     )

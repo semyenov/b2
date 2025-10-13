@@ -75,9 +75,9 @@ const variantStyles: Record<ButtonVariant, string> = {
   success: 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white border-2 border-green-400 shadow-depth-2 hover:shadow-depth-3',
   warning: 'bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-white border-2 border-yellow-500 shadow-depth-2 hover:shadow-depth-3',
   danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white border-2 border-red-500 shadow-depth-2 hover:shadow-depth-3',
-  ghost: 'bg-transparent hover:bg-gray-800 text-gray-300 hover:text-white border-2 border-transparent hover:border-gray-600',
-  muted: 'bg-gray-600 hover:bg-gray-500 text-white shadow-depth-1 hover:shadow-depth-2',
-  gray: 'bg-gray-700 hover:bg-gray-600 text-gray-200 border-2 border-gray-600 shadow-depth-1 hover:shadow-depth-2',
+  ghost: 'bg-transparent hover:bg-slate-800 text-slate-300 hover:text-white border-2 border-transparent hover:border-slate-600',
+  muted: 'bg-slate-600 hover:bg-slate-500 text-white shadow-depth-1 hover:shadow-depth-2',
+  gray: 'bg-slate-700 hover:bg-slate-600 text-slate-200 border-2 border-slate-600 shadow-depth-1 hover:shadow-depth-2',
 }
 
 /**

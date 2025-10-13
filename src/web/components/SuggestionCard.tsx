@@ -85,14 +85,14 @@ export const SuggestionCard = memo(({
     >
       {/* Rank Badge */}
       <div
-        className="text-gray-400 font-bold text-xs shrink-0 leading-none min-w-[20px] text-center"
+        className="text-slate-400 font-bold text-xs shrink-0 leading-none min-w-[20px] text-center"
         aria-hidden="true"
       >
         {rank}
       </div>
 
       {/* Word - Hero Element */}
-      <div className="flex-1 text-gray-100 font-black uppercase text-base tracking-wide text-left truncate">
+      <div className="flex-1 text-slate-100 font-black uppercase text-base tracking-wide text-left truncate">
         {suggestion.word}
       </div>
 

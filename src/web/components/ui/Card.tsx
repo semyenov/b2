@@ -46,10 +46,10 @@ interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'className'> {
  * Variant styles mapping
  */
 const variantStyles: Record<CardVariant, string> = {
-  default: 'bg-gray-800 border-2 border-gray-700 shadow-depth-2',
-  elevated: 'bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-700 shadow-depth-3',
-  bordered: 'bg-gray-800 border-2 border-gray-600 shadow-depth-1',
-  gradient: 'bg-gradient-to-br from-gray-800 to-gray-900 shadow-depth-3 border-2 border-gray-700',
+  default: 'bg-slate-800 border-2 border-slate-700 shadow-depth-2',
+  elevated: 'bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700 shadow-depth-3',
+  bordered: 'bg-slate-800 border-2 border-slate-600 shadow-depth-1',
+  gradient: 'bg-gradient-to-br from-slate-800 to-slate-900 shadow-depth-3 border-2 border-slate-700',
 }
 
 /**
