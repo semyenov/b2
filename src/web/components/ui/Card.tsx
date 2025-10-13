@@ -49,7 +49,7 @@ const variantStyles: Record<CardVariant, string> = {
   default: 'bg-gray-800 border-2 border-gray-700 shadow-depth-2',
   elevated: 'bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-700 shadow-depth-3',
   bordered: 'bg-gray-800 border-2 border-gray-600 shadow-depth-1',
-  gradient: 'bg-gradient-to-br from-gray-800 to-gray-900 shadow-depth-4 border-2 border-gray-700',
+  gradient: 'bg-gradient-to-br from-gray-800 to-gray-900 shadow-depth-3 border-2 border-gray-700',
 }
 
 /**

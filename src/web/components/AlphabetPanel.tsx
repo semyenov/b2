@@ -1,11 +1,11 @@
-import { A11Y_LABELS, RUSSIAN_ALPHABET } from '../constants/game'
 import { memo } from 'react'
+import { A11Y_LABELS, RUSSIAN_ALPHABET } from '../constants/game'
 import { useHover } from '../hooks/useHover'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 import { cn } from '../utils/classNames'
 import { isLetterButtonDisabled } from '../utils/uiHelpers'
 
-interface AlphabetPanelProps {
+export interface AlphabetPanelProps {
   selectedLetter?: string
   disabled?: boolean
   selectedCell?: { row: number, col: number }
@@ -28,7 +28,7 @@ export const AlphabetPanel = memo((({
 
   return (
     <div
-      className="flex-1 min-h-0 flex items-stretch px-[var(--spacing-resp-sm)] py-3 pb-4"
+      className="flex-1 min-h-0 flex items-stretch px-2 sm:px-4 py-3 pb-4"
       role="group"
       aria-label="Выбор буквы для размещения на доске"
     >

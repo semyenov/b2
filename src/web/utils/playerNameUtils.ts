@@ -17,6 +17,7 @@ export function generatePlayerName(): string {
  * @returns Player name entered by user or generated name
  */
 export function promptPlayerName(defaultName?: string): string {
+  // eslint-disable-next-line no-alert
   const name = window.prompt(
     'Введите ваше имя:',
     defaultName || generatePlayerName(),

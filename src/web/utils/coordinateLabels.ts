@@ -37,6 +37,13 @@ interface GetCellAriaLabelOptions {
  * Provides accessible description of cell state for screen readers
  *
  * @param options - Cell state options
+ * @param options.row - Cell row index
+ * @param options.col - Cell column index
+ * @param options.cell - Cell content (letter or null)
+ * @param options.selected - Whether cell is currently selected
+ * @param options.inPath - Whether cell is part of current word path
+ * @param options.pathIdx - Index in word path (if applicable)
+ * @param options.selectedLetter - Currently selected letter for placement
  * @returns ARIA label string
  */
 export function getCellAriaLabel({

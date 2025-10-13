@@ -79,7 +79,8 @@ class Logger {
       return
     }
 
-    const entry: LogEntry = {
+    // Store entry for persistence (not used yet but ready for future error tracking)
+    const _entry: LogEntry = {
       level,
       message,
       timestamp: Date.now(),
@@ -105,14 +106,17 @@ class Logger {
   private getConsoleMethod(level: LogLevel): typeof console.log {
     switch (level) {
       case LogLevel.DEBUG:
+        // eslint-disable-next-line no-console
         return console.debug
       case LogLevel.INFO:
+        // eslint-disable-next-line no-console
         return console.info
       case LogLevel.WARN:
         return console.warn
       case LogLevel.ERROR:
         return console.error
       default:
+        // eslint-disable-next-line no-console
         return console.log
     }
   }

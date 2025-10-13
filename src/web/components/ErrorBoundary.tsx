@@ -64,7 +64,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       // Default fallback UI
       return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center px-4">
-          <div className="max-w-2xl w-full bg-gray-800 border-2 border-red-600 p-8 shadow-depth-4">
+          <div className="max-w-2xl w-full bg-gray-800 border-2 border-red-600 p-8 shadow-depth-3">
             {/* Header */}
             <div className="text-center mb-6">
               <div className="text-6xl mb-4">⚠️</div>

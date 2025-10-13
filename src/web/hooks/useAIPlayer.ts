@@ -17,7 +17,9 @@ interface UseAIPlayerReturn {
  * AI Player automation hook
  * Automatically plays moves for AI players using suggestions API
  *
- * @param options - Current game state and API client
+ * @param options - Hook configuration
+ * @param options.currentGame - Current game state
+ * @param options.apiClient - API client for making moves
  * @returns AI thinking state and error messages
  */
 export function useAIPlayer({

@@ -1,9 +1,9 @@
 import type { GameState, Suggestion } from '../../lib/client'
 import type { Position } from '../../types/game'
+import { Board, ControlButtons, GamePanel, PlayerPanel } from '@components'
 import { memo, useMemo } from 'react'
 import { buildMoveBody, canSubmitMove } from '../../utils/moveValidation'
 import { getFormedWord } from '../../utils/wordUtils'
-import { Board, ControlButtons, GamePanel, PlayerPanel } from '@components'
 
 interface GameScreenProps {
   game: GameState
@@ -71,21 +71,19 @@ export const GameScreen = memo(({
   return (
     <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
-      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-[var(--spacing-resp-lg)] p-[var(--spacing-resp-md)] pb-0 lg:p-[var(--spacing-resp-xl)] overflow-hidden relative">
+      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-4 lg:gap-6 p-3 lg:p-6 pb-0 overflow-hidden relative">
         {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
-        <div className="flex lg:contents gap-[var(--spacing-resp-sm)] min-h-0">
+        <div className="flex lg:contents gap-2 min-h-0">
           <div className="flex-1 lg:flex-none min-h-0">
             <PlayerPanel
               game={game}
               playerIndex={0}
-              currentPlayerName={playerName}
             />
           </div>
           <div className="flex-1 lg:hidden min-h-0">
             <PlayerPanel
               game={game}
               playerIndex={1}
-              currentPlayerName={playerName}
             />
           </div>
         </div>
@@ -107,7 +105,6 @@ export const GameScreen = memo(({
           <PlayerPanel
             game={game}
             playerIndex={1}
-            currentPlayerName={playerName}
           />
         </div>
       </div>
@@ -126,7 +123,7 @@ export const GameScreen = memo(({
 
       {/* Bottom control panel - fixed at bottom */}
       <div className="shrink-0 shadow-depth-3 overflow-hidden relative z-50">
-        <div className="bg-slate-900 border-t-2 border-slate-700 px-[var(--spacing-resp-sm)] sm:px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-sm)] sm:py-[var(--spacing-resp-md)]">
+        <div className="bg-slate-900 border-t-2 border-slate-700 px-2 sm:px-4 py-2 sm:py-3">
           <ControlButtons
             isMyTurn={isMyTurn}
             selectedCell={selectedCell}

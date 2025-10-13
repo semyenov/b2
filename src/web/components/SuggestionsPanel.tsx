@@ -5,7 +5,7 @@ import { getScoreTier } from '../utils/suggestionHelpers'
 import { SuggestionCard } from './SuggestionCard'
 import { Spinner } from './ui'
 
-interface SuggestionsPanelProps {
+export interface SuggestionsPanelProps {
   suggestions: Suggestion[]
   loadingSuggestions: boolean
   onSuggestionSelect: (suggestion: Suggestion) => void
@@ -15,7 +15,7 @@ interface SuggestionsPanelProps {
  * Suggestions Panel Component
  * Displays AI move suggestions in a multi-column grid
  */
-export const SuggestionsPanel = memo<SuggestionsPanelProps>(({ 
+export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
   suggestions,
   loadingSuggestions,
   onSuggestionSelect,
@@ -47,7 +47,7 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
 
   return (
     <div className="py-3 pb-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 px-[var(--spacing-resp-sm)]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 px-2 sm:px-4">
         {limitedSuggestions.map((suggestion, index) => (
           <SuggestionCard
             key={`${suggestion.word}-${index}`}

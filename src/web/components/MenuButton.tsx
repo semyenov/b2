@@ -21,7 +21,7 @@ export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick
     <button
       onClick={onClick}
       className={cn(
-        'w-full group relative px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-md)] bg-gradient-to-r font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden',
+        'w-full group relative px-4 lg:px-8 py-3 lg:py-6 bg-gradient-to-r font-bold text-white shadow-depth-2 hover:shadow-depth-3 transition-all duration-200 transform hover:scale-105 overflow-hidden',
         variantStyles[variant],
         {
           'text-lg': size === 'large',
@@ -30,7 +30,7 @@ export const MenuButton = memo(({ icon, label, variant, size = 'normal', onClick
       )}
     >
       <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
-      <div className="relative flex items-center justify-center gap-[var(--spacing-resp-sm)]">
+      <div className="relative flex items-center justify-center gap-2 lg:gap-4">
         <span className={cn({
           'text-xl': size === 'large',
           'text-lg': size === 'normal',

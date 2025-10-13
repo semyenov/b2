@@ -29,7 +29,8 @@ function isValidRussianWord(word: string): boolean {
  * Custom hook for create game form logic
  * Handles form state, validation, and submission
  *
- * @param options - Form submission callback
+ * @param options - Hook configuration
+ * @param options.onSubmit - Form submission callback
  * @returns Form state and handlers
  */
 export function useCreateGameForm({ onSubmit }: UseCreateGameFormOptions): UseCreateGameFormReturn {

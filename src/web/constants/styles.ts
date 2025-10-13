@@ -42,7 +42,7 @@ export const BUTTON_STYLES = {
     muted: 'bg-gray-600 hover:bg-gray-500 text-white',
 
     /** Success/submit button with gradient */
-    success: 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 border-2 border-green-400 text-white shadow-depth-3 hover:shadow-depth-4 hover:scale-110 animate-pulse-glow',
+    success: 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 border-2 border-green-400 text-white shadow-depth-3 hover:shadow-depth-3 hover:scale-110 animate-pulse-glow',
 
     /** Warning/AI button (active state) */
     warningActive: 'bg-yellow-700 hover:bg-yellow-600 text-white shadow-depth-3',

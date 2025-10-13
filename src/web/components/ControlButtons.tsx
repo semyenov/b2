@@ -24,7 +24,7 @@ export interface ControlButtonsProps {
  * Bottom control bar with game actions: exit, fullscreen, status messages, submit, AI toggle, and clear
  * Displays different status messages based on current game step
  */
-export const ControlButtons = memo<ControlButtonsProps>(({ 
+export const ControlButtons = memo<ControlButtonsProps>(({
   isMyTurn,
   selectedCell,
   selectedLetter,

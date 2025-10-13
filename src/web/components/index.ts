@@ -26,14 +26,13 @@ export { MenuButton } from './MenuButton'
 export { PlayerPanel } from './PlayerPanel'
 export type { PlayerPanelProps } from './PlayerPanel'
 
+export * from './screens'
 export { StatusMessage } from './StatusMessage'
+
 export type { StatusMessageProps } from './StatusMessage'
-
 export { SuggestionCard } from './SuggestionCard'
-export type { SuggestionCardProps } from './SuggestionCard'
 
+export type { SuggestionCardProps } from './SuggestionCard'
 export { SuggestionsPanel } from './SuggestionsPanel'
 export type { SuggestionsPanelProps } from './SuggestionsPanel'
-export * from './screens'
 export * from './ui'
-

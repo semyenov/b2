@@ -4,7 +4,7 @@ import { shouldShowAlphabetPanel } from '../utils/uiHelpers'
 import { AlphabetPanel } from './AlphabetPanel'
 import { SuggestionsPanel } from './SuggestionsPanel'
 
-interface GamePanelProps {
+export interface GamePanelProps {
   disabled?: boolean
   selectedCell?: { row: number, col: number }
   selectedLetter?: string

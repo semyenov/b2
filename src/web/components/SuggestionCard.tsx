@@ -5,7 +5,7 @@ import { cn } from '../utils/classNames'
 import { getScoreColor, getSuggestionCoordLabel } from '../utils/suggestionHelpers'
 import { Badge } from './ui'
 
-interface SuggestionCardProps {
+export interface SuggestionCardProps {
   /**
    * Suggestion data
    */

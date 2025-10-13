@@ -5,10 +5,15 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "moduleDetection": "force",
     "useDefineForClassFields": true,
+    "baseUrl": ".",
     "module": "ESNext",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "paths": {
+      "@components": ["components/index.ts"],
+      "@components/*": ["components/*"]
+    },
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
 
@@ -19,12 +24,7 @@
     "noUnusedParameters": true,
     "noEmit": true,
     "isolatedModules": true,
-    "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@components": ["components/index.ts"],
-      "@components/*": ["components/*"]
-    }
+    "skipLibCheck": true
   },
   "include": ["./**/*"],
   "exclude": ["node_modules"]

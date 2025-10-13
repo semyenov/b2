@@ -19,6 +19,11 @@ interface GetCellClassNameOptions {
  * Generate CSS classes for board cell based on state
  *
  * @param options - Cell state options
+ * @param options.selected - Whether cell is currently selected
+ * @param options.inPath - Whether cell is part of current word path
+ * @param options.hasCell - Whether cell contains a letter
+ * @param options.canClick - Whether cell can be clicked
+ * @param options.isHovered - Whether cell is being hovered
  * @returns Combined className string
  */
 export function getCellClassName({
