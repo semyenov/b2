@@ -27,43 +27,63 @@ export const AlphabetPanel = memo((({
   const { handleKeyDown } = useKeyboardNavigation()
 
   return (
-    <div
-      className="flex-1 min-h-0 flex items-stretch px-2 sm:px-4 py-3 pb-4"
-      role="group"
-      aria-label="Выбор буквы для размещения на доске"
-    >
-      <div className="alphabet-grid grid gap-1.5 w-full h-full">
-        {RUSSIAN_ALPHABET.map((letter) => {
-          const isSelected = selectedLetter === letter
-          const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
-          const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
+    <div className="flex flex-col h-full w-full min-h-0">
+      {/* Header Panel */}
+      <div className="px-4 py-4 border-b shrink-0 transition-all duration-300 bg-slate-900 border-slate-700">
+        <div className="flex items-center justify-center">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-yellow-400 rounded-full" />
+            <div className="text-sm font-bold text-slate-300">
+              Выбор буквы
+            </div>
+          </div>
+        </div>
+      </div>
 
-          return (
-            <button
-              key={letter}
-              type="button"
-              onClick={() => onLetterSelect?.(letter)}
-              onKeyDown={e => handleKeyDown(e, () => onLetterSelect?.(letter), buttonDisabled)}
-              onMouseEnter={() => handleMouseEnter(letter)}
-              onMouseLeave={handleMouseLeave}
-              disabled={buttonDisabled}
-              aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
-              aria-pressed={isSelected}
-              className={cn(
-                'h-full w-full font-black text-xl sm:text-2xl transition-all duration-200 border-2',
-                {
-                  'bg-cyan-600 border-cyan-300 text-white shadow-depth-3 ring-2 ring-cyan-400': isSelected,
-                  'bg-yellow-400 border-yellow-300 text-slate-900 shadow-depth-3 ring-2 ring-yellow-400': isHovered,
-                  'bg-slate-700 text-slate-300 border-slate-600 hover:bg-slate-600 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-400': !isSelected && !isHovered,
-                  'bg-slate-800 text-slate-500 cursor-not-allowed': buttonDisabled,
-                  'cursor-pointer hover:shadow-depth-2': !buttonDisabled,
-                },
-              )}
-            >
-              {letter}
-            </button>
-          )
-        })}
+      {/* Alphabet Grid */}
+      <div
+        className="flex-1 min-h-0 flex items-stretch px-4 py-6"
+        role="group"
+        aria-label="Выбор буквы для размещения на доске"
+      >
+        <div className="alphabet-grid grid gap-3 w-full h-full">
+          {RUSSIAN_ALPHABET.map((letter) => {
+            const isSelected = selectedLetter === letter
+            const buttonDisabled = isLetterButtonDisabled(!!disabled, selectedCell, selectedLetter, letter)
+            const isHovered = hoveredLetter === letter && !disabled && selectedCell && !selectedLetter
+
+            return (
+              <button
+                key={letter}
+                type="button"
+                onClick={() => onLetterSelect?.(letter)}
+                onKeyDown={e => handleKeyDown(e, () => onLetterSelect?.(letter), buttonDisabled)}
+                onMouseEnter={() => handleMouseEnter(letter)}
+                onMouseLeave={handleMouseLeave}
+                disabled={buttonDisabled}
+                aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
+                aria-pressed={isSelected}
+                className={cn(
+                  'h-full w-full font-black text-xl sm:text-2xl transition-all duration-300 border-2',
+                  'group relative',
+                  {
+                    'bg-cyan-600 border-cyan-300 text-white shadow-lg ring-2 ring-cyan-400': isSelected,
+                    'bg-yellow-400 border-yellow-300 text-slate-900 shadow-lg ring-2 ring-yellow-400': isHovered,
+                    'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-400 hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]': !isSelected && !isHovered && !buttonDisabled,
+                    'bg-slate-800 text-slate-500 cursor-not-allowed border-slate-700': buttonDisabled,
+                    'cursor-pointer': !buttonDisabled,
+                  },
+                )}
+              >
+                {letter}
+                {/* Hover effect overlay */}
+                {!buttonDisabled && (
+                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                )}
+              </button>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
