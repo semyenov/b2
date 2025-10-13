@@ -11,7 +11,7 @@
 
   /* Essential responsive dimensions */
   --size-resp-panel: 1fr;  /* Player panel width - flexible to use available space */
-  --height-control-panel: 80px;  /* Bottom control panel height */
+  --height-control-panel: 105px;  /* Bottom control panel height - increased for better visibility */
 }
 
 /* ========================================

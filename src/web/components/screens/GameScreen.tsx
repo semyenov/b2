@@ -125,7 +125,7 @@ export const GameScreen = memo(({
 
       {/* Bottom control panel - fixed at bottom */}
       <div className="shrink-0 shadow-depth-3 overflow-hidden relative z-50">
-        <div className="bg-slate-900 border-t-2 border-slate-700 px-2 sm:px-4 py-2 sm:py-3">
+        <div className="bg-slate-900 border-t-2 border-slate-700 px-2 sm:px-4 py-4 sm:py-6">
           <ControlButtons
             isMyTurn={isMyTurn}
             selectedCell={selectedCell}
