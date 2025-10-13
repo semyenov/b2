@@ -39,7 +39,7 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
       >
         {/* Score display with status indicator */}
         <div className="flex items-center justify-center gap-2">
-          <span className={cn('text-3xl font-black tabular-nums tracking-tight transition-colors duration-300', scoreColor)}>
+          <span className={cn('text-4xl font-black transition-colors duration-300', scoreColor)}>
             {letterCount}
             /
             {score}
@@ -47,7 +47,7 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
           {/* Status indicator */}
           {!isTied && (
             <div className={cn(
-              'text-2xl font-black leading-none transition-all duration-300',
+              'text-3xl font-black leading-none transition-all duration-300',
               isWinning ? 'text-green-400' : 'text-red-400',
             )}
             >
@@ -62,16 +62,16 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
         <div className="space-y-2">
           {playerWords.length === 0
             ? (
-                <div className="text-slate-500 text-sm italic py-2 text-center">Пока нет слов</div>
+                <div className="text-slate-500 text-base italic py-2 text-center">Пока нет слов</div>
               )
             : (
                 playerWords.map((word, i) => (
                   <div
                     key={i}
-                    className="px-2 sm:px-3 py-1.5 bg-slate-900 hover:bg-slate-700 text-sm font-mono text-gray-100 transition-all duration-200 border-2 border-slate-700 hover:border-cyan-500 hover:shadow-depth-2 flex items-center justify-between group"
+                    className="px-2 sm:px-3 py-2 bg-slate-900 hover:bg-slate-700 text-base font-mono text-gray-100 transition-all duration-200 border-2 border-slate-700 hover:border-cyan-500 hover:shadow-depth-2 flex items-center justify-between group"
                   >
-                    <span className="font-black tracking-wide">{word}</span>
-                    <span className="text-xs text-slate-400 group-hover:text-cyan-400 font-bold">
+                    <span className="font-black">{word}</span>
+                    <span className="text-sm text-slate-400 group-hover:text-cyan-400 font-bold">
                       #
                       {i + 1}
                     </span>

@@ -54,7 +54,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
         <Button
           type="button"
           variant="gray"
-          size="sm"
+          size="md"
           onClick={onExit}
           aria-label="Выйти в главное меню"
         >
@@ -63,7 +63,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
         <Button
           type="button"
           variant="gray"
-          size="sm"
+          size="md"
           onClick={toggleFullscreen}
           aria-label="Полноэкранный режим"
         >
@@ -81,7 +81,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           <Button
             type="button"
             variant="success"
-            size="sm"
+            size="md"
             onClick={onSubmitMove}
             aria-label={`Отправить слово ${formedWord}`}
             leftIcon="📤"
@@ -100,7 +100,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
         <Button
           type="button"
           variant="warning"
-          size="sm"
+          size="md"
           onClick={onToggleSuggestions}
           disabled={!isMyTurn}
           aria-label={showSuggestions ? 'Скрыть подсказки AI' : 'Показать подсказки AI'}
@@ -114,7 +114,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
         <Button
           type="button"
           variant="muted"
-          size="sm"
+          size="md"
           onClick={onClearSelection}
           disabled={isClearDisabled}
           aria-label="Отменить выбор ячейки и буквы"

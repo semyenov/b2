@@ -6,11 +6,11 @@
 @theme {
   /* Essential responsive text sizes */
   --text-resp-base: clamp(1.125rem, 2.25vw, 1.625rem);  /* Base body text */
-  --text-resp-board: clamp(3.5rem, 6.5vw, 5.5rem);      /* Game board letters */
+  --text-resp-board: clamp(2.5rem, 5vw, 4rem);          /* Game board letters - significantly larger for better visibility */
   --text-resp-score: clamp(3rem, 5vw, 5rem);            /* Player score display */
 
   /* Essential responsive dimensions */
-  --size-resp-panel: clamp(280px, 15vw, 320px);  /* Player panel width */
+  --size-resp-panel: clamp(320px, 20vw, 420px);  /* Player panel width - wider for better space utilization */
   --height-control-panel: 80px;  /* Bottom control panel height */
 }
 

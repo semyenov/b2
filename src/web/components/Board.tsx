@@ -46,7 +46,7 @@ export const Board = memo(({
         {Array.from({ length: gridSize }, (_, i) => (
           <div
             key={`col-${i}`}
-            className="flex-1 flex items-center justify-center text-cyan-400 font-black text-lg tracking-wider"
+            className="flex-1 flex items-center justify-center text-cyan-700 opacity-50 font-black text-lg tracking-wider"
           >
             {String.fromCharCode(1040 + i)}
             {' '}
@@ -62,7 +62,7 @@ export const Board = memo(({
           {Array.from({ length: gridSize }, (_, i) => (
             <div
               key={`row-${i}`}
-              className="flex items-center justify-center text-cyan-400 font-black text-lg"
+              className="flex items-center justify-center text-cyan-700 opacity-50 font-black text-lg"
             >
               {i}
             </div>
