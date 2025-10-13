@@ -17,7 +17,7 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
 
   // Use extracted hook for player statistics
-  const { playerWords, letterCount, isTied, isWinning, score } = usePlayerStats({ game, playerIndex })
+  const { playerWords, letterCount, isScoreTied, isLetterCountTied, isWinningByScore, isWinningByLetters, score } = usePlayerStats({ game, playerIndex })
 
   return (
     <div className={cn(
@@ -65,15 +65,15 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
                 <div className="text-2xl font-bold text-slate-100 transition-colors duration-300">
                   {letterCount}
                 </div>
-                {!isTied && (
+                {!isLetterCountTied && (
                   <div className={cn(
                     'text-xs font-bold transition-all duration-300',
-                    isWinning
+                    isWinningByLetters
                       ? 'text-green-400'
                       : 'text-red-400',
                   )}
                   >
-                    {isWinning ? '▲' : '▼'}
+                    {isWinningByLetters ? '▲' : '▼'}
                   </div>
                 )}
               </div>
@@ -90,15 +90,15 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
                 <div className="text-2xl font-bold text-slate-100 transition-colors duration-300">
                   {score}
                 </div>
-                {!isTied && (
+                {!isScoreTied && (
                   <div className={cn(
                     'text-xs font-bold transition-all duration-300',
-                    isWinning
+                    isWinningByScore
                       ? 'text-green-400'
                       : 'text-red-400',
                   )}
                   >
-                    {isWinning ? '▲' : '▼'}
+                    {isWinningByScore ? '▲' : '▼'}
                   </div>
                 )}
               </div>
@@ -125,20 +125,22 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
               </div>
             )
             : (
-              playerWords.map((word, i) => (
+              playerWords.slice().reverse().map((word, i) => (
                 <div
-                  key={i}
+                  key={playerWords.length - i}
                   className={cn(
                     'group relative transition-all duration-300',
                     'bg-slate-800 border border-slate-700 hover:border-cyan-400',
                     'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
                     'hover:bg-slate-700',
+                    'animate-fade-slide-in',
                   )}
+                  style={{ animationDelay: `${i * 50}ms` }}
                 >
                   <div className="px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
-                        {i + 1}
+                        {playerWords.length - i}
                       </div>
                       <span className="font-bold text-lg text-slate-100 group-hover:text-cyan-100 transition-colors duration-200">
                         {word}

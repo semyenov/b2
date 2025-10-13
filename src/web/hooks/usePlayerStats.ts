@@ -11,8 +11,11 @@ interface PlayerStats {
   score: number
   opponentPlayer: string
   opponentScore: number
-  isWinning: boolean
-  isTied: boolean
+  opponentLetterCount: number
+  isWinningByScore: boolean
+  isWinningByLetters: boolean
+  isScoreTied: boolean
+  isLetterCountTied: boolean
   scoreColor: string
   playerWords: string[]
   letterCount: number
@@ -35,21 +38,10 @@ export function usePlayerStats({ game, playerIndex }: UsePlayerStatsOptions): Pl
     const player = game.players[playerIndex]
     const score = game.scores[player] || 0
 
-    // Calculate opponent score for comparison
+    // Calculate opponent stats for comparison
     const opponentIndex = playerIndex === 0 ? 1 : 0
     const opponentPlayer = game.players[opponentIndex]
     const opponentScore = game.scores[opponentPlayer] || 0
-
-    // Determine score status
-    const isWinning = score > opponentScore
-    const isTied = score === opponentScore
-
-    // Score color based on status (green for winning, gray for tied, red for losing)
-    const scoreColor = isWinning
-      ? 'text-green-400'
-      : isTied
-        ? 'text-gray-100'
-        : 'text-red-400'
 
     // Get words played by this player from moves history
     const playerWords = game.moves
@@ -61,13 +53,34 @@ export function usePlayerStats({ game, playerIndex }: UsePlayerStatsOptions): Pl
       .filter(move => move.playerId === player)
       .reduce((acc, move) => acc + move.word.length, 0)
 
+    // Calculate opponent letter count
+    const opponentLetterCount = game.moves
+      .filter(move => move.playerId === opponentPlayer)
+      .reduce((acc, move) => acc + move.word.length, 0)
+
+    // Determine status - separate comparisons for score and letters
+    const isWinningByScore = score > opponentScore
+    const isWinningByLetters = letterCount > opponentLetterCount
+    const isScoreTied = score === opponentScore
+    const isLetterCountTied = letterCount === opponentLetterCount
+
+    // Score color based on status (green for winning, gray for tied, red for losing)
+    const scoreColor = isWinningByScore
+      ? 'text-green-400'
+      : isScoreTied
+        ? 'text-gray-100'
+        : 'text-red-400'
+
     return {
       player,
       score,
       opponentPlayer,
       opponentScore,
-      isWinning,
-      isTied,
+      opponentLetterCount,
+      isWinningByScore,
+      isWinningByLetters,
+      isScoreTied,
+      isLetterCountTied,
       scoreColor,
       playerWords,
       letterCount,
