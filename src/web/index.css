@@ -4,26 +4,14 @@
    RESPONSIVE UTILITIES (replacing clamp)
    ======================================== */
 @theme {
-  /* Responsive spacing utilities */
-  --spacing-resp-xs: clamp(0.25rem, 0.5vw, 0.5rem);  /* 4-8px - Tight spacing */
-  --spacing-resp-sm: clamp(0.5rem, 1vw, 1rem);       /* 8-16px - Standard spacing */
-  --spacing-resp-md: clamp(0.75rem, 1.5vw, 1.5rem);  /* 12-24px - Medium spacing */
-  --spacing-resp-lg: clamp(1rem, 2vw, 2rem);         /* 16-32px - Large spacing */
-  --spacing-resp-xl: clamp(1.5rem, 3vw, 3rem);       /* 24-48px - Extra large spacing */
-
   /* Essential responsive text sizes */
   --text-resp-base: clamp(1.125rem, 2.25vw, 1.625rem);  /* Base body text */
   --text-resp-board: clamp(3.5rem, 6.5vw, 5.5rem);      /* Game board letters */
   --text-resp-score: clamp(3rem, 5vw, 5rem);            /* Player score display */
 
-  /* Responsive dimensions - optimized for maximum board space */
-  --size-resp-cell: clamp(4rem, 10vw, 12rem);
-  --size-resp-header: clamp(3rem, 4.5vw, 4.5rem);
-  --size-resp-label: clamp(3rem, 5vw, 5rem);
-  --size-resp-panel: clamp(280px, 15vw, 320px);
-
-  /* Control panel height - used for spacing calculations */
-  --height-control-panel: 80px;
+  /* Essential responsive dimensions */
+  --size-resp-panel: clamp(280px, 15vw, 320px);  /* Player panel width */
+  --height-control-panel: 80px;  /* Bottom control panel height */
 }
 
 /* ========================================
@@ -34,11 +22,6 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
-
-  /* Glow Effects */
-  --glow-primary: 0 0 20px rgba(34, 211, 238, 0.4);
-  --glow-success: 0 0 20px rgba(16, 185, 129, 0.4);
-  --glow-warning: 0 0 20px rgba(245, 158, 11, 0.4);
 }
 
 /* Global styles */
@@ -133,20 +116,6 @@ button:focus-visible {
   background: linear-gradient(180deg, #818cf8 0%, #6366f1 100%);
 }
 
-/* Grid card hover effects */
-@keyframes card-float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-.suggestion-card:hover {
-  animation: card-float 0.3s ease-in-out;
-}
-
 /* ========================================
    UTILITY CLASSES
    ======================================== */
@@ -169,20 +138,6 @@ button:focus-visible {
 .shadow-depth-3 {
   box-shadow: var(--shadow-lg);
 }
-
-/* Glow effects */
-.glow-primary {
-  box-shadow: var(--glow-primary);
-}
-
-.glow-success {
-  box-shadow: var(--glow-success);
-}
-
-.glow-warning {
-  box-shadow: var(--glow-warning);
-}
-
 
 /* Alphabet Grid - responsive layout */
 .alphabet-grid {
