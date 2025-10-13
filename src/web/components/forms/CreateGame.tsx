@@ -1,9 +1,9 @@
-import type { CreateGameBody } from '../lib/client'
+import type { CreateGameBody } from '../../lib/client'
 import { memo } from 'react'
-import { BOARD_SIZES } from '../constants/game'
-import { useCreateGameForm } from '../hooks/useCreateGameForm'
-import { cn } from '../utils/classNames'
-import { Button, Card, Input } from './ui'
+import { BOARD_SIZES } from '../../constants/game'
+import { useCreateGameForm } from '../../hooks/useCreateGameForm'
+import { cn } from '../../utils/classNames'
+import { Button, Card, Input } from '../ui'
 
 export interface CreateGameProps {
   onSubmit: (body: CreateGameBody) => void

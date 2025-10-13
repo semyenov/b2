@@ -7,6 +7,9 @@
 export { Badge } from './Badge'
 export type { BadgeSize, BadgeVariant } from './Badge'
 
+export { Banner } from './Banner'
+export type { BannerProps } from './Banner'
+
 export { Button } from './Button'
 export type { ButtonSize, ButtonVariant } from './Button'
 
@@ -17,3 +20,6 @@ export { Input } from './Input'
 
 export { Spinner } from './Spinner'
 export type { SpinnerSize } from './Spinner'
+
+export { StatusMessage } from './StatusMessage'
+export type { StatusMessageProps } from './StatusMessage'

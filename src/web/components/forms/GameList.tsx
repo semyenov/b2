@@ -1,11 +1,11 @@
-import type { GameState } from '../lib/client'
-import type { BadgeVariant } from './ui'
+import type { GameState } from '../../lib/client'
+import type { BadgeVariant } from '../ui'
 import { memo } from 'react'
-import { STATUS_CONFIG } from '../constants/statusConfig'
-import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
-import { formatTimeAgo, getBaseWord, getGameStatus } from '../utils/gameHelpers'
-import { getRussianPluralForm } from '../utils/russianPlural'
-import { Badge, Button, Card } from './ui'
+import { STATUS_CONFIG } from '../../constants/statusConfig'
+import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation'
+import { formatTimeAgo, getBaseWord, getGameStatus } from '../../utils/gameHelpers'
+import { getRussianPluralForm } from '../../utils/russianPlural'
+import { Badge, Button, Card } from '../ui'
 
 export interface GameListProps {
   games: GameState[]

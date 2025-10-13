@@ -1,8 +1,8 @@
-import type { Suggestion } from '../lib/client'
-import { useAnimatedPanel } from '../hooks/useAnimatedPanel'
-import { useClickOutside } from '../hooks/useClickOutside'
-import { cn } from '../utils/classNames'
-import { shouldShowAlphabetPanel } from '../utils/uiHelpers'
+import type { Suggestion } from '../../lib/client'
+import { useAnimatedPanel } from '../../hooks/useAnimatedPanel'
+import { useClickOutside } from '../../hooks/useClickOutside'
+import { cn } from '../../utils/classNames'
+import { shouldShowAlphabetPanel } from '../../utils/uiHelpers'
 import { AlphabetPanel } from './AlphabetPanel'
 import { SuggestionsPanel } from './SuggestionsPanel'
 

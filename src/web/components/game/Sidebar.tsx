@@ -1,19 +1,19 @@
-import type { GameState } from '../lib/client'
+import type { GameState } from '../../lib/client'
 import { memo } from 'react'
-import { usePlayerStats } from '../hooks/usePlayerStats'
-import { cn } from '../utils/classNames'
+import { usePlayerStats } from '../../hooks/usePlayerStats'
+import { cn } from '../../utils/classNames'
 
-export interface PlayerPanelProps {
+export interface SidebarProps {
   game: GameState
   playerIndex: 0 | 1
 }
 
 /**
- * Player Panel Component - Redesigned
+ * Sidebar Component - Player Stats Display
  * Modern player stats sidebar with enhanced visual design, better typography,
  * improved animations, and more intuitive score display
  */
-export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
+export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
 
   // Use extracted hook for player statistics
@@ -168,4 +168,4 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
   )
 })
 
-PlayerPanel.displayName = 'PlayerPanel'
+Sidebar.displayName = 'Sidebar'

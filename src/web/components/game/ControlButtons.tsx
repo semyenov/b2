@@ -1,10 +1,9 @@
-import type { Position } from '../types/game'
+import type { Position } from '../../types/game'
 import { memo } from 'react'
-import { useFullscreen } from '../hooks/useFullscreen'
-import { getGameStep } from '../utils/gameStepUtils'
-import { isClearButtonDisabled } from '../utils/uiHelpers'
-import { StatusMessage } from './StatusMessage'
-import { Button } from './ui'
+import { useFullscreen } from '../../hooks/useFullscreen'
+import { getGameStep } from '../../utils/gameStepUtils'
+import { isClearButtonDisabled } from '../../utils/uiHelpers'
+import { Button, StatusMessage } from '../ui'
 
 export interface ControlButtonsProps {
   isMyTurn: boolean

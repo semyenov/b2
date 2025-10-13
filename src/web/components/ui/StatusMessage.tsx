@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { cn } from '../utils/classNames'
+import { cn } from '../../utils/classNames'
 
 export interface StatusMessageProps {
   step: 'waiting' | 'select-cell' | 'select-letter' | 'build-word'

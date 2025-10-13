@@ -1,9 +1,9 @@
-import type { Suggestion } from '../lib/client'
-import type { ScoreTier } from '../utils/suggestionHelpers'
+import type { Suggestion } from '../../lib/client'
+import type { ScoreTier } from '../../utils/suggestionHelpers'
 import { memo } from 'react'
-import { cn } from '../utils/classNames'
-import { getScoreColor, getSuggestionCoordLabel } from '../utils/suggestionHelpers'
-import { Badge } from './ui'
+import { cn } from '../../utils/classNames'
+import { getScoreColor, getSuggestionCoordLabel } from '../../utils/suggestionHelpers'
+import { Badge } from '../ui'
 
 export interface SuggestionCardProps {
   /**

@@ -1,6 +1,6 @@
 import type { GameState, Suggestion } from '../../lib/client'
 import type { Position } from '../../types/game'
-import { Board, ControlButtons, GamePanel, PlayerPanel } from '@components'
+import { Board, ControlButtons, GamePanel, Sidebar } from '@components'
 import { memo } from 'react'
 import { useGameActions } from '../../hooks/useGameActions'
 
@@ -68,13 +68,13 @@ export const GameScreen = memo(({
         {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
         <div className="flex lg:contents gap-2 min-h-0">
           <div className="flex-1 lg:flex-1 min-h-0">
-            <PlayerPanel
+            <Sidebar
               game={game}
               playerIndex={0}
             />
           </div>
           <div className="flex-1 lg:hidden min-h-0">
-            <PlayerPanel
+            <Sidebar
               game={game}
               playerIndex={1}
             />
@@ -95,7 +95,7 @@ export const GameScreen = memo(({
 
         {/* Desktop only: Player 2 right sidebar */}
         <div className="hidden lg:flex lg:flex-1 min-h-0">
-          <PlayerPanel
+          <Sidebar
             game={game}
             playerIndex={1}
           />

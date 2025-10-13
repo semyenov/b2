@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { cn } from '../utils/classNames'
+import { cn } from '../../utils/classNames'
 
 export interface BannerProps {
   variant: 'error' | 'loading' | 'warning'

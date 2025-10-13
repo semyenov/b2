@@ -1,9 +1,9 @@
-import type { Suggestion } from '../lib/client'
+import type { Suggestion } from '../../lib/client'
 import { memo, useMemo } from 'react'
-import { GAME_CONFIG } from '../constants/game'
-import { getScoreTier } from '../utils/suggestionHelpers'
+import { GAME_CONFIG } from '../../constants/game'
+import { getScoreTier } from '../../utils/suggestionHelpers'
 import { SuggestionCard } from './SuggestionCard'
-import { Spinner } from './ui'
+import { Spinner } from '../ui'
 
 export interface SuggestionsPanelProps {
   suggestions: Suggestion[]
