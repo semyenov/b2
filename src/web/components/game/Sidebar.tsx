@@ -22,11 +22,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
   return (
     <div className={cn(
       'flex flex-col h-full w-full min-h-0 transition-all duration-300',
-      'bg-slate-800 border-2 shadow-lg',
-      {
-        'border-slate-600 shadow-slate-500/20 animate-pulse-glow': isCurrentTurn,
-        'border-slate-600 shadow-slate-500/20': !isCurrentTurn,
-      },
+      'bg-slate-800 border border-slate-700',
     )}
     >
       {/* Clean Header Panel */}

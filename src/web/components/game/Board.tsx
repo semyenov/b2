@@ -42,7 +42,7 @@ export const Board = memo(({
       <div className="flex-1 flex items-center gap-1">
         {/* Board grid - height-driven, maintains square aspect with enhanced visual design */}
         <div
-          className="grid w-full h-full border-2 border-slate-500 shadow-2xl bg-slate-800"
+          className="grid w-full h-full border border-slate-600 bg-slate-800"
           style={{
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
             gridTemplateRows: `repeat(${gridSize}, 1fr)`,
@@ -103,13 +103,13 @@ export const Board = memo(({
                 >
                   {!cell && !selected
                     ? (
-                      <div className="text-xs text-slate-500 font-medium">
-                        {displayContent}
-                      </div>
-                    )
+                        <div className="text-xs text-slate-500 font-medium">
+                          {displayContent}
+                        </div>
+                      )
                     : (
-                      displayContent
-                    )}
+                        displayContent
+                      )}
                   {inPath && pathIdx >= 0 && (
                     <div className="absolute top-0 right-0 w-6 h-6 bg-emerald-800 text-white text-base flex items-center justify-center font-bold border-l border-b border-emerald-400">
                       {pathIdx + 1}
