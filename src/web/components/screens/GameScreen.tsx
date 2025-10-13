@@ -119,6 +119,8 @@ export const GameScreen = memo(({
         suggestions={suggestions}
         loadingSuggestions={loadingSuggestions}
         onSuggestionSelect={handleSuggestionSelect}
+        onClose={onClearSelection}
+        onHideSuggestions={onHideSuggestions}
       />
 
       {/* Bottom control panel - fixed at bottom */}

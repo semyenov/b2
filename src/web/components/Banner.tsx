@@ -33,7 +33,7 @@ export const Banner = memo(({ variant, message, onClose }: BannerProps) => {
         {onClose && (
           <button
             onClick={onClose}
-            className="ml-4 hover:bg-opacity-80 px-2 py-1 transition-all duration-200"
+            className="ml-4 hover:bg-slate-700 px-2 py-1 transition-all duration-200"
           >
             ✕
           </button>

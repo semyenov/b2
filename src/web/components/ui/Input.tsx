@@ -97,8 +97,8 @@ export const Input = memo(
               // Focus
               'focus:outline-none focus:ring-2',
               error
-                ? 'focus:ring-red-400/50'
-                : 'focus:ring-cyan-400/50',
+                ? 'focus:ring-red-400'
+                : 'focus:ring-cyan-400',
               // Custom className
               className,
             )}

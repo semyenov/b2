@@ -55,8 +55,8 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
                     className={cn(
                       'py-3 font-bold text-base transition-all duration-200',
                       size === String(s)
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-depth-2 scale-105 ring-2 ring-cyan-400'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:scale-105',
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-depth-2 ring-2 ring-cyan-400'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
                     )}
                   >
                     {s}

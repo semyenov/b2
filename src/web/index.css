@@ -173,35 +173,6 @@ button:focus-visible {
   animation: pop-in 0.2s ease-out;
 }
 
-/* Pulse animation for active elements */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Fade in animation for menu */
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.6s ease-out;
-}
 
 /* Slide up animation */
 @keyframes slide-up {
@@ -233,5 +204,21 @@ button:focus-visible {
 
 .animate-slide-up-panel {
   animation: slide-up-panel 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Slide down animation for GamePanel - smooth hide */
+@keyframes slide-down-panel {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+.animate-slide-down-panel {
+  animation: slide-down-panel 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

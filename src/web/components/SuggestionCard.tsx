@@ -75,7 +75,7 @@ export const SuggestionCard = memo(({
         'bg-slate-700 hover:bg-slate-600',
         'border-2 border-slate-600 hover:border-cyan-400',
         'transition-all duration-200',
-        'hover:ring-2 hover:ring-cyan-400/50',
+        'hover:ring-2 hover:ring-cyan-400',
         'hover:shadow-depth-2',
         'px-3 py-2.5',
         'flex items-center gap-2.5',

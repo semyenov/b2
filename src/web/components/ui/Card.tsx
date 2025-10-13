@@ -100,7 +100,7 @@ export const Card = memo(
             // Padding
             paddingStyles[padding],
             // Interactive
-            interactive && 'cursor-pointer hover:scale-105 hover:border-cyan-500 hover:shadow-depth-3',
+            interactive && 'cursor-pointer hover:border-cyan-500 hover:shadow-depth-3',
             // Custom className
             className,
           )}

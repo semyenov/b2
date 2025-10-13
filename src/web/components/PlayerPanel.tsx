@@ -17,27 +17,20 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
 
   // Use extracted hook for player statistics
-  const { scoreColor, playerWords, letterCount, isTied, isWinning, score } = usePlayerStats({ game, playerIndex })
+  const { playerWords, letterCount, isTied, isWinning, score } = usePlayerStats({ game, playerIndex })
 
   return (
     <div className={cn(
       'flex flex-col h-full min-h-0 transition-all duration-300',
       'bg-slate-800 border-2 shadow-lg',
       {
-        'border-amber-400 shadow-amber-400/20 animate-pulse-glow': isCurrentTurn,
-        'border-slate-600 shadow-slate-600/10': !isCurrentTurn,
+        'border-slate-600 shadow-gray-500/20 animate-pulse-glow': isCurrentTurn,
+        'border-slate-600 shadow-gray-500/20': !isCurrentTurn,
       },
     )}
     >
       {/* Clean Header Panel */}
-      <div className={cn(
-        'px-4 py-4 border-b shrink-0 transition-all duration-300',
-        {
-          'bg-amber-900/20 border-amber-400': isCurrentTurn,
-          'bg-slate-900 border-slate-700': !isCurrentTurn,
-        },
-      )}
-      >
+      <div className="px-4 py-4 border-b shrink-0 transition-all duration-300 bg-slate-900 border-slate-700">
         {/* Player header */}
         <div className="flex items-center justify-between mb-4">
           {/* Player indicator */}
@@ -46,7 +39,7 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
               className={cn(
                 'w-3 h-3 rounded-full transition-all duration-300',
                 {
-                  'bg-amber-400 animate-pulse': isCurrentTurn,
+                  'bg-yellow-400 animate-pulse': isCurrentTurn,
                   'bg-slate-500': !isCurrentTurn,
                 },
               )}
@@ -58,23 +51,6 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
             </div>
           </div>
 
-          {/* Status badge */}
-          {!isTied && (
-            <div className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold transition-all duration-300 border',
-              isWinning
-                ? 'bg-green-500/20 text-green-300 border-green-400/30'
-                : 'bg-red-500/20 text-red-300 border-red-400/30',
-            )}
-            >
-              <span className="text-sm">
-                {isWinning ? '▲' : '▼'}
-              </span>
-              <span className="uppercase tracking-wide">
-                {isWinning ? 'Лидер' : 'Отстаёт'}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Stats display */}
@@ -85,13 +61,21 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
               <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                 Буквы
               </div>
-              <div
-                className={cn(
-                  'text-2xl font-bold transition-colors duration-300',
-                  scoreColor,
+              <div className="flex items-center justify-center gap-2">
+                <div className="text-2xl font-bold text-slate-100 transition-colors duration-300">
+                  {letterCount}
+                </div>
+                {!isTied && (
+                  <div className={cn(
+                    'text-xs font-bold transition-all duration-300',
+                    isWinning
+                      ? 'text-green-400'
+                      : 'text-red-400',
+                  )}
+                  >
+                    {isWinning ? '▲' : '▼'}
+                  </div>
                 )}
-              >
-                {letterCount}
               </div>
             </div>
           </div>
@@ -102,13 +86,21 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
               <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                 Счёт
               </div>
-              <div
-                className={cn(
-                  'text-2xl font-bold transition-colors duration-300',
-                  scoreColor,
+              <div className="flex items-center justify-center gap-2">
+                <div className="text-2xl font-bold text-slate-100 transition-colors duration-300">
+                  {score}
+                </div>
+                {!isTied && (
+                  <div className={cn(
+                    'text-xs font-bold transition-all duration-300',
+                    isWinning
+                      ? 'text-green-400'
+                      : 'text-red-400',
+                  )}
+                  >
+                    {isWinning ? '▲' : '▼'}
+                  </div>
                 )}
-              >
-                {score}
               </div>
             </div>
           </div>
