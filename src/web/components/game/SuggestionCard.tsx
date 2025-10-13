@@ -70,46 +70,48 @@ export const SuggestionCard = memo(({
       onClick={() => onClick(suggestion)}
       aria-label={`Подсказка ${rank}: ${suggestion.word}, буква ${suggestion.letter} на позиции ${posStr}, ${suggestion.score} очков`}
       className={cn(
-        // Base styles - matching alphabet button style
-        'group relative w-full',
-        'bg-slate-700 hover:bg-slate-600',
-        'border-2 border-slate-600 hover:border-cyan-400',
-        'transition-all duration-200',
-        'hover:ring-2 hover:ring-cyan-400',
-        'hover:shadow-depth-2',
-        'px-3 py-2.5',
-        'flex items-center gap-2.5',
+        // Base styles - matching sidebar word list style
+        'group relative w-full transition-all duration-300',
+        'bg-slate-800 border border-slate-700 hover:border-cyan-400',
+        'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
+        'hover:bg-slate-700',
+        'px-4 py-3',
+        'flex items-center justify-between',
         // Keyboard focus
         isKeyboardFocused && 'ring-2 ring-cyan-400',
       )}
     >
-      {/* Rank Badge */}
-      <div
-        className="text-slate-400 font-bold text-xs shrink-0 leading-none min-w-[20px] text-center"
-        aria-hidden="true"
-      >
-        {rank}
-      </div>
+      <div className="flex items-center gap-3">
+        {/* Rank Badge */}
+        <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
+          {rank}
+        </div>
 
-      {/* Word - Hero Element */}
-      <div className="flex-1 text-slate-300 font-black uppercase text-base tracking-wide text-left truncate">
-        {suggestion.word}
-      </div>
-
-      {/* Position + Letter */}
-      <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-cyan-400 font-mono font-bold text-xs px-1.5 py-0.5 leading-none">
-          {posStr}
-        </span>
-        <span className="text-yellow-400 font-black text-lg leading-none">
-          {suggestion.letter}
+        {/* Word - Hero Element */}
+        <span className="font-bold text-xl text-slate-300 group-hover:text-slate-300 transition-colors duration-200">
+          {suggestion.word}
         </span>
       </div>
 
-      {/* Score Badge */}
-      <Badge variant={scoreVariant} size="md" className="min-w-[40px] text-center font-black text-base">
-        {Math.round(suggestion.score)}
-      </Badge>
+      <div className="flex items-center gap-3">
+        {/* Position + Letter */}
+        <div className="flex items-center gap-2">
+          <span className="text-cyan-400 font-mono font-bold text-xs px-2 py-1 bg-cyan-500/10 rounded">
+            {posStr}
+          </span>
+          <span className="text-yellow-400 font-black text-lg">
+            {suggestion.letter}
+          </span>
+        </div>
+
+        {/* Score Badge */}
+        <Badge variant={scoreVariant} size="md" className="min-w-[40px] text-center font-black text-base">
+          {Math.round(suggestion.score)}
+        </Badge>
+      </div>
+
+      {/* Hover effect overlay */}
+      <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </button>
   )
 })
