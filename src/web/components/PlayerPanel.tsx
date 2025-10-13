@@ -9,9 +9,9 @@ export interface PlayerPanelProps {
 }
 
 /**
- * Player Panel Component
- * Displays player stats sidebar with score, word history, and current turn indicator
- * Shows win/lose indicator and highlights active player's turn
+ * Player Panel Component - Redesigned
+ * Modern player stats sidebar with enhanced visual design, better typography,
+ * improved animations, and more intuitive score display
  */
 export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
@@ -21,63 +21,153 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
 
   return (
     <div className={cn(
-      'flex flex-col bg-slate-800 border-2 h-full min-h-0 transition-all duration-200',
+      'flex flex-col h-full min-h-0 transition-all duration-300',
+      'bg-slate-800 border-2 shadow-lg',
       {
-        'border-yellow-400 shadow-depth-3 animate-pulse-glow ring-2 ring-yellow-400/30': isCurrentTurn,
-        'border-slate-600 shadow-depth-2': !isCurrentTurn,
+        'border-amber-400 shadow-amber-400/20 animate-pulse-glow': isCurrentTurn,
+        'border-slate-600 shadow-slate-600/10': !isCurrentTurn,
       },
     )}
     >
-      {/* Header with player info */}
+      {/* Clean Header Panel */}
       <div className={cn(
-        'px-2 sm:px-4 py-2 flex flex-col gap-1 border-b-2 shrink-0',
+        'px-4 py-4 border-b shrink-0 transition-all duration-300',
         {
-          'bg-yellow-900/40 border-yellow-600': isCurrentTurn,
+          'bg-amber-900/20 border-amber-400': isCurrentTurn,
           'bg-slate-900 border-slate-700': !isCurrentTurn,
         },
       )}
       >
-        {/* Score display with status indicator */}
-        <div className="flex items-center justify-center gap-2">
-          <span className={cn('text-4xl font-black transition-colors duration-300', scoreColor)}>
-            {letterCount}
-            /
-            {score}
-          </span>
-          {/* Status indicator */}
+        {/* Player header */}
+        <div className="flex items-center justify-between mb-4">
+          {/* Player indicator */}
+          <div className="flex items-center gap-3">
+            <div
+              className={cn(
+                'w-3 h-3 rounded-full transition-all duration-300',
+                {
+                  'bg-amber-400 animate-pulse': isCurrentTurn,
+                  'bg-slate-500': !isCurrentTurn,
+                },
+              )}
+            />
+            <div className="text-sm font-bold text-slate-300">
+              Игрок
+              {' '}
+              {playerIndex + 1}
+            </div>
+          </div>
+
+          {/* Status badge */}
           {!isTied && (
             <div className={cn(
-              'text-3xl font-black leading-none transition-all duration-300',
-              isWinning ? 'text-green-400' : 'text-red-400',
+              'flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold transition-all duration-300 border',
+              isWinning
+                ? 'bg-green-500/20 text-green-300 border-green-400/30'
+                : 'bg-red-500/20 text-red-300 border-red-400/30',
             )}
             >
-              {isWinning ? '▲' : '▼'}
+              <span className="text-sm">
+                {isWinning ? '▲' : '▼'}
+              </span>
+              <span className="uppercase tracking-wide">
+                {isWinning ? 'Лидер' : 'Отстаёт'}
+              </span>
             </div>
           )}
         </div>
+
+        {/* Stats display */}
+        <div className="grid grid-cols-2 gap-4">
+          {/* Letters count */}
+          <div className="bg-slate-800 border border-slate-700 p-4 transition-all duration-300 hover:bg-slate-700">
+            <div className="text-center">
+              <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
+                Буквы
+              </div>
+              <div
+                className={cn(
+                  'text-2xl font-bold transition-colors duration-300',
+                  scoreColor,
+                )}
+              >
+                {letterCount}
+              </div>
+            </div>
+          </div>
+
+          {/* Score */}
+          <div className="bg-slate-800 border border-slate-700 p-4 transition-all duration-300 hover:bg-slate-700">
+            <div className="text-center">
+              <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
+                Счёт
+              </div>
+              <div
+                className={cn(
+                  'text-2xl font-bold transition-colors duration-300',
+                  scoreColor,
+                )}
+              >
+                {score}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Words list */}
-      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 min-h-0">
-        <div className="space-y-2">
+      {/* Enhanced words list */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0 relative">
+        <div className="space-y-3">
           {playerWords.length === 0
             ? (
-                <div className="text-slate-500 text-base italic py-2 text-center">Пока нет слов</div>
-              )
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="w-16 h-16 bg-slate-800 flex items-center justify-center mb-4">
+                  <span className="text-2xl">📝</span>
+                </div>
+                <div className="text-slate-400 text-sm font-medium">
+                  Пока нет слов
+                </div>
+                <div className="text-slate-500 text-xs mt-1">
+                  Слова появятся здесь
+                </div>
+              </div>
+            )
             : (
-                playerWords.map((word, i) => (
-                  <div
-                    key={i}
-                    className="px-2 sm:px-3 py-2 bg-slate-900 hover:bg-slate-700 text-base font-mono text-gray-100 transition-all duration-200 border-2 border-slate-700 hover:border-cyan-500 hover:shadow-depth-2 flex items-center justify-between group"
-                  >
-                    <span className="font-black">{word}</span>
-                    <span className="text-sm text-slate-400 group-hover:text-cyan-400 font-bold">
-                      #
-                      {i + 1}
-                    </span>
+              playerWords.map((word, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    'group relative transition-all duration-300',
+                    'bg-slate-800 border border-slate-700 hover:border-cyan-400',
+                    'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
+                    'hover:bg-slate-700',
+                  )}
+                >
+                  <div className="px-4 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
+                        {i + 1}
+                      </div>
+                      <span className="font-bold text-lg text-slate-100 group-hover:text-cyan-100 transition-colors duration-200">
+                        {word}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <div className="text-xs font-bold text-slate-500 group-hover:text-cyan-400 transition-colors duration-200">
+                        {word.length}
+                        {' '}
+                        букв
+                      </div>
+                      <div className="w-2 h-2 bg-cyan-400/50 group-hover:bg-cyan-400 transition-colors duration-200" />
+                    </div>
                   </div>
-                ))
-              )}
+
+                  {/* Hover effect overlay */}
+                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+              ))
+            )}
         </div>
       </div>
     </div>
