@@ -3,13 +3,17 @@ import { memo } from 'react'
 import { usePlayerStats } from '../hooks/usePlayerStats'
 import { cn } from '../utils/classNames'
 
-interface PlayerPanelProps {
+export interface PlayerPanelProps {
   game: GameState
   playerIndex: 0 | 1
-  currentPlayerName: string
 }
 
-export const PlayerPanel = memo(({ game, playerIndex, currentPlayerName: _currentPlayerName }: PlayerPanelProps) => {
+/**
+ * Player Panel Component
+ * Displays player stats sidebar with score, word history, and current turn indicator
+ * Shows win/lose indicator and highlights active player's turn
+ */
+export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
 
   // Use extracted hook for player statistics

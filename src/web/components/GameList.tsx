@@ -1,18 +1,24 @@
 import type { GameState } from '../lib/client'
 import type { BadgeVariant } from './ui'
+import { memo } from 'react'
 import { STATUS_CONFIG } from '../constants/statusConfig'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 import { formatTimeAgo, getBaseWord, getGameStatus } from '../utils/gameHelpers'
 import { getRussianPluralForm } from '../utils/russianPlural'
 import { Badge, Button, Card } from './ui'
 
-interface GameListProps {
+export interface GameListProps {
   games: GameState[]
   onJoin: (gameId: string, playerName: string) => void
   onBack: () => void
 }
 
-export function GameList({ games, onJoin, onBack }: GameListProps) {
+/**
+ * Game List Component
+ * Displays available games for joining with game status, board size, and player info
+ * Shows empty state when no games are available
+ */
+export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
   const { handleKeyDown } = useKeyboardNavigation()
 
   const handleJoin = (game: GameState) => {
@@ -174,4 +180,6 @@ export function GameList({ games, onJoin, onBack }: GameListProps) {
       </div>
     </div>
   )
-}
+})
+
+GameList.displayName = 'GameList'

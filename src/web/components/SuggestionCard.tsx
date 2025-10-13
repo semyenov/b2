@@ -77,8 +77,8 @@ export const SuggestionCard = memo(({
         'transition-all duration-200',
         'hover:ring-2 hover:ring-cyan-400/50',
         'hover:shadow-depth-2',
-        'px-2.5 py-2',
-        'flex items-center gap-2',
+        'px-3 py-2.5',
+        'flex items-center gap-2.5',
         // Keyboard focus
         isKeyboardFocused && 'ring-2 ring-cyan-400',
       )}
@@ -92,7 +92,7 @@ export const SuggestionCard = memo(({
       </div>
 
       {/* Word - Hero Element */}
-      <div className="flex-1 text-gray-100 font-black uppercase text-sm tracking-wide text-left truncate">
+      <div className="flex-1 text-gray-100 font-black uppercase text-base tracking-wide text-left truncate">
         {suggestion.word}
       </div>
 
@@ -107,8 +107,8 @@ export const SuggestionCard = memo(({
       </div>
 
       {/* Score Badge */}
-      <Badge variant={scoreVariant} size="sm" className="min-w-[32px] text-center font-bold">
-        {suggestion.score.toFixed(0)}
+      <Badge variant={scoreVariant} size="md" className="min-w-[40px] text-center font-black text-base">
+        {Math.round(suggestion.score)}
       </Badge>
     </button>
   )

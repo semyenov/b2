@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import { resolve } from 'pathe'
 
 export default defineConfig({
   plugins: [react()],
@@ -9,8 +10,12 @@ export default defineConfig({
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '@components': resolve(__dirname, 'src/web/components'),
+    },
   },
   server: {
+    
     port: 5173,
     proxy: {
       '/api': {

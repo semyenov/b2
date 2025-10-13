@@ -1,7 +1,4 @@
-import { Banner } from './components/Banner'
-import { CreateGame } from './components/CreateGame'
-import { GameList } from './components/GameList'
-import { GameScreen, MenuScreen } from './components/screens'
+import { Banner, CreateGame, GameList, GameScreen, MenuScreen } from '@components'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameControls } from './hooks/useGameControls'

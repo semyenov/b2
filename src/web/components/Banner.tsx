@@ -1,12 +1,17 @@
 import { memo } from 'react'
 import { cn } from '../utils/classNames'
 
-interface BannerProps {
+export interface BannerProps {
   variant: 'error' | 'loading' | 'warning'
   message: string
   onClose?: () => void
 }
 
+/**
+ * Banner Component
+ * Toast-style notification that appears in the top-right corner
+ * Supports error, loading, and warning variants with optional close button
+ */
 const variantStyles = {
   error: 'bg-red-700 border-red-600',
   loading: 'bg-blue-600 border-blue-500',

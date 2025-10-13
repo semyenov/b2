@@ -1,11 +1,12 @@
 import type { Position } from '../types/game'
+import { memo } from 'react'
 import { useFullscreen } from '../hooks/useFullscreen'
 import { getGameStep } from '../utils/gameStepUtils'
 import { isClearButtonDisabled } from '../utils/uiHelpers'
 import { StatusMessage } from './StatusMessage'
 import { Button } from './ui'
 
-interface ControlButtonsProps {
+export interface ControlButtonsProps {
   isMyTurn: boolean
   selectedCell?: Position
   selectedLetter?: string
@@ -18,7 +19,12 @@ interface ControlButtonsProps {
   onExit: () => void
 }
 
-export function ControlButtons({
+/**
+ * Control Buttons Component
+ * Bottom control bar with game actions: exit, fullscreen, status messages, submit, AI toggle, and clear
+ * Displays different status messages based on current game step
+ */
+export const ControlButtons = memo<ControlButtonsProps>(({ 
   isMyTurn,
   selectedCell,
   selectedLetter,
@@ -29,7 +35,7 @@ export function ControlButtons({
   onClearSelection,
   onToggleSuggestions,
   onExit,
-}: ControlButtonsProps) {
+}) => {
   const { toggleFullscreen } = useFullscreen()
 
   const gameStep = getGameStep({
@@ -42,9 +48,9 @@ export function ControlButtons({
   const isClearDisabled = isClearButtonDisabled(isMyTurn, selectedCell, selectedLetter, wordPath)
 
   return (
-    <div className="flex items-center gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)] flex-1 min-w-0 flex-wrap sm:flex-nowrap">
+    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 flex-wrap sm:flex-nowrap">
       {/* Left: Exit and Fullscreen buttons */}
-      <div className="flex items-center gap-[var(--spacing-resp-xs)] flex-shrink-0">
+      <div className="flex items-center gap-3 flex-shrink-0">
         <Button
           type="button"
           variant="gray"
@@ -89,7 +95,7 @@ export function ControlButtons({
       </div>
 
       {/* Right side: AI and Clear buttons */}
-      <div className="flex flex-shrink-0 w-0 sm:w-auto flex-row gap-[var(--spacing-resp-xs)] sm:gap-[var(--spacing-resp-sm)]">
+      <div className="flex flex-shrink-0 w-0 sm:w-auto flex-row gap-3">
         {/* AI suggestions toggle button */}
         <Button
           type="button"
@@ -118,4 +124,6 @@ export function ControlButtons({
       </div>
     </div>
   )
-}
+})
+
+ControlButtons.displayName = 'ControlButtons'

@@ -3,10 +3,7 @@ import type { Position } from '../../types/game'
 import { memo, useMemo } from 'react'
 import { buildMoveBody, canSubmitMove } from '../../utils/moveValidation'
 import { getFormedWord } from '../../utils/wordUtils'
-import { Board } from '../Board'
-import { ControlButtons } from '../ControlButtons'
-import { GamePanel } from '../GamePanel'
-import { PlayerPanel } from '../PlayerPanel'
+import { Board, ControlButtons, GamePanel, PlayerPanel } from '@components'
 
 interface GameScreenProps {
   game: GameState

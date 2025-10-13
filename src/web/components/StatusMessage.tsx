@@ -1,10 +1,15 @@
 import { memo } from 'react'
 import { cn } from '../utils/classNames'
 
-interface StatusMessageProps {
+export interface StatusMessageProps {
   step: 'waiting' | 'select-cell' | 'select-letter' | 'build-word'
 }
 
+/**
+ * Status Message Component
+ * Displays step-by-step game instructions in the control bar
+ * Shows different messages with icons for each game phase
+ */
 const stepConfig = {
   'waiting': {
     icon: '⏳',
@@ -33,7 +38,7 @@ export const StatusMessage = memo(({ step }: StatusMessageProps) => {
 
   return (
     <div className={cn(
-      'px-[var(--spacing-resp-lg)] py-[var(--spacing-resp-xs)] border-2 shadow-depth-1 font-bold text-[var(--text-resp-sm)]',
+      'px-4 py-3 border-2 shadow-depth-1 font-bold text-sm',
       config.className,
     )}
     >

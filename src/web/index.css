@@ -28,7 +28,7 @@
   --size-resp-panel: clamp(280px, 15vw, 320px);
 
   /* Control panel height - used for spacing calculations */
-  --height-control-panel: 60px;
+  --height-control-panel: 80px;
 
   /* PlayerPanel specific sizes */
   --text-resp-score: clamp(3rem, 5vw, 5rem);

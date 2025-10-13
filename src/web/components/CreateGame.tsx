@@ -5,11 +5,16 @@ import { useCreateGameForm } from '../hooks/useCreateGameForm'
 import { cn } from '../utils/classNames'
 import { Button, Card, Input } from './ui'
 
-interface CreateGameProps {
+export interface CreateGameProps {
   onSubmit: (body: CreateGameBody) => void
   onBack: () => void
 }
 
+/**
+ * Create Game Component
+ * Form screen for creating a new game with custom board size and base word
+ * Provides validation and feedback for user input
+ */
 export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
   const { size, baseWord, error, setSize, setBaseWord, handleSubmit } = useCreateGameForm({ onSubmit })
 

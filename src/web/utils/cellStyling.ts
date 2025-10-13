@@ -42,13 +42,13 @@ export function getCellClassName({
 
     // Interactive styling
     {
-      'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-slate-700 hover:z-10 hover:border-cyan-400 hover:ring-2 hover:ring-cyan-500/50': canClick,
+      'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-slate-700 hover:z-10 hover:border-yellow-400 hover:ring-2 hover:ring-yellow-500/50': canClick,
       'cursor-default': !canClick,
     },
 
     // Hover ring
     {
-      'ring-4 ring-blue-400': isHovered && canClick && selected,
+      'ring-4 ring-yellow-400': isHovered && canClick && selected,
       'ring-4 ring-yellow-400 bg-slate-700 border-yellow-500': isHovered && canClick && !selected,
     },
   )

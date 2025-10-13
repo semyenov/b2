@@ -19,7 +19,12 @@
     "noUnusedParameters": true,
     "noEmit": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@components": ["components/index.ts"],
+      "@components/*": ["components/*"]
+    }
   },
   "include": ["./**/*"],
   "exclude": ["node_modules"]

@@ -6,7 +6,7 @@ import { canClickCell, getPositionPathIndex, isPositionInWordPath, isPositionSel
 import { getCellClassName } from '../utils/cellStyling'
 import { getCellAriaLabel } from '../utils/coordinateLabels'
 
-interface BoardProps {
+export interface BoardProps {
   game: GameState
   selectedCell?: { row: number, col: number }
   selectedLetter?: string
@@ -15,6 +15,11 @@ interface BoardProps {
   disabled?: boolean
 }
 
+/**
+ * Board Component
+ * Renders the game board grid with coordinate labels (Russian letters for columns, numbers for rows)
+ * Displays cells with letters, handles selection, hover states, and word path visualization
+ */
 export const Board = memo(({
   game,
   selectedCell,
@@ -32,15 +37,42 @@ export const Board = memo(({
   const gridSize = board.length
 
   return (
-    <div className="h-full aspect-square mx-auto" style={{ maxHeight: '100%' }}>
-      {/* Board grid - height-driven, maintains square aspect */}
-      <div
-        className="w-full h-full grid gap-0.5 bg-slate-950 p-1"
-        style={{
-          gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-          gridTemplateRows: `repeat(${gridSize}, 1fr)`,
-        }}
-      >
+    <div className="h-full aspect-square mx-auto flex flex-col" style={{ maxHeight: '100%' }}>
+      {/* Column headers (Russian letters: А, Б, В, Г, Д) */}
+      <div className="flex items-center justify-center mb-1">
+        <div className="w-8 shrink-0" /> {/* Spacer for row numbers */}
+        {Array.from({ length: gridSize }, (_, i) => (
+          <div
+            key={`col-${i}`}
+            className="flex-1 flex items-center justify-center text-cyan-400 font-black text-lg tracking-wider"
+          >
+            {String.fromCharCode(1040 + i)} {/* А=1040 in Unicode */}
+          </div>
+        ))}
+      </div>
+
+      {/* Board container with row labels */}
+      <div className="flex-1 flex items-center gap-1">
+        {/* Row numbers */}
+        <div className="flex flex-col justify-around h-full w-8 shrink-0">
+          {Array.from({ length: gridSize }, (_, i) => (
+            <div
+              key={`row-${i}`}
+              className="flex items-center justify-center text-cyan-400 font-black text-lg"
+            >
+              {i}
+            </div>
+          ))}
+        </div>
+
+        {/* Board grid - height-driven, maintains square aspect */}
+        <div
+          className="flex-1 h-full grid gap-0.5 bg-slate-950 p-1"
+          style={{
+            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+            gridTemplateRows: `repeat(${gridSize}, 1fr)`,
+          }}
+        >
         {board.map((row, rowIndex) =>
           row.map((cell, colIndex) => {
             const canClick = canClickCell({
@@ -104,6 +136,7 @@ export const Board = memo(({
             )
           }),
         )}
+        </div>
       </div>
     </div>
   )
