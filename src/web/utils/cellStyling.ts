@@ -35,7 +35,7 @@ export function getCellClassName({
 }: GetCellClassNameOptions): string {
   return cn(
     // Base classes - flexible sizing
-    'aspect-square w-full border flex items-center justify-center text-[length:var(--text-resp-board)] font-black transition-all duration-200 relative leading-none',
+    'aspect-square w-full border flex items-center justify-center text-[length:calc(var(--text-resp-board)*0.85)] font-black transition-all duration-200 relative leading-none',
 
     // State-based styling
     {

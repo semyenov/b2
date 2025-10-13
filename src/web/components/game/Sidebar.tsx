@@ -33,7 +33,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
             <div
               key={i}
               className={cn(
-                'w-[3px] h-[3px] transition-all duration-300',
+                'w-[2px] h-[2px] transition-all duration-300',
                 {
                   'bg-yellow-500/30 animate-pulse': isCurrentTurn,
                   'bg-slate-600/40': !isCurrentTurn,
