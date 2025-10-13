@@ -29,7 +29,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
       <div className="px-4 py-4 border-b shrink-0 transition-all duration-300 bg-slate-900 border-slate-700 relative">
         {/* Move indicator - absolutely positioned at vertical center */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col gap-1">
-          {Array.from({ length: 18 }, (_, i) => (
+          {Array.from({ length: 16 }, (_, i) => (
             <div
               key={i}
               className={cn(

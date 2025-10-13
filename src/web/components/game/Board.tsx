@@ -107,9 +107,21 @@ export const Board = memo(({
                           {displayContent}
                         </div>
                       )
-                    : (
-                        displayContent
-                      )}
+                    : selected && !cell && selectedLetter
+                      ? (
+                          <div className="text-[length:calc(var(--text-resp-board)*0.85)] text-cyan-200 font-black">
+                            {selectedLetter}
+                          </div>
+                        )
+                      : selected && !cell
+                        ? (
+                            <div className="text-2xl text-cyan-200 font-bold">
+                              {getCoordLabel(rowIndex, colIndex)}
+                            </div>
+                          )
+                        : (
+                            displayContent
+                          )}
                   {inPath && pathIdx >= 0 && (
                     <div className="absolute top-0 right-0 w-6 h-6 bg-emerald-800 text-white text-base flex items-center justify-center font-bold border-l border-b border-emerald-400">
                       {pathIdx + 1}

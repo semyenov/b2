@@ -93,13 +93,13 @@ export const SuggestionCard = memo(({
         </span>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         {/* Position Badge */}
         <div className="flex items-center gap-3">
-          <span className="text-cyan-300 font-mono font-bold text-lg">
+          <span className="text-cyan-200 font-mono font-black text-xl">
             {posStr}
           </span>
-          <div className="bg-yellow-500/20 border border-yellow-500/30 px-2 py-1">
+          <div className="bg-yellow-500/20 border border-yellow-500/30 px-2 py-1 w-8 h-8 flex items-center justify-center">
             <span className="text-yellow-300 font-black text-lg">
               {suggestion.letter}
             </span>
