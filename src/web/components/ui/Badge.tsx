@@ -44,7 +44,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   warning: 'bg-yellow-900 text-yellow-300 border-yellow-600',
   danger: 'bg-red-900 text-red-300 border-red-600',
   info: 'bg-blue-900 text-blue-300 border-blue-600',
-  gray: 'bg-gray-700 text-gray-300 border-gray-600',
+  gray: 'bg-slate-700 text-slate-300 border-slate-600',
 }
 
 /**

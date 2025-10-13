@@ -69,7 +69,7 @@ export const Input = memo(
           {label && (
             <label
               htmlFor={inputId}
-              className="block text-base font-bold text-gray-300"
+              className="block text-base font-bold text-slate-300"
             >
               {label}
             </label>
@@ -88,12 +88,12 @@ export const Input = memo(
               // Base styles
               'w-full px-6 py-4 font-bold transition-all duration-200',
               // Colors
-              'bg-gray-900 text-gray-100 placeholder-gray-600',
+              'bg-slate-900 text-slate-100 placeholder-slate-600',
               // Border
               'border-2',
               error
                 ? 'border-red-500 focus:border-red-400'
-                : 'border-gray-700 focus:border-cyan-400',
+                : 'border-slate-700 focus:border-cyan-400',
               // Focus
               'focus:outline-none focus:ring-2',
               error
@@ -107,7 +107,7 @@ export const Input = memo(
 
           {/* Help text */}
           {helpText && !error && (
-            <p id={helpTextId} className="text-xs text-gray-500">
+            <p id={helpTextId} className="text-xs text-slate-500">
               {helpText}
             </p>
           )}

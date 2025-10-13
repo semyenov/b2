@@ -33,7 +33,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-cyan-400 mb-2">Доступные игры</h1>
-            <p className="text-gray-400 text-base">Присоединитесь к существующей игре или создайте новую</p>
+            <p className="text-slate-400 text-base">Присоединитесь к существующей игре или создайте новую</p>
           </div>
           <Button variant="gray" size="md" onClick={onBack}>
             ← Назад в меню
@@ -45,8 +45,8 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
           ? (
               <Card variant="default" padding="spacious" className="text-center">
                 <div className="text-6xl mb-4">🎮</div>
-                <h3 className="text-xl font-bold text-gray-300 mb-2">Нет доступных игр</h3>
-                <p className="text-gray-400 text-base mb-6">Станьте первым, кто создаст игру!</p>
+                <h3 className="text-xl font-bold text-slate-300 mb-2">Нет доступных игр</h3>
+                <p className="text-slate-400 text-base mb-6">Станьте первым, кто создаст игру!</p>
                 <Button variant="primary" size="lg" onClick={onBack}>
                   Создать новую игру
                 </Button>
@@ -54,7 +54,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
             )
           : (
               <>
-                <div className="text-gray-400 mb-4">
+                <div className="text-slate-400 mb-4">
                   {games.length}
                   {' '}
                   {getRussianPluralForm(games.length, ['игра', 'игры', 'игр'])}
@@ -95,7 +95,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                           <Badge variant={badgeVariant} size="md">
                             {statusInfo.label}
                           </Badge>
-                          <div className="text-xs text-gray-500">{timeAgo}</div>
+                          <div className="text-xs text-slate-500">{timeAgo}</div>
                         </div>
 
                         {/* Base Word */}
@@ -103,7 +103,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                           <div className="text-2xl font-bold text-cyan-400 tracking-wider mb-1">
                             {baseWord}
                           </div>
-                          <div className="text-xs text-gray-500 font-mono">
+                          <div className="text-xs text-slate-500 font-mono">
                             {game.id.substring(0, 8)}
                             ...
                           </div>
@@ -112,20 +112,20 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                         {/* Game Info */}
                         <div className="space-y-2 mb-5 text-sm">
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-400">Доска:</span>
-                            <span className="text-gray-200 font-mono">
+                            <span className="text-slate-400">Доска:</span>
+                            <span className="text-slate-200 font-mono">
                               {game.size}
                               ×
                               {game.size}
                             </span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-400">Ход:</span>
-                            <span className="text-gray-200 font-bold">{turnNumber}</span>
+                            <span className="text-slate-400">Ход:</span>
+                            <span className="text-slate-200 font-bold">{turnNumber}</span>
                           </div>
                           {status === 'in_progress' && (
                             <div className="flex items-center justify-between">
-                              <span className="text-gray-400">Сейчас:</span>
+                              <span className="text-slate-400">Сейчас:</span>
                               <span className="text-yellow-300 font-bold text-xs">
                                 {currentPlayer}
                               </span>
@@ -134,7 +134,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                         </div>
 
                         {/* Players & Scores */}
-                        <div className="border-t border-gray-700 pt-4 mb-5">
+                        <div className="border-t border-slate-700 pt-4 mb-5">
                           <div className="space-y-2">
                             {game.players.map((player, idx) => (
                               <div
@@ -145,13 +145,13 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                                   <span className={
                                     idx === game.currentPlayerIndex
                                       ? 'text-yellow-300 font-bold'
-                                      : 'text-gray-400'
+                                      : 'text-slate-400'
                                   }
                                   >
                                     {player}
                                   </span>
                                 </div>
-                                <span className="font-mono font-bold text-xl text-gray-200">
+                                <span className="font-mono font-bold text-xl text-slate-200">
                                   {game.scores[player] || 0}
                                 </span>
                               </div>
