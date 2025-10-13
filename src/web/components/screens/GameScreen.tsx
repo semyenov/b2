@@ -1,9 +1,8 @@
 import type { GameState, Suggestion } from '../../lib/client'
 import type { Position } from '../../types/game'
 import { Board, ControlButtons, GamePanel, PlayerPanel } from '@components'
-import { memo, useMemo } from 'react'
-import { buildMoveBody, canSubmitMove } from '../../utils/moveValidation'
-import { getFormedWord } from '../../utils/wordUtils'
+import { memo } from 'react'
+import { useGameActions } from '../../hooks/useGameActions'
 
 interface GameScreenProps {
   game: GameState
@@ -50,23 +49,17 @@ export const GameScreen = memo(({
   onHideSuggestions,
   onExit,
 }: GameScreenProps) => {
-  // Memoize formed word for display
-  const formedWord = useMemo(
-    () => selectedLetter ? getFormedWord(game, selectedCell, selectedLetter, wordPath) : '',
-    [game, selectedCell, selectedLetter, wordPath],
-  )
-
-  const handleSubmitMove = () => {
-    if (canSubmitMove(selectedCell, selectedLetter, wordPath) && selectedCell && selectedLetter) {
-      const moveBody = buildMoveBody(playerName, selectedCell, selectedLetter, formedWord)
-      onSubmitMove(moveBody)
-    }
-  }
-
-  const handleSuggestionSelect = (suggestion: Suggestion) => {
-    onSuggestionSelect(suggestion)
-    onHideSuggestions()
-  }
+  // Use extracted game actions hook
+  const { formedWord, handleSubmitMove, handleSuggestionSelect } = useGameActions({
+    game,
+    playerName,
+    selectedCell,
+    selectedLetter,
+    wordPath,
+    onSubmitMove,
+    onSuggestionSelect,
+    onHideSuggestions,
+  })
 
   return (
     <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 overflow-hidden">

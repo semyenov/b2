@@ -4,7 +4,7 @@ import { useHover } from '../hooks/useHover'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 import { canClickCell, getPositionPathIndex, isPositionInWordPath, isPositionSelected } from '../utils/boardValidation'
 import { getCellClassName } from '../utils/cellStyling'
-import { getCellAriaLabel } from '../utils/coordinateLabels'
+import { getCellAriaLabel, getCoordLabel } from '../utils/coordinateLabels'
 
 export interface BoardProps {
   game: GameState
@@ -38,11 +38,11 @@ export const Board = memo(({
 
   return (
     <div className="h-full aspect-square mx-auto flex flex-col" style={{ maxHeight: '100%' }}>
-      {/* Board container with row labels */}
+      {/* Board container with enhanced styling */}
       <div className="flex-1 flex items-center gap-1">
-        {/* Board grid - height-driven, maintains square aspect */}
+        {/* Board grid - height-driven, maintains square aspect with enhanced visual design */}
         <div
-          className="grid w-full h-full border border-slate-700"
+          className="grid w-full h-full border-2 border-slate-500 shadow-2xl bg-slate-800"
           style={{
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
             gridTemplateRows: `repeat(${gridSize}, 1fr)`,
@@ -69,8 +69,8 @@ export const Board = memo(({
               if (selected && !cell && selectedLetter) {
                 displayContent = selectedLetter
               }
-              if (!displayContent) {
-                displayContent = '·'
+              if (!displayContent && !selected) {
+                displayContent = getCoordLabel(rowIndex, colIndex)
               }
 
               return (
@@ -101,9 +101,17 @@ export const Board = memo(({
                     isHovered,
                   })}
                 >
-                  {displayContent}
+                  {!cell && !selected
+                    ? (
+                      <div className="text-xs text-slate-500 font-medium">
+                        {displayContent}
+                      </div>
+                    )
+                    : (
+                      displayContent
+                    )}
                   {inPath && pathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-10 h-10 bg-green-800 text-white text-base flex items-center justify-center font-bold border border-green-600">
+                    <div className="absolute top-0 right-0 w-8 h-8 bg-emerald-600 text-white text-sm flex items-center justify-center font-bold border-2 border-emerald-400 shadow-lg ring-2 ring-emerald-400/50">
                       {pathIdx + 1}
                     </div>
                   )}

@@ -112,56 +112,56 @@ export const PlayerPanel = memo(({ game, playerIndex }: PlayerPanelProps) => {
         <div className="space-y-3">
           {playerWords.length === 0
             ? (
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <div className="w-16 h-16 bg-slate-800 flex items-center justify-center mb-4">
-                  <span className="text-2xl">📝</span>
-                </div>
-                <div className="text-slate-400 text-sm font-medium">
-                  Пока нет слов
-                </div>
-                <div className="text-slate-500 text-xs mt-1">
-                  Слова появятся здесь
-                </div>
-              </div>
-            )
-            : (
-              playerWords.slice().reverse().map((word, i) => (
-                <div
-                  key={playerWords.length - i}
-                  className={cn(
-                    'group relative transition-all duration-300',
-                    'bg-slate-800 border border-slate-700 hover:border-cyan-400',
-                    'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
-                    'hover:bg-slate-700',
-                    'animate-fade-slide-in',
-                  )}
-                  style={{ animationDelay: `${i * 50}ms` }}
-                >
-                  <div className="px-4 py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
-                        {playerWords.length - i}
-                      </div>
-                      <span className="font-bold text-lg text-slate-100 group-hover:text-cyan-100 transition-colors duration-200">
-                        {word}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <div className="text-xs font-bold text-slate-500 group-hover:text-cyan-400 transition-colors duration-200">
-                        {word.length}
-                        {' '}
-                        букв
-                      </div>
-                      <div className="w-2 h-2 bg-cyan-400/50 group-hover:bg-cyan-400 transition-colors duration-200" />
-                    </div>
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <div className="w-16 h-16 bg-slate-800 flex items-center justify-center mb-4">
+                    <span className="text-2xl">📝</span>
                   </div>
-
-                  {/* Hover effect overlay */}
-                  <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="text-slate-400 text-sm font-medium">
+                    Пока нет слов
+                  </div>
+                  <div className="text-slate-500 text-xs mt-1">
+                    Слова появятся здесь
+                  </div>
                 </div>
-              ))
-            )}
+              )
+            : (
+                playerWords.slice().reverse().map((word, i) => (
+                  <div
+                    key={playerWords.length - i}
+                    className={cn(
+                      'group relative transition-all duration-300',
+                      'bg-slate-800 border border-slate-700 hover:border-cyan-400',
+                      'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
+                      'hover:bg-slate-700',
+                      'animate-fade-slide-in',
+                    )}
+                    style={{ animationDelay: `${i * 50}ms` }}
+                  >
+                    <div className="px-4 py-3 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
+                          {playerWords.length - i}
+                        </div>
+                        <span className="font-bold text-lg text-slate-100 group-hover:text-cyan-100 transition-colors duration-200">
+                          {word}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <div className="text-xs font-bold text-slate-500 group-hover:text-cyan-400 transition-colors duration-200">
+                          {word.length}
+                          {' '}
+                          букв
+                        </div>
+                        <div className="w-2 h-2 bg-cyan-400/50 group-hover:bg-cyan-400 transition-colors duration-200" />
+                      </div>
+                    </div>
+
+                    {/* Hover effect overlay */}
+                    <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                ))
+              )}
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import type { Suggestion } from '../lib/client'
-import { useEffect, useState } from 'react'
+import { useAnimatedPanel } from '../hooks/useAnimatedPanel'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { cn } from '../utils/classNames'
 import { shouldShowAlphabetPanel } from '../utils/uiHelpers'
@@ -37,27 +37,9 @@ export function GamePanel({
   onHideSuggestions,
 }: GamePanelProps) {
   const shouldShowPanel = shouldShowAlphabetPanel(showSuggestions, selectedCell, selectedLetter)
-  const [isVisible, setIsVisible] = useState(false)
-  const [isClosing, setIsClosing] = useState(false)
 
-  // Handle panel visibility with animation
-  useEffect(() => {
-    if (shouldShowPanel) {
-      setIsVisible(true)
-      setIsClosing(false)
-    }
-    else if (isVisible) {
-      // Start closing animation
-      setIsClosing(true)
-      // Wait for animation to complete before hiding
-      const timer = setTimeout(() => {
-        setIsVisible(false)
-        setIsClosing(false)
-      }, 300) // Match animation duration
-
-      return () => clearTimeout(timer)
-    }
-  }, [shouldShowPanel, isVisible])
+  // Use extracted animation hook
+  const { isVisible, isClosing } = useAnimatedPanel(shouldShowPanel)
 
   // Click outside handler - only active when panel is shown
   const panelRef = useClickOutside<HTMLDivElement>(
