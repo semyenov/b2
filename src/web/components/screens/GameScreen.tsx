@@ -69,7 +69,7 @@ export const GameScreen = memo(({
   }
 
   return (
-    <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
+    <div className="relative h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 overflow-hidden">
       {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
       <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[var(--size-resp-panel)_1fr_var(--size-resp-panel)] gap-4 lg:gap-6 p-3 lg:p-6 pb-0 overflow-hidden relative">
         {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
@@ -89,7 +89,7 @@ export const GameScreen = memo(({
         </div>
 
         {/* Center: Board Only - centered vertically */}
-        <div className="h-full min-h-0 flex items-center justify-center max-w-full overflow-hidden">
+        <div className="h-full min-h-0 flex items-center justify-center max-w-full">
           <Board
             game={game}
             selectedCell={selectedCell}

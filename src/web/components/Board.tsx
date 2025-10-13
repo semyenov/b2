@@ -38,40 +38,11 @@ export const Board = memo(({
 
   return (
     <div className="h-full aspect-square mx-auto flex flex-col" style={{ maxHeight: '100%' }}>
-      {/* Column headers (Russian letters: А, Б, В, Г, Д) */}
-      <div className="flex items-center justify-center mb-1">
-        <div className="w-8 shrink-0" />
-        {' '}
-        {/* Spacer for row numbers */}
-        {Array.from({ length: gridSize }, (_, i) => (
-          <div
-            key={`col-${i}`}
-            className="flex-1 flex items-center justify-center text-cyan-700 opacity-50 font-black text-lg tracking-wider"
-          >
-            {String.fromCharCode(1040 + i)}
-            {' '}
-            {/* А=1040 in Unicode */}
-          </div>
-        ))}
-      </div>
-
       {/* Board container with row labels */}
       <div className="flex-1 flex items-center gap-1">
-        {/* Row numbers */}
-        <div className="flex flex-col justify-around h-full w-8 shrink-0">
-          {Array.from({ length: gridSize }, (_, i) => (
-            <div
-              key={`row-${i}`}
-              className="flex items-center justify-center text-cyan-700 opacity-50 font-black text-lg"
-            >
-              {i}
-            </div>
-          ))}
-        </div>
-
         {/* Board grid - height-driven, maintains square aspect */}
         <div
-          className="flex-1 h-full grid gap-0.5 bg-slate-950 p-1"
+          className="grid w-full h-full border border-slate-700"
           style={{
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
             gridTemplateRows: `repeat(${gridSize}, 1fr)`,
@@ -132,7 +103,7 @@ export const Board = memo(({
                 >
                   {displayContent}
                   {inPath && pathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-5 h-5 bg-green-800 text-white text-[10px] flex items-center justify-center font-bold border border-green-600">
+                    <div className="absolute top-0 right-0 w-10 h-10 bg-green-800 text-white text-base flex items-center justify-center font-bold border border-green-600">
                       {pathIdx + 1}
                     </div>
                   )}
