@@ -39,9 +39,9 @@ export function getCellClassName({
 
     // State-based styling
     {
-      'bg-blue-600 border-blue-300 text-white shadow-depth-3 ring-2 ring-blue-400/50': selected,
-      'bg-emerald-600 border-emerald-300 text-white shadow-depth-3 ring-2 ring-emerald-400/50': !selected && inPath,
-      'bg-slate-700 border-slate-600 text-cyan-300 shadow-depth-2': !selected && !inPath && hasCell,
+      'bg-cyan-800 border-cyan-300 text-white shadow-depth-3 ring-2 ring-cyan-400/50': selected,
+      'bg-emerald-700 border-emerald-300 text-white shadow-depth-3 ring-2 ring-emerald-400/50': !selected && inPath,
+      'bg-slate-800 border-slate-700 text-slate-300 shadow-depth-2': !selected && !inPath && hasCell,
       'bg-slate-900 border-slate-700 text-slate-600': !selected && !inPath && !hasCell,
     },
 

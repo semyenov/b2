@@ -22,7 +22,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
   return (
     <div className={cn(
       'flex flex-col h-full w-full min-h-0 transition-all duration-300',
-      'bg-slate-800 border border-slate-700',
+      'bg-slate-800 border-2 border-slate-600',
     )}
     >
       {/* Clean Header Panel */}
@@ -58,14 +58,14 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                 Буквы
               </div>
               <div className="flex items-center justify-center gap-2">
-                <div className="text-2xl font-bold text-slate-100 transition-colors duration-300">
+                <div className="text-2xl font-bold text-slate-300 transition-colors duration-300">
                   {letterCount}
                 </div>
                 {!isLetterCountTied && (
                   <div className={cn(
                     'text-xs font-bold transition-all duration-300',
                     isWinningByLetters
-                      ? 'text-green-400'
+                      ? 'text-emerald-400'
                       : 'text-red-400',
                   )}
                   >
@@ -83,14 +83,14 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                 Счёт
               </div>
               <div className="flex items-center justify-center gap-2">
-                <div className="text-2xl font-bold text-slate-100 transition-colors duration-300">
+                <div className="text-2xl font-bold text-slate-300 transition-colors duration-300">
                   {score}
                 </div>
                 {!isScoreTied && (
                   <div className={cn(
                     'text-xs font-bold transition-all duration-300',
                     isWinningByScore
-                      ? 'text-green-400'
+                      ? 'text-emerald-400'
                       : 'text-red-400',
                   )}
                   >
@@ -138,7 +138,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                         <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
                           {playerWords.length - i}
                         </div>
-                        <span className="font-bold text-lg text-slate-100 group-hover:text-cyan-100 transition-colors duration-200">
+                        <span className="font-bold text-xl text-slate-300 group-hover:text-slate-300 transition-colors duration-200">
                           {word}
                         </span>
                       </div>

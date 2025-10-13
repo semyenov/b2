@@ -92,7 +92,7 @@ export const SuggestionCard = memo(({
       </div>
 
       {/* Word - Hero Element */}
-      <div className="flex-1 text-slate-100 font-black uppercase text-base tracking-wide text-left truncate">
+      <div className="flex-1 text-slate-300 font-black uppercase text-base tracking-wide text-left truncate">
         {suggestion.word}
       </div>
 

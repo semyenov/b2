@@ -70,14 +70,14 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'cla
  * Variant styles mapping
  */
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white border-2 border-blue-500 shadow-depth-2 hover:shadow-depth-3',
+  primary: 'bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-500 hover:to-cyan-600 text-white border-2 border-cyan-500 shadow-depth-2 hover:shadow-depth-3',
   secondary: 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white border-2 border-purple-500 shadow-depth-2 hover:shadow-depth-3',
-  success: 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white border-2 border-green-400 shadow-depth-2 hover:shadow-depth-3',
+  success: 'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white border-2 border-emerald-400 shadow-depth-2 hover:shadow-depth-3',
   warning: 'bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-white border-2 border-yellow-500 shadow-depth-2 hover:shadow-depth-3',
   danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white border-2 border-red-500 shadow-depth-2 hover:shadow-depth-3',
   ghost: 'bg-transparent hover:bg-slate-800 text-slate-300 hover:text-white border-2 border-transparent hover:border-slate-600',
   muted: 'bg-slate-600 hover:bg-slate-500 text-white shadow-depth-1 hover:shadow-depth-2',
-  gray: 'bg-slate-700 hover:bg-slate-600 text-slate-200 border-2 border-slate-600 shadow-depth-1 hover:shadow-depth-2',
+  gray: 'bg-slate-700 hover:bg-slate-600 text-white border-2 border-slate-600 shadow-depth-1 hover:shadow-depth-2',
 }
 
 /**

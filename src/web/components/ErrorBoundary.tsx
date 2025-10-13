@@ -94,13 +94,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="flex gap-3">
               <button
                 onClick={this.handleReset}
-                className="flex-1 py-4 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 font-bold text-lg text-white transition-all duration-200 hover:shadow-depth-3"
+                className="flex-1 py-4 bg-cyan-600 hover:bg-cyan-700 border-2 border-cyan-500 font-bold text-lg text-white transition-all duration-200 hover:shadow-depth-3"
               >
                 🔄 Попробовать снова
               </button>
               <button
                 onClick={() => window.location.href = '/'}
-                className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 border-2 border-slate-600 font-bold text-lg text-slate-200 transition-all duration-200 hover:shadow-depth-2"
+                className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 border-2 border-slate-600 font-bold text-lg text-slate-300 transition-all duration-200 hover:shadow-depth-2"
               >
                 🏠 На главную
               </button>

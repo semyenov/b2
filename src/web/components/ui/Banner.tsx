@@ -14,14 +14,14 @@ export interface BannerProps {
  */
 const variantStyles = {
   error: 'bg-red-700 border-red-600',
-  loading: 'bg-blue-600 border-blue-500',
+  loading: 'bg-cyan-600 border-cyan-500',
   warning: 'bg-yellow-700 border-yellow-600',
 }
 
 export const Banner = memo(({ variant, message, onClose }: BannerProps) => {
   return (
     <div className={cn(
-      'fixed top-4 right-4 text-white px-4 py-3 shadow-depth-3 z-50 border-2',
+      'fixed top-4 right-4 text-cyan-100 px-4 py-3 shadow-depth-3 z-50 border-2',
       variantStyles[variant],
     )}
     >

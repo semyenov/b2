@@ -113,7 +113,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                         <div className="space-y-2 mb-5 text-sm">
                           <div className="flex items-center justify-between">
                             <span className="text-slate-400">Доска:</span>
-                            <span className="text-slate-200 font-mono">
+                            <span className="text-slate-300 font-mono">
                               {game.size}
                               ×
                               {game.size}
@@ -121,7 +121,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-slate-400">Ход:</span>
-                            <span className="text-slate-200 font-bold">{turnNumber}</span>
+                            <span className="text-slate-300 font-bold">{turnNumber}</span>
                           </div>
                           {status === 'in_progress' && (
                             <div className="flex items-center justify-between">
@@ -151,7 +151,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                                     {player}
                                   </span>
                                 </div>
-                                <span className="font-mono font-bold text-xl text-slate-200">
+                                <span className="font-mono font-bold text-xl text-slate-300">
                                   {game.scores[player] || 0}
                                 </span>
                               </div>

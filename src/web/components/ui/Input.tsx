@@ -88,7 +88,7 @@ export const Input = memo(
               // Base styles
               'w-full px-6 py-4 font-bold transition-all duration-200',
               // Colors
-              'bg-slate-900 text-slate-100 placeholder-slate-600',
+              'bg-slate-900 text-slate-300 placeholder-slate-600',
               // Border
               'border-2',
               error

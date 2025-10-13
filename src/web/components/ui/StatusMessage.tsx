@@ -24,7 +24,7 @@ const stepConfig = {
   'select-letter': {
     icon: '🔤',
     text: 'Шаг 2: Выберите букву',
-    className: 'text-blue-200 bg-blue-950 border-blue-700',
+    className: 'text-cyan-200 bg-cyan-950 border-cyan-700',
   },
   'build-word': {
     icon: '✍️',
