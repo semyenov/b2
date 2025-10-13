@@ -78,7 +78,7 @@ export function App() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+    <div className="min-h-screen bg-slate-900">
       {/* Screen reader live region for game announcements */}
       <div
         className="sr-only"
