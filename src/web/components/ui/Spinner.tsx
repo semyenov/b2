@@ -77,14 +77,6 @@ export const Spinner = memo(
         aria-live="polite"
         {...props}
       >
-        {/* Spinner */}
-        <div
-          className={cn(
-            'animate-spin border-b-yellow-400',
-            styles.spinner,
-          )}
-          aria-hidden="true"
-        />
 
         {/* Label */}
         {label && (

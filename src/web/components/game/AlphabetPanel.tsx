@@ -33,7 +33,7 @@ export const AlphabetPanel = memo((({
         <div className="flex items-center justify-center">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-yellow-400 rounded-full" />
-            <div className="text-sm font-bold text-slate-300">
+            <div className="text-sm font-bold text-slate-300 uppercase">
               Выбор буквы
             </div>
           </div>

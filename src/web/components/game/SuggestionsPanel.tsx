@@ -67,7 +67,7 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
         <div className="flex items-center justify-center">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-cyan-400 rounded-full" />
-            <div className="text-sm font-bold text-slate-300">
+            <div className="text-sm font-bold text-slate-300 uppercase">
               AI Подсказки
             </div>
           </div>

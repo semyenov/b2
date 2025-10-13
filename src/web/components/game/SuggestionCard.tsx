@@ -73,7 +73,7 @@ export const SuggestionCard = memo(({
         // Base styles - matching sidebar word list style
         'group relative w-full transition-all duration-300',
         'bg-slate-800 border border-slate-700 hover:border-cyan-400',
-        'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
+        'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.005]',
         'hover:bg-slate-700',
         'px-4 py-3',
         'flex items-center justify-between',
@@ -82,9 +82,9 @@ export const SuggestionCard = memo(({
       )}
     >
       <div className="flex items-center gap-3">
-        {/* Rank Badge */}
+        {/* Score Badge */}
         <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
-          {rank}
+          {Math.round(suggestion.score)}
         </div>
 
         {/* Word - Hero Element */}
@@ -93,21 +93,19 @@ export const SuggestionCard = memo(({
         </span>
       </div>
 
-      <div className="flex items-center gap-3">
-        {/* Position + Letter */}
-        <div className="flex items-center gap-2">
-          <span className="text-cyan-400 font-mono font-bold text-xs px-2 py-1 bg-cyan-500/10 rounded">
+      <div className="flex items-center gap-4">
+        {/* Position Badge */}
+        <div className="flex items-center gap-3">
+          <span className="text-cyan-300 font-mono font-bold text-lg">
             {posStr}
           </span>
-          <span className="text-yellow-400 font-black text-lg">
-            {suggestion.letter}
-          </span>
+          <div className="bg-yellow-500/20 border border-yellow-500/30 px-2 py-1">
+            <span className="text-yellow-300 font-black text-lg">
+              {suggestion.letter}
+            </span>
+          </div>
         </div>
 
-        {/* Score Badge */}
-        <Badge variant={scoreVariant} size="md" className="min-w-[40px] text-center font-black text-base">
-          {Math.round(suggestion.score)}
-        </Badge>
       </div>
 
       {/* Hover effect overlay */}

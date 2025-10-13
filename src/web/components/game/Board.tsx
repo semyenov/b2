@@ -103,7 +103,7 @@ export const Board = memo(({
                 >
                   {!cell && !selected
                     ? (
-                        <div className="text-xs text-slate-500 font-medium">
+                        <div className="text-2xl text-slate-600 font-bold">
                           {displayContent}
                         </div>
                       )

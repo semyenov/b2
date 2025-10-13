@@ -12,24 +12,24 @@ export interface StatusMessageProps {
  */
 const stepConfig = {
   'waiting': {
-    icon: '⏳',
-    text: 'Ждите хода...',
-    className: 'text-orange-300 bg-orange-950 border-orange-700',
+    icon: '',
+    text: 'Ход противника',
+    className: 'text-orange-300',
   },
   'select-cell': {
-    icon: '👆',
-    text: 'Шаг 1: Выберите пустую клетку',
-    className: 'text-cyan-200 bg-cyan-950 border-cyan-700',
+    icon: '',
+    text: 'Выбери пустую клетку',
+    className: 'text-cyan-200',
   },
   'select-letter': {
-    icon: '🔤',
-    text: 'Шаг 2: Выберите букву',
-    className: 'text-cyan-200 bg-cyan-950 border-cyan-700',
+    icon: '',
+    text: 'Выбери букву',
+    className: 'text-cyan-200',
   },
   'build-word': {
-    icon: '✍️',
-    text: 'Шаг 3: Составьте слово из букв',
-    className: 'text-purple-200 bg-purple-950 border-purple-700',
+    icon: '',
+    text: 'Составь слово',
+    className: 'text-purple-200',
   },
 }
 
@@ -38,7 +38,7 @@ export const StatusMessage = memo(({ step }: StatusMessageProps) => {
 
   return (
     <div className={cn(
-      'px-4 py-3 border-2 shadow-depth-1 font-bold text-base',
+      'px-4 py-3 font-bold text-2xl uppercase',
       config.className,
     )}
     >

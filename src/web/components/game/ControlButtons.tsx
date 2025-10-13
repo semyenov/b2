@@ -57,7 +57,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           onClick={onExit}
           aria-label="Выйти в главное меню"
         >
-          ← Выход
+          Выход
         </Button>
         <Button
           type="button"
@@ -66,7 +66,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           onClick={toggleFullscreen}
           aria-label="Полноэкранный режим"
         >
-          ⛶
+          На весь экран
         </Button>
       </div>
 
@@ -83,12 +83,11 @@ export const ControlButtons = memo<ControlButtonsProps>(({
             size="md"
             onClick={onSubmitMove}
             aria-label={`Отправить слово ${formedWord}`}
-            leftIcon="📤"
             className="whitespace-nowrap uppercase tracking-wider"
           >
-            Отправить слово &quot;
+            Отправить слово «
             {formedWord}
-            &quot;
+            »
           </Button>
         )}
       </div>
@@ -98,7 +97,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
         {/* AI suggestions toggle button */}
         <Button
           type="button"
-          variant="warning"
+          variant="primary"
           size="md"
           onClick={onToggleSuggestions}
           disabled={!isMyTurn}
@@ -106,7 +105,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           aria-pressed={showSuggestions}
           className={showSuggestions ? 'shadow-depth-3' : ''}
         >
-          AI
+          Подсказка
         </Button>
 
         {/* Clear button */}
@@ -118,7 +117,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           disabled={isClearDisabled}
           aria-label="Отменить выбор ячейки и буквы"
         >
-          ✕ Отмена
+          Отмена
         </Button>
       </div>
     </div>

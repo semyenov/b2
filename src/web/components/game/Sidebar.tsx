@@ -108,7 +108,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
             ? (
                 <div className="flex flex-col items-center justify-center py-8 text-center">
                   <div className="w-16 h-16 bg-slate-800 flex items-center justify-center mb-4">
-                    <span className="text-2xl">📝</span>
+                    <span className="text-2xl text-slate-400">•</span>
                   </div>
                   <div className="text-slate-400 text-sm font-medium">
                     Пока нет слов
@@ -124,7 +124,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                     key={playerWords.length - i}
                     className={cn(
                       'group relative transition-all duration-300',
-                      'bg-slate-800 border border-slate-700 hover:border-cyan-400',
+                      'bg-slate-900/50n border border-slate-700 hover:border-cyan-400',
                       'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
                       'hover:bg-slate-700',
                       'animate-fade-slide-in',

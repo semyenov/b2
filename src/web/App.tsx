@@ -91,7 +91,7 @@ export function App() {
 
       {/* Banners */}
       {error && <Banner variant="error" message={error} onClose={() => setError('')} />}
-      {loading && <Banner variant="loading" message="Загрузка..." />}
+      {loading && <Banner variant="loading" message="Загрузка" />}
       {aiError && (
         <div className="fixed top-16 right-4">
           <Banner variant="warning" message={aiError} />

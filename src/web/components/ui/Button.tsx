@@ -84,11 +84,11 @@ const variantStyles: Record<ButtonVariant, string> = {
  * Size styles mapping
  */
 const sizeStyles: Record<ButtonSize, string> = {
-  xs: 'px-2 py-1 text-xs',
-  sm: 'px-4 py-3 text-sm',
-  md: 'px-5 py-3.5 text-base',
-  lg: 'px-7 py-4 text-lg',
-  xl: 'px-9 py-5 text-xl',
+  xs: 'px-2 py-1 text-sm',
+  sm: 'px-4 py-3 text-base',
+  md: 'px-5 py-3.5 text-lg',
+  lg: 'px-7 py-4 text-xl',
+  xl: 'px-9 py-5 text-2xl',
 }
 
 /**
@@ -127,7 +127,7 @@ export const Button = memo(
           disabled={disabled || loading}
           className={cn(
             // Base styles
-            'font-bold transition-all duration-200 flex items-center justify-center gap-2 relative overflow-hidden',
+            'font-bold transition-all duration-200 flex items-center justify-center gap-2 relative overflow-hidden uppercase',
             // Variant styles
             variantStyles[variant],
             // Size styles
