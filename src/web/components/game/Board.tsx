@@ -12,6 +12,7 @@ export interface BoardProps {
   selectedLetter?: string
   wordPath?: Array<{ row: number, col: number }>
   hoveredWordPath?: Array<{ row: number, col: number }>
+  recentOpponentPath?: Array<{ row: number, col: number }>
   onCellClick?: (row: number, col: number) => void
   disabled?: boolean
 }
@@ -27,6 +28,7 @@ export const Board = memo(({
   selectedLetter,
   wordPath = [],
   hoveredWordPath = [],
+  recentOpponentPath = [],
   onCellClick,
   disabled,
 }: BoardProps) => {
@@ -64,8 +66,10 @@ export const Board = memo(({
               const isHovered = hoveredCell?.row === rowIndex && hoveredCell?.col === colIndex
               const inPath = isPositionInWordPath(rowIndex, colIndex, wordPath)
               const isInHoveredPath = isPositionInWordPath(rowIndex, colIndex, hoveredWordPath)
+              const isInRecentOpponentPath = isPositionInWordPath(rowIndex, colIndex, recentOpponentPath)
               const pathIdx = getPositionPathIndex(rowIndex, colIndex, wordPath)
               const hoveredPathIdx = getPositionPathIndex(rowIndex, colIndex, hoveredWordPath)
+              const recentOpponentPathIdx = getPositionPathIndex(rowIndex, colIndex, recentOpponentPath)
               const selected = isPositionSelected(rowIndex, colIndex, selectedCell)
 
               // Display content
@@ -101,6 +105,7 @@ export const Board = memo(({
                     selected,
                     inPath,
                     isInHoveredPath,
+                    isInRecentOpponentPath,
                     hasCell: !!cell,
                     canClick,
                     isHovered,
@@ -128,12 +133,17 @@ export const Board = memo(({
                             displayContent
                           )}
                   {inPath && pathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-8 h-8 text-white text-base flex items-center justify-center font-bold">
+                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-white text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none">
                       {pathIdx + 1}
                     </div>
                   )}
-                  {!inPath && isInHoveredPath && hoveredPathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-8 h-8 text-amber-200 text-base flex items-center justify-center font-bold">
+                  {!inPath && isInRecentOpponentPath && recentOpponentPathIdx >= 0 && (
+                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-violet-200 text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none">
+                      {recentOpponentPathIdx + 1}
+                    </div>
+                  )}
+                  {!inPath && !isInRecentOpponentPath && isInHoveredPath && hoveredPathIdx >= 0 && (
+                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-amber-200 text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none">
                       {hoveredPathIdx + 1}
                     </div>
                   )}

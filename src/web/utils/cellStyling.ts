@@ -11,6 +11,7 @@ interface GetCellClassNameOptions {
   selected: boolean
   inPath: boolean
   isInHoveredPath: boolean
+  isInRecentOpponentPath: boolean
   hasCell: boolean
   canClick: boolean
   isHovered: boolean
@@ -23,6 +24,7 @@ interface GetCellClassNameOptions {
  * @param options.selected - Whether cell is currently selected
  * @param options.inPath - Whether cell is part of current word path
  * @param options.isInHoveredPath - Whether cell is part of hovered word path (from Sidebar)
+ * @param options.isInRecentOpponentPath - Whether cell is part of recent opponent move (2s highlight)
  * @param options.hasCell - Whether cell contains a letter
  * @param options.canClick - Whether cell can be clicked
  * @param options.isHovered - Whether cell is being hovered
@@ -32,6 +34,7 @@ export function getCellClassName({
   selected,
   inPath,
   isInHoveredPath,
+  isInRecentOpponentPath,
   hasCell,
   canClick,
   isHovered,
@@ -40,13 +43,14 @@ export function getCellClassName({
     // Base classes - flexible sizing
     'aspect-square w-full border flex items-center justify-center text-[length:calc(var(--text-resp-board)*0.85)] font-black transition-all duration-200 relative leading-none',
 
-    // State-based styling (priority order: selected > inPath > isInHoveredPath > hasCell > empty)
+    // State-based styling (priority order: selected > inPath > isInRecentOpponentPath > isInHoveredPath > hasCell > empty)
     {
       'bg-cyan-800 border-cyan-300 text-white shadow-depth-3 ring-2 ring-cyan-400/50': selected,
       'bg-emerald-700 border-emerald-300 text-white shadow-depth-3 ring-2 ring-emerald-400/50': !selected && inPath,
-      'bg-amber-700 border-amber-300 text-white shadow-depth-2 ring-2 ring-amber-400/50': !selected && !inPath && isInHoveredPath,
-      'bg-slate-800 border-slate-700 text-slate-300 shadow-depth-2': !selected && !inPath && !isInHoveredPath && hasCell,
-      'bg-slate-900 border-slate-700 text-slate-600': !selected && !inPath && !isInHoveredPath && !hasCell,
+      'bg-violet-700 border-violet-300 text-white shadow-depth-3 ring-2 ring-violet-400/50 animate-pulse': !selected && !inPath && isInRecentOpponentPath,
+      'bg-amber-700 border-amber-300 text-white shadow-depth-2 ring-2 ring-amber-400/50': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath,
+      'bg-slate-800 border-slate-700 text-slate-300 shadow-depth-2': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && hasCell,
+      'bg-slate-900 border-slate-700 text-slate-600': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && !hasCell,
     },
 
     // Interactive styling

@@ -3,7 +3,7 @@ import type { Position } from '@types'
 import { Board, ControlButtons, GamePanel, Sidebar } from '@components'
 import { useGameActions } from '@hooks/useGameActions'
 import { findWordPath } from '@utils/gamePathFinder'
-import { memo, useCallback, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 
 interface GameScreenProps {
   game: GameState
@@ -68,6 +68,53 @@ export const GameScreen = memo(({
   // Word hover highlighting state
   const [hoveredWordPath, setHoveredWordPath] = useState<Position[] | null>(null)
 
+  // Recent opponent move highlighting (2 seconds)
+  const [recentOpponentPath, setRecentOpponentPath] = useState<Position[] | null>(null)
+  const previousMoveCountRef = useRef<number>(0)
+
+  // Detect opponent moves and highlight for 2 seconds
+  useEffect(() => {
+    const currentMoveCount = game.moves.length
+
+    // Only proceed if a new move was added
+    if (currentMoveCount <= previousMoveCountRef.current) {
+      previousMoveCountRef.current = currentMoveCount
+      return
+    }
+
+    previousMoveCountRef.current = currentMoveCount
+
+    // Get the most recent move
+    const lastMove = game.moves[game.moves.length - 1]
+    if (!lastMove) {
+      return
+    }
+
+    // Check if it's an opponent's move (not the current player)
+    if (lastMove.playerId === playerName) {
+      // Player's own move, don't highlight
+      setRecentOpponentPath(null)
+      return
+    }
+
+    // Compute the path for opponent's move
+    const path = findWordPath(
+      game.board,
+      lastMove.position,
+      lastMove.letter,
+      lastMove.word,
+    )
+
+    setRecentOpponentPath(path)
+
+    // Clear after 2 seconds
+    const timer = setTimeout(() => {
+      setRecentOpponentPath(null)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [game.moves, game.board, playerName])
+
   // Handle word hover in sidebar - compute path for highlighted word
   const handleWordHover = useCallback((playerIndex: number, wordIndex: number) => {
     // Find all moves for this player
@@ -129,6 +176,7 @@ export const GameScreen = memo(({
             selectedLetter={selectedLetter}
             wordPath={wordPath}
             hoveredWordPath={hoveredWordPath || []}
+            recentOpponentPath={recentOpponentPath || []}
             onCellClick={onCellClick}
             disabled={!isMyTurn}
           />
