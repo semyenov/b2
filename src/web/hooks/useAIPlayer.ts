@@ -1,6 +1,7 @@
 import type { ApiClient, GameState, MoveBody } from '../lib/client'
 import { useEffect, useRef, useState } from 'react'
 import { GAME_CONFIG } from '../constants/game'
+import { ERROR_MESSAGES, translateErrorMessage } from '../constants/messages'
 import { logger } from '../utils/logger'
 
 interface UseAIPlayerOptions {
@@ -82,7 +83,7 @@ export function useAIPlayer({
         }
         else {
           // No valid moves available - game is stuck
-          setAIError('У AI нет доступных ходов')
+          setAIError(ERROR_MESSAGES.AI_NO_MOVES)
           logger.warn('AI has no valid moves available', {
             gameId: currentGame.id,
             player: currentPlayer,
@@ -92,7 +93,7 @@ export function useAIPlayer({
         }
       }
       catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Ошибка AI хода'
+        const errorMessage = error instanceof Error ? translateErrorMessage(error.message) : ERROR_MESSAGES.AI_MOVE_FAILED
         setAIError(errorMessage)
         logger.error('AI move failed', error as Error, {
           gameId: currentGame.id,

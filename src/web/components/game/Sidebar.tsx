@@ -107,15 +107,21 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
         <div className="space-y-2">
           {playerWords.length === 0
             ? (
-                <div className="flex flex-col items-center justify-center py-8 text-center">
-                  <div className="w-16 h-16 bg-slate-800 flex items-center justify-center mb-4">
-                    <span className="text-2xl text-slate-400">•</span>
-                  </div>
-                  <div className="text-slate-400 text-sm font-medium">
-                    Пока нет слов
-                  </div>
-                  <div className="text-slate-500 text-xs mt-1">
-                    Слова появятся здесь
+                <div className="flex flex-col items-center justify-center h-full text-center px-6">
+                  <div className="space-y-8">
+                    <div className="space-y-1">
+                      <div className="text-slate-500 text-lg font-semibold tracking-wide uppercase leading-tight">
+                        ПУСТО
+                      </div>
+                      <div className="text-slate-600 text-sm leading-tight max-w-[200px]">
+                        составляйте слова, чтобы увидеть их здесь
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-3 opacity-30">
+                      <div className="h-px w-24 bg-gradient-to-r from-transparent via-slate-700 to-transparent mx-auto" />
+                      <div className="h-px w-16 bg-gradient-to-r from-transparent via-slate-700 to-transparent mx-auto" />
+                      <div className="h-px w-20 bg-gradient-to-r from-transparent via-slate-700 to-transparent mx-auto" />
+                    </div>
                   </div>
                 </div>
               )

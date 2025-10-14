@@ -1,4 +1,5 @@
 import { Banner, CreateGame, GameList, GameScreen, MenuScreen } from '@components'
+import { LOADING_MESSAGES } from './constants'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameControls } from './hooks/useGameControls'
@@ -91,7 +92,7 @@ export function App() {
 
       {/* Banners */}
       {error && <Banner variant="error" message={error} onClose={() => setError('')} />}
-      {loading && <Banner variant="loading" message="Загрузка" />}
+      {loading && <Banner variant="loading" message={LOADING_MESSAGES.DEFAULT} />}
       {aiError && (
         <div className="fixed top-16 right-4">
           <Banner variant="warning" message={aiError} />

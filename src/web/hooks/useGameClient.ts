@@ -2,6 +2,7 @@ import type { CreateGameBody, GameState, MoveBody } from '../lib/client'
 import type { Screen, UseGameClientReturn } from '../types/hooks'
 import { useEffect, useRef, useState } from 'react'
 import { ApiClient } from '../lib/client'
+import { ERROR_MESSAGES, LOADING_MESSAGES, translateErrorMessage } from '../constants/messages'
 
 // Re-export for backwards compatibility
 export type { Screen, UseGameClientReturn } from '../types/hooks'
@@ -25,7 +26,7 @@ export function useGameClient(): UseGameClientReturn {
   // Check server health on mount
   useEffect(() => {
     apiClient.getHealth().catch(() => {
-      setError('Cannot connect to server. Make sure it\'s running on http://localhost:3000')
+      setError(ERROR_MESSAGES.SERVER_CONNECTION_FAILED)
     })
   }, [apiClient])
 
@@ -35,7 +36,7 @@ export function useGameClient(): UseGameClientReturn {
       wsRef.current = apiClient.connectWebSocket(
         gameId,
         updatedGame => setCurrentGame(updatedGame),
-        () => setError('Соединение потеряно'),
+        () => setError(ERROR_MESSAGES.CONNECTION_LOST),
       )
     }
 
@@ -55,7 +56,8 @@ export function useGameClient(): UseGameClientReturn {
       return await fn()
     }
     catch (err) {
-      setError(err instanceof Error ? err.message : 'Произошла ошибка')
+      const errorMessage = err instanceof Error ? translateErrorMessage(err.message) : ERROR_MESSAGES.GENERIC_ERROR
+      setError(errorMessage)
       return null
     }
     finally {

@@ -123,7 +123,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
         {/* Clear button */}
         <Button
           type="button"
-          variant="muted"
+          variant={(isClearDisabled && !showSuggestions) ? 'muted' : 'danger'}
           size="md"
           onClick={handleClearClick}
           disabled={isClearDisabled && !showSuggestions}

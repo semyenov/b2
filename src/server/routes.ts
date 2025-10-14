@@ -19,7 +19,7 @@ import {
   SuggestQuerySchema,
   SuggestResponseSchema,
   UpdatePlayerBodySchema,
-} from './schemas'
+} from '../shared/schemas'
 import { store } from './store'
 import { broadcastGame, setArchiveCallback } from './wsHub'
 

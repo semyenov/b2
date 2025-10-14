@@ -3,7 +3,7 @@ import { consola } from 'consola'
 import { Elysia } from 'elysia'
 import { DictionaryError, GameNotFoundError, InvalidMoveError, InvalidPlacementError } from './errors'
 import { registerRoutes } from './routes'
-import { GameIdParamsSchema } from './schemas'
+import { GameIdParamsSchema } from '../shared/schemas'
 import { addClient, removeClient } from './wsHub'
 
 const port = Number(process.env.PORT ?? 3000)

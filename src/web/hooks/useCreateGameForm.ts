@@ -1,5 +1,6 @@
 import type { CreateGameBody } from '../lib/client'
 import { useState } from 'react'
+import { ERROR_MESSAGES } from '../constants/messages'
 import { generatePlayerName } from '../utils/playerNameUtils'
 import { getRussianPluralForm } from '../utils/russianPlural'
 
@@ -46,13 +47,14 @@ export function useCreateGameForm({ onSubmit }: UseCreateGameFormOptions): UseCr
 
     // Validate word length matches board size
     if (!baseWord || baseWord.length !== sizeNum) {
-      setError(`Базовое слово должно содержать ровно ${sizeNum} ${getRussianPluralForm(sizeNum, ['букву', 'буквы', 'букв'])}`)
+      const pluralForm = getRussianPluralForm(sizeNum, ['букву', 'буквы', 'букв'])
+      setError(ERROR_MESSAGES.BASE_WORD_LENGTH(sizeNum, pluralForm))
       return
     }
 
     // Validate Russian letters only
     if (!isValidRussianWord(baseWord)) {
-      setError('Используйте только русские буквы')
+      setError(ERROR_MESSAGES.ONLY_RUSSIAN_LETTERS)
       return
     }
 
