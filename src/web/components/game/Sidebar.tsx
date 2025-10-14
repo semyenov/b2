@@ -7,6 +7,8 @@ import { memo } from 'react'
 export interface SidebarProps {
   game: GameState
   playerIndex: 0 | 1
+  onWordHover?: (playerIndex: number, wordIndex: number) => void
+  onWordLeave?: () => void
 }
 
 /**
@@ -14,7 +16,7 @@ export interface SidebarProps {
  * Modern player stats sidebar with enhanced visual design, better typography,
  * improved animations, and more intuitive score display
  */
-export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
+export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: SidebarProps) => {
   const isCurrentTurn = game.currentPlayerIndex === playerIndex
 
   // Use extracted hook for player statistics
@@ -126,18 +128,23 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                 </div>
               )
             : (
-                playerWords.slice().reverse().map((word, i) => (
-                  <div
-                    key={playerWords.length - i}
-                    className={cn(
-                      'group relative transition-all duration-300',
-                      'bg-slate-900/80 border border-slate-700 hover:border-cyan-400',
-                      'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
-                      'hover:bg-slate-700',
-                      'animate-fade-slide-in',
-                    )}
-                    style={{ animationDelay: `${i * 50}ms` }}
-                  >
+                playerWords.slice().reverse().map((word, i) => {
+                  // Original index in moves array (not reversed)
+                  const originalWordIndex = playerWords.length - 1 - i
+                  return (
+                    <div
+                      key={playerWords.length - i}
+                      onMouseEnter={() => onWordHover?.(playerIndex, originalWordIndex)}
+                      onMouseLeave={() => onWordLeave?.()}
+                      className={cn(
+                        'group relative transition-all duration-300',
+                        'bg-slate-900/80 border border-slate-700 hover:border-cyan-400',
+                        'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.02]',
+                        'hover:bg-slate-700',
+                        'animate-fade-slide-in',
+                      )}
+                      style={{ animationDelay: `${i * 50}ms` }}
+                    >
                     <div className="px-4 py-3 flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
@@ -158,10 +165,11 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                       </div>
                     </div>
 
-                    {/* Hover effect overlay */}
-                    <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                ))
+                      {/* Hover effect overlay */}
+                      <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  )
+                })
               )}
         </div>
       </div>

@@ -11,6 +11,7 @@ export interface BoardProps {
   selectedCell?: { row: number, col: number }
   selectedLetter?: string
   wordPath?: Array<{ row: number, col: number }>
+  hoveredWordPath?: Array<{ row: number, col: number }>
   onCellClick?: (row: number, col: number) => void
   disabled?: boolean
 }
@@ -25,6 +26,7 @@ export const Board = memo(({
   selectedCell,
   selectedLetter,
   wordPath = [],
+  hoveredWordPath = [],
   onCellClick,
   disabled,
 }: BoardProps) => {
@@ -61,7 +63,9 @@ export const Board = memo(({
               })
               const isHovered = hoveredCell?.row === rowIndex && hoveredCell?.col === colIndex
               const inPath = isPositionInWordPath(rowIndex, colIndex, wordPath)
+              const isInHoveredPath = isPositionInWordPath(rowIndex, colIndex, hoveredWordPath)
               const pathIdx = getPositionPathIndex(rowIndex, colIndex, wordPath)
+              const hoveredPathIdx = getPositionPathIndex(rowIndex, colIndex, hoveredWordPath)
               const selected = isPositionSelected(rowIndex, colIndex, selectedCell)
 
               // Display content
@@ -96,6 +100,7 @@ export const Board = memo(({
                   className={getCellClassName({
                     selected,
                     inPath,
+                    isInHoveredPath,
                     hasCell: !!cell,
                     canClick,
                     isHovered,
@@ -125,6 +130,11 @@ export const Board = memo(({
                   {inPath && pathIdx >= 0 && (
                     <div className="absolute top-0 right-0 w-8 h-8 text-white text-base flex items-center justify-center font-bold">
                       {pathIdx + 1}
+                    </div>
+                  )}
+                  {!inPath && isInHoveredPath && hoveredPathIdx >= 0 && (
+                    <div className="absolute top-0 right-0 w-8 h-8 text-amber-200 text-base flex items-center justify-center font-bold">
+                      {hoveredPathIdx + 1}
                     </div>
                   )}
                 </div>

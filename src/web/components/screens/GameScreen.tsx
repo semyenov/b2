@@ -2,7 +2,8 @@ import type { GameState, Suggestion } from '@lib/client'
 import type { Position } from '@types'
 import { Board, ControlButtons, GamePanel, Sidebar } from '@components'
 import { useGameActions } from '@hooks/useGameActions'
-import { memo, useRef } from 'react'
+import { findWordPath } from '@utils/gamePathFinder'
+import { memo, useCallback, useRef, useState } from 'react'
 
 interface GameScreenProps {
   game: GameState
@@ -64,6 +65,38 @@ export const GameScreen = memo(({
   // Ref to bottom control panel container to exclude from click-outside
   const bottomPanelRef = useRef<HTMLDivElement | null>(null)
 
+  // Word hover highlighting state
+  const [hoveredWordPath, setHoveredWordPath] = useState<Position[] | null>(null)
+
+  // Handle word hover in sidebar - compute path for highlighted word
+  const handleWordHover = useCallback((playerIndex: number, wordIndex: number) => {
+    // Find all moves for this player
+    const player = game.players[playerIndex]
+    const playerMoves = game.moves.filter(move => move.playerId === player)
+
+    // Get the specific move being hovered
+    const move = playerMoves[wordIndex]
+    if (!move) {
+      setHoveredWordPath(null)
+      return
+    }
+
+    // Reconstruct the path using current board state + move data
+    const path = findWordPath(
+      game.board,
+      move.position,
+      move.letter,
+      move.word,
+    )
+
+    setHoveredWordPath(path)
+  }, [game.board, game.moves, game.players])
+
+  // Clear hovered word path
+  const handleWordLeave = useCallback(() => {
+    setHoveredWordPath(null)
+  }, [])
+
   return (
     <div className="relative h-screen flex flex-col bg-slate-900 overflow-hidden">
       {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
@@ -74,12 +107,16 @@ export const GameScreen = memo(({
             <Sidebar
               game={game}
               playerIndex={0}
+              onWordHover={handleWordHover}
+              onWordLeave={handleWordLeave}
             />
           </div>
           <div className="flex-1 lg:hidden min-h-0">
             <Sidebar
               game={game}
               playerIndex={1}
+              onWordHover={handleWordHover}
+              onWordLeave={handleWordLeave}
             />
           </div>
         </div>
@@ -91,6 +128,7 @@ export const GameScreen = memo(({
             selectedCell={selectedCell}
             selectedLetter={selectedLetter}
             wordPath={wordPath}
+            hoveredWordPath={hoveredWordPath || []}
             onCellClick={onCellClick}
             disabled={!isMyTurn}
           />
@@ -101,6 +139,8 @@ export const GameScreen = memo(({
           <Sidebar
             game={game}
             playerIndex={1}
+            onWordHover={handleWordHover}
+            onWordLeave={handleWordLeave}
           />
         </div>
       </div>
