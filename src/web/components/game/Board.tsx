@@ -42,7 +42,7 @@ export const Board = memo(({
       <div className="flex-1 flex items-center gap-1">
         {/* Board grid - height-driven, maintains square aspect with enhanced visual design */}
         <div
-          className="grid w-full h-full border border-slate-600 bg-slate-800"
+          className="grid w-full h-full bg-slate-800 ring-1 ring-slate-600"
           style={{
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
             gridTemplateRows: `repeat(${gridSize}, 1fr)`,

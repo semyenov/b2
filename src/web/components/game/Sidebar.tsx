@@ -22,7 +22,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
   return (
     <div className={cn(
       'flex flex-col h-full w-full min-h-0 transition-all duration-300',
-      'bg-slate-800 border-2 border-slate-600',
+      'bg-slate-800 border border-slate-700 ring-1 ring-slate-600',
     )}
     >
       {/* Clean Header Panel */}
@@ -49,12 +49,12 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
           <div className="bg-slate-800 border border-slate-700 p-4 transition-all duration-300 hover:bg-slate-700">
             <div className="text-center">
               <div className="flex flex-col items-center gap-2">
-                <div className="text-4xl font-bold text-slate-300 transition-colors duration-300">
+                <div className="text-4xl font-bold text-slate-300 transition-colors duration-300 tracking-wider">
                   {letterCount}
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                    Буквы
+                    Счет
                   </div>
                   {!isLetterCountTied && (
                     <div className={cn(
@@ -76,12 +76,12 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
           <div className="bg-slate-800 border border-slate-700 p-4 transition-all duration-300 hover:bg-slate-700">
             <div className="text-center">
               <div className="flex flex-col items-center gap-2">
-                <div className="text-4xl font-bold text-slate-300 transition-colors duration-300">
+                <div className="text-4xl font-bold text-slate-300 transition-colors duration-300 tracking-wider">
                   {score}
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                    Счёт
+                    Очки
                   </div>
                   {!isScoreTied && (
                     <div className={cn(
