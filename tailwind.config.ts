@@ -1,4 +1,7 @@
 import type { Config } from 'tailwindcss'
+import colors from 'tailwindcss/colors'
+
+colors.yellow = colors.amber
 
 /**
  * Tailwind CSS Configuration with Semantic Color Aliases
@@ -24,4 +27,9 @@ export default {
     './src/web/**/*.{ts,tsx,js,jsx}',
     './index.html',
   ],
+  theme: {
+    extend: {
+      colors,
+    },
+  },
 } satisfies Config

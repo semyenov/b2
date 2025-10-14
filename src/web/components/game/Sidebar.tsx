@@ -2,6 +2,7 @@ import type { GameState } from '@lib/client'
 import { usePlayerStats } from '@hooks/usePlayerStats'
 import { cn } from '@utils/classNames'
 import { getRussianPluralForm } from '@utils/russianPlural'
+import { calculateWordScore } from '@utils/wordScore'
 import { memo } from 'react'
 
 export interface SidebarProps {
@@ -131,6 +132,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                 playerWords.slice().reverse().map((word, i) => {
                   // Original index in moves array (not reversed)
                   const originalWordIndex = playerWords.length - 1 - i
+                  const wordScore = calculateWordScore(word)
                   return (
                     <div
                       key={playerWords.length - i}
@@ -148,7 +150,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                     <div className="px-4 py-3 flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-info-500/20 flex items-center justify-center text-xs font-bold text-info-300">
-                          {playerWords.length - i}
+                          {wordScore}
                         </div>
                         <span className="font-bold text-xl text-surface-300 group-hover:text-info-100 transition-colors duration-200 tracking-wider">
                           {word}

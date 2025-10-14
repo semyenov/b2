@@ -343,7 +343,7 @@ If you need to manually update colors:
   User action
 </div>
 
-<div className="bg-amber-800 text-amber-300">
+<div className="bg-amber-800 text-opponent-300">
   Opponent move
 </div>
 

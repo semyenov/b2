@@ -17,55 +17,55 @@
      SEMANTIC COLOR ALIASES
      ======================================== */
 
-  /* User/Player colors → Yellow
+  /* User/Player colors → emerald
      Use for: user actions, active states, success */
-  --color-user-50: var(--color-yellow-50);
-  --color-user-100: var(--color-yellow-100);
-  --color-user-200: var(--color-yellow-200);
-  --color-user-300: var(--color-yellow-300);
-  --color-user-400: var(--color-yellow-400);
-  --color-user-500: var(--color-yellow-500);
-  --color-user-600: var(--color-yellow-600);
-  --color-user-700: var(--color-yellow-700);
-  --color-user-800: var(--color-yellow-800);
-  --color-user-900: var(--color-yellow-900);
-  --color-user-950: var(--color-yellow-950);
+  --color-user-50: var(--color-emerald-50);
+  --color-user-100: var(--color-emerald-100);
+  --color-user-200: var(--color-emerald-200);
+  --color-user-300: var(--color-emerald-300);
+  --color-user-400: var(--color-emerald-400);
+  --color-user-500: var(--color-emerald-500);
+  --color-user-600: var(--color-emerald-600);
+  --color-user-700: var(--color-emerald-700);
+  --color-user-800: var(--color-emerald-800);
+  --color-user-900: var(--color-emerald-900);
+  --color-user-950: var(--color-emerald-950);
 
-  --color-player-50: var(--color-yellow-50);
-  --color-player-100: var(--color-yellow-100);
-  --color-player-200: var(--color-yellow-200);
-  --color-player-300: var(--color-yellow-300);
-  --color-player-400: var(--color-yellow-400);
-  --color-player-500: var(--color-yellow-500);
-  --color-player-600: var(--color-yellow-600);
-  --color-player-700: var(--color-yellow-700);
-  --color-player-800: var(--color-yellow-800);
-  --color-player-900: var(--color-yellow-900);
-  --color-player-950: var(--color-yellow-950);
+  --color-player-50: var(--color-emerald-50);
+  --color-player-100: var(--color-emerald-100);
+  --color-player-200: var(--color-emerald-200);
+  --color-player-300: var(--color-emerald-300);
+  --color-player-400: var(--color-emerald-400);
+  --color-player-500: var(--color-emerald-500);
+  --color-player-600: var(--color-emerald-600);
+  --color-player-700: var(--color-emerald-700);
+  --color-player-800: var(--color-emerald-800);
+  --color-player-900: var(--color-emerald-900);
+  --color-player-950: var(--color-emerald-950);
 
-  --color-active-50: var(--color-yellow-50);
-  --color-active-100: var(--color-yellow-100);
-  --color-active-200: var(--color-yellow-200);
-  --color-active-300: var(--color-yellow-300);
-  --color-active-400: var(--color-yellow-400);
-  --color-active-500: var(--color-yellow-500);
-  --color-active-600: var(--color-yellow-600);
-  --color-active-700: var(--color-yellow-700);
-  --color-active-800: var(--color-yellow-800);
-  --color-active-900: var(--color-yellow-900);
-  --color-active-950: var(--color-yellow-950);
+  --color-active-50: var(--color-emerald-50);
+  --color-active-100: var(--color-emerald-100);
+  --color-active-200: var(--color-emerald-200);
+  --color-active-300: var(--color-emerald-300);
+  --color-active-400: var(--color-emerald-400);
+  --color-active-500: var(--color-emerald-500);
+  --color-active-600: var(--color-emerald-600);
+  --color-active-700: var(--color-emerald-700);
+  --color-active-800: var(--color-emerald-800);
+  --color-active-900: var(--color-emerald-900);
+  --color-active-950: var(--color-emerald-950);
 
-  --color-success-50: var(--color-yellow-50);
-  --color-success-100: var(--color-yellow-100);
-  --color-success-200: var(--color-yellow-200);
-  --color-success-300: var(--color-yellow-300);
-  --color-success-400: var(--color-yellow-400);
-  --color-success-500: var(--color-yellow-500);
-  --color-success-600: var(--color-yellow-600);
-  --color-success-700: var(--color-yellow-700);
-  --color-success-800: var(--color-yellow-800);
-  --color-success-900: var(--color-yellow-900);
-  --color-success-950: var(--color-yellow-950);
+  --color-success-50: var(--color-emerald-50);
+  --color-success-100: var(--color-emerald-100);
+  --color-success-200: var(--color-emerald-200);
+  --color-success-300: var(--color-emerald-300);
+  --color-success-400: var(--color-emerald-400);
+  --color-success-500: var(--color-emerald-500);
+  --color-success-600: var(--color-emerald-600);
+  --color-success-700: var(--color-emerald-700);
+  --color-success-800: var(--color-emerald-800);
+  --color-success-900: var(--color-emerald-900);
+  --color-success-950: var(--color-emerald-950);
 
   /* Opponent/Warning colors → Amber
      Use for: opponent actions, warning states */
@@ -121,29 +121,29 @@
 
   /* Neutral/Surface colors → Slate
      Use for: backgrounds, borders, disabled states */
-  --color-neutral-50: var(--color-slate-50);
-  --color-neutral-100: var(--color-slate-100);
-  --color-neutral-200: var(--color-slate-200);
-  --color-neutral-300: var(--color-slate-300);
-  --color-neutral-400: var(--color-slate-400);
-  --color-neutral-500: var(--color-slate-500);
-  --color-neutral-600: var(--color-slate-600);
-  --color-neutral-700: var(--color-slate-700);
-  --color-neutral-800: var(--color-slate-800);
-  --color-neutral-900: var(--color-slate-900);
-  --color-neutral-950: var(--color-slate-950);
+  --color-neutral-50: var(--color-zinc-50);
+  --color-neutral-100: var(--color-zinc-100);
+  --color-neutral-200: var(--color-zinc-200);
+  --color-neutral-300: var(--color-zinc-300);
+  --color-neutral-400: var(--color-zinc-400);
+  --color-neutral-500: var(--color-zinc-500);
+  --color-neutral-600: var(--color-zinc-600);
+  --color-neutral-700: var(--color-zinc-700);
+  --color-neutral-800: var(--color-zinc-800);
+  --color-neutral-900: var(--color-zinc-900);
+  --color-neutral-950: var(--color-zinc-950);
 
-  --color-surface-50: var(--color-slate-50);
-  --color-surface-100: var(--color-slate-100);
-  --color-surface-200: var(--color-slate-200);
-  --color-surface-300: var(--color-slate-300);
-  --color-surface-400: var(--color-slate-400);
-  --color-surface-500: var(--color-slate-500);
-  --color-surface-600: var(--color-slate-600);
-  --color-surface-700: var(--color-slate-700);
-  --color-surface-800: var(--color-slate-800);
-  --color-surface-900: var(--color-slate-900);
-  --color-surface-950: var(--color-slate-950);
+  --color-surface-50: var(--color-zinc-50);
+  --color-surface-100: var(--color-zinc-100);
+  --color-surface-200: var(--color-zinc-200);
+  --color-surface-300: var(--color-zinc-300);
+  --color-surface-400: var(--color-zinc-400);
+  --color-surface-500: var(--color-zinc-500);
+  --color-surface-600: var(--color-zinc-600);
+  --color-surface-700: var(--color-zinc-700);
+  --color-surface-800: var(--color-zinc-800);
+  --color-surface-900: var(--color-zinc-900);
+  --color-surface-950: var(--color-zinc-950);
 
   /* Danger/Error colors → Red
      Use for: errors, destructive actions */

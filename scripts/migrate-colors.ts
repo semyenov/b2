@@ -143,7 +143,7 @@ const UTILITY_PREFIXES = [
  * Build regex patterns for color matching
  */
 function buildColorPattern(mapping: ColorMapping): RegExp {
-  // Matches any utility prefix + color (e.g., bg-yellow-600, text-amber-300, etc.)
+  // Matches any utility prefix + color (e.g., bg-yellow-600, text-opponent-300, etc.)
   const prefixes = UTILITY_PREFIXES.join('|')
   return new RegExp(
     `(${prefixes})-(${mapping.from})(?=[\\s"'\`}/;,)])`,
