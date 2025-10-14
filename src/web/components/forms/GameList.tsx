@@ -126,7 +126,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                           {status === 'in_progress' && (
                             <div className="flex items-center justify-between">
                               <span className="text-slate-400">Сейчас:</span>
-                              <span className="text-emerald-300 font-bold text-xs">
+                              <span className="text-yellow-300 font-bold text-xs">
                                 {currentPlayer}
                               </span>
                             </div>
@@ -144,7 +144,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                                 <div className="flex items-center gap-1">
                                   <span className={
                                     idx === game.currentPlayerIndex
-                                      ? 'text-emerald-300 font-bold'
+                                      ? 'text-yellow-300 font-bold'
                                       : 'text-slate-400'
                                   }
                                   >

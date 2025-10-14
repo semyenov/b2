@@ -4,7 +4,7 @@ This document defines the standardized color palette for the Balda game web inte
 
 ## Core Color Palette
 
-### Emerald - User Player Actions
+### Yellow - User Player Actions
 **Purpose**: User-controlled elements, active player indicators, and success states
 
 **Usage**:
@@ -17,36 +17,41 @@ This document defines the standardized color palette for the Balda game web inte
 - Winning score indicators
 
 **Shades**:
-- `emerald-900`: Darkest - New letter placement in path
-- `emerald-800`: Dark - New letter in path
-- `emerald-600`: Medium - Existing letters in path, selected letter
-- `emerald-500`: Bright - Hover rings, overlays
-- `emerald-400`: Light - Borders, winning indicators
-- `emerald-300`: Lighter - Text accents
-- `emerald-200`: Lightest - Letter number overlay
-- `emerald-100`: Very light - Selected letter text
+- `yellow-900`: Darkest - New letter placement in path, selected cells
+- `yellow-800`: Dark - New letter in path
+- `yellow-700`: Medium-dark - Success button gradient
+- `yellow-600`: Medium - Existing letters in path, selected letter
+- `yellow-500`: Bright - Hover rings, overlays
+- `yellow-400`: Light - Borders, winning indicators, hover effects
+- `yellow-300`: Lighter - Text accents, current player name
+- `yellow-200`: Lightest - Letter number overlay
+- `yellow-100`: Very light - Selected letter text
 
 **Files**:
 - `src/web/utils/cellStyling.ts` (hover effects, user path highlighting)
+- `src/web/components/game/Board.tsx` (selected text, move number overlay)
 - `src/web/components/game/AlphabetPanel.tsx` (letter selection)
 - `src/web/components/game/Sidebar.tsx` (turn indicator, winning stats)
+- `src/web/components/forms/GameList.tsx` (current player highlighting)
 - `src/web/components/ui/Button.tsx` (success variant)
 
 ---
 
-### Amber - Opponent Player
-**Purpose**: Opponent-controlled elements, opponent move visualization
+### Amber - Opponent Player & Warnings
+**Purpose**: Opponent-controlled elements, opponent move visualization, and warning states
 
 **Usage**:
 - Opponent's move paths
 - Opponent's word highlights in history
 - Recent opponent move animation (2s pulse)
 - Opponent's new letter placement
+- Warning buttons, banners, and badges
 
 **Shades**:
 - `amber-800`: Dark - New letter in opponent path
-- `amber-600`: Medium - Existing letters in opponent path
-- `amber-500`: Bright - Glow effects
+- `amber-700`: Medium-dark - Warning button gradient
+- `amber-600`: Medium - Existing letters in opponent path, warning backgrounds
+- `amber-500`: Bright - Glow effects, warning borders
 - `amber-400`: Light - Rings
 - `amber-300`: Lighter - Borders
 - `amber-200`: Lightest - Letter numbers
@@ -54,6 +59,9 @@ This document defines the standardized color palette for the Balda game web inte
 **Files**:
 - `src/web/utils/cellStyling.ts` (opponent path highlighting)
 - `src/web/components/screens/GameScreen.tsx` (opponent move detection)
+- `src/web/components/ui/Button.tsx` (warning variant)
+- `src/web/components/ui/Banner.tsx` (warning banner)
+- `src/web/components/ui/Badge.tsx` (warning badge)
 
 ---
 
@@ -134,16 +142,17 @@ This document defines the standardized color palette for the Balda game web inte
 ## Color Usage Guidelines
 
 ### 1. Player vs Opponent Distinction
-- **Always** use `emerald` for user-controlled elements
+- **Always** use `yellow` for user-controlled elements
 - **Always** use `amber` for opponent-controlled elements
 - **Never** mix these colors except in comparative scenarios (winning/losing indicators)
 
 ### 2. Information vs Action
 - Use `cyan` for informational, non-committal elements (suggestions, help, previews)
-- Use `emerald` for active user interactions and commitments (selections, moves, submissions)
+- Use `yellow` for active user interactions and commitments (selections, moves, submissions)
+- Use `amber` for warnings and opponent actions
 
 ### 3. Hover States
-- User-interactive elements: `emerald` hover borders and rings
+- User-interactive elements: `yellow` hover borders and rings
 - Informational elements: `cyan` hover effects
 - Keep hover effects 1-2 shades brighter than base color
 
@@ -160,31 +169,24 @@ This document defines the standardized color palette for the Balda game web inte
 
 ---
 
-## Migration from Legacy Yellow
+## Migration History
 
-### Replaced Yellow Usage:
-1. **Board hover effects** (yellow → emerald)
-   - Rationale: Board interaction is a user action
+### Initial Migration (Emerald Phase)
+Temporarily used emerald for user actions, but this was later reversed.
 
-2. **Alphabet panel letter hover** (yellow → emerald)
-   - Rationale: Letter selection is a user action
+### Final Color System (Yellow for User)
+1. **Board interactions** - Yellow for selected cells, hover effects, and user paths
+2. **Alphabet panel** - Yellow for selected and hovered letters
+3. **Sidebar** - Yellow for turn indicator and winning stats
+4. **Game list** - Yellow for current player highlighting
+5. **Button success variant** - Yellow (was emerald)
+6. **Button warning variant** - Amber (was yellow-amber gradient)
 
-3. **Alphabet panel selected letter** (cyan → emerald)
-   - Rationale: Selected state represents user choice
-
-4. **Alphabet panel header indicator** (yellow → cyan)
-   - Rationale: Header is informational, not an action
-
-5. **Suggestion card letter badge** (yellow → cyan)
-   - Rationale: Suggestions are informational
-
-6. **Sidebar turn indicator** (yellow → emerald)
-   - Rationale: Turn indicator shows active player state
-
-### Remaining Yellow Usage:
-- `yellow-*` is **reserved exclusively for warning states** (Banner, Badge, Button warning variant)
-- **Do not use** yellow for interactive elements, turn indicators, or user actions
-- Current yellow usage (12 occurrences) is intentional and appropriate
+### Rationale
+- **Yellow** is bright and attention-grabbing, perfect for user actions
+- **Amber** works well for both opponent moves and warnings (warm, cautionary color)
+- **Cyan** remains informational and neutral
+- Clear visual separation between player (yellow) and opponent (amber)
 
 ---
 
@@ -193,10 +195,13 @@ This document defines the standardized color palette for the Balda game web inte
 ### User Path Highlighting
 ```tsx
 // New letter in user's path
-'bg-emerald-800 border-emerald-300 text-white ring-4 ring-emerald-400/70'
+'bg-yellow-800 border-yellow-300 text-white ring-4 ring-yellow-400/70'
 
 // Existing letter in user's path
-'bg-emerald-600 border-emerald-200 text-white ring-2 ring-emerald-300/50'
+'bg-yellow-600 border-yellow-200 text-white ring-2 ring-yellow-300/50'
+
+// Selected cell
+'bg-yellow-900 border-yellow-400 text-white ring-4 ring-yellow-500/80'
 ```
 
 ### Opponent Path Highlighting
@@ -219,14 +224,17 @@ This document defines the standardized color palette for the Balda game web inte
 
 ### Interactive Buttons
 ```tsx
-// User action button
-'bg-emerald-600 hover:bg-emerald-500 border-emerald-400'
+// User action button (success)
+'bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-500'
 
 // Info button
-'bg-cyan-600 hover:bg-cyan-500 border-cyan-500'
+'bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-500'
+
+// Warning button
+'bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500'
 
 // Danger button
-'bg-red-600 hover:bg-red-500 border-red-500'
+'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500'
 ```
 
 ---
@@ -241,9 +249,22 @@ bun run scripts/analyze-colors.ts
 
 This script will:
 - Count usage of each color shade across the codebase
-- Identify any remaining yellow usage
 - Report color distribution by component
-- Flag potential color misuse
+- Validate color consistency
+
+---
+
+## Maintenance Checklist
+
+When adding new UI components:
+
+- [ ] Does it represent a user action? → Use `yellow-*`
+- [ ] Does it represent opponent state? → Use `amber-*`
+- [ ] Is it informational/suggestive? → Use `cyan-*`
+- [ ] Is it a warning/alert? → Use `amber-*`
+- [ ] Is it an error/danger? → Use `red-*`
+- [ ] Run `bun run scripts/analyze-colors.ts` to verify
+- [ ] Check `COLOR_CODE.md` for shade guidelines
 
 ---
 

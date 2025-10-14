@@ -67,9 +67,9 @@ export const AlphabetPanel = memo((({
                   'h-full w-full font-black text-xl sm:text-2xl transition-all duration-300 border-2',
                   'group relative',
                   {
-                    'bg-emerald-600 border-emerald-300 text-white shadow-lg ring-2 ring-emerald-400': isSelected,
-                    'bg-emerald-400 border-emerald-300 text-slate-900 shadow-lg ring-2 ring-emerald-400': isHovered,
-                    'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700 hover:border-emerald-400 hover:ring-2 hover:ring-emerald-400 hover:shadow-lg hover:shadow-emerald-400/10 hover:scale-[1.02]': !isSelected && !isHovered && !buttonDisabled,
+                    'bg-yellow-600 border-yellow-300 text-white shadow-lg ring-2 ring-yellow-400': isSelected,
+                    'bg-yellow-400 border-yellow-300 text-slate-900 shadow-lg ring-2 ring-yellow-400': isHovered,
+                    'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700 hover:border-yellow-400 hover:ring-2 hover:ring-yellow-400 hover:shadow-lg hover:shadow-yellow-400/10 hover:scale-[1.02]': !isSelected && !isHovered && !buttonDisabled,
                     'bg-slate-800 text-slate-500 cursor-not-allowed border-slate-700': buttonDisabled,
                     'cursor-pointer': !buttonDisabled,
                   },
@@ -78,7 +78,7 @@ export const AlphabetPanel = memo((({
                 {letter}
                 {/* Hover effect overlay */}
                 {!buttonDisabled && (
-                  <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 )}
               </button>
             )

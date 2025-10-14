@@ -159,8 +159,8 @@ async function analyzeColors(files: string[], baseDir: string): Promise<ColorRep
       const fileShadeCount = fileColors.get(shadeKey) || 0
       fileColors.set(shadeKey, fileShadeCount + 1)
 
-      // Track deprecated yellow usage
-      if (color === 'yellow') {
+      // Track deprecated emerald usage (yellow replaced emerald for user actions)
+      if (color === 'emerald') {
         if (!report.deprecatedUsage.find(u => u.color === color && u.shade === shade)) {
           report.deprecatedUsage.push(usage)
         }
@@ -204,7 +204,7 @@ function formatReport(report: ColorReport, verbose = false): string {
 
   // Deprecated usage
   if (report.deprecatedUsage.length > 0) {
-    lines.push('⚠️  DEPRECATED YELLOW USAGE')
+    lines.push('⚠️  DEPRECATED EMERALD USAGE (replaced by yellow for user actions)')
     for (const usage of report.deprecatedUsage) {
       lines.push(`   ${usage.color}-${usage.shade}: ${usage.count} occurrences`)
       if (verbose) {
@@ -216,7 +216,7 @@ function formatReport(report: ColorReport, verbose = false): string {
     lines.push('')
   }
   else {
-    lines.push('✅ NO DEPRECATED YELLOW USAGE')
+    lines.push('✅ NO DEPRECATED EMERALD USAGE')
     lines.push('')
   }
 
@@ -316,7 +316,7 @@ async function main() {
 
   // Exit with error code if deprecated colors found
   if (report.deprecatedUsage.length > 0) {
-    console.error('\n⚠️  Warning: Deprecated yellow colors detected!')
+    console.error('\n⚠️  Warning: Deprecated emerald colors detected! (Use yellow for user actions instead)')
     process.exit(1)
   }
 }

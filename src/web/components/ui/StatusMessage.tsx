@@ -20,17 +20,17 @@ const stepConfig = {
   'select-cell': {
     icon: '',
     text: (moveNumber: number) => `Ход №${moveNumber}`,
-    className: 'text-emerald-100',
+    className: 'text-yellow-100',
   },
   'select-letter': {
     icon: '',
     text: 'Выбери букву',
-    className: 'text-emerald-100',
+    className: 'text-yellow-100',
   },
   'build-word': {
     icon: '',
     text: 'Составь слово',
-    className: 'text-emerald-100',
+    className: 'text-yellow-100',
   },
 }
 

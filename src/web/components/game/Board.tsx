@@ -135,13 +135,13 @@ export const Board = memo(({
                       )
                     : selected && !cell && selectedLetter
                       ? (
-                          <div className="text-[length:calc(var(--text-resp-board)*0.85)] text-emerald-100 font-black">
+                          <div className="text-[length:calc(var(--text-resp-board)*0.85)] text-yellow-100 font-black">
                             {selectedLetter}
                           </div>
                         )
                       : selected && !cell
                         ? (
-                            <div className="text-2xl text-emerald-100 font-bold">
+                            <div className="text-2xl text-yellow-100 font-bold">
                               {getCoordLabel(rowIndex, colIndex)}
                             </div>
                           )
@@ -166,7 +166,7 @@ export const Board = memo(({
                     <div className={cn(
                       'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut',
                       isHoveredWordFromUser
-                        ? (isNewLetterInHoveredPath ? 'text-emerald-100' : 'text-emerald-200')
+                        ? (isNewLetterInHoveredPath ? 'text-yellow-100' : 'text-yellow-200')
                         : (isNewLetterInHoveredPath ? 'text-amber-100' : 'text-amber-200'),
                     )}
                     >
