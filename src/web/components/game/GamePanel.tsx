@@ -17,6 +17,7 @@ export interface GamePanelProps {
   onSuggestionSelect?: (suggestion: Suggestion) => void
   onClose?: () => void
   onHideSuggestions?: () => void
+  excludeRefs?: React.RefObject<HTMLElement | null>[]
 }
 
 /**
@@ -35,6 +36,7 @@ export function GamePanel({
   onSuggestionSelect,
   onClose,
   onHideSuggestions,
+  excludeRefs = [],
 }: GamePanelProps) {
   const shouldShowPanel = shouldShowAlphabetPanel(showSuggestions, selectedCell, selectedLetter)
 
@@ -53,6 +55,7 @@ export function GamePanel({
       }
     },
     shouldShowPanel && !isClosing,
+    excludeRefs,
   )
 
   // Don't render if not visible

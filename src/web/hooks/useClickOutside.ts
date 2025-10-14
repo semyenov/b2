@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import type { RefObject } from 'react'
 
 /**
  * Custom hook to detect clicks outside of a referenced element
@@ -15,6 +16,7 @@ import { useEffect, useRef } from 'react'
 export function useClickOutside<T extends HTMLElement = HTMLElement>(
   callback: () => void,
   enabled: boolean = true,
+  excludeRefs: RefObject<HTMLElement | null>[] = [],
 ): React.RefObject<T | null> {
   const ref = useRef<T | null>(null)
 
@@ -24,6 +26,10 @@ export function useClickOutside<T extends HTMLElement = HTMLElement>(
     }
 
     const handleClickOutside = (event: MouseEvent) => {
+      // Ignore clicks inside any of the excluded elements
+      if (excludeRefs.some(r => r.current && r.current.contains(event.target as Node))) {
+        return
+      }
       // Check if click is outside the referenced element
       if (ref.current && !ref.current.contains(event.target as Node)) {
         callback()
@@ -37,7 +43,7 @@ export function useClickOutside<T extends HTMLElement = HTMLElement>(
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [callback, enabled])
+  }, [callback, enabled, excludeRefs])
 
   return ref
 }

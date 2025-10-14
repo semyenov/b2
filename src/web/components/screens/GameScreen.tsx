@@ -1,7 +1,7 @@
 import type { GameState, Suggestion } from '../../lib/client'
 import type { Position } from '../../types/game'
 import { Board, ControlButtons, GamePanel, Sidebar } from '@components'
-import { memo } from 'react'
+import { memo, useRef } from 'react'
 import { useGameActions } from '../../hooks/useGameActions'
 
 interface GameScreenProps {
@@ -61,6 +61,9 @@ export const GameScreen = memo(({
     onHideSuggestions,
   })
 
+  // Ref to bottom control panel container to exclude from click-outside
+  const bottomPanelRef = useRef<HTMLDivElement | null>(null)
+
   return (
     <div className="relative h-screen flex flex-col bg-slate-900 overflow-hidden">
       {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
@@ -114,10 +117,11 @@ export const GameScreen = memo(({
         onSuggestionSelect={handleSuggestionSelect}
         onClose={onClearSelection}
         onHideSuggestions={onHideSuggestions}
+        excludeRefs={[bottomPanelRef]}
       />
 
       {/* Bottom control panel - fixed at bottom */}
-      <div className="shrink-0 shadow-depth-3 overflow-hidden relative z-50">
+      <div ref={bottomPanelRef} className="shrink-0 shadow-depth-3 overflow-hidden relative z-50">
         <div className="bg-slate-800 border-t border-slate-600 px-6 py-6">
           <ControlButtons
             isMyTurn={isMyTurn}
