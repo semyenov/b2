@@ -12,6 +12,164 @@
   /* Essential responsive dimensions */
   --size-resp-panel: 1fr;  /* Player panel width - flexible to use available space */
   --height-control-panel: 105px;  /* Bottom control panel height - increased for better visibility */
+
+  /* ========================================
+     SEMANTIC COLOR ALIASES
+     ======================================== */
+
+  /* User/Player colors → Yellow
+     Use for: user actions, active states, success */
+  --color-user-50: var(--color-yellow-50);
+  --color-user-100: var(--color-yellow-100);
+  --color-user-200: var(--color-yellow-200);
+  --color-user-300: var(--color-yellow-300);
+  --color-user-400: var(--color-yellow-400);
+  --color-user-500: var(--color-yellow-500);
+  --color-user-600: var(--color-yellow-600);
+  --color-user-700: var(--color-yellow-700);
+  --color-user-800: var(--color-yellow-800);
+  --color-user-900: var(--color-yellow-900);
+  --color-user-950: var(--color-yellow-950);
+
+  --color-player-50: var(--color-yellow-50);
+  --color-player-100: var(--color-yellow-100);
+  --color-player-200: var(--color-yellow-200);
+  --color-player-300: var(--color-yellow-300);
+  --color-player-400: var(--color-yellow-400);
+  --color-player-500: var(--color-yellow-500);
+  --color-player-600: var(--color-yellow-600);
+  --color-player-700: var(--color-yellow-700);
+  --color-player-800: var(--color-yellow-800);
+  --color-player-900: var(--color-yellow-900);
+  --color-player-950: var(--color-yellow-950);
+
+  --color-active-50: var(--color-yellow-50);
+  --color-active-100: var(--color-yellow-100);
+  --color-active-200: var(--color-yellow-200);
+  --color-active-300: var(--color-yellow-300);
+  --color-active-400: var(--color-yellow-400);
+  --color-active-500: var(--color-yellow-500);
+  --color-active-600: var(--color-yellow-600);
+  --color-active-700: var(--color-yellow-700);
+  --color-active-800: var(--color-yellow-800);
+  --color-active-900: var(--color-yellow-900);
+  --color-active-950: var(--color-yellow-950);
+
+  --color-success-50: var(--color-yellow-50);
+  --color-success-100: var(--color-yellow-100);
+  --color-success-200: var(--color-yellow-200);
+  --color-success-300: var(--color-yellow-300);
+  --color-success-400: var(--color-yellow-400);
+  --color-success-500: var(--color-yellow-500);
+  --color-success-600: var(--color-yellow-600);
+  --color-success-700: var(--color-yellow-700);
+  --color-success-800: var(--color-yellow-800);
+  --color-success-900: var(--color-yellow-900);
+  --color-success-950: var(--color-yellow-950);
+
+  /* Opponent/Warning colors → Amber
+     Use for: opponent actions, warning states */
+  --color-opponent-50: var(--color-amber-50);
+  --color-opponent-100: var(--color-amber-100);
+  --color-opponent-200: var(--color-amber-200);
+  --color-opponent-300: var(--color-amber-300);
+  --color-opponent-400: var(--color-amber-400);
+  --color-opponent-500: var(--color-amber-500);
+  --color-opponent-600: var(--color-amber-600);
+  --color-opponent-700: var(--color-amber-700);
+  --color-opponent-800: var(--color-amber-800);
+  --color-opponent-900: var(--color-amber-900);
+  --color-opponent-950: var(--color-amber-950);
+
+  --color-warning-50: var(--color-amber-50);
+  --color-warning-100: var(--color-amber-100);
+  --color-warning-200: var(--color-amber-200);
+  --color-warning-300: var(--color-amber-300);
+  --color-warning-400: var(--color-amber-400);
+  --color-warning-500: var(--color-amber-500);
+  --color-warning-600: var(--color-amber-600);
+  --color-warning-700: var(--color-amber-700);
+  --color-warning-800: var(--color-amber-800);
+  --color-warning-900: var(--color-amber-900);
+  --color-warning-950: var(--color-amber-950);
+
+  /* Information/Suggestion colors → Cyan
+     Use for: info elements, AI suggestions, help text */
+  --color-info-50: var(--color-cyan-50);
+  --color-info-100: var(--color-cyan-100);
+  --color-info-200: var(--color-cyan-200);
+  --color-info-300: var(--color-cyan-300);
+  --color-info-400: var(--color-cyan-400);
+  --color-info-500: var(--color-cyan-500);
+  --color-info-600: var(--color-cyan-600);
+  --color-info-700: var(--color-cyan-700);
+  --color-info-800: var(--color-cyan-800);
+  --color-info-900: var(--color-cyan-900);
+  --color-info-950: var(--color-cyan-950);
+
+  --color-suggestion-50: var(--color-cyan-50);
+  --color-suggestion-100: var(--color-cyan-100);
+  --color-suggestion-200: var(--color-cyan-200);
+  --color-suggestion-300: var(--color-cyan-300);
+  --color-suggestion-400: var(--color-cyan-400);
+  --color-suggestion-500: var(--color-cyan-500);
+  --color-suggestion-600: var(--color-cyan-600);
+  --color-suggestion-700: var(--color-cyan-700);
+  --color-suggestion-800: var(--color-cyan-800);
+  --color-suggestion-900: var(--color-cyan-900);
+  --color-suggestion-950: var(--color-cyan-950);
+
+  /* Neutral/Surface colors → Slate
+     Use for: backgrounds, borders, disabled states */
+  --color-neutral-50: var(--color-slate-50);
+  --color-neutral-100: var(--color-slate-100);
+  --color-neutral-200: var(--color-slate-200);
+  --color-neutral-300: var(--color-slate-300);
+  --color-neutral-400: var(--color-slate-400);
+  --color-neutral-500: var(--color-slate-500);
+  --color-neutral-600: var(--color-slate-600);
+  --color-neutral-700: var(--color-slate-700);
+  --color-neutral-800: var(--color-slate-800);
+  --color-neutral-900: var(--color-slate-900);
+  --color-neutral-950: var(--color-slate-950);
+
+  --color-surface-50: var(--color-slate-50);
+  --color-surface-100: var(--color-slate-100);
+  --color-surface-200: var(--color-slate-200);
+  --color-surface-300: var(--color-slate-300);
+  --color-surface-400: var(--color-slate-400);
+  --color-surface-500: var(--color-slate-500);
+  --color-surface-600: var(--color-slate-600);
+  --color-surface-700: var(--color-slate-700);
+  --color-surface-800: var(--color-slate-800);
+  --color-surface-900: var(--color-slate-900);
+  --color-surface-950: var(--color-slate-950);
+
+  /* Danger/Error colors → Red
+     Use for: errors, destructive actions */
+  --color-danger-50: var(--color-red-50);
+  --color-danger-100: var(--color-red-100);
+  --color-danger-200: var(--color-red-200);
+  --color-danger-300: var(--color-red-300);
+  --color-danger-400: var(--color-red-400);
+  --color-danger-500: var(--color-red-500);
+  --color-danger-600: var(--color-red-600);
+  --color-danger-700: var(--color-red-700);
+  --color-danger-800: var(--color-red-800);
+  --color-danger-900: var(--color-red-900);
+  --color-danger-950: var(--color-red-950);
+
+  --color-error-50: var(--color-red-50);
+  --color-error-100: var(--color-red-100);
+  --color-error-200: var(--color-red-200);
+  --color-error-300: var(--color-red-300);
+  --color-error-400: var(--color-red-400);
+  --color-error-500: var(--color-red-500);
+  --color-error-600: var(--color-red-600);
+  --color-error-700: var(--color-red-700);
+  --color-error-800: var(--color-red-800);
+  --color-error-900: var(--color-red-900);
+  --color-error-950: var(--color-red-950);
 }
 
 /* ========================================

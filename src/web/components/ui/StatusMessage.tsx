@@ -15,22 +15,22 @@ const stepConfig = {
   'waiting': {
     icon: '',
     text: 'Ход противника',
-    className: 'text-amber-300',
+    className: 'text-opponent-300',
   },
   'select-cell': {
     icon: '',
     text: (moveNumber: number) => `Ход №${moveNumber}`,
-    className: 'text-yellow-100',
+    className: 'text-user-100',
   },
   'select-letter': {
     icon: '',
     text: 'Выбери букву',
-    className: 'text-yellow-100',
+    className: 'text-user-100',
   },
   'build-word': {
     icon: '',
     text: 'Составь слово',
-    className: 'text-yellow-100',
+    className: 'text-user-100',
   },
 }
 

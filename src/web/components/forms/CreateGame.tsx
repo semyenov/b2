@@ -22,7 +22,7 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-500 mb-3">
+        <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-info-400 to-info-500 mb-3">
           Создать игру
         </h1>
         <p className="text-gray-400 text-base">
@@ -55,7 +55,7 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
                     className={cn(
                       'py-3 font-bold text-base transition-all duration-200',
                       size === String(s)
-                        ? 'bg-gradient-to-r from-cyan-500 to-cyan-500 text-cyan-100 shadow-depth-2 ring-2 ring-cyan-400'
+                        ? 'bg-gradient-to-r from-info-500 to-info-500 text-info-100 shadow-depth-2 ring-2 ring-info-400'
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
                     )}
                   >
@@ -76,7 +76,7 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
               onChange={e => setBaseWord(e.target.value.toUpperCase())}
               error={error}
               helpText="Слово будет размещено в центре доски"
-              className="uppercase text-center text-2xl tracking-widest text-cyan-400"
+              className="uppercase text-center text-2xl tracking-widest text-info-400"
               placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
               maxLength={Number.parseInt(size, 10)}
               required

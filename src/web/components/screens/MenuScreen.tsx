@@ -24,7 +24,7 @@ export const MenuScreen = memo(({
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
       {/* Hero Section */}
       <div className="text-center mb-12">
-        <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-400 to-purple-500 mb-4 tracking-tight drop-shadow-2xl">
+        <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-info-400 via-info-400 to-purple-500 mb-4 tracking-tight drop-shadow-2xl">
           БАЛДА
         </h1>
         <p className="text-gray-400 text-base md:text-lg font-medium tracking-wide">

@@ -40,11 +40,11 @@ interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'className'> 
  * Variant styles mapping
  */
 const variantStyles: Record<BadgeVariant, string> = {
-  success: 'bg-yellow-900 text-yellow-300 border-yellow-600',
-  warning: 'bg-amber-900 text-amber-300 border-amber-600',
-  danger: 'bg-red-900 text-red-300 border-red-600',
-  info: 'bg-cyan-900 text-cyan-300 border-cyan-600',
-  gray: 'bg-slate-700 text-slate-300 border-slate-600',
+  success: 'bg-user-900 text-user-300 border-user-600',
+  warning: 'bg-opponent-900 text-opponent-300 border-opponent-600',
+  danger: 'bg-danger-900 text-danger-300 border-danger-600',
+  info: 'bg-info-900 text-info-300 border-info-600',
+  gray: 'bg-surface-700 text-surface-300 border-surface-600',
 }
 
 /**

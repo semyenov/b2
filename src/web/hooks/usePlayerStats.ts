@@ -69,7 +69,7 @@ export function usePlayerStats({ game, playerIndex }: UsePlayerStatsOptions): Pl
       ? 'text-green-400'
       : isScoreTied
         ? 'text-gray-100'
-        : 'text-red-400'
+        : 'text-danger-400'
 
     return {
       player,

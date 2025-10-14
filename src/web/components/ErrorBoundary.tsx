@@ -63,27 +63,27 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default fallback UI
       return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center px-4">
-          <div className="max-w-2xl w-full bg-slate-800 border-2 border-red-600 p-8 shadow-depth-3">
+        <div className="min-h-screen bg-gradient-to-b from-surface-900 to-surface-800 flex items-center justify-center px-4">
+          <div className="max-w-2xl w-full bg-surface-800 border-2 border-danger-600 p-8 shadow-depth-3">
             {/* Header */}
             <div className="text-center mb-6">
               <div className="text-6xl mb-4">⚠️</div>
-              <h1 className="text-3xl font-bold text-red-400 mb-2">
+              <h1 className="text-3xl font-bold text-danger-400 mb-2">
                 Что-то пошло не так
               </h1>
-              <p className="text-slate-300 text-lg">
+              <p className="text-surface-300 text-lg">
                 Произошла непредвиденная ошибка в приложении
               </p>
             </div>
 
             {/* Error Details (only in development) */}
             {import.meta.env.DEV && this.state.error && (
-              <div className="mb-6 bg-slate-900 border border-slate-700 p-4 overflow-auto max-h-64">
-                <p className="text-red-400 font-mono text-sm mb-2">
+              <div className="mb-6 bg-surface-900 border border-surface-700 p-4 overflow-auto max-h-64">
+                <p className="text-danger-400 font-mono text-sm mb-2">
                   {this.state.error.toString()}
                 </p>
                 {this.state.errorInfo && (
-                  <pre className="text-slate-400 text-xs whitespace-pre-wrap">
+                  <pre className="text-surface-400 text-xs whitespace-pre-wrap">
                     {this.state.errorInfo.componentStack}
                   </pre>
                 )}
@@ -94,20 +94,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="flex gap-3">
               <button
                 onClick={this.handleReset}
-                className="flex-1 py-4 bg-cyan-600 hover:bg-cyan-700 border-2 border-cyan-500 font-bold text-lg text-white transition-all duration-200 hover:shadow-depth-3"
+                className="flex-1 py-4 bg-info-600 hover:bg-info-700 border-2 border-info-500 font-bold text-lg text-white transition-all duration-200 hover:shadow-depth-3"
               >
                 🔄 Попробовать снова
               </button>
               <button
                 onClick={() => window.location.href = '/'}
-                className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 border-2 border-slate-600 font-bold text-lg text-slate-300 transition-all duration-200 hover:shadow-depth-2"
+                className="flex-1 py-4 bg-surface-700 hover:bg-surface-600 border-2 border-surface-600 font-bold text-lg text-surface-300 transition-all duration-200 hover:shadow-depth-2"
               >
                 🏠 На главную
               </button>
             </div>
 
             {/* Help Text */}
-            <p className="text-center text-slate-500 text-sm mt-6">
+            <p className="text-center text-surface-500 text-sm mt-6">
               Если проблема повторяется, попробуйте обновить страницу или очистить кеш браузера
             </p>
           </div>

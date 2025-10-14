@@ -70,14 +70,14 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'cla
  * Variant styles mapping
  */
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-500 hover:to-cyan-600 text-white border-2 border-cyan-500 shadow-depth-2 hover:shadow-depth-3',
+  primary: 'bg-gradient-to-r from-info-600 to-info-700 hover:from-info-500 hover:to-info-600 text-white border-2 border-info-500 shadow-depth-2 hover:shadow-depth-3',
   secondary: 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white border-2 border-purple-500 shadow-depth-2 hover:shadow-depth-3',
-  success: 'bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-500 hover:to-yellow-600 text-white border-2 border-yellow-400 shadow-depth-2 hover:shadow-depth-3',
-  warning: 'bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white border-2 border-amber-500 shadow-depth-2 hover:shadow-depth-3',
-  danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white border-2 border-red-500 shadow-depth-2 hover:shadow-depth-3',
-  ghost: 'bg-transparent hover:bg-slate-800 text-slate-300 hover:text-white border-2 border-transparent hover:border-slate-600',
-  muted: 'bg-slate-600 hover:bg-slate-500 text-white shadow-depth-1 hover:shadow-depth-2',
-  gray: 'bg-slate-700 hover:bg-slate-600 text-white border-2 border-slate-600 shadow-depth-1 hover:shadow-depth-2',
+  success: 'bg-gradient-to-r from-user-600 to-user-700 hover:from-user-500 hover:to-user-600 text-white border-2 border-user-400 shadow-depth-2 hover:shadow-depth-3',
+  warning: 'bg-gradient-to-r from-opponent-600 to-opponent-700 hover:from-opponent-500 hover:to-opponent-600 text-white border-2 border-opponent-500 shadow-depth-2 hover:shadow-depth-3',
+  danger: 'bg-gradient-to-r from-danger-600 to-danger-700 hover:from-danger-500 hover:to-danger-600 text-white border-2 border-danger-500 shadow-depth-2 hover:shadow-depth-3',
+  ghost: 'bg-transparent hover:bg-surface-800 text-surface-300 hover:text-white border-2 border-transparent hover:border-surface-600',
+  muted: 'bg-surface-600 hover:bg-surface-500 text-white shadow-depth-1 hover:shadow-depth-2',
+  gray: 'bg-surface-700 hover:bg-surface-600 text-white border-2 border-surface-600 shadow-depth-1 hover:shadow-depth-2',
 }
 
 /**
@@ -135,7 +135,7 @@ export const Button = memo(
             // Width
             fullWidth && 'w-full',
             // Disabled state
-            (disabled || loading) && 'bg-slate-700 border-slate-600 text-slate-400 cursor-not-allowed',
+            (disabled || loading) && 'bg-surface-700 border-surface-600 text-surface-400 cursor-not-allowed',
             // Custom className
             className,
           )}

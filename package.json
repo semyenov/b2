@@ -14,7 +14,13 @@
     "type-check": "bun tsc --noEmit",
     "type-check:watch": "bun tsc --noEmit --watch",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "colors:migrate:dry": "bun run scripts/migrate-colors.ts --dry-run",
+    "colors:migrate": "bun run scripts/migrate-colors.ts --apply",
+    "colors:rollback": "bun run scripts/migrate-colors.ts --rollback",
+    "colors:clean": "bun run scripts/migrate-colors.ts --clean-backups",
+    "colors:analyze": "bun run scripts/analyze-colors.ts",
+    "colors:analyze:verbose": "bun run scripts/analyze-colors.ts --verbose"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",

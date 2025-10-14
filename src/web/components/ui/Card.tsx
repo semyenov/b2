@@ -46,10 +46,10 @@ interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'className'> {
  * Variant styles mapping
  */
 const variantStyles: Record<CardVariant, string> = {
-  default: 'bg-slate-800 border-2 border-slate-700 shadow-depth-2',
-  elevated: 'bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700 shadow-depth-3',
-  bordered: 'bg-slate-800 border-2 border-slate-600 shadow-depth-1',
-  gradient: 'bg-gradient-to-br from-slate-800 to-slate-900 shadow-depth-3 border-2 border-slate-700',
+  default: 'bg-surface-800 border-2 border-surface-700 shadow-depth-2',
+  elevated: 'bg-gradient-to-br from-surface-800 to-surface-900 border-2 border-surface-700 shadow-depth-3',
+  bordered: 'bg-surface-800 border-2 border-surface-600 shadow-depth-1',
+  gradient: 'bg-gradient-to-br from-surface-800 to-surface-900 shadow-depth-3 border-2 border-surface-700',
 }
 
 /**
@@ -100,7 +100,7 @@ export const Card = memo(
             // Padding
             paddingStyles[padding],
             // Interactive
-            interactive && 'cursor-pointer hover:border-cyan-500 hover:shadow-depth-3',
+            interactive && 'cursor-pointer hover:border-info-500 hover:shadow-depth-3',
             // Custom className
             className,
           )}

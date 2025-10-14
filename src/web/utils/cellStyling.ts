@@ -56,29 +56,29 @@ export function getCellClassName({
 
     // State-based styling (priority order: selected > inPath > isInRecentOpponentPath > isInHoveredPath > hasCell > empty)
     {
-      'bg-yellow-900 border-yellow-400 text-white shadow-depth-3 ring-4 ring-yellow-500/80': selected,
+      'bg-user-900 border-user-400 text-white shadow-depth-3 ring-4 ring-user-500/80': selected,
       // User moves (current path + user's hovered words): new letter is darker, existing letters are brighter
-      'bg-yellow-800 border-yellow-300 text-white shadow-depth-3 ring-4 ring-yellow-400/70': !selected && ((inPath && isNewLetterInPath) || (!inPath && !isInRecentOpponentPath && isInHoveredPath && isHoveredWordFromUser && isNewLetterInHoveredPath)),
-      'bg-yellow-600 border-yellow-200 text-white shadow-depth-3 ring-2 ring-yellow-300/50': !selected && ((inPath && !isNewLetterInPath) || (!inPath && !isInRecentOpponentPath && isInHoveredPath && isHoveredWordFromUser && !isNewLetterInHoveredPath)),
+      'bg-user-800 border-user-300 text-white shadow-depth-3 ring-4 ring-user-400/70': !selected && ((inPath && isNewLetterInPath) || (!inPath && !isInRecentOpponentPath && isInHoveredPath && isHoveredWordFromUser && isNewLetterInHoveredPath)),
+      'bg-user-600 border-user-200 text-white shadow-depth-3 ring-2 ring-user-300/50': !selected && ((inPath && !isNewLetterInPath) || (!inPath && !isInRecentOpponentPath && isInHoveredPath && isHoveredWordFromUser && !isNewLetterInHoveredPath)),
       // Opponent moves (recent + opponent's hovered words): new letter is darker, existing letters are brighter
-      'bg-amber-800 border-amber-300 text-white shadow-depth-3 ring-4 ring-amber-400/90 animate-pulse shadow-amber-500/40': !selected && !inPath && isInRecentOpponentPath && isNewLetterInOpponentPath,
-      'bg-amber-600 border-amber-200 text-white shadow-depth-3 ring-2 ring-amber-300/50 animate-pulse': !selected && !inPath && isInRecentOpponentPath && !isNewLetterInOpponentPath,
-      'bg-amber-800 border-amber-300 text-white shadow-depth-3 ring-4 ring-amber-400/70': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && !isHoveredWordFromUser && isNewLetterInHoveredPath,
-      'bg-amber-600 border-amber-200 text-white shadow-depth-2 ring-2 ring-amber-300/50': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && !isHoveredWordFromUser && !isNewLetterInHoveredPath,
-      'bg-slate-800 border-slate-700 text-slate-300 shadow-depth-2': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && hasCell,
-      'bg-slate-900 border-slate-700 text-slate-600': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && !hasCell,
+      'bg-opponent-800 border-opponent-300 text-white shadow-depth-3 ring-4 ring-opponent-400/90 animate-pulse shadow-opponent-500/40': !selected && !inPath && isInRecentOpponentPath && isNewLetterInOpponentPath,
+      'bg-opponent-600 border-opponent-200 text-white shadow-depth-3 ring-2 ring-opponent-300/50 animate-pulse': !selected && !inPath && isInRecentOpponentPath && !isNewLetterInOpponentPath,
+      'bg-opponent-800 border-opponent-300 text-white shadow-depth-3 ring-4 ring-opponent-400/70': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && !isHoveredWordFromUser && isNewLetterInHoveredPath,
+      'bg-opponent-600 border-opponent-200 text-white shadow-depth-2 ring-2 ring-opponent-300/50': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && !isHoveredWordFromUser && !isNewLetterInHoveredPath,
+      'bg-surface-800 border-surface-700 text-surface-300 shadow-depth-2': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && hasCell,
+      'bg-surface-900 border-surface-700 text-surface-600': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && !hasCell,
     },
 
     // Interactive styling
     {
-      'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-slate-700 hover:z-10 hover:border-yellow-400 hover:ring-2 hover:ring-yellow-500/50': canClick,
+      'cursor-pointer hover:shadow-depth-3 hover:transform hover:scale-105 hover:bg-surface-700 hover:z-10 hover:border-user-400 hover:ring-2 hover:ring-user-500/50': canClick,
       'cursor-default': !canClick,
     },
 
     // Hover ring
     {
-      'ring-4 ring-yellow-400': isHovered && canClick && selected,
-      'ring-4 ring-yellow-400 bg-slate-700 border-yellow-500': isHovered && canClick && !selected,
+      'ring-4 ring-user-400': isHovered && canClick && selected,
+      'ring-4 ring-user-400 bg-surface-700 border-user-500': isHovered && canClick && !selected,
     },
   )
 }

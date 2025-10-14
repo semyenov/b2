@@ -2,6 +2,18 @@
 
 This document defines the standardized color palette for the Balda game web interface. Consistent color usage improves UX by creating clear visual associations between colors and their semantic meanings.
 
+## ⚠️ IMPORTANT: Use Semantic Color Aliases
+
+**Always use semantic aliases** (`user-*`, `opponent-*`, `info-*`, etc.) instead of raw color names (`yellow-*`, `amber-*`, `cyan-*`).
+
+**Why?**
+- **Clarity**: `bg-user-600` is clearer than `bg-yellow-600`
+- **Maintainability**: Change colors in one place (CSS theme)
+- **Consistency**: Forces semantic thinking
+- **Rebranding**: Easy to switch colors without code changes
+
+See [SEMANTIC_COLORS.md](./docs/SEMANTIC_COLORS.md) for complete alias reference.
+
 ## Core Color Palette
 
 ### Yellow - User Player Actions

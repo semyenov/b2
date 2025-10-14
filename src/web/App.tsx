@@ -79,7 +79,7 @@ export function App() {
   })
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-surface-900">
       {/* Screen reader live region for game announcements */}
       <div
         className="sr-only"

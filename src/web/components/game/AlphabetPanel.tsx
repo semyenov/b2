@@ -29,11 +29,11 @@ export const AlphabetPanel = memo((({
   return (
     <div className="flex flex-col h-full w-full min-h-0">
       {/* Header Panel */}
-      <div className="px-4 py-4 border-b shrink-0 transition-all duration-300 bg-slate-900 border-slate-700">
+      <div className="px-4 py-4 border-b shrink-0 transition-all duration-300 bg-surface-900 border-surface-700">
         <div className="flex items-center justify-center">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-cyan-400 rounded-full" />
-            <div className="text-sm font-bold text-slate-300 uppercase">
+            <div className="w-3 h-3 bg-info-400 rounded-full" />
+            <div className="text-sm font-bold text-surface-300 uppercase">
               Выбор буквы
             </div>
           </div>
@@ -67,10 +67,10 @@ export const AlphabetPanel = memo((({
                   'h-full w-full font-black text-xl sm:text-2xl transition-all duration-300 border-2',
                   'group relative',
                   {
-                    'bg-yellow-600 border-yellow-300 text-white shadow-lg ring-2 ring-yellow-400': isSelected,
-                    'bg-yellow-400 border-yellow-300 text-slate-900 shadow-lg ring-2 ring-yellow-400': isHovered,
-                    'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700 hover:border-yellow-400 hover:ring-2 hover:ring-yellow-400 hover:shadow-lg hover:shadow-yellow-400/10 hover:scale-[1.02]': !isSelected && !isHovered && !buttonDisabled,
-                    'bg-slate-800 text-slate-500 cursor-not-allowed border-slate-700': buttonDisabled,
+                    'bg-user-600 border-user-300 text-white shadow-lg ring-2 ring-user-400': isSelected,
+                    'bg-user-400 border-user-300 text-surface-900 shadow-lg ring-2 ring-user-400': isHovered,
+                    'bg-surface-800 text-surface-300 border-surface-700 hover:bg-surface-700 hover:border-user-400 hover:ring-2 hover:ring-user-400 hover:shadow-lg hover:shadow-user-400/10 hover:scale-[1.02]': !isSelected && !isHovered && !buttonDisabled,
+                    'bg-surface-800 text-surface-500 cursor-not-allowed border-surface-700': buttonDisabled,
                     'cursor-pointer': !buttonDisabled,
                   },
                 )}
@@ -78,7 +78,7 @@ export const AlphabetPanel = memo((({
                 {letter}
                 {/* Hover effect overlay */}
                 {!buttonDisabled && (
-                  <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-user-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 )}
               </button>
             )

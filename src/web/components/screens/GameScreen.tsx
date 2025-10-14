@@ -159,7 +159,7 @@ export const GameScreen = memo(({
   }, [])
 
   return (
-    <div className="relative h-screen flex flex-col bg-slate-900 overflow-hidden">
+    <div className="relative h-screen flex flex-col bg-surface-900 overflow-hidden">
       {/* Main game area - Responsive layout: mobile stack, desktop three-column */}
       <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[1fr_auto_1fr] gap-4 lg:gap-6 p-3 lg:p-6 pb-0 overflow-hidden relative">
         {/* Mobile: Players side-by-side, Desktop: Player 1 left sidebar */}
@@ -228,7 +228,7 @@ export const GameScreen = memo(({
 
       {/* Bottom control panel - fixed at bottom */}
       <div ref={bottomPanelRef} className="shrink-0 shadow-depth-3 overflow-hidden relative z-50">
-        <div className="bg-slate-800 border-t border-slate-600 px-6 py-6">
+        <div className="bg-surface-800 border-t border-surface-600 px-6 py-6">
           <ControlButtons
             isMyTurn={isMyTurn}
             selectedCell={selectedCell}

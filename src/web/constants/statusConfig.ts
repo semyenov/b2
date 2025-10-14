@@ -26,7 +26,7 @@ export interface StatusConfig {
 export const STATUS_CONFIG: Record<GameStatus, StatusConfig> = {
   waiting: {
     label: 'Ожидание',
-    color: 'bg-yellow-900 text-yellow-300 border-yellow-600',
+    color: 'bg-user-900 text-user-300 border-user-600',
   },
   in_progress: {
     label: 'В процессе',

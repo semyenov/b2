@@ -70,23 +70,23 @@ export const SuggestionCard = memo(({
       className={cn(
         // Base styles - matching sidebar word list style
         'group relative w-full transition-all duration-300',
-        'bg-slate-800 border border-slate-700 hover:border-cyan-400',
-        'hover:shadow-lg hover:shadow-cyan-400/10 hover:scale-[1.005]',
-        'hover:bg-slate-700',
+        'bg-surface-800 border border-surface-700 hover:border-info-400',
+        'hover:shadow-lg hover:shadow-info-400/10 hover:scale-[1.005]',
+        'hover:bg-surface-700',
         'px-4 py-3',
         'flex items-center justify-between',
         // Keyboard focus
-        isKeyboardFocused && 'ring-2 ring-cyan-400',
+        isKeyboardFocused && 'ring-2 ring-info-400',
       )}
     >
       <div className="flex items-center gap-3">
         {/* Score Badge */}
-        <div className="w-8 h-8 bg-cyan-500/20 flex items-center justify-center text-xs font-bold text-cyan-300">
+        <div className="w-8 h-8 bg-info-500/20 flex items-center justify-center text-xs font-bold text-info-300">
           {Math.round(suggestion.score)}
         </div>
 
         {/* Word - Hero Element */}
-        <span className="font-bold text-xl text-slate-300 group-hover:text-slate-300 transition-colors duration-200">
+        <span className="font-bold text-xl text-surface-300 group-hover:text-surface-300 transition-colors duration-200">
           {suggestion.word}
         </span>
       </div>
@@ -94,11 +94,11 @@ export const SuggestionCard = memo(({
       <div className="flex items-center gap-6">
         {/* Position Badge */}
         <div className="flex items-center gap-3">
-          <span className="text-cyan-200 font-mono font-black text-xl">
+          <span className="text-info-200 font-mono font-black text-xl">
             {posStr}
           </span>
-          <div className="bg-cyan-500/20 border border-cyan-500/30 px-2 py-1 w-8 h-8 flex items-center justify-center">
-            <span className="text-cyan-300 font-black text-lg">
+          <div className="bg-info-500/20 border border-info-500/30 px-2 py-1 w-8 h-8 flex items-center justify-center">
+            <span className="text-info-300 font-black text-lg">
               {suggestion.letter}
             </span>
           </div>
@@ -107,7 +107,7 @@ export const SuggestionCard = memo(({
       </div>
 
       {/* Hover effect overlay */}
-      <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-info-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </button>
   )
 })

@@ -55,7 +55,7 @@ export const Board = memo(({
       <div className="flex-1 flex items-center gap-1">
         {/* Board grid - height-driven, maintains square aspect with enhanced visual design */}
         <div
-          className="grid w-full h-full bg-slate-800 ring-1 ring-slate-600"
+          className="grid w-full h-full bg-surface-800 ring-1 ring-surface-600"
           style={{
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
             gridTemplateRows: `repeat(${gridSize}, 1fr)`,
@@ -129,19 +129,19 @@ export const Board = memo(({
                 >
                   {!cell && !selected
                     ? (
-                        <div className="text-2xl text-slate-600 font-bold">
+                        <div className="text-2xl text-surface-600 font-bold">
                           {displayContent}
                         </div>
                       )
                     : selected && !cell && selectedLetter
                       ? (
-                          <div className="text-[length:calc(var(--text-resp-board)*0.85)] text-yellow-100 font-black">
+                          <div className="text-[length:calc(var(--text-resp-board)*0.85)] text-user-100 font-black">
                             {selectedLetter}
                           </div>
                         )
                       : selected && !cell
                         ? (
-                            <div className="text-2xl text-yellow-100 font-bold">
+                            <div className="text-2xl text-user-100 font-bold">
                               {getCoordLabel(rowIndex, colIndex)}
                             </div>
                           )
@@ -156,7 +156,7 @@ export const Board = memo(({
                   {!inPath && isInRecentOpponentPath && recentOpponentPathIdx >= 0 && (
                     <div className={cn(
                       'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut',
-                      isNewLetterInOpponentPath ? 'text-amber-100' : 'text-amber-200',
+                      isNewLetterInOpponentPath ? 'text-opponent-100' : 'text-opponent-200',
                     )}
                     >
                       {recentOpponentPathIdx + 1}
@@ -166,8 +166,8 @@ export const Board = memo(({
                     <div className={cn(
                       'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut',
                       isHoveredWordFromUser
-                        ? (isNewLetterInHoveredPath ? 'text-yellow-100' : 'text-yellow-200')
-                        : (isNewLetterInHoveredPath ? 'text-amber-100' : 'text-amber-200'),
+                        ? (isNewLetterInHoveredPath ? 'text-user-100' : 'text-user-200')
+                        : (isNewLetterInHoveredPath ? 'text-opponent-100' : 'text-opponent-200'),
                     )}
                     >
                       {hoveredPathIdx + 1}

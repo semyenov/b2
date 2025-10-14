@@ -68,7 +68,7 @@ export function GamePanel({
       ref={panelRef}
       className={cn(
         'absolute bottom-0 left-0 right-0 z-40',
-        'bg-slate-800 flex flex-col border-t-2 border-cyan-800',
+        'bg-surface-800 flex flex-col border-t-2 border-info-800',
         'shadow-[0_-8px_24px_rgba(0,0,0,0.7)]',
         isClosing ? 'animate-slide-down-panel' : 'animate-slide-up-panel',
       )}

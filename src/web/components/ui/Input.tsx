@@ -69,7 +69,7 @@ export const Input = memo(
           {label && (
             <label
               htmlFor={inputId}
-              className="block text-base font-bold text-slate-300"
+              className="block text-base font-bold text-surface-300"
             >
               {label}
             </label>
@@ -88,17 +88,17 @@ export const Input = memo(
               // Base styles
               'w-full px-6 py-4 font-bold transition-all duration-200',
               // Colors
-              'bg-slate-900 text-slate-300 placeholder-slate-600',
+              'bg-surface-900 text-surface-300 placeholder-slate-600',
               // Border
               'border-2',
               error
-                ? 'border-red-500 focus:border-red-400'
-                : 'border-slate-700 focus:border-cyan-400',
+                ? 'border-danger-500 focus:border-danger-400'
+                : 'border-surface-700 focus:border-info-400',
               // Focus
               'focus:outline-none focus:ring-2',
               error
-                ? 'focus:ring-red-400'
-                : 'focus:ring-cyan-400',
+                ? 'focus:ring-danger-400'
+                : 'focus:ring-info-400',
               // Custom className
               className,
             )}
@@ -107,7 +107,7 @@ export const Input = memo(
 
           {/* Help text */}
           {helpText && !error && (
-            <p id={helpTextId} className="text-xs text-slate-500">
+            <p id={helpTextId} className="text-xs text-surface-500">
               {helpText}
             </p>
           )}
@@ -117,7 +117,7 @@ export const Input = memo(
             <p
               id={errorId}
               role="alert"
-              className="text-xs text-red-400 font-medium flex items-center gap-1"
+              className="text-xs text-danger-400 font-medium flex items-center gap-1"
             >
               <span aria-hidden="true">⚠️</span>
               {error}
