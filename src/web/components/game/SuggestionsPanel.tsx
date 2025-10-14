@@ -43,16 +43,20 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
 
   if (suggestions.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[200px]">
-        <div className="flex flex-col items-center gap-4 text-center">
-          <div className="w-16 h-16 bg-slate-800 flex items-center justify-center rounded-lg border border-slate-700">
-            <span className="text-2xl">🤔</span>
+      <div className="flex flex-col items-center justify-center h-full text-center px-6">
+        <div className="space-y-6">
+          <div className="space-y-0.5">
+            <div className="text-slate-500 text-2xl font-bold tracking-wide uppercase leading-tight">
+              ПУСТО
+            </div>
+            <div className="text-slate-600 text-sm leading-tight max-w-[200px]">
+              AI не может найти подходящие ходы
+            </div>
           </div>
-          <div className="text-slate-400 text-sm font-medium">
-            Нет доступных подсказок
-          </div>
-          <div className="text-slate-500 text-xs">
-            AI не может найти подходящие ходы
+          <div className="flex flex-col gap-3 opacity-30">
+            <div className="h-px w-24 bg-gradient-to-r from-transparent via-slate-700 to-transparent mx-auto" />
+            <div className="h-px w-16 bg-gradient-to-r from-transparent via-slate-700 to-transparent mx-auto" />
+            <div className="h-px w-20 bg-gradient-to-r from-transparent via-slate-700 to-transparent mx-auto" />
           </div>
         </div>
       </div>

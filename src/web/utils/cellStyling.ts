@@ -12,6 +12,9 @@ interface GetCellClassNameOptions {
   inPath: boolean
   isInHoveredPath: boolean
   isInRecentOpponentPath: boolean
+  isNewLetterInPath: boolean
+  isNewLetterInOpponentPath: boolean
+  isNewLetterInHoveredPath: boolean
   hasCell: boolean
   canClick: boolean
   isHovered: boolean
@@ -25,6 +28,9 @@ interface GetCellClassNameOptions {
  * @param options.inPath - Whether cell is part of current word path
  * @param options.isInHoveredPath - Whether cell is part of hovered word path (from Sidebar)
  * @param options.isInRecentOpponentPath - Whether cell is part of recent opponent move (2s highlight)
+ * @param options.isNewLetterInPath - Whether this cell is the newly placed letter in current path
+ * @param options.isNewLetterInOpponentPath - Whether this cell is the newly placed letter in opponent path
+ * @param options.isNewLetterInHoveredPath - Whether this cell is the newly placed letter in hovered path
  * @param options.hasCell - Whether cell contains a letter
  * @param options.canClick - Whether cell can be clicked
  * @param options.isHovered - Whether cell is being hovered
@@ -35,6 +41,9 @@ export function getCellClassName({
   inPath,
   isInHoveredPath,
   isInRecentOpponentPath,
+  isNewLetterInPath,
+  isNewLetterInOpponentPath,
+  isNewLetterInHoveredPath,
   hasCell,
   canClick,
   isHovered,
@@ -46,9 +55,15 @@ export function getCellClassName({
     // State-based styling (priority order: selected > inPath > isInRecentOpponentPath > isInHoveredPath > hasCell > empty)
     {
       'bg-cyan-800 border-cyan-300 text-white shadow-depth-3 ring-2 ring-cyan-400/50': selected,
-      'bg-emerald-700 border-emerald-300 text-white shadow-depth-3 ring-2 ring-emerald-400/50': !selected && inPath,
-      'bg-violet-700 border-violet-300 text-white shadow-depth-3 ring-2 ring-violet-400/50 animate-pulse': !selected && !inPath && isInRecentOpponentPath,
-      'bg-amber-700 border-amber-300 text-white shadow-depth-2 ring-2 ring-amber-400/50': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath,
+      // Current path: darker emerald for new letter, brighter for existing letters
+      'bg-emerald-800 border-emerald-300 text-white shadow-depth-3 ring-4 ring-emerald-400/70': !selected && inPath && isNewLetterInPath,
+      'bg-emerald-600 border-emerald-200 text-white shadow-depth-3 ring-2 ring-emerald-300/50': !selected && inPath && !isNewLetterInPath,
+      // Opponent path: darker violet for new letter (prominent), brighter violet for existing letters
+      'bg-violet-800 border-violet-300 text-white shadow-depth-3 ring-4 ring-violet-400/90 animate-pulse shadow-violet-500/40': !selected && !inPath && isInRecentOpponentPath && isNewLetterInOpponentPath,
+      'bg-violet-600 border-violet-200 text-white shadow-depth-3 ring-2 ring-violet-300/50 animate-pulse': !selected && !inPath && isInRecentOpponentPath && !isNewLetterInOpponentPath,
+      // Hovered path: darker amber for new letter, brighter for existing letters
+      'bg-amber-800 border-amber-300 text-white shadow-depth-3 ring-4 ring-amber-400/70': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && isNewLetterInHoveredPath,
+      'bg-amber-600 border-amber-200 text-white shadow-depth-2 ring-2 ring-amber-300/50': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && !isNewLetterInHoveredPath,
       'bg-slate-800 border-slate-700 text-slate-300 shadow-depth-2': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && hasCell,
       'bg-slate-900 border-slate-700 text-slate-600': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && !hasCell,
     },

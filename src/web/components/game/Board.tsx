@@ -3,6 +3,7 @@ import { useHover } from '@hooks/useHover'
 import { useKeyboardNavigation } from '@hooks/useKeyboardNavigation'
 import { canClickCell, getPositionPathIndex, isPositionInWordPath, isPositionSelected } from '@utils/boardValidation'
 import { getCellClassName } from '@utils/cellStyling'
+import { cn } from '@utils/classNames'
 import { getCellAriaLabel, getCoordLabel } from '@utils/coordinateLabels'
 import { memo } from 'react'
 
@@ -13,6 +14,9 @@ export interface BoardProps {
   wordPath?: Array<{ row: number, col: number }>
   hoveredWordPath?: Array<{ row: number, col: number }>
   recentOpponentPath?: Array<{ row: number, col: number }>
+  newLetterPosition?: { row: number, col: number }
+  opponentNewLetterPosition?: { row: number, col: number }
+  hoveredNewLetterPosition?: { row: number, col: number }
   onCellClick?: (row: number, col: number) => void
   disabled?: boolean
 }
@@ -29,6 +33,9 @@ export const Board = memo(({
   wordPath = [],
   hoveredWordPath = [],
   recentOpponentPath = [],
+  newLetterPosition,
+  opponentNewLetterPosition,
+  hoveredNewLetterPosition,
   onCellClick,
   disabled,
 }: BoardProps) => {
@@ -67,6 +74,9 @@ export const Board = memo(({
               const inPath = isPositionInWordPath(rowIndex, colIndex, wordPath)
               const isInHoveredPath = isPositionInWordPath(rowIndex, colIndex, hoveredWordPath)
               const isInRecentOpponentPath = isPositionInWordPath(rowIndex, colIndex, recentOpponentPath)
+              const isNewLetterInPath = isPositionSelected(rowIndex, colIndex, newLetterPosition)
+              const isNewLetterInOpponentPath = isPositionSelected(rowIndex, colIndex, opponentNewLetterPosition)
+              const isNewLetterInHoveredPath = isPositionSelected(rowIndex, colIndex, hoveredNewLetterPosition)
               const pathIdx = getPositionPathIndex(rowIndex, colIndex, wordPath)
               const hoveredPathIdx = getPositionPathIndex(rowIndex, colIndex, hoveredWordPath)
               const recentOpponentPathIdx = getPositionPathIndex(rowIndex, colIndex, recentOpponentPath)
@@ -106,6 +116,9 @@ export const Board = memo(({
                     inPath,
                     isInHoveredPath,
                     isInRecentOpponentPath,
+                    isNewLetterInPath,
+                    isNewLetterInOpponentPath,
+                    isNewLetterInHoveredPath,
                     hasCell: !!cell,
                     canClick,
                     isHovered,
@@ -138,7 +151,11 @@ export const Board = memo(({
                     </div>
                   )}
                   {!inPath && isInRecentOpponentPath && recentOpponentPathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-violet-200 text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none">
+                    <div className={cn(
+                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none',
+                      isNewLetterInOpponentPath ? 'text-violet-100' : 'text-violet-200',
+                    )}
+                    >
                       {recentOpponentPathIdx + 1}
                     </div>
                   )}

@@ -67,9 +67,11 @@ export const GameScreen = memo(({
 
   // Word hover highlighting state
   const [hoveredWordPath, setHoveredWordPath] = useState<Position[] | null>(null)
+  const [hoveredNewLetterPosition, setHoveredNewLetterPosition] = useState<Position | null>(null)
 
   // Recent opponent move highlighting (2 seconds)
   const [recentOpponentPath, setRecentOpponentPath] = useState<Position[] | null>(null)
+  const [opponentNewLetterPosition, setOpponentNewLetterPosition] = useState<Position | null>(null)
   const previousMoveCountRef = useRef<number>(0)
 
   // Detect opponent moves and highlight for 2 seconds
@@ -106,10 +108,12 @@ export const GameScreen = memo(({
     )
 
     setRecentOpponentPath(path)
+    setOpponentNewLetterPosition(lastMove.position)
 
     // Clear after 2 seconds
     const timer = setTimeout(() => {
       setRecentOpponentPath(null)
+      setOpponentNewLetterPosition(null)
     }, 2000)
 
     return () => clearTimeout(timer)
@@ -125,6 +129,7 @@ export const GameScreen = memo(({
     const move = playerMoves[wordIndex]
     if (!move) {
       setHoveredWordPath(null)
+      setHoveredNewLetterPosition(null)
       return
     }
 
@@ -137,11 +142,13 @@ export const GameScreen = memo(({
     )
 
     setHoveredWordPath(path)
+    setHoveredNewLetterPosition(move.position)
   }, [game.board, game.moves, game.players])
 
   // Clear hovered word path
   const handleWordLeave = useCallback(() => {
     setHoveredWordPath(null)
+    setHoveredNewLetterPosition(null)
   }, [])
 
   return (
@@ -177,6 +184,9 @@ export const GameScreen = memo(({
             wordPath={wordPath}
             hoveredWordPath={hoveredWordPath || []}
             recentOpponentPath={recentOpponentPath || []}
+            newLetterPosition={selectedCell}
+            opponentNewLetterPosition={opponentNewLetterPosition || undefined}
+            hoveredNewLetterPosition={hoveredNewLetterPosition || undefined}
             onCellClick={onCellClick}
             disabled={!isMyTurn}
           />
