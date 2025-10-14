@@ -40,7 +40,7 @@ export const StatusMessage = memo(({ step, moveNumber = 1 }: StatusMessageProps)
 
   return (
     <div className={cn(
-      'px-4 py-3 font-bold text-2xl uppercase',
+      'px-4 py-3 font-bold text-2xl uppercase tracking-wider',
       config.className,
     )}
     >

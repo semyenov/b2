@@ -149,13 +149,13 @@ export const Board = memo(({
                             displayContent
                           )}
                   {inPath && pathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-white text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none">
+                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-white text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut">
                       {pathIdx + 1}
                     </div>
                   )}
                   {!inPath && isInRecentOpponentPath && recentOpponentPathIdx >= 0 && (
                     <div className={cn(
-                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none',
+                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut',
                       isNewLetterInOpponentPath ? 'text-amber-100' : 'text-amber-200',
                     )}
                     >
@@ -164,7 +164,7 @@ export const Board = memo(({
                   )}
                   {!inPath && !isInRecentOpponentPath && isInHoveredPath && hoveredPathIdx >= 0 && (
                     <div className={cn(
-                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none',
+                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut',
                       isHoveredWordFromUser
                         ? (isNewLetterInHoveredPath ? 'text-emerald-100' : 'text-emerald-200')
                         : (isNewLetterInHoveredPath ? 'text-amber-100' : 'text-amber-200'),

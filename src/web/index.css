@@ -254,3 +254,23 @@ button:focus-visible {
   animation: slide-in-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Fade in and out animation for letter numbers */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeInOut {
+  animation: fadeInOut 0.8s ease-in-out;
+}
+
