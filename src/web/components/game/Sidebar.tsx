@@ -38,7 +38,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
               className={cn(
                 'w-[2px] h-[2px] transition-all duration-300',
                 {
-                  'bg-yellow-500/30 animate-pulse': isCurrentTurn,
+                  'bg-emerald-500/30 animate-pulse': isCurrentTurn,
                   'bg-slate-600/40': !isCurrentTurn,
                 },
               )}

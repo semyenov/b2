@@ -97,8 +97,8 @@ export const SuggestionCard = memo(({
           <span className="text-cyan-200 font-mono font-black text-xl">
             {posStr}
           </span>
-          <div className="bg-yellow-500/20 border border-yellow-500/30 px-2 py-1 w-8 h-8 flex items-center justify-center">
-            <span className="text-yellow-300 font-black text-lg">
+          <div className="bg-cyan-500/20 border border-cyan-500/30 px-2 py-1 w-8 h-8 flex items-center justify-center">
+            <span className="text-cyan-300 font-black text-lg">
               {suggestion.letter}
             </span>
           </div>
