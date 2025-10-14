@@ -3,6 +3,7 @@ import { memo } from 'react'
 
 export interface StatusMessageProps {
   step: 'waiting' | 'select-cell' | 'select-letter' | 'build-word'
+  moveNumber?: number
 }
 
 /**
@@ -14,27 +15,28 @@ const stepConfig = {
   'waiting': {
     icon: '',
     text: 'Ход противника',
-    className: 'text-orange-300',
+    className: 'text-amber-300',
   },
   'select-cell': {
     icon: '',
-    text: 'Выбери пустую клетку',
-    className: 'text-cyan-100',
+    text: (moveNumber: number) => `Ход №${moveNumber}`,
+    className: 'text-emerald-100',
   },
   'select-letter': {
     icon: '',
     text: 'Выбери букву',
-    className: 'text-cyan-100',
+    className: 'text-emerald-100',
   },
   'build-word': {
     icon: '',
     text: 'Составь слово',
-    className: 'text-purple-100',
+    className: 'text-emerald-100',
   },
 }
 
-export const StatusMessage = memo(({ step }: StatusMessageProps) => {
+export const StatusMessage = memo(({ step, moveNumber = 1 }: StatusMessageProps) => {
   const config = stepConfig[step]
+  const text = typeof config.text === 'function' ? config.text(moveNumber) : config.text
 
   return (
     <div className={cn(
@@ -44,7 +46,7 @@ export const StatusMessage = memo(({ step }: StatusMessageProps) => {
     >
       {config.icon}
       {' '}
-      {config.text}
+      {text}
     </div>
   )
 })

@@ -17,6 +17,7 @@ export interface BoardProps {
   newLetterPosition?: { row: number, col: number }
   opponentNewLetterPosition?: { row: number, col: number }
   hoveredNewLetterPosition?: { row: number, col: number }
+  isHoveredWordFromUser?: boolean
   onCellClick?: (row: number, col: number) => void
   disabled?: boolean
 }
@@ -36,6 +37,7 @@ export const Board = memo(({
   newLetterPosition,
   opponentNewLetterPosition,
   hoveredNewLetterPosition,
+  isHoveredWordFromUser = false,
   onCellClick,
   disabled,
 }: BoardProps) => {
@@ -119,6 +121,7 @@ export const Board = memo(({
                     isNewLetterInPath,
                     isNewLetterInOpponentPath,
                     isNewLetterInHoveredPath,
+                    isHoveredWordFromUser,
                     hasCell: !!cell,
                     canClick,
                     isHovered,
@@ -132,13 +135,13 @@ export const Board = memo(({
                       )
                     : selected && !cell && selectedLetter
                       ? (
-                          <div className="text-[length:calc(var(--text-resp-board)*0.85)] text-cyan-200 font-black">
+                          <div className="text-[length:calc(var(--text-resp-board)*0.85)] text-emerald-100 font-black">
                             {selectedLetter}
                           </div>
                         )
                       : selected && !cell
                         ? (
-                            <div className="text-2xl text-cyan-200 font-bold">
+                            <div className="text-2xl text-emerald-100 font-bold">
                               {getCoordLabel(rowIndex, colIndex)}
                             </div>
                           )
@@ -153,14 +156,20 @@ export const Board = memo(({
                   {!inPath && isInRecentOpponentPath && recentOpponentPathIdx >= 0 && (
                     <div className={cn(
                       'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none',
-                      isNewLetterInOpponentPath ? 'text-violet-100' : 'text-violet-200',
+                      isNewLetterInOpponentPath ? 'text-amber-100' : 'text-amber-200',
                     )}
                     >
                       {recentOpponentPathIdx + 1}
                     </div>
                   )}
                   {!inPath && !isInRecentOpponentPath && isInHoveredPath && hoveredPathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-amber-200 text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none">
+                    <div className={cn(
+                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none',
+                      isHoveredWordFromUser
+                        ? (isNewLetterInHoveredPath ? 'text-emerald-100' : 'text-emerald-200')
+                        : (isNewLetterInHoveredPath ? 'text-amber-100' : 'text-amber-200'),
+                    )}
+                    >
                       {hoveredPathIdx + 1}
                     </div>
                   )}

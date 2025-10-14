@@ -15,6 +15,7 @@ interface GetCellClassNameOptions {
   isNewLetterInPath: boolean
   isNewLetterInOpponentPath: boolean
   isNewLetterInHoveredPath: boolean
+  isHoveredWordFromUser: boolean
   hasCell: boolean
   canClick: boolean
   isHovered: boolean
@@ -44,6 +45,7 @@ export function getCellClassName({
   isNewLetterInPath,
   isNewLetterInOpponentPath,
   isNewLetterInHoveredPath,
+  isHoveredWordFromUser,
   hasCell,
   canClick,
   isHovered,
@@ -54,16 +56,15 @@ export function getCellClassName({
 
     // State-based styling (priority order: selected > inPath > isInRecentOpponentPath > isInHoveredPath > hasCell > empty)
     {
-      'bg-cyan-800 border-cyan-300 text-white shadow-depth-3 ring-2 ring-cyan-400/50': selected,
-      // Current path: darker emerald for new letter, brighter for existing letters
-      'bg-emerald-800 border-emerald-300 text-white shadow-depth-3 ring-4 ring-emerald-400/70': !selected && inPath && isNewLetterInPath,
-      'bg-emerald-600 border-emerald-200 text-white shadow-depth-3 ring-2 ring-emerald-300/50': !selected && inPath && !isNewLetterInPath,
-      // Opponent path: darker violet for new letter (prominent), brighter violet for existing letters
-      'bg-violet-800 border-violet-300 text-white shadow-depth-3 ring-4 ring-violet-400/90 animate-pulse shadow-violet-500/40': !selected && !inPath && isInRecentOpponentPath && isNewLetterInOpponentPath,
-      'bg-violet-600 border-violet-200 text-white shadow-depth-3 ring-2 ring-violet-300/50 animate-pulse': !selected && !inPath && isInRecentOpponentPath && !isNewLetterInOpponentPath,
-      // Hovered path: darker amber for new letter, brighter for existing letters
-      'bg-amber-800 border-amber-300 text-white shadow-depth-3 ring-4 ring-amber-400/70': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && isNewLetterInHoveredPath,
-      'bg-amber-600 border-amber-200 text-white shadow-depth-2 ring-2 ring-amber-300/50': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && !isNewLetterInHoveredPath,
+      'bg-emerald-900 border-emerald-400 text-white shadow-depth-3 ring-4 ring-emerald-500/80': selected,
+      // User moves (current path + user's hovered words): new letter is darker, existing letters are brighter
+      'bg-emerald-800 border-emerald-300 text-white shadow-depth-3 ring-4 ring-emerald-400/70': !selected && ((inPath && isNewLetterInPath) || (!inPath && !isInRecentOpponentPath && isInHoveredPath && isHoveredWordFromUser && isNewLetterInHoveredPath)),
+      'bg-emerald-600 border-emerald-200 text-white shadow-depth-3 ring-2 ring-emerald-300/50': !selected && ((inPath && !isNewLetterInPath) || (!inPath && !isInRecentOpponentPath && isInHoveredPath && isHoveredWordFromUser && !isNewLetterInHoveredPath)),
+      // Opponent moves (recent + opponent's hovered words): new letter is darker, existing letters are brighter
+      'bg-amber-800 border-amber-300 text-white shadow-depth-3 ring-4 ring-amber-400/90 animate-pulse shadow-amber-500/40': !selected && !inPath && isInRecentOpponentPath && isNewLetterInOpponentPath,
+      'bg-amber-600 border-amber-200 text-white shadow-depth-3 ring-2 ring-amber-300/50 animate-pulse': !selected && !inPath && isInRecentOpponentPath && !isNewLetterInOpponentPath,
+      'bg-amber-800 border-amber-300 text-white shadow-depth-3 ring-4 ring-amber-400/70': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && !isHoveredWordFromUser && isNewLetterInHoveredPath,
+      'bg-amber-600 border-amber-200 text-white shadow-depth-2 ring-2 ring-amber-300/50': !selected && !inPath && !isInRecentOpponentPath && isInHoveredPath && !isHoveredWordFromUser && !isNewLetterInHoveredPath,
       'bg-slate-800 border-slate-700 text-slate-300 shadow-depth-2': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && hasCell,
       'bg-slate-900 border-slate-700 text-slate-600': !selected && !inPath && !isInRecentOpponentPath && !isInHoveredPath && !hasCell,
     },

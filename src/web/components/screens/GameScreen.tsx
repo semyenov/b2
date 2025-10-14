@@ -62,12 +62,16 @@ export const GameScreen = memo(({
     onHideSuggestions,
   })
 
+  // Calculate current move number (total moves + 1 for next move)
+  const currentMoveNumber = game.moves.length + 1
+
   // Ref to bottom control panel container to exclude from click-outside
   const bottomPanelRef = useRef<HTMLDivElement | null>(null)
 
   // Word hover highlighting state
   const [hoveredWordPath, setHoveredWordPath] = useState<Position[] | null>(null)
   const [hoveredNewLetterPosition, setHoveredNewLetterPosition] = useState<Position | null>(null)
+  const [isHoveredWordFromUser, setIsHoveredWordFromUser] = useState<boolean>(false)
 
   // Recent opponent move highlighting (2 seconds)
   const [recentOpponentPath, setRecentOpponentPath] = useState<Position[] | null>(null)
@@ -130,6 +134,7 @@ export const GameScreen = memo(({
     if (!move) {
       setHoveredWordPath(null)
       setHoveredNewLetterPosition(null)
+      setIsHoveredWordFromUser(false)
       return
     }
 
@@ -143,12 +148,14 @@ export const GameScreen = memo(({
 
     setHoveredWordPath(path)
     setHoveredNewLetterPosition(move.position)
-  }, [game.board, game.moves, game.players])
+    setIsHoveredWordFromUser(player === playerName)
+  }, [game.board, game.moves, game.players, playerName])
 
   // Clear hovered word path
   const handleWordLeave = useCallback(() => {
     setHoveredWordPath(null)
     setHoveredNewLetterPosition(null)
+    setIsHoveredWordFromUser(false)
   }, [])
 
   return (
@@ -187,6 +194,7 @@ export const GameScreen = memo(({
             newLetterPosition={selectedCell}
             opponentNewLetterPosition={opponentNewLetterPosition || undefined}
             hoveredNewLetterPosition={hoveredNewLetterPosition || undefined}
+            isHoveredWordFromUser={isHoveredWordFromUser}
             onCellClick={onCellClick}
             disabled={!isMyTurn}
           />
@@ -228,6 +236,7 @@ export const GameScreen = memo(({
             wordPath={wordPath}
             formedWord={formedWord}
             showSuggestions={showSuggestions}
+            moveNumber={currentMoveNumber}
             onSubmitMove={handleSubmitMove}
             onClearSelection={onClearSelection}
             onToggleSuggestions={onToggleSuggestions}

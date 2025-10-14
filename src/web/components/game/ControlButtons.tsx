@@ -12,6 +12,7 @@ export interface ControlButtonsProps {
   wordPath: Position[]
   formedWord: string
   showSuggestions: boolean
+  moveNumber?: number
   onSubmitMove: () => void
   onClearSelection: () => void
   onToggleSuggestions: () => void
@@ -31,6 +32,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
   wordPath,
   formedWord,
   showSuggestions,
+  moveNumber,
   onSubmitMove,
   onClearSelection,
   onToggleSuggestions,
@@ -85,7 +87,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
       {/* Center: Status message or submit button */}
       <div className="flex-1 flex justify-center">
         {gameStep === 'waiting' && <StatusMessage step="waiting" />}
-        {gameStep === 'select-cell' && <StatusMessage step="select-cell" />}
+        {gameStep === 'select-cell' && <StatusMessage step="select-cell" moveNumber={moveNumber} />}
         {gameStep === 'select-letter' && <StatusMessage step="select-letter" />}
         {gameStep === 'build-word' && <StatusMessage step="build-word" />}
         {gameStep === 'ready-to-submit' && (
