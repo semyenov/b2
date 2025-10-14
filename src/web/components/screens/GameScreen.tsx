@@ -133,6 +133,7 @@ export const GameScreen = memo(({
             onSubmitMove={handleSubmitMove}
             onClearSelection={onClearSelection}
             onToggleSuggestions={onToggleSuggestions}
+            onHideSuggestions={onHideSuggestions}
             onExit={onExit}
           />
         </div>

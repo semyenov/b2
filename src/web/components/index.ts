@@ -10,17 +10,17 @@
  * - utilities: ErrorBoundary and other utilities
  */
 
-// UI Primitives
-export * from './ui'
-
-// Game Components
-export * from './game'
+// Utilities
+export { ErrorBoundary, withErrorBoundary } from './ErrorBoundary'
 
 // Form Components
 export * from './forms'
 
+// Game Components
+export * from './game'
+
 // Screen Layouts
 export * from './screens'
 
-// Utilities
-export { ErrorBoundary, withErrorBoundary } from './ErrorBoundary'
+// UI Primitives
+export * from './ui'

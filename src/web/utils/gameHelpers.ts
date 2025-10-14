@@ -3,9 +3,8 @@
  * Reusable functions for game state analysis and formatting
  */
 
+import type { GameStatus } from '../constants/statusConfig'
 import type { GameState } from '../lib/client'
-
-export type GameStatus = 'waiting' | 'in_progress' | 'finished'
 
 /**
  * Extract the base word from the center row of the game board

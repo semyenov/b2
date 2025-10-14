@@ -2,6 +2,7 @@ import type { GameState } from '../../lib/client'
 import { memo } from 'react'
 import { usePlayerStats } from '../../hooks/usePlayerStats'
 import { cn } from '../../utils/classNames'
+import { getRussianPluralForm } from '../../utils/russianPlural'
 
 export interface SidebarProps {
   game: GameState
@@ -145,7 +146,7 @@ export const Sidebar = memo(({ game, playerIndex }: SidebarProps) => {
                         <div className="text-xs font-bold text-slate-500 group-hover:text-cyan-400 transition-colors duration-200">
                           {word.length}
                           {' '}
-                          букв
+                          {getRussianPluralForm(word.length, ['буква', 'буквы', 'букв'])}
                         </div>
                         <div className="w-2 h-2 bg-cyan-400/50 group-hover:bg-cyan-400 transition-colors duration-200" />
                       </div>

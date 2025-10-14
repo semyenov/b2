@@ -1,5 +1,6 @@
 import type { UseFullscreenReturn } from '../types/hooks'
 import { useEffect, useState } from 'react'
+import { logger } from '../utils/logger'
 
 /**
  * Custom hook for managing fullscreen mode
@@ -26,12 +27,12 @@ export function useFullscreen(): UseFullscreenReturn {
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
-        console.error('Failed to enter fullscreen:', err)
+        logger.error('Failed to enter fullscreen', err)
       })
     }
     else {
       document.exitFullscreen().catch((err) => {
-        console.error('Failed to exit fullscreen:', err)
+        logger.error('Failed to exit fullscreen', err)
       })
     }
   }

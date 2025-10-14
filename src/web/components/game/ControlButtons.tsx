@@ -15,6 +15,7 @@ export interface ControlButtonsProps {
   onSubmitMove: () => void
   onClearSelection: () => void
   onToggleSuggestions: () => void
+  onHideSuggestions: () => void
   onExit: () => void
 }
 
@@ -33,6 +34,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
   onSubmitMove,
   onClearSelection,
   onToggleSuggestions,
+  onHideSuggestions,
   onExit,
 }) => {
   const { toggleFullscreen } = useFullscreen()
@@ -45,6 +47,16 @@ export const ControlButtons = memo<ControlButtonsProps>(({
   })
 
   const isClearDisabled = isClearButtonDisabled(isMyTurn, selectedCell, selectedLetter, wordPath)
+
+  // Handle clear button click: hide suggestions if open, otherwise clear selection
+  const handleClearClick = () => {
+    if (showSuggestions) {
+      onHideSuggestions()
+    }
+    else {
+      onClearSelection()
+    }
+  }
 
   return (
     <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 flex-wrap sm:flex-nowrap">
@@ -113,9 +125,9 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           type="button"
           variant="muted"
           size="md"
-          onClick={onClearSelection}
-          disabled={isClearDisabled}
-          aria-label="Отменить выбор ячейки и буквы"
+          onClick={handleClearClick}
+          disabled={isClearDisabled && !showSuggestions}
+          aria-label={showSuggestions ? 'Скрыть подсказки' : 'Отменить выбор ячейки и буквы'}
         >
           Отмена
         </Button>

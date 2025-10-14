@@ -1,0 +1,21 @@
+/**
+ * Constants - Application configuration and constants
+ *
+ * Centralized exports for all constant values and configuration
+ * Organized by domain: game config, status, accessibility, alphabet
+ */
+
+// Game Configuration
+export {
+  A11Y_LABELS,
+  BOARD_SIZES,
+  GAME_CONFIG,
+  RUSSIAN_ALPHABET,
+} from './game'
+
+// Status Configuration (single source of truth)
+export {
+  STATUS_CONFIG,
+} from './statusConfig'
+
+export type { GameStatus, StatusConfig } from './statusConfig'

@@ -2,8 +2,7 @@ import type { Suggestion } from '../../lib/client'
 import type { ScoreTier } from '../../utils/suggestionHelpers'
 import { memo } from 'react'
 import { cn } from '../../utils/classNames'
-import { getScoreColor, getSuggestionCoordLabel } from '../../utils/suggestionHelpers'
-import { Badge } from '../ui'
+import { getSuggestionCoordLabel } from '../../utils/suggestionHelpers'
 
 export interface SuggestionCardProps {
   /**
@@ -62,7 +61,6 @@ export const SuggestionCard = memo(({
   isKeyboardFocused = false,
 }: SuggestionCardProps) => {
   const posStr = getSuggestionCoordLabel(suggestion)
-  const scoreVariant = getScoreColor(suggestion.score)
 
   return (
     <button

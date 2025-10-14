@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
+import { useEffect, useRef } from 'react'
 
 /**
  * Custom hook to detect clicks outside of a referenced element
