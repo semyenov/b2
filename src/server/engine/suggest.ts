@@ -89,7 +89,7 @@ export function suggestWords(
 function enumerateAroundOptimized(
   board: Letter[][],
   pos: BoardPosition,
-  letter: string,
+  _letter: string,
   dict: SizedDictionary,
   onWord: (word: string) => void,
 ) {

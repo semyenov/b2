@@ -1,8 +1,8 @@
-import type { CreateGameBody } from '../lib/client'
+import type { CreateGameBody } from '@lib/client'
 import { useState } from 'react'
-import { ERROR_MESSAGES } from '../constants/messages'
-import { generatePlayerName } from '../utils/playerNameUtils'
-import { getRussianPluralForm } from '../utils/russianPlural'
+import { ERROR_MESSAGES } from '@constants/messages'
+import { generatePlayerName } from '@utils/playerNameUtils'
+import { getRussianPluralForm } from '@utils/russianPlural'
 
 interface UseCreateGameFormOptions {
   onSubmit: (body: CreateGameBody) => void

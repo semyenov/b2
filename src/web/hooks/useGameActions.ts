@@ -1,8 +1,8 @@
-import type { GameState, Suggestion } from '../lib/client'
-import type { Position } from '../types/game'
+import type { GameState, Suggestion } from '@lib/client'
+import type { Position } from '@types'
 import { useCallback, useMemo } from 'react'
-import { buildMoveBody, canSubmitMove } from '../utils/moveValidation'
-import { getFormedWord } from '../utils/wordUtils'
+import { buildMoveBody, canSubmitMove } from '@utils/moveValidation'
+import { getFormedWord } from '@utils/wordUtils'
 
 /**
  * useGameActions Hook

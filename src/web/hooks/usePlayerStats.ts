@@ -1,4 +1,4 @@
-import type { GameState } from '../lib/client'
+import type { GameState } from '@lib/client'
 import { useMemo } from 'react'
 
 interface UsePlayerStatsOptions {

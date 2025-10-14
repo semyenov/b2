@@ -5,8 +5,8 @@ import type {
   MoveBodySchema,
   PlacementSchema,
   SuggestionSchema,
-} from '../../shared/schemas'
-import { logger } from '../utils/logger'
+} from '@shared/schemas'
+import { logger } from '@utils/logger'
 
 export type GameState = Static<typeof GameStateSchema>
 export type CreateGameBody = Static<typeof CreateGameBodySchema>

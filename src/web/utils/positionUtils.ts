@@ -3,7 +3,7 @@
  * Helper functions for working with board positions
  */
 
-import type { Board, Position } from '../types/game'
+import type { Board, Position } from '@types'
 
 /**
  * Check if two positions are the same

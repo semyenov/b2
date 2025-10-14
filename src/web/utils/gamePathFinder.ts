@@ -3,7 +3,7 @@
  * Uses DFS to find valid word paths on the board
  */
 
-import type { Board, Position } from '../types/game'
+import type { Board, Position } from '@types'
 
 /**
  * DFS search for word path on board (orthogonal adjacency only)

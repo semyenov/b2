@@ -1,21 +1,30 @@
 import react from '@vitejs/plugin-react'
-import { resolve } from 'pathe'
 import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    tsconfigPaths({
+      root: '../..',
+    }), // Auto-sync tsconfig paths ✨
+  ],
   root: './src/web',
   build: {
     outDir: '../../dist/web',
-  },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    alias: {
-      '@components': resolve(__dirname, 'src/web/components'),
+    sourcemap: true, // Better debugging
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+        },
+      },
     },
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+  },
   server: {
-
     port: 5173,
     proxy: {
       '/api': {

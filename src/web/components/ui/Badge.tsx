@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { forwardRef, memo } from 'react'
-import { cn } from '../../utils/classNames'
+import { cn } from '@utils/classNames'
 
 /**
  * Badge variants define color scheme

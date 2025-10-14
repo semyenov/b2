@@ -1,4 +1,4 @@
-import type { MoveBody } from '../lib/client'
+import type { MoveBody } from '@lib/client'
 import type { Screen } from './useGameClient'
 import { useCallback, useState } from 'react'
 

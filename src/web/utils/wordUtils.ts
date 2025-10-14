@@ -1,5 +1,5 @@
-import type { GameState } from '../lib/client'
-import type { Board, Position } from '../types/game'
+import type { GameState } from '@lib/client'
+import type { Board, Position } from '@types'
 
 /**
  * Word utility functions

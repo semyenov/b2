@@ -3,7 +3,7 @@
  * Centralized logging with different levels and optional external service integration
  */
 
-import { env } from '../config/env'
+import { env } from '@config/env'
 
 /** Log levels in order of severity */
 export enum LogLevel {
@@ -11,15 +11,6 @@ export enum LogLevel {
   INFO = 1,
   WARN = 2,
   ERROR = 3,
-}
-
-/** Log entry structure */
-interface LogEntry {
-  level: LogLevel
-  message: string
-  timestamp: number
-  context?: Record<string, unknown>
-  error?: Error
 }
 
 /**
@@ -77,15 +68,6 @@ class Logger {
   ): void {
     if (level < this.minLevel) {
       return
-    }
-
-    // Store entry for persistence (not used yet but ready for future error tracking)
-    const _entry: LogEntry = {
-      level,
-      message,
-      timestamp: Date.now(),
-      context,
-      error,
     }
 
     // Console output with appropriate method

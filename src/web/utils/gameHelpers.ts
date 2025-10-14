@@ -3,8 +3,8 @@
  * Reusable functions for game state analysis and formatting
  */
 
-import type { GameStatus } from '../constants/statusConfig'
-import type { GameState } from '../lib/client'
+import type { GameStatus } from '@constants/statusConfig'
+import type { GameState } from '@lib/client'
 
 /**
  * Extract the base word from the center row of the game board

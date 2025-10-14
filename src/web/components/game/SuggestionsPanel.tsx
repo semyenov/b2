@@ -1,7 +1,7 @@
-import type { Suggestion } from '../../lib/client'
+import type { Suggestion } from '@lib/client'
 import { memo, useMemo } from 'react'
-import { GAME_CONFIG } from '../../constants/game'
-import { getScoreTier } from '../../utils/suggestionHelpers'
+import { GAME_CONFIG } from '@constants/game'
+import { getScoreTier } from '@utils/suggestionHelpers'
 import { Spinner } from '../ui'
 import { SuggestionCard } from './SuggestionCard'
 

@@ -5,13 +5,13 @@
  * Organized by domain: game client, AI, interactions, UI state, and utilities
  */
 
-export type { UseGameInteractionReturn } from '../types/hooks'
-export type { UseGameControlsReturn } from '../types/hooks'
+export type { UseGameInteractionReturn } from '@types'
+export type { UseGameControlsReturn } from '@types'
 
-export type { UseAIPlayerReturn } from '../types/hooks'
-export type { UseSuggestionsReturn } from '../types/hooks'
+export type { UseAIPlayerReturn } from '@types'
+export type { UseSuggestionsReturn } from '@types'
 
-export type { UseCreateGameFormReturn } from '../types/hooks'
+export type { UseCreateGameFormReturn } from '@types'
 // AI & Suggestions
 export { useAIPlayer } from './useAIPlayer'
 

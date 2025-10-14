@@ -1,10 +1,10 @@
-import type { GameState } from '../../lib/client'
+import type { GameState } from '@lib/client'
 import { memo } from 'react'
-import { useHover } from '../../hooks/useHover'
-import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation'
-import { canClickCell, getPositionPathIndex, isPositionInWordPath, isPositionSelected } from '../../utils/boardValidation'
-import { getCellClassName } from '../../utils/cellStyling'
-import { getCellAriaLabel, getCoordLabel } from '../../utils/coordinateLabels'
+import { useHover } from '@hooks/useHover'
+import { useKeyboardNavigation } from '@hooks/useKeyboardNavigation'
+import { canClickCell, getPositionPathIndex, isPositionInWordPath, isPositionSelected } from '@utils/boardValidation'
+import { getCellClassName } from '@utils/cellStyling'
+import { getCellAriaLabel, getCoordLabel } from '@utils/coordinateLabels'
 
 export interface BoardProps {
   game: GameState

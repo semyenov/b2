@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { forwardRef, memo } from 'react'
-import { cn } from '../../utils/classNames'
+import { cn } from '@utils/classNames'
 
 /**
  * Button variants define the color scheme and styling

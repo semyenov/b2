@@ -4,15 +4,15 @@
  */
 
 // Re-export main API types from client
-// These are derived from TypeBox schemas in ../../schemas
-export type { CreateGameBody, GameState, MoveBody, Placement, Suggestion } from '../lib/client'
+// These are derived from TypeBox schemas in @shared/schemas
+export type { CreateGameBody, GameState, MoveBody, Placement, Suggestion } from '@lib/client'
 
 /**
  * WebSocket message types
  */
 export interface WebSocketGameUpdate {
   type: 'game_update'
-  game: import('../lib/client').GameState
+  game: import('@lib/client').GameState
 }
 
 export type WebSocketMessage = WebSocketGameUpdate

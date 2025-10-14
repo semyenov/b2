@@ -45,6 +45,7 @@ export function useAnimatedPanel(shouldShow: boolean) {
       // Show immediately with enter animation
       setIsVisible(true)
       setIsClosing(false)
+      return undefined
     }
     else if (isVisible) {
       // Start closing animation
@@ -58,6 +59,7 @@ export function useAnimatedPanel(shouldShow: boolean) {
 
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [shouldShow, isVisible])
 
   return {

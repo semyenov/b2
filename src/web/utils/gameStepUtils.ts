@@ -3,11 +3,11 @@
  * Determines the current step in the game flow for UI rendering
  */
 
-import type { Position } from '../types/game'
-import type { GameStep } from '../types/ui'
+import type { Position } from '@types'
+import type { GameStep } from '@types'
 
 // Re-export for backwards compatibility
-export type { GameStep } from '../types/ui'
+export type { GameStep } from '@types'
 
 interface GameStepParams {
   isMyTurn: boolean

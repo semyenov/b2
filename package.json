@@ -11,6 +11,8 @@
     "dev:all": "bun run dev & bun run dev:web",
     "cli": "bun run src/cli/index.tsx",
     "check": "bun tsc --noEmit",
+    "type-check": "bun tsc --noEmit",
+    "type-check:watch": "bun tsc --noEmit --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -36,12 +38,14 @@
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
     "@types/bun": "^1.2.23",
+    "@types/node": "^24.7.2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
     "@vitejs/plugin-react": "^5.0.4",
     "bun-types": "^1.2.23",
     "eslint": "^9.37.0",
     "typescript": "^5.9.3",
-    "vite": "^7.1.9"
+    "vite": "^7.1.9",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

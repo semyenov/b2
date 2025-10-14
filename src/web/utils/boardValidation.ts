@@ -3,7 +3,7 @@
  * Contains game rules for cell click validation
  */
 
-import type { Board, Position } from '../types/game'
+import type { Board, Position } from '@types'
 
 interface CanClickCellParams {
   row: number

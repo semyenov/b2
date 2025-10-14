@@ -5,7 +5,7 @@
  * Provides pure functions for board coordinate calculations and ARIA labels
  */
 
-import { A11Y_LABELS } from '../constants/game'
+import { A11Y_LABELS } from '@constants/game'
 
 /**
  * Get coordinate label for a board position

@@ -1,5 +1,5 @@
 import { memo, useEffect } from 'react'
-import { cn } from '../../utils/classNames'
+import { cn } from '@utils/classNames'
 
 export interface BannerProps {
   variant: 'error' | 'loading' | 'warning'
@@ -34,6 +34,7 @@ export const Banner = memo(({ variant, message, onClose, autoDismissMs = 5000 }:
 
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [variant, onClose, autoDismissMs])
 
   return (

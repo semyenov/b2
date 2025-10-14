@@ -1,6 +1,6 @@
-import type { GameState } from '../lib/client'
+import type { GameState } from '@lib/client'
 import { useEffect, useRef, useState } from 'react'
-import { A11Y_LABELS } from '../constants/game'
+import { A11Y_LABELS } from '@constants/game'
 
 interface UseLiveRegionOptions {
   currentGame: GameState | null

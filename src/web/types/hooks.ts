@@ -3,7 +3,7 @@
  * Centralizes types for custom React hooks
  */
 
-import type { ApiClient, GameState, MoveBody, Suggestion } from '../lib/client'
+import type { ApiClient, GameState, MoveBody, Suggestion } from '@lib/client'
 import type { Position } from './game'
 
 /**

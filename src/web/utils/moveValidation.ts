@@ -3,8 +3,8 @@
  * Handles move submission logic
  */
 
-import type { MoveBody } from '../lib/client'
-import type { Position } from '../types/game'
+import type { MoveBody } from '@lib/client'
+import type { Position } from '@types'
 
 /**
  * Validate if a move can be submitted

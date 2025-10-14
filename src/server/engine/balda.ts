@@ -94,7 +94,6 @@ const memoizedExistsPathForWord = memoize(
 
       while (stack.length > 0) {
         const { pos, index, path } = stack.pop()!
-        const _key = `${pos.row},${pos.col}`
 
         if (index === target.length - 1) {
           if (path.has(mustKey)) {
@@ -192,28 +191,6 @@ export type Direction = 'up' | 'down' | 'left' | 'right'
 export interface PositionValidation {
   readonly isValid: boolean
   readonly reason?: string
-}
-
-/**
- * Validate if a move input is well-formed
- */
-function _validateMoveInput(move: MoveInput, size: number): { ok: true } | { ok: false, message: string } {
-  if (!move.playerId?.trim()) {
-    return { ok: false, message: 'Player ID is required' }
-  }
-  if (!move.letter?.trim()) {
-    return { ok: false, message: 'Letter is required' }
-  }
-  if (move.letter.length !== 1) {
-    return { ok: false, message: 'Letter must be exactly one character' }
-  }
-  if (!move.word?.trim()) {
-    return { ok: false, message: 'Word is required' }
-  }
-  if (!isInside(size, move.position)) {
-    return { ok: false, message: 'Position is outside of board' }
-  }
-  return { ok: true }
 }
 
 /**

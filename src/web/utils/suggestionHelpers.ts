@@ -1,6 +1,6 @@
-import type { BadgeVariant } from '../components/ui'
-import type { Suggestion } from '../lib/client'
-import { GAME_CONFIG } from '../constants/game'
+import type { BadgeVariant } from '@components/ui'
+import type { Suggestion } from '@lib/client'
+import { GAME_CONFIG } from '@constants/game'
 
 /**
  * Score tier classification

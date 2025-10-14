@@ -1,8 +1,8 @@
-import type { GameState } from '../../lib/client'
+import type { GameState } from '@lib/client'
 import { memo } from 'react'
-import { usePlayerStats } from '../../hooks/usePlayerStats'
-import { cn } from '../../utils/classNames'
-import { getRussianPluralForm } from '../../utils/russianPlural'
+import { usePlayerStats } from '@hooks/usePlayerStats'
+import { cn } from '@utils/classNames'
+import { getRussianPluralForm } from '@utils/russianPlural'
 
 export interface SidebarProps {
   game: GameState

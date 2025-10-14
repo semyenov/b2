@@ -1,8 +1,8 @@
-import type { Position } from '../../types/game'
+import type { Position } from '@types'
 import { memo } from 'react'
-import { useFullscreen } from '../../hooks/useFullscreen'
-import { getGameStep } from '../../utils/gameStepUtils'
-import { isClearButtonDisabled } from '../../utils/uiHelpers'
+import { useFullscreen } from '@hooks/useFullscreen'
+import { getGameStep } from '@utils/gameStepUtils'
+import { isClearButtonDisabled } from '@utils/uiHelpers'
 import { Button, StatusMessage } from '../ui'
 
 export interface ControlButtonsProps {

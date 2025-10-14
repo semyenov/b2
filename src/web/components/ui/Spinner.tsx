@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react'
 import { memo } from 'react'
-import { cn } from '../../utils/classNames'
+import { cn } from '@utils/classNames'
 
 /**
  * Spinner sizes

@@ -1,6 +1,6 @@
-import type { UseFullscreenReturn } from '../types/hooks'
+import type { UseFullscreenReturn } from '@types'
 import { useEffect, useState } from 'react'
-import { logger } from '../utils/logger'
+import { logger } from '@utils/logger'
 
 /**
  * Custom hook for managing fullscreen mode

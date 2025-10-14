@@ -1,11 +1,11 @@
-import type { CreateGameBody, GameState, MoveBody } from '../lib/client'
-import type { Screen, UseGameClientReturn } from '../types/hooks'
+import type { CreateGameBody, GameState, MoveBody } from '@lib/client'
+import type { Screen, UseGameClientReturn } from '@types'
 import { useEffect, useRef, useState } from 'react'
-import { ApiClient } from '../lib/client'
-import { ERROR_MESSAGES, LOADING_MESSAGES, translateErrorMessage } from '../constants/messages'
+import { ApiClient } from '@lib/client'
+import { ERROR_MESSAGES, translateErrorMessage } from '@constants/messages'
 
 // Re-export for backwards compatibility
-export type { Screen, UseGameClientReturn } from '../types/hooks'
+export type { Screen, UseGameClientReturn } from '@types'
 
 export function useGameClient(): UseGameClientReturn {
   // Core state

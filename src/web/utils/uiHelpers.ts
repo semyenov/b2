@@ -1,4 +1,4 @@
-import type { Position } from '../types/game'
+import type { Position } from '@types'
 
 /**
  * UI Helper Functions
