@@ -1,8 +1,8 @@
 import type { GameState, Suggestion } from '@lib/client'
 import type { Position } from '@types'
 import { Board, ControlButtons, GamePanel, Sidebar } from '@components'
-import { memo, useRef } from 'react'
 import { useGameActions } from '@hooks/useGameActions'
+import { memo, useRef } from 'react'
 
 interface GameScreenProps {
   game: GameState

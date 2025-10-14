@@ -1,6 +1,6 @@
 import type { InputHTMLAttributes, ReactNode } from 'react'
-import { forwardRef, memo } from 'react'
 import { cn } from '@utils/classNames'
+import { forwardRef, memo } from 'react'
 
 interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
   /**

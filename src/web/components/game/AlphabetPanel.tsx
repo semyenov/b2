@@ -1,9 +1,9 @@
-import { memo } from 'react'
 import { A11Y_LABELS, RUSSIAN_ALPHABET } from '@constants/game'
 import { useHover } from '@hooks/useHover'
 import { useKeyboardNavigation } from '@hooks/useKeyboardNavigation'
 import { cn } from '@utils/classNames'
 import { isLetterButtonDisabled } from '@utils/uiHelpers'
+import { memo } from 'react'
 
 export interface AlphabetPanelProps {
   selectedLetter?: string

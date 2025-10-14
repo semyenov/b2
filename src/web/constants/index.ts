@@ -13,18 +13,18 @@ export {
   RUSSIAN_ALPHABET,
 } from './game'
 
+// Messages and Localization
+export {
+  ERROR_MESSAGE_MAP,
+  ERROR_MESSAGES,
+  LOADING_MESSAGES,
+  SUCCESS_MESSAGES,
+  translateErrorMessage,
+} from './messages'
+
 // Status Configuration (single source of truth)
 export {
   STATUS_CONFIG,
 } from './statusConfig'
 
 export type { GameStatus, StatusConfig } from './statusConfig'
-
-// Messages and Localization
-export {
-  ERROR_MESSAGES,
-  ERROR_MESSAGE_MAP,
-  LOADING_MESSAGES,
-  SUCCESS_MESSAGES,
-  translateErrorMessage,
-} from './messages'

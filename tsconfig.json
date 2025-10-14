@@ -1,18 +1,15 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
+    "jsx": "react-jsx",
     /* Environment - Latest ESNext for Bun */
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "target": "ESNext",
-    "module": "ESNext",
     "moduleDetection": "force",
-    "jsx": "react-jsx",
 
+    "baseUrl": ".",
+    "module": "ESNext",
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
 
     /* Comprehensive Path Aliases */
     "paths": {
@@ -36,22 +33,24 @@
       "@config/*": ["src/web/config/*"]
     },
 
+    "resolveJsonModule": true,
+    /* Types */
+    "types": ["bun-types"],
+    "allowImportingTsExtensions": true,
     /* Type checking - Strict mode */
     "strict": true,
     "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
 
     /* Emit */
     "noEmit": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-
-    /* Types */
-    "types": ["bun-types"]
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "data"]

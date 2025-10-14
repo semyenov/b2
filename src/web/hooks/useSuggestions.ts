@@ -1,6 +1,6 @@
 import type { ApiClient, GameState, Suggestion } from '@lib/client'
-import { useCallback, useMemo, useState } from 'react'
 import { logger } from '@utils/logger'
+import { useCallback, useMemo, useState } from 'react'
 
 interface UseSuggestionsOptions {
   apiClient: ApiClient

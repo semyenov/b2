@@ -1,8 +1,8 @@
 import type { Suggestion } from '@lib/client'
 import type { ScoreTier } from '@utils/suggestionHelpers'
-import { memo } from 'react'
 import { cn } from '@utils/classNames'
 import { getSuggestionCoordLabel } from '@utils/suggestionHelpers'
+import { memo } from 'react'
 
 export interface SuggestionCardProps {
   /**

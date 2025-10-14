@@ -2,9 +2,6 @@ import type { SizedDictionary } from './dictionary'
 import { Type } from '@sinclair/typebox'
 import { consola } from 'consola'
 import { Elysia } from 'elysia'
-import { applyMove, createGame, findPlacementsForWord } from './engine/balda'
-import { suggestWords } from './engine/suggest'
-import { DictionaryError, GameNotFoundError, InvalidMoveError, InvalidPlacementError } from './errors'
 import {
   CreateGameBodySchema,
   DictionaryStatsSchema,
@@ -20,6 +17,9 @@ import {
   SuggestResponseSchema,
   UpdatePlayerBodySchema,
 } from '../shared/schemas'
+import { applyMove, createGame, findPlacementsForWord } from './engine/balda'
+import { suggestWords } from './engine/suggest'
+import { DictionaryError, GameNotFoundError, InvalidMoveError, InvalidPlacementError } from './errors'
 import { store } from './store'
 import { broadcastGame, setArchiveCallback } from './wsHub'
 

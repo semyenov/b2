@@ -1,4 +1,3 @@
-import type { Static } from '@sinclair/typebox'
 import type {
   CreateGameBodySchema,
   GameStateSchema,
@@ -6,6 +5,7 @@ import type {
   PlacementSchema,
   SuggestionSchema,
 } from '@shared/schemas'
+import type { Static } from '@sinclair/typebox'
 import { logger } from '@utils/logger'
 
 export type GameState = Static<typeof GameStateSchema>

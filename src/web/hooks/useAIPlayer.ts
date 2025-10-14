@@ -1,8 +1,8 @@
 import type { ApiClient, GameState, MoveBody } from '@lib/client'
-import { useEffect, useRef, useState } from 'react'
 import { GAME_CONFIG } from '@constants/game'
 import { ERROR_MESSAGES, translateErrorMessage } from '@constants/messages'
 import { logger } from '@utils/logger'
+import { useEffect, useRef, useState } from 'react'
 
 interface UseAIPlayerOptions {
   currentGame: GameState | null

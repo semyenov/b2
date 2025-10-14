@@ -1,5 +1,5 @@
-import { memo, useEffect } from 'react'
 import { cn } from '@utils/classNames'
+import { memo, useEffect } from 'react'
 
 export interface BannerProps {
   variant: 'error' | 'loading' | 'warning'

@@ -1,8 +1,8 @@
 import type { GameState, Suggestion } from '@lib/client'
 import type { Position } from '@types'
-import { useCallback, useState } from 'react'
 import { findWordPath } from '@utils/gamePathFinder'
 import { hasLetterAtPosition, isAdjacent, isSamePosition } from '@utils/positionUtils'
+import { useCallback, useState } from 'react'
 
 interface UseGameInteractionOptions {
   currentGame: GameState | null
