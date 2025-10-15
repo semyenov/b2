@@ -77,7 +77,8 @@ const memoizedExistsPathForWord = memoize(
     const starts: BoardPosition[] = []
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
-        if (board[r][c] === first) {
+        // Non-null assertion: loop bounds guarantee valid array access
+        if (board[r]![c] === first) {
           starts.push({ row: r, col: c })
         }
       }
@@ -111,7 +112,8 @@ const memoizedExistsPathForWord = memoize(
           if (path.has(nextKey))
             continue
 
-          const nextCell = board[nextPos.row][nextPos.col]
+          // Non-null assertion: isInside() check guarantees valid access
+          const nextCell = board[nextPos.row]![nextPos.col]
           if (nextCell !== target[index + 1])
             continue
 
@@ -197,7 +199,8 @@ export interface PositionValidation {
  * Validate if a position can be used for placement
  */
 function validatePlacement(game: GameState, position: BoardPosition): { ok: true } | { ok: false, message: string } {
-  if (game.board[position.row][position.col] !== null) {
+  // Non-null assertion: position is validated by caller
+  if (game.board[position.row]![position.col] !== null) {
     return { ok: false, message: 'Cell is already occupied' }
   }
   if (!isAdjacentToExisting(game.board, position)) {
@@ -233,7 +236,8 @@ export function isInside(size: number, { row, col }: BoardPosition): boolean {
 }
 
 export function canPlace(board: Letter[][], pos: BoardPosition): boolean {
-  return isInside(board.length, pos) && board[pos.row][pos.col] === null
+  // Non-null assertion: isInside() check guarantees valid access
+  return isInside(board.length, pos) && board[pos.row]![pos.col] === null
 }
 
 export function placeBaseWord(board: Letter[][], baseWord: string): void {
@@ -247,7 +251,9 @@ export function placeBaseWord(board: Letter[][], baseWord: string): void {
   const startCol = Math.floor((size - word.length) / 2)
 
   for (let i = 0; i < word.length; i++) {
-    board[centerRow][startCol + i] = word[i]
+    // Non-null assertions: centerRow and startCol+i are within bounds by construction
+    // word[i] is within bounds by loop condition
+    board[centerRow]![startCol + i] = word[i]!
   }
 }
 
@@ -365,7 +371,8 @@ export function forEachNeighbor(
 export function isAdjacentToExisting(board: Letter[][], pos: BoardPosition): boolean {
   let adjacent = false
   forEachNeighbor(board.length, pos, (n) => {
-    if (board[n.row][n.col] !== null)
+    // Non-null assertion: forEachNeighbor only calls with valid positions
+    if (board[n.row]![n.col] !== null)
       adjacent = true
   })
   return adjacent
@@ -488,7 +495,8 @@ export function findPlacementsForWord(
 
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
-      if (board[r][c] !== null)
+      // Non-null assertion: loop bounds guarantee valid access
+      if (board[r]![c] !== null)
         continue
       const pos = { row: r, col: c }
       if (!isAdjacentToExisting(board, pos))
@@ -496,7 +504,7 @@ export function findPlacementsForWord(
       for (const letter of candidateLetters) {
         // Create a copy of the board with the tentative placement
         const boardCopy = board.map(row => [...row])
-        boardCopy[r][c] = letter
+        boardCopy[r]![c] = letter
         const ok = existsPathForWord(boardCopy, word, pos)
         if (ok)
           results.push({ position: pos, letter })

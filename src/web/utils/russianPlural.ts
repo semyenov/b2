@@ -22,10 +22,12 @@ export function getRussianPluralForm(count: number, forms: [string, string, stri
   const mod10 = count % 10
 
   if (mod100 > 4 && mod100 < 20) {
-    return forms[2] // 5-20: игр
+    // Index 2 is guaranteed to exist in tuple [string, string, string]
+    return forms[2]! // 5-20: игр
   }
   if (mod10 > 4 || mod10 === 0) {
-    return forms[2] // 0, 5-9: игр
+    return forms[2]! // 0, 5-9: игр
   }
-  return forms[cases[mod10]] // 1: игра, 2-4: игры
+  // mod10 is 0-9, so cases[mod10] gives 0, 1, or 2, which are valid indices
+  return forms[cases[mod10]!]! // 1: игра, 2-4: игры
 }

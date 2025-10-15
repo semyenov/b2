@@ -11,7 +11,8 @@ import type { GameState } from '@lib/client'
  */
 export function getBaseWord(game: GameState): string {
   const centerRow = Math.floor(game.size / 2)
-  return game.board[centerRow]
+  // centerRow is calculated from game.size and guaranteed to be in bounds
+  return game.board[centerRow]!
     .map(cell => cell || '')
     .join('')
     .trim()
@@ -69,17 +70,19 @@ export function getWinner(game: GameState): string | null {
 
   const scores = game.players.map(player => ({
     player,
+    // Player names are guaranteed to exist in scores object
     score: game.scores[player] || 0,
   }))
 
   scores.sort((a, b) => b.score - a.score)
 
-  // Return null if tie
-  if (scores[0].score === scores[1]?.score) {
+  // Return null if tie (using optional chaining for second place)
+  if (scores[0]!.score === scores[1]?.score) {
     return null
   }
 
-  return scores[0].player
+  // First element guaranteed to exist after sorting non-empty array
+  return scores[0]!.player
 }
 
 /**

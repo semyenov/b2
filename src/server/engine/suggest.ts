@@ -32,7 +32,8 @@ export function suggestWords(
   const validPositions: BoardPosition[] = []
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
-      if (board[r][c] !== null)
+      // Non-null assertion: loop bounds guarantee valid access
+      if (board[r]![c] !== null)
         continue
       const pos = { row: r, col: c }
       if (isAdjacentToExisting(board, pos)) {
@@ -48,7 +49,8 @@ export function suggestWords(
     for (const ch of dict.getAlphabet()) {
       // Create a copy of the board for enumeration to avoid mutating input
       const boardCopy = board.map(row => [...row])
-      boardCopy[pos.row][pos.col] = ch
+      // Non-null assertion: pos.row/col are within bounds (from validPositions)
+      boardCopy[pos.row]![pos.col] = ch
 
       // Expand words around this position using optimized enumeration
       enumerateAroundOptimized(boardCopy, pos, ch, dict, (word) => {
@@ -98,7 +100,8 @@ function enumerateAroundOptimized(
 
   // DFS with prefix pruning, target position tracking, and path tracking
   function dfs(r: number, c: number, word: string, pathIncludesTarget: boolean, path: Set<string>) {
-    const ch = board[r][c]
+    // Non-null assertion: dfs is only called with valid positions
+    const ch = board[r]![c]
     if (!ch)
       return
 
@@ -145,7 +148,8 @@ function enumerateAroundOptimized(
   // Start DFS from all occupied cells
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
-      if (board[r][c] !== null) {
+      // Non-null assertion: loop bounds guarantee valid access
+      if (board[r]![c] !== null) {
         dfs(r, c, '', false, new Set())
       }
     }

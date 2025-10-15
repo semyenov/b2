@@ -28,7 +28,8 @@ export function useLiveRegion({
     const currentTurn = currentGame.currentPlayerIndex
     if (previousTurnRef.current !== currentTurn) {
       previousTurnRef.current = currentTurn
-      const currentPlayer = currentGame.players[currentTurn]
+      // currentPlayerIndex is guaranteed to be valid by game state
+      const currentPlayer = currentGame.players[currentTurn]!
 
       if (isMyTurn()) {
         setLiveRegionMessage(A11Y_LABELS.YOUR_TURN)

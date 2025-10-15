@@ -35,6 +35,7 @@ export const authPlugin = new Elysia({ name: 'auth', prefix: '/auth', tags: ['au
       const user = await userService.create(body.email, body.username, body.password)
 
       // Generate tokens
+      // Type cast needed due to Elysia JWT plugin type limitations - runtime types are correct
       const token = await generateAccessToken({ jwt: jwt as any }, user)
       const refreshToken = await generateRefreshToken({ refreshJwt: refreshJwt as any }, user.id)
 
@@ -87,6 +88,7 @@ export const authPlugin = new Elysia({ name: 'auth', prefix: '/auth', tags: ['au
     }
 
     // Generate tokens
+    // Type cast needed due to Elysia JWT plugin type limitations - runtime types are correct
     const token = await generateAccessToken({ jwt: jwt as any }, user)
     const refreshToken = await generateRefreshToken({ refreshJwt: refreshJwt as any }, user.id)
 
@@ -136,6 +138,7 @@ export const authPlugin = new Elysia({ name: 'auth', prefix: '/auth', tags: ['au
       }
 
       // Generate new access token
+      // Type cast needed due to Elysia JWT plugin type limitations - runtime types are correct
       const token = await generateAccessToken({ jwt: jwt as any }, user)
 
       logger.info(`Token refreshed for user: ${user.email}`)
@@ -163,16 +166,19 @@ export const authPlugin = new Elysia({ name: 'auth', prefix: '/auth', tags: ['au
       tags: ['auth'],
     },
   })
-  .get('/me', async (context: any) => {
-    if (!context.user) {
-      context.set.status = 401
+  .get('/me', async (context) => {
+    // JWT plugin adds user to context through derive()
+    const { user, set } = context as typeof context & { user: import('../auth/jwt').AuthUser | null }
+
+    if (!user) {
+      set.status = 401
       throw new AuthenticationError('Authentication required')
     }
 
     // Find full user details
-    const fullUser = await userService.findById(context.user.id)
+    const fullUser = await userService.findById(user.id)
     if (!fullUser) {
-      context.set.status = 404
+      set.status = 404
       return {
         error: 'User not found',
       }

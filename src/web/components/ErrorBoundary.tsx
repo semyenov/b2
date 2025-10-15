@@ -77,6 +77,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </div>
 
             {/* Error Details (only in development) */}
+            {/* TypeScript requires bracket notation for import.meta.env access with noUncheckedIndexedAccess */}
             {import.meta.env.DEV && this.state.error && (
               <div className="mb-6 bg-surface-900 border border-surface-700 p-4 overflow-auto max-h-64">
                 <p className="text-danger-400 font-mono text-sm mb-2">

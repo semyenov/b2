@@ -44,6 +44,8 @@ export const authMiddleware = new Elysia({ name: 'auth-middleware' })
     AUTHORIZATION_ERROR: AuthorizationError,
   })
   .onBeforeHandle((context: any) => {
+    // Type assertion needed: TypeScript can't infer that jwtPlugin adds 'user' property
+    // Runtime type is guaranteed by Elysia plugin system
     if (!context.user) {
       context.set.status = 401
       throw new AuthenticationError('Authentication required. Please login.')
@@ -56,5 +58,7 @@ export const authMiddleware = new Elysia({ name: 'auth-middleware' })
 export const optionalAuthMiddleware = new Elysia({ name: 'optional-auth-middleware' })
   .use(jwtPlugin)
   .derive((context: any) => {
+    // Type assertion needed: TypeScript can't infer that jwtPlugin adds 'user' property
+    // Runtime type is guaranteed by Elysia plugin system
     return { currentUser: context.user ?? null }
   })

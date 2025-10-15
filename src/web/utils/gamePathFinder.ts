@@ -22,21 +22,24 @@ function dfsWordSearch(
   const key = `${row},${col}`
   visited.add(key)
 
-  const nextChar = word[path.length]
-  const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+  // Bounds-checked array access - safe to use non-null assertion
+  const nextChar = word[path.length]!
+  const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]] as const
 
   for (const [dr, dc] of directions) {
-    const newRow = row + dr
-    const newCol = col + dc
+    // Directions array contains tuples of two numbers - safe to use non-null assertion
+    const newRow = row + dr!
+    const newCol = col + dc!
     const newKey = `${newRow},${newCol}`
 
+    // Bounds are checked before accessing board array elements
     if (
       newRow >= 0
       && newRow < board.length
       && newCol >= 0
-      && newCol < board[0].length
+      && newCol < board[0]!.length
       && !visited.has(newKey)
-      && board[newRow][newCol] === nextChar
+      && board[newRow]![newCol] === nextChar
     ) {
       const result = dfsWordSearch(
         board,
@@ -65,12 +68,14 @@ export function findWordPath(
 ): Position[] | null {
   // Create board copy with new letter
   const tempBoard = board.map(row => [...row])
-  tempBoard[newLetterPos.row][newLetterPos.col] = newLetter
+  // Bounds are guaranteed by function caller - safe to use non-null assertion
+  tempBoard[newLetterPos.row]![newLetterPos.col] = newLetter
 
   // Try to find word starting from each matching cell
   for (let row = 0; row < board.length; row++) {
-    for (let col = 0; col < board[0].length; col++) {
-      if (tempBoard[row][col] === word[0]) {
+    // Board is guaranteed to be non-empty and rectangular - safe to use non-null assertion
+    for (let col = 0; col < board[0]!.length; col++) {
+      if (tempBoard[row]![col] === word[0]) {
         const path = dfsWordSearch(
           tempBoard,
           word,

@@ -36,7 +36,8 @@ export function useGameInteraction({
 
     // If no cell selected yet, select empty cell
     if (!selectedCell) {
-      if (!currentGame.board[row][col]) {
+      // row/col guaranteed to be in bounds by UI constraints
+      if (!currentGame.board[row]![col]) {
         setSelectedCell(clickedPos)
         setWordPath([])
       }
@@ -68,7 +69,8 @@ export function useGameInteraction({
       }
       else {
         // Subsequent letters: must be orthogonally adjacent to last letter in path
-        const lastPos = wordPath[wordPath.length - 1]
+        // wordPath checked to have length > 0 - safe to use non-null assertion
+        const lastPos = wordPath[wordPath.length - 1]!
         const adjacent = isAdjacent(clickedPos, lastPos)
         const hasLetter = hasLetterAtPosition(currentGame.board, clickedPos, selectedCell, selectedLetter)
 

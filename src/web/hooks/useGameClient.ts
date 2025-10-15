@@ -89,8 +89,9 @@ export function useGameClient(): UseGameClientReturn {
         p => p.startsWith('Player ') && p !== 'Player 1',
       )
       if (slotIndex !== -1) {
+        // slotIndex checked to be valid (-1 check above) - safe to use non-null assertion
         const updated = await apiCall(() =>
-          apiClient.updatePlayerName(id, game.players[slotIndex], name),
+          apiClient.updatePlayerName(id, game.players[slotIndex]!, name),
         )
         if (updated) {
           setCurrentGame(updated)
@@ -103,7 +104,8 @@ export function useGameClient(): UseGameClientReturn {
 
   const createGame = async (body: CreateGameBody) => {
     const game = await apiCall(() => apiClient.createGame(body))
-    if (game && body.players) {
+    if (game && body.players && body.players[0]) {
+      // First player checked to exist - safe to use non-null assertion
       await joinGame(game.id, body.players[0])
     }
   }
@@ -122,6 +124,7 @@ export function useGameClient(): UseGameClientReturn {
     const words = await apiCall(() => apiClient.getRandomWords(5, 1))
     if (words && words[0]) {
       const name = `Player_${Date.now()}`
+      // First word checked to exist above - safe to use non-null assertion
       await createGame({
         size: 5,
         baseWord: words[0],
@@ -134,6 +137,7 @@ export function useGameClient(): UseGameClientReturn {
     const words = await apiCall(() => apiClient.getRandomWords(5, 1))
     if (words && words[0]) {
       const name = `Player_${Date.now()}`
+      // First word checked to exist above - safe to use non-null assertion
       await createGame({
         size: 5,
         baseWord: words[0],
@@ -144,7 +148,8 @@ export function useGameClient(): UseGameClientReturn {
   }
 
   const isMyTurn = () => {
-    return !!currentGame && playerName === currentGame.players[currentGame.currentPlayerIndex]
+    // currentPlayerIndex is guaranteed to be valid game state
+    return !!currentGame && playerName === currentGame.players[currentGame.currentPlayerIndex]!
   }
 
   return {

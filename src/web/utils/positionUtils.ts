@@ -21,7 +21,8 @@ export function hasLetterAtPosition(
   selectedCell?: Position,
   selectedLetter?: string,
 ): boolean {
-  const existingLetter = board[position.row][position.col]
+  // Position is guaranteed to be valid board coordinates by caller
+  const existingLetter = board[position.row]![position.col]
   const isSelectedPosition = selectedCell ? isSamePosition(position, selectedCell) : false
 
   return !!existingLetter || (isSelectedPosition && !!selectedLetter)

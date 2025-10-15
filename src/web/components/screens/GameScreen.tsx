@@ -1,4 +1,4 @@
-import type { GameState, Suggestion } from '@lib/client'
+import type { GameState, MoveBody, Suggestion } from '@lib/client'
 import type { Position } from '@types'
 import { Board, ControlButtons, GamePanel, Sidebar } from '@components'
 import { useGameActions } from '@hooks/useGameActions'
@@ -18,7 +18,7 @@ interface GameScreenProps {
   onCellClick: (row: number, col: number) => void
   onLetterSelect: (letter: string) => void
   onSuggestionSelect: (suggestion: Suggestion) => void
-  onSubmitMove: (move: any) => void
+  onSubmitMove: (move: MoveBody) => void
   onClearSelection: () => void
   onToggleSuggestions: () => void
   onHideSuggestions: () => void

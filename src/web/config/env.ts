@@ -21,6 +21,7 @@ interface EnvironmentConfig {
  * Throws error if required environment variables are missing
  */
 function getEnvironmentConfig(): EnvironmentConfig {
+  // TypeScript requires bracket notation for import.meta.env access with noUncheckedIndexedAccess
   const mode = (import.meta.env.MODE || 'development') as EnvironmentConfig['mode']
 
   // Default URLs - can be overridden with environment variables

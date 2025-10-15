@@ -86,17 +86,20 @@ export const ERROR_MESSAGE_MAP: Record<string, string> = {
 export function translateErrorMessage(message: string): string {
   // Check direct mapping
   if (message in ERROR_MESSAGE_MAP) {
-    return ERROR_MESSAGE_MAP[message]
+    // Message key checked to exist in map above
+    return ERROR_MESSAGE_MAP[message]!
   }
 
   // Check for dynamic messages (e.g., "Player name \"X\" is already taken")
   const playerNameTakenMatch = message.match(/Player name "(.+)" is already taken/)
-  if (playerNameTakenMatch) {
+  if (playerNameTakenMatch && playerNameTakenMatch[1]) {
+    // Regex capture group guaranteed to exist by match condition
     return ERROR_MESSAGES.PLAYER_NAME_TAKEN(playerNameTakenMatch[1])
   }
 
   const playerNotFoundMatch = message.match(/Player "(.+)" not found/)
-  if (playerNotFoundMatch) {
+  if (playerNotFoundMatch && playerNotFoundMatch[1]) {
+    // Regex capture group guaranteed to exist by match condition
     return ERROR_MESSAGES.PLAYER_NOT_FOUND(playerNotFoundMatch[1])
   }
 

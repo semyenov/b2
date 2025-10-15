@@ -22,7 +22,7 @@ describe('Game Engine - Board Utilities', () => {
     test('creates board of correct size', () => {
       const board = createEmptyBoard(5)
       expect(board.length).toBe(5)
-      expect(board[0].length).toBe(5)
+      expect(board[0]!.length).toBe(5) // Test data guaranteed to exist
     })
 
     test('initializes all cells as null', () => {
@@ -36,9 +36,9 @@ describe('Game Engine - Board Utilities', () => {
 
     test('creates independent rows', () => {
       const board = createEmptyBoard(3)
-      board[0][0] = 'A'
-      expect(board[1][0]).toBeNull()
-      expect(board[2][0]).toBeNull()
+      board[0]![0] = 'A' // Test data guaranteed to exist
+      expect(board[1]![0]).toBeNull() // Test data guaranteed to exist
+      expect(board[2]![0]).toBeNull() // Test data guaranteed to exist
     })
   })
 
@@ -67,7 +67,7 @@ describe('Game Engine - Board Utilities', () => {
 
     test('returns false for occupied positions', () => {
       const board = createEmptyBoard(5)
-      board[2][2] = 'A'
+      board[2]![2] = 'A' // Test data guaranteed to exist
       expect(canPlace(board, { row: 2, col: 2 })).toBe(false)
     })
 
@@ -82,16 +82,16 @@ describe('Game Engine - Board Utilities', () => {
     test('places word in center row', () => {
       const board = createEmptyBoard(5)
       placeBaseWord(board, 'CAT')
-      expect(board[2][1]).toBe('C')
-      expect(board[2][2]).toBe('A')
-      expect(board[2][3]).toBe('T')
+      expect(board[2]![1]).toBe('C') // Test data guaranteed to exist
+      expect(board[2]![2]).toBe('A') // Test data guaranteed to exist
+      expect(board[2]![3]).toBe('T') // Test data guaranteed to exist
     })
 
     test('centers word horizontally', () => {
       const board = createEmptyBoard(5)
       placeBaseWord(board, 'HI')
-      expect(board[2][1]).toBe('H')
-      expect(board[2][2]).toBe('I')
+      expect(board[2]![1]).toBe('H') // Test data guaranteed to exist
+      expect(board[2]![2]).toBe('I') // Test data guaranteed to exist
     })
 
     test('normalizes word to uppercase', () => {
@@ -167,7 +167,7 @@ describe('Game Engine - Neighbor & Adjacency', () => {
   describe('isAdjacentToExisting', () => {
     test('returns true when adjacent to letter', () => {
       const board = createEmptyBoard(5)
-      board[2][2] = 'A'
+      board[2]![2] = 'A' // Test data guaranteed to exist
       expect(isAdjacentToExisting(board, { row: 1, col: 2 })).toBe(true) // above
       expect(isAdjacentToExisting(board, { row: 3, col: 2 })).toBe(true) // below
       expect(isAdjacentToExisting(board, { row: 2, col: 1 })).toBe(true) // left
@@ -176,7 +176,7 @@ describe('Game Engine - Neighbor & Adjacency', () => {
 
     test('returns false when not adjacent', () => {
       const board = createEmptyBoard(5)
-      board[2][2] = 'A'
+      board[2]![2] = 'A' // Test data guaranteed to exist
       expect(isAdjacentToExisting(board, { row: 0, col: 0 })).toBe(false)
       expect(isAdjacentToExisting(board, { row: 4, col: 4 })).toBe(false)
     })
@@ -223,7 +223,7 @@ describe('Game Engine - Path Finding', () => {
 
     test('finds path when letter added', () => {
       const game = cloneGameState(initialGameCAT)
-      game.board[1][1] = 'S' // Add S above C
+      game.board[1]![1] = 'S' // Add S above C - Test data guaranteed to exist
       const result = existsPathForWord(game.board, 'SCAT', { row: 1, col: 1 })
       expect(result).toBe(true)
     })
@@ -307,8 +307,8 @@ describe('Game Engine - Game Creation', () => {
         players: ['Alice', 'Bob'],
       })
 
-      expect(game.scores.Alice).toBe(0)
-      expect(game.scores.Bob).toBe(0)
+      expect(game.scores.Alice).toBe(0) // Test data guaranteed to exist
+      expect(game.scores.Bob).toBe(0) // Test data guaranteed to exist
     })
 
     test('places base word on board', () => {
@@ -371,7 +371,7 @@ describe('Game Engine - Move Application', () => {
 
       expect(result.ok).toBe(true)
       if (result.ok) {
-        expect(result.game.board[1][1]).toBe('S')
+        expect(result.game.board[1]![1]).toBe('S') // Test data guaranteed to exist
         expect(result.game.moves.length).toBe(1)
         expect(result.game.usedWords).toContain('SCAT')
       }
@@ -392,7 +392,7 @@ describe('Game Engine - Move Application', () => {
 
       expect(result.ok).toBe(true)
       if (result.ok) {
-        expect(result.game.scores.Alice).toBeGreaterThan(0)
+        expect(result.game.scores.Alice).toBeGreaterThan(0) // Test data guaranteed to exist
       }
     })
 
@@ -542,7 +542,7 @@ describe('Game Engine - Move Application', () => {
 
       expect(result.ok).toBe(true)
       if (result.ok) {
-        expect(result.game.board[1][1]).toBe('S')
+        expect(result.game.board[1]![1]).toBe('S') // Test data guaranteed to exist
       }
     })
 

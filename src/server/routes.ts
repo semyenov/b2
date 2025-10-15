@@ -257,7 +257,8 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games', tags: ['games'
     // Safely migrate scores - only if the old player had a score
     const updatedScores = { ...game.scores }
     if (oldName in game.scores) {
-      updatedScores[newName] = game.scores[oldName]
+      // oldName checked to exist in scores object above
+      updatedScores[newName] = game.scores[oldName]!
       delete updatedScores[oldName]
     }
     else {

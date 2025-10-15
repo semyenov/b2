@@ -35,12 +35,14 @@ interface PlayerStats {
  */
 export function usePlayerStats({ game, playerIndex }: UsePlayerStatsOptions): PlayerStats {
   return useMemo(() => {
-    const player = game.players[playerIndex]
+    // playerIndex is 0 or 1, guaranteed to be valid by type system
+    const player = game.players[playerIndex]!
     const score = game.scores[player] || 0
 
     // Calculate opponent stats for comparison
     const opponentIndex = playerIndex === 0 ? 1 : 0
-    const opponentPlayer = game.players[opponentIndex]
+    // opponentIndex is also guaranteed to be valid (0 or 1)
+    const opponentPlayer = game.players[opponentIndex]!
     const opponentScore = game.scores[opponentPlayer] || 0
 
     // Get words played by this player from moves history

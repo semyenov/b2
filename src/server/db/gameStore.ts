@@ -38,7 +38,8 @@ export class PostgresGameStore {
         return null
       }
 
-      return this.rowToGameState(result[0])
+      // Query with limit(1) guarantees exactly one result when length > 0
+      return this.rowToGameState(result[0]!)
     }
     catch (error) {
       consola.error(`Failed to get game ${id}:`, error)

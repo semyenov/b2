@@ -19,7 +19,7 @@ describe('Suggestion Engine', () => {
       const suggestions = suggestWords(game.board, mockDictionary, { limit: 3 })
 
       if (suggestions.length > 0) {
-        const suggestion = suggestions[0]
+        const suggestion = suggestions[0]! // Test data guaranteed to exist
         expect(suggestion).toHaveProperty('position')
         expect(suggestion).toHaveProperty('letter')
         expect(suggestion).toHaveProperty('word')
@@ -54,7 +54,7 @@ describe('Suggestion Engine', () => {
 
       for (let i = 1; i < suggestions.length; i++) {
         // Score should be descending (higher scores first)
-        expect(suggestions[i - 1].score).toBeGreaterThanOrEqual(suggestions[i].score)
+        expect(suggestions[i - 1]!.score).toBeGreaterThanOrEqual(suggestions[i]!.score) // Test data guaranteed to exist
       }
     })
 
@@ -81,10 +81,10 @@ describe('Suggestion Engine', () => {
         const { row, col } = suggestion.position
         // Check if position is adjacent to at least one existing letter
         const hasAdjacentLetter
-          = (row > 0 && game.board[row - 1][col] !== null)
-            || (row < game.board.length - 1 && game.board[row + 1][col] !== null)
-            || (col > 0 && game.board[row][col - 1] !== null)
-            || (col < game.board[0].length - 1 && game.board[row][col + 1] !== null)
+          = (row > 0 && game.board[row - 1]![col] !== null) // Test data guaranteed to exist
+            || (row < game.board.length - 1 && game.board[row + 1]![col] !== null) // Test data guaranteed to exist
+            || (col > 0 && game.board[row]![col - 1] !== null) // Test data guaranteed to exist
+            || (col < game.board[0]!.length - 1 && game.board[row]![col + 1] !== null) // Test data guaranteed to exist
 
         expect(hasAdjacentLetter).toBe(true)
       }
@@ -163,9 +163,9 @@ describe('Suggestion Engine', () => {
 
       // When scores are equal, longer words should come first
       for (let i = 1; i < suggestions.length; i++) {
-        if (suggestions[i - 1].score === suggestions[i].score) {
-          expect(suggestions[i - 1].word.length).toBeGreaterThanOrEqual(
-            suggestions[i].word.length,
+        if (suggestions[i - 1]!.score === suggestions[i]!.score) { // Test data guaranteed to exist
+          expect(suggestions[i - 1]!.word.length).toBeGreaterThanOrEqual( // Test data guaranteed to exist
+            suggestions[i]!.word.length, // Test data guaranteed to exist
           )
         }
       }

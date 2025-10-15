@@ -18,6 +18,7 @@ export const correlationMiddleware = new Elysia({ name: 'correlation' })
     return { correlationId }
   })
   .onRequest((context: any) => {
+    // Type assertion needed: TypeScript can't infer that derive() adds 'correlationId'
     const url = new URL(context.request.url)
 
     // Skip logging for certain paths
@@ -28,9 +29,10 @@ export const correlationMiddleware = new Elysia({ name: 'correlation' })
     logRequest(context.request.method, url.pathname, context.correlationId)
 
     // Store start time for duration tracking
-    ;(context.request as any).startTime = Date.now()
+    ;(context.request as Request & { startTime?: number }).startTime = Date.now()
   })
   .onAfterResponse((context: any) => {
+    // Type assertion needed: TypeScript can't infer that derive() adds 'correlationId'
     const url = new URL(context.request.url)
 
     // Skip logging for certain paths
@@ -38,12 +40,13 @@ export const correlationMiddleware = new Elysia({ name: 'correlation' })
       return
     }
 
-    const duration = Date.now() - ((context.request as any).startTime || Date.now())
+    const duration = Date.now() - ((context.request as Request & { startTime?: number }).startTime || Date.now())
     const status = typeof context.set.status === 'number' ? context.set.status : 200
 
     logResponse(context.request.method, url.pathname, status, duration, context.correlationId)
   })
   .onError((context: any) => {
+    // Type assertion needed: TypeScript can't infer that derive() adds 'correlationId'
     const url = new URL(context.request.url)
 
     // Handle both Error instances and other error types

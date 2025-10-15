@@ -25,7 +25,8 @@ export function canClickCell(params: CanClickCellParams): boolean {
   if (disabled)
     return false
 
-  const cell = board[row][col]
+  // row and col are provided by caller and guaranteed to be in bounds
+  const cell = board[row]![col]
   const isSelected = selectedCell?.row === row && selectedCell?.col === col
   const isInPath = wordPath.some(pos => pos.row === row && pos.col === col)
 
@@ -45,7 +46,8 @@ export function canClickCell(params: CanClickCellParams): boolean {
     return hasLetter
 
   // Subsequent letters: must be orthogonally adjacent to last letter in path
-  const lastPos = wordPath[wordPath.length - 1]
+  // wordPath is guaranteed to have at least one element when length > 0
+  const lastPos = wordPath[wordPath.length - 1]!
   const isAdjacent = (Math.abs(row - lastPos.row) === 1 && col === lastPos.col)
     || (Math.abs(col - lastPos.col) === 1 && row === lastPos.row)
 

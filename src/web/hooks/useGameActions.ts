@@ -1,4 +1,4 @@
-import type { GameState, Suggestion } from '@lib/client'
+import type { GameState, MoveBody, Suggestion } from '@lib/client'
 import type { Position } from '@types'
 import { buildMoveBody, canSubmitMove } from '@utils/moveValidation'
 import { getFormedWord } from '@utils/wordUtils'
@@ -60,7 +60,7 @@ export function useGameActions({
   selectedCell?: Position
   selectedLetter?: string
   wordPath: Position[]
-  onSubmitMove: (move: any) => void
+  onSubmitMove: (move: MoveBody) => void
   onSuggestionSelect: (suggestion: Suggestion) => void
   onHideSuggestions: () => void
 }) {

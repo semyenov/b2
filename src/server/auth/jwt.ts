@@ -1,4 +1,5 @@
 import type { User } from '../models/user'
+import type { JWTPlugin } from '../types/elysia'
 import { jwt } from '@elysiajs/jwt'
 import { Elysia } from 'elysia'
 import { logger } from '../monitoring/logger'
@@ -85,8 +86,8 @@ export const jwtPlugin = new Elysia({ name: 'jwt-auth' })
 /**
  * Generate access token for user
  */
-export async function generateAccessToken(app: { jwt: { sign: (payload: JWTPayload) => Promise<string> } }, user: Pick<User, 'id' | 'email' | 'username'>): Promise<string> {
-  const payload: JWTPayload = {
+export async function generateAccessToken(app: { jwt: JWTPlugin }, user: Pick<User, 'id' | 'email' | 'username'>): Promise<string> {
+  const payload: Record<string, unknown> & JWTPayload = {
     userId: user.id,
     email: user.email,
     username: user.username,
@@ -97,8 +98,8 @@ export async function generateAccessToken(app: { jwt: { sign: (payload: JWTPaylo
 /**
  * Generate refresh token for user
  */
-export async function generateRefreshToken(app: { refreshJwt: { sign: (payload: RefreshTokenPayload) => Promise<string> } }, userId: string): Promise<string> {
-  const payload: RefreshTokenPayload = {
+export async function generateRefreshToken(app: { refreshJwt: JWTPlugin }, userId: string): Promise<string> {
+  const payload: Record<string, unknown> & RefreshTokenPayload = {
     userId,
   }
   return await app.refreshJwt.sign(payload)

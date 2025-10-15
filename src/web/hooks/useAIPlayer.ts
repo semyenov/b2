@@ -38,7 +38,8 @@ export function useAIPlayer({
     }
 
     // Check if current player is AI
-    const currentPlayer = currentGame.players[currentGame.currentPlayerIndex]
+    // currentPlayerIndex is guaranteed to be valid by game state
+    const currentPlayer = currentGame.players[currentGame.currentPlayerIndex]!
     const isAITurn = currentGame.aiPlayers.includes(currentPlayer)
 
     if (!isAITurn) {
@@ -68,7 +69,8 @@ export function useAIPlayer({
 
         if (suggestions.length > 0) {
           // Select best suggestion (first one is highest scored)
-          const bestMove = suggestions[0]
+          // Array bounds checked above - safe to use non-null assertion
+          const bestMove = suggestions[0]!
 
           // Construct move body
           const moveBody: MoveBody = {

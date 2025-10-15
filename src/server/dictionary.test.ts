@@ -150,19 +150,19 @@ describe('Dictionary - TrieDictionary', () => {
       dict.insert('DOG')
       const freq = dict.getLetterFrequency()
 
-      expect(freq.C).toBe(1)
-      expect(freq.A).toBe(1)
-      expect(freq.T).toBe(1)
-      expect(freq.D).toBe(1)
-      expect(freq.O).toBe(1)
-      expect(freq.G).toBe(1)
+      expect(freq.C).toBe(1) // Test data guaranteed to exist
+      expect(freq.A).toBe(1) // Test data guaranteed to exist
+      expect(freq.T).toBe(1) // Test data guaranteed to exist
+      expect(freq.D).toBe(1) // Test data guaranteed to exist
+      expect(freq.O).toBe(1) // Test data guaranteed to exist
+      expect(freq.G).toBe(1) // Test data guaranteed to exist
     })
 
     test('counts letters per word, not per character', () => {
       dict.insert('HELLO') // Two L's in one word
       const freq = dict.getLetterFrequency()
       // Each letter should be counted once per word insertion
-      expect(freq.L).toBeGreaterThan(0)
+      expect(freq.L).toBeGreaterThan(0) // Test data guaranteed to exist
     })
 
     test('accumulates frequency across multiple words', () => {
@@ -170,8 +170,8 @@ describe('Dictionary - TrieDictionary', () => {
       dict.insert('CAR')
       const freq = dict.getLetterFrequency()
 
-      expect(freq.C).toBe(2) // C appears in both words
-      expect(freq.A).toBe(2) // A appears in both words
+      expect(freq.C).toBe(2) // C appears in both words - Test data guaranteed to exist
+      expect(freq.A).toBe(2) // A appears in both words - Test data guaranteed to exist
     })
   })
 
