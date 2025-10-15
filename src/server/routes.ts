@@ -52,7 +52,7 @@ async function getDictionary(): Promise<SizedDictionary> {
   // Acquire the lock and load the dictionary
   dictionaryLoadingLock = true
   try {
-    const dictPath = process.env.DICT_PATH
+    const dictPath = process.env['DICT_PATH']
     if (dictPath) {
       const { loadDictionaryFromFile } = await import('./dictionary')
       dictionaryPromise = loadDictionaryFromFile(dictPath).catch((error) => {
@@ -78,7 +78,7 @@ async function getDictionary(): Promise<SizedDictionary> {
  */
 const dictionaryPlugin = new Elysia({ name: 'dictionary', prefix: '/dictionary', tags: ['dictionary'] })
   .get('/', async () => {
-    const dictPath = process.env.DICT_PATH
+    const dictPath = process.env['DICT_PATH']
     if (!dictPath)
       return { loaded: true, source: 'builtin' as const }
     const { loadDictionaryFromFile } = await import('./dictionary')

@@ -5,8 +5,8 @@ import { Elysia } from 'elysia'
 import { logger } from '../monitoring/logger'
 
 // JWT secret from environment
-const JWT_SECRET = process.env.JWT_SECRET ?? 'change-me-in-production'
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET ?? 'change-me-refresh-in-production'
+const JWT_SECRET = process.env['JWT_SECRET'] ?? 'change-me-in-production'
+const JWT_REFRESH_SECRET = process.env['JWT_REFRESH_SECRET'] ?? 'change-me-refresh-in-production'
 
 if (JWT_SECRET === 'change-me-in-production') {
   logger.warn('Using default JWT_SECRET. Please set JWT_SECRET environment variable in production!')
@@ -57,7 +57,7 @@ export const jwtPlugin = new Elysia({ name: 'jwt-auth' })
     exp: '7d', // Refresh token expires in 7 days
   }))
   .derive(async ({ jwt, headers }) => {
-    const auth = headers.authorization
+    const auth = headers['authorization']
     if (!auth?.startsWith('Bearer ')) {
       return { user: null as AuthUser | null }
     }

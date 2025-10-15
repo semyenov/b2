@@ -11,12 +11,12 @@ import { logger } from './monitoring/logger'
 import { registerRoutes } from './routes'
 import { addClient, removeClient } from './wsHub'
 
-const port = Number(process.env.PORT ?? 3000)
-const isProduction = process.env.NODE_ENV === 'production'
+const port = Number(process.env['PORT'] ?? 3000)
+const isProduction = process.env['NODE_ENV'] === 'production'
 
 // Check database connection on startup if DATABASE_URL is configured
 await (async () => {
-  if (process.env.DATABASE_URL) {
+  if (process.env['DATABASE_URL']) {
     const { checkDatabaseConnection } = await import('./db/client')
     const connected = await checkDatabaseConnection()
     if (!connected) {

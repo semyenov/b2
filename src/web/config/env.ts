@@ -22,10 +22,10 @@ interface EnvironmentConfig {
  */
 function getEnvironmentConfig(): EnvironmentConfig {
   // TypeScript requires bracket notation for import.meta.env access with noUncheckedIndexedAccess
-  const mode = (import.meta.env.MODE || 'development') as EnvironmentConfig['mode']
+  const mode = (import.meta.env['MODE'] || 'development') as EnvironmentConfig['mode']
 
   // Default URLs - can be overridden with environment variables
-  const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+  const apiBaseUrl = import.meta.env['VITE_API_URL'] || 'http://localhost:3000'
   const wsBaseUrl = apiBaseUrl.replace(/^http/, 'ws')
 
   return {

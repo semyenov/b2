@@ -7,7 +7,7 @@ import fsDriver from 'unstorage/drivers/fs'
 const storage = createStorage({
   driver: fsDriver({
     // TypeScript requires bracket notation for process.env access with noUncheckedIndexedAccess
-    base: process.env.STORAGE_DIR ?? './data/users',
+    base: process.env['STORAGE_DIR'] ?? './data/users',
   }),
 })
 

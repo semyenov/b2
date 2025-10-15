@@ -307,8 +307,8 @@ describe('Game Engine - Game Creation', () => {
         players: ['Alice', 'Bob'],
       })
 
-      expect(game.scores.Alice).toBe(0) // Test data guaranteed to exist
-      expect(game.scores.Bob).toBe(0) // Test data guaranteed to exist
+      expect(game.scores['Alice']).toBe(0) // Test data guaranteed to exist
+      expect(game.scores['Bob']).toBe(0) // Test data guaranteed to exist
     })
 
     test('places base word on board', () => {
@@ -392,7 +392,7 @@ describe('Game Engine - Move Application', () => {
 
       expect(result.ok).toBe(true)
       if (result.ok) {
-        expect(result.game.scores.Alice).toBeGreaterThan(0) // Test data guaranteed to exist
+        expect(result.game.scores['Alice']).toBeGreaterThan(0) // Test data guaranteed to exist
       }
     })
 

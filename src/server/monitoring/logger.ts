@@ -1,8 +1,8 @@
 import { consola, createConsola } from 'consola'
 
-const isProduction = process.env.NODE_ENV === 'production'
-const logLevel = process.env.LOG_LEVEL ?? (isProduction ? 'info' : 'debug')
-const logFormat = process.env.LOG_FORMAT ?? (isProduction ? 'json' : 'pretty')
+const isProduction = process.env['NODE_ENV'] === 'production'
+const logLevel = process.env['LOG_LEVEL'] ?? (isProduction ? 'info' : 'debug')
+const logFormat = process.env['LOG_FORMAT'] ?? (isProduction ? 'json' : 'pretty')
 
 /**
  * Application logger with structured logging support

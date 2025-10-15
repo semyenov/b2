@@ -6,8 +6,8 @@ import { createStorage } from 'unstorage'
 import fsDriver from 'unstorage/drivers/fs'
 
 // TypeScript requires bracket notation for process.env access with noUncheckedIndexedAccess
-const storageDir = process.env.STORAGE_DIR || './data/games'
-const useDatabaseStorage = Boolean(process.env.DATABASE_URL)
+const storageDir = process.env['STORAGE_DIR'] || './data/games'
+const useDatabaseStorage = Boolean(process.env['DATABASE_URL'])
 
 /**
  * Game store interface - supports both file-based and PostgreSQL storage

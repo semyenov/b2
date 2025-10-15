@@ -1,5 +1,5 @@
-import { afterAll, afterEach, beforeAll, describe, expect, test } from 'bun:test'
 import cors from '@elysiajs/cors'
+import { afterAll, afterEach, beforeAll, describe, expect, test } from 'bun:test'
 import { Elysia } from 'elysia'
 import { createTestClient } from '../../test/helpers/testClient'
 import { registerRoutes } from './routes'

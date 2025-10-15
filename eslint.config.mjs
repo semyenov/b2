@@ -24,5 +24,7 @@ export default antfu({
     ],
     // Allow top-level await in entry point files (Bun supports it)
     'antfu/no-top-level-await': 'off',
+    // Allow bracket notation for environment variables (TypeScript noPropertyAccessFromIndexSignature compatibility)
+    'dot-notation': 'off',
   },
 })
