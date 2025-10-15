@@ -1,0 +1,9 @@
+[test]
+preload = [ "./test/setup.ts" ]
+coverage = true
+coverageThreshold = 80
+coverageReporter = [
+  "text",
+  "lcov"
+]
+coverageDir = "./coverage"

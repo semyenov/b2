@@ -147,25 +147,25 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                       )}
                       style={{ animationDelay: `${i * 50}ms` }}
                     >
-                    <div className="px-4 py-3 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-info-500/20 flex items-center justify-center text-xs font-bold text-info-300">
-                          {word.length}
+                      <div className="px-4 py-3 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-info-500/20 flex items-center justify-center text-xs font-bold text-info-300">
+                            {word.length}
+                          </div>
+                          <span className="font-bold text-xl text-surface-300 group-hover:text-info-100 transition-colors duration-200 tracking-wider">
+                            {word}
+                          </span>
                         </div>
-                        <span className="font-bold text-xl text-surface-300 group-hover:text-info-100 transition-colors duration-200 tracking-wider">
-                          {word}
-                        </span>
-                      </div>
 
-                      <div className="flex items-center gap-2">
-                        <div className="text-xs font-bold text-surface-500 group-hover:text-info-400 transition-colors duration-200">
-                          {wordScore}
-                          {' '}
-                          {getRussianPluralForm(wordScore, ['очко', 'очка', 'очков'])}
+                        <div className="flex items-center gap-2">
+                          <div className="text-xs font-bold text-surface-500 group-hover:text-info-400 transition-colors duration-200">
+                            {wordScore}
+                            {' '}
+                            {getRussianPluralForm(wordScore, ['очко', 'очка', 'очков'])}
+                          </div>
+                          <div className="w-2 h-2 bg-info-400/50 group-hover:bg-info-400 transition-colors duration-200" />
                         </div>
-                        <div className="w-2 h-2 bg-info-400/50 group-hover:bg-info-400 transition-colors duration-200" />
                       </div>
-                    </div>
 
                       {/* Hover effect overlay */}
                       <div className="absolute inset-0 bg-info-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

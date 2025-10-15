@@ -1,6 +1,5 @@
 import type { SizedDictionary } from './dictionary'
 import { Type } from '@sinclair/typebox'
-import { consola } from 'consola'
 import { Elysia } from 'elysia'
 import {
   CreateGameBodySchema,
@@ -20,7 +19,9 @@ import {
 import { applyMove, createGame, findPlacementsForWord } from './engine/balda'
 import { suggestWords } from './engine/suggest'
 import { DictionaryError, GameNotFoundError, InvalidMoveError, InvalidPlacementError } from './errors'
+import { logger } from './monitoring/logger'
 import { store } from './store'
+import { isValidUUID } from './utils/uuid'
 import { broadcastGame, setArchiveCallback } from './wsHub'
 
 // Set up archive callback to delete games when all clients disconnect
@@ -28,7 +29,7 @@ setArchiveCallback(async (gameId: string) => {
   const game = await store.get(gameId)
   if (game) {
     await store.delete(gameId)
-    consola.info(`Archived game ${gameId} (${game.players.join(' vs ')})`)
+    logger.info(`Archived game ${gameId} (${game.players.join(' vs ')})`)
   }
 })
 
@@ -75,7 +76,7 @@ async function getDictionary(): Promise<SizedDictionary> {
 /**
  * Dictionary plugin - handles dictionary-related endpoints
  */
-const dictionaryPlugin = new Elysia({ name: 'dictionary', prefix: '/dictionary' })
+const dictionaryPlugin = new Elysia({ name: 'dictionary', prefix: '/dictionary', tags: ['dictionary'] })
   .get('/', async () => {
     const dictPath = process.env.DICT_PATH
     if (!dictPath)
@@ -83,21 +84,41 @@ const dictionaryPlugin = new Elysia({ name: 'dictionary', prefix: '/dictionary' 
     const { loadDictionaryFromFile } = await import('./dictionary')
     const dict = await loadDictionaryFromFile(dictPath)
     return { loaded: true, source: 'file' as const, size: dict.size() }
-  }, { response: { 200: DictionaryStatsSchema } })
+  }, {
+    response: { 200: DictionaryStatsSchema },
+    detail: {
+      summary: 'Get dictionary metadata',
+      description: 'Returns information about the loaded dictionary including source (file or builtin) and size.',
+      tags: ['dictionary'],
+    },
+  })
   .get('/random', async ({ query }) => {
     const dict = await getDictionary()
     const length = query.length ? Number(query.length) : 5
     const count = query.count ? Number(query.count) : 1
     const words = dict.getRandomWords(length, count)
     return { words }
-  }, { query: RandomWordsQuerySchema, response: { 200: RandomWordsResponseSchema } })
+  }, {
+    query: RandomWordsQuerySchema,
+    response: { 200: RandomWordsResponseSchema },
+    detail: {
+      summary: 'Get random words from dictionary',
+      description: 'Returns random words of specified length from the dictionary. Useful for generating base words for new games.',
+      tags: ['dictionary'],
+    },
+  })
 
 /**
  * Game management plugin - handles game CRUD operations
  */
-const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
+const gamesPlugin = new Elysia({ name: 'games', prefix: '/games', tags: ['games'] })
   .get('/', async () => await store.getAll(), {
     response: { 200: Type.Array(GameStateSchema) },
+    detail: {
+      summary: 'List all games',
+      description: 'Returns an array of all active games in the system.',
+      tags: ['games'],
+    },
   })
   .post('/', async ({ body }) => {
     const id = crypto.randomUUID()
@@ -112,15 +133,36 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
   }, {
     body: CreateGameBodySchema,
     response: { 200: GameStateSchema },
+    detail: {
+      summary: 'Create a new game',
+      description: 'Creates a new Balda game with the specified board size, base word, and players. The base word is placed in the center row of the board.',
+      tags: ['games'],
+    },
   })
   .get('/:id', async ({ params }) => {
+    // Validate UUID format before querying database
+    if (!isValidUUID(params.id))
+      throw new GameNotFoundError(params.id)
+
     const game = await store.get(params.id)
     if (!game)
       throw new GameNotFoundError(params.id)
 
     return game
-  }, { params: GameIdParamsSchema, response: { 200: GameStateSchema, 404: ErrorSchema } })
+  }, {
+    params: GameIdParamsSchema,
+    response: { 200: GameStateSchema, 404: ErrorSchema },
+    detail: {
+      summary: 'Get game state',
+      description: 'Returns the current state of a specific game including board, players, scores, and move history.',
+      tags: ['games'],
+    },
+  })
   .post('/:id/move', async ({ params, body }) => {
+    // Validate UUID format before querying database
+    if (!isValidUUID(params.id))
+      throw new GameNotFoundError(params.id)
+
     const game = await store.get(params.id)
     if (!game)
       throw new GameNotFoundError(params.id)
@@ -138,8 +180,17 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
     params: GameIdParamsSchema,
     body: MoveBodySchema,
     response: { 200: GameStateSchema, 400: ErrorSchema, 404: ErrorSchema },
+    detail: {
+      summary: 'Submit a move',
+      description: 'Validates and applies a player move to the game. A valid move requires: (1) placing exactly one letter in an empty cell, (2) forming a valid word that uses the placed letter, (3) the word must exist in the dictionary and not have been used before.',
+      tags: ['games'],
+    },
   })
   .get('/:id/placements', async ({ params, query }) => {
+    // Validate UUID format before querying database
+    if (!isValidUUID(params.id))
+      throw new GameNotFoundError(params.id)
+
     const game = await store.get(params.id)
     if (!game)
       throw new GameNotFoundError(params.id)
@@ -149,8 +200,20 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
       throw new InvalidPlacementError('Word query parameter is required')
 
     return findPlacementsForWord(game.board, word)
-  }, { query: FindPlacementsQuerySchema, response: { 200: PlacementsResponseSchema, 400: ErrorSchema, 404: ErrorSchema } })
+  }, {
+    query: FindPlacementsQuerySchema,
+    response: { 200: PlacementsResponseSchema, 400: ErrorSchema, 404: ErrorSchema },
+    detail: {
+      summary: 'Find valid placements for a word',
+      description: 'Returns all possible positions where a single letter can be placed to form the specified word on the current board.',
+      tags: ['games'],
+    },
+  })
   .get('/:id/suggest', async ({ params, query }) => {
+    // Validate UUID format before querying database
+    if (!isValidUUID(params.id))
+      throw new GameNotFoundError(params.id)
+
     const game = await store.get(params.id)
     if (!game)
       throw new GameNotFoundError(params.id)
@@ -158,8 +221,20 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
     const dict = await getDictionary()
     const limit = query.limit ? Number(query.limit) : undefined
     return suggestWords(game.board, dict, { limit, usedWords: game.usedWords })
-  }, { query: SuggestQuerySchema, response: { 200: SuggestResponseSchema, 404: ErrorSchema } })
+  }, {
+    query: SuggestQuerySchema,
+    response: { 200: SuggestResponseSchema, 404: ErrorSchema },
+    detail: {
+      summary: 'Get AI move suggestions',
+      description: 'Returns a list of suggested moves generated by the AI, sorted by score. Each suggestion includes the position, letter to place, and the word that would be formed.',
+      tags: ['games'],
+    },
+  })
   .patch('/:id/player', async ({ params, body }) => {
+    // Validate UUID format before querying database
+    if (!isValidUUID(params.id))
+      throw new GameNotFoundError(params.id)
+
     const game = await store.get(params.id)
     if (!game)
       throw new GameNotFoundError(params.id)
@@ -212,11 +287,30 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games' })
     params: GameIdParamsSchema,
     body: UpdatePlayerBodySchema,
     response: { 200: GameStateSchema, 400: ErrorSchema, 404: ErrorSchema },
+    detail: {
+      summary: 'Update player name',
+      description: 'Updates a player\'s name in the game, preserving their score and move history.',
+      tags: ['games'],
+    },
   })
 
+// eslint-disable-next-line ts/ban-ts-comment
+// @ts-ignore - Elysia type system complexities with JWT plugins cause type inference issues
 export function registerRoutes(app: Elysia): Elysia {
+  // Import auth routes
+  const authPluginImport = import('./routes/auth').then(m => m.authPlugin)
+
+  // eslint-disable-next-line ts/ban-ts-comment
+  // @ts-ignore - Elysia type system complexities
   return app
-    .get('/health', () => ({ status: 'ok' }))
+    .get('/health', () => ({ status: 'ok' }), {
+      detail: {
+        summary: 'Health check',
+        description: 'Returns the health status of the API server.',
+        tags: ['health'],
+      },
+    })
+    .use(async () => await authPluginImport)
     .use(dictionaryPlugin)
     .use(gamesPlugin)
 }

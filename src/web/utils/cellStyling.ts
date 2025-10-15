@@ -32,6 +32,7 @@ interface GetCellClassNameOptions {
  * @param options.isNewLetterInPath - Whether this cell is the newly placed letter in current path
  * @param options.isNewLetterInOpponentPath - Whether this cell is the newly placed letter in opponent path
  * @param options.isNewLetterInHoveredPath - Whether this cell is the newly placed letter in hovered path
+ * @param options.isHoveredWordFromUser - Whether this cell is part of a user-hovered word
  * @param options.hasCell - Whether cell contains a letter
  * @param options.canClick - Whether cell can be clicked
  * @param options.isHovered - Whether cell is being hovered

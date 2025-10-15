@@ -149,13 +149,13 @@ export const Board = memo(({
                             displayContent
                           )}
                   {inPath && pathIdx >= 0 && (
-                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-white text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut">
+                    <div className="absolute top-0 right-0 w-[30%] h-[30%] text-white text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeIn">
                       {pathIdx + 1}
                     </div>
                   )}
                   {!inPath && isInRecentOpponentPath && recentOpponentPathIdx >= 0 && (
                     <div className={cn(
-                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut',
+                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeIn',
                       isNewLetterInOpponentPath ? 'text-opponent-100' : 'text-opponent-200',
                     )}
                     >
@@ -164,7 +164,7 @@ export const Board = memo(({
                   )}
                   {!inPath && !isInRecentOpponentPath && isInHoveredPath && hoveredPathIdx >= 0 && (
                     <div className={cn(
-                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeInOut',
+                      'absolute top-0 right-0 w-[30%] h-[30%] text-[length:calc(var(--text-resp-board)*0.4)] flex items-center justify-center font-black leading-none animate-fadeIn',
                       isHoveredWordFromUser
                         ? (isNewLetterInHoveredPath ? 'text-user-100' : 'text-user-200')
                         : (isNewLetterInHoveredPath ? 'text-opponent-100' : 'text-opponent-200'),

@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Get the commit message
+commit_msg=$(cat "$1")
+
+# Check for conventional commit format
+# Allowed types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert
+if ! echo "$commit_msg" | grep -qE "^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+"; then
+  echo "❌ Invalid commit message format!"
+  echo ""
+  echo "Commit message must follow Conventional Commits format:"
+  echo "  type(scope?): description"
+  echo ""
+  echo "Allowed types:"
+  echo "  feat     - New feature"
+  echo "  fix      - Bug fix"
+  echo "  docs     - Documentation changes"
+  echo "  style    - Code formatting (no functional changes)"
+  echo "  refactor - Code refactoring"
+  echo "  test     - Adding or updating tests"
+  echo "  chore    - Build, tooling, dependencies"
+  echo "  perf     - Performance improvements"
+  echo "  ci       - CI/CD changes"
+  echo "  build    - Build system changes"
+  echo "  revert   - Revert previous commit"
+  echo ""
+  echo "Examples:"
+  echo "  feat(auth): add JWT authentication"
+  echo "  fix(api): handle empty dictionary path"
+  echo "  docs: update API examples in README"
+  echo "  test(balda): add edge cases for path finding"
+  echo ""
+  exit 1
+fi

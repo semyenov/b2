@@ -6,12 +6,28 @@ import { createStorage } from 'unstorage'
 import fsDriver from 'unstorage/drivers/fs'
 
 const storageDir = process.env.STORAGE_DIR || './data/games'
+const useDatabaseStorage = Boolean(process.env.DATABASE_URL)
 
 /**
- * Persistent game store using unstorage with filesystem driver
- * Data is stored in JSON files under STORAGE_DIR (default: ./data/games)
+ * Game store interface - supports both file-based and PostgreSQL storage
  */
-export class GameStore {
+export interface IGameStore {
+  getAll: () => Promise<GameState[]>
+  get: (id: string) => Promise<GameState | null>
+  set: (game: GameState) => Promise<void>
+  has: (id: string) => Promise<boolean>
+  delete: (id: string) => Promise<void>
+  clear: () => Promise<void>
+  count: () => Promise<number>
+  filter: (predicate: (game: GameState) => boolean) => Promise<GameState[]>
+}
+
+/**
+ * File-based game store using unstorage with filesystem driver
+ * Data is stored in JSON files under STORAGE_DIR (default: ./data/games)
+ * @deprecated Use PostgreSQL storage for production
+ */
+export class FileGameStore implements IGameStore {
   private storage: Storage<GameState>
 
   constructor() {
@@ -20,7 +36,7 @@ export class GameStore {
         base: storageDir,
       }),
     })
-    consola.info(`Game storage initialized at: ${storageDir}`)
+    consola.info(`File-based game storage initialized at: ${storageDir}`)
   }
 
   async getAll(): Promise<GameState[]> {
@@ -64,4 +80,25 @@ export class GameStore {
   }
 }
 
-export const store = new GameStore()
+/**
+ * Initialize the appropriate game store based on environment configuration
+ * - If DATABASE_URL is set, use PostgreSQL storage
+ * - Otherwise, fall back to file-based storage
+ */
+async function initializeStore(): Promise<IGameStore> {
+  if (useDatabaseStorage) {
+    consola.info('Using PostgreSQL storage (DATABASE_URL detected)')
+    // Dynamic import to avoid loading PostgreSQL dependencies when not needed
+    const { postgresStore } = await import('./db/gameStore')
+    return postgresStore
+  }
+  else {
+    consola.warn('Using file-based storage (DATABASE_URL not set). Consider migrating to PostgreSQL for production.')
+    return new FileGameStore()
+  }
+}
+
+export const store = await initializeStore()
+
+// Export legacy class name for backwards compatibility
+export const GameStore = FileGameStore

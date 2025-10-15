@@ -22,5 +22,7 @@ export default antfu({
         varsIgnorePattern: '^_',
       },
     ],
+    // Allow top-level await in entry point files (Bun supports it)
+    'antfu/no-top-level-await': 'off',
   },
 })

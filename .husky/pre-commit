@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run lint-staged on all staged files
+bunx lint-staged
+
+# Run tests (optional - uncomment if you want tests to run before every commit)
+# bun test

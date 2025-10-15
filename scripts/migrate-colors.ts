@@ -20,9 +20,9 @@
  * - Rollback capability
  */
 
-import { readdir, readFile, writeFile, copyFile, unlink } from 'node:fs/promises'
-import { join, relative, extname } from 'node:path'
 import { existsSync } from 'node:fs'
+import { copyFile, readdir, readFile, unlink, writeFile } from 'node:fs/promises'
+import { extname, join, relative } from 'node:path'
 
 interface ColorMapping {
   from: string
@@ -457,4 +457,4 @@ if (import.meta.main) {
 }
 
 // Export for testing
-export { migrate, COLOR_MAPPINGS }
+export { COLOR_MAPPINGS, migrate }

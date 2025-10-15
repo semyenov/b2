@@ -1,6 +1,15 @@
-# Balda Word Game Server
+# Balda Word Game 🎮
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Bun](https://img.shields.io/badge/Bun-1.3-black?logo=bun)](https://bun.sh)
+[![Elysia](https://img.shields.io/badge/Elysia-1.4-orange)](https://elysiajs.com)
+[![React](https://img.shields.io/badge/React-19-blue?logo=react)](https://react.dev)
+[![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
 A high-performance word game server built with [Bun](https://bun.sh), [Elysia](https://elysiajs.com), and TypeScript. Balda is a word-building game where players take turns adding letters to a grid and forming new words.
+
+**🎯 Production Ready** | **📚 [API Docs](http://localhost:3000/swagger)** | **🤝 [Contributing](./CONTRIBUTING.md)**
 
 ## Features
 

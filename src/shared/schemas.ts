@@ -165,3 +165,56 @@ export const RandomWordsQuerySchema = Type.Object({
 export const RandomWordsResponseSchema = Type.Object({
   words: Type.Array(Type.String()),
 })
+
+// Auth schemas
+export const RegisterBodySchema = Type.Object({
+  email: Type.String({
+    format: 'email',
+    error: 'Invalid email format',
+  }),
+  username: Type.String({
+    minLength: 3,
+    maxLength: 20,
+    pattern: '^[a-zA-Z0-9_-]+$',
+    error: 'Username must be 3-20 characters and contain only letters, numbers, underscores, and hyphens',
+  }),
+  password: Type.String({
+    minLength: 8,
+    error: 'Password must be at least 8 characters',
+  }),
+})
+
+export const LoginBodySchema = Type.Object({
+  email: Type.String({
+    format: 'email',
+    error: 'Invalid email format',
+  }),
+  password: Type.String({
+    minLength: 1,
+    error: 'Password is required',
+  }),
+})
+
+export const PublicUserSchema = Type.Object({
+  id: Type.String(),
+  email: Type.String({ format: 'email' }),
+  username: Type.String(),
+  createdAt: Type.Integer(),
+})
+
+export const AuthResponseSchema = Type.Object({
+  user: PublicUserSchema,
+  token: Type.String(),
+  refreshToken: Type.String(),
+})
+
+export const RefreshTokenBodySchema = Type.Object({
+  refreshToken: Type.String({
+    minLength: 1,
+    error: 'Refresh token is required',
+  }),
+})
+
+export const RefreshTokenResponseSchema = Type.Object({
+  token: Type.String(),
+})

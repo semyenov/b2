@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: balda_postgres
+    environment:
+      POSTGRES_DB: balda
+      POSTGRES_USER: balda
+      POSTGRES_PASSWORD: balda
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/server/db/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U balda]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local

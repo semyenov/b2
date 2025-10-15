@@ -67,31 +67,31 @@
   --color-success-900: var(--color-emerald-900);
   --color-success-950: var(--color-emerald-950);
 
-  /* Opponent/Warning colors → Amber
+  /* Opponent/Warning colors → yellow
      Use for: opponent actions, warning states */
-  --color-opponent-50: var(--color-amber-50);
-  --color-opponent-100: var(--color-amber-100);
-  --color-opponent-200: var(--color-amber-200);
-  --color-opponent-300: var(--color-amber-300);
-  --color-opponent-400: var(--color-amber-400);
-  --color-opponent-500: var(--color-amber-500);
-  --color-opponent-600: var(--color-amber-600);
-  --color-opponent-700: var(--color-amber-700);
-  --color-opponent-800: var(--color-amber-800);
-  --color-opponent-900: var(--color-amber-900);
-  --color-opponent-950: var(--color-amber-950);
+  --color-opponent-50: var(--color-yellow-50);
+  --color-opponent-100: var(--color-yellow-100);
+  --color-opponent-200: var(--color-yellow-200);
+  --color-opponent-300: var(--color-yellow-300);
+  --color-opponent-400: var(--color-yellow-400);
+  --color-opponent-500: var(--color-yellow-500);
+  --color-opponent-600: var(--color-yellow-600);
+  --color-opponent-700: var(--color-yellow-700);
+  --color-opponent-800: var(--color-yellow-800);
+  --color-opponent-900: var(--color-yellow-900);
+  --color-opponent-950: var(--color-yellow-950);
 
-  --color-warning-50: var(--color-amber-50);
-  --color-warning-100: var(--color-amber-100);
-  --color-warning-200: var(--color-amber-200);
-  --color-warning-300: var(--color-amber-300);
-  --color-warning-400: var(--color-amber-400);
-  --color-warning-500: var(--color-amber-500);
-  --color-warning-600: var(--color-amber-600);
-  --color-warning-700: var(--color-amber-700);
-  --color-warning-800: var(--color-amber-800);
-  --color-warning-900: var(--color-amber-900);
-  --color-warning-950: var(--color-amber-950);
+  --color-warning-50: var(--color-yellow-50);
+  --color-warning-100: var(--color-yellow-100);
+  --color-warning-200: var(--color-yellow-200);
+  --color-warning-300: var(--color-yellow-300);
+  --color-warning-400: var(--color-yellow-400);
+  --color-warning-500: var(--color-yellow-500);
+  --color-warning-600: var(--color-yellow-600);
+  --color-warning-700: var(--color-yellow-700);
+  --color-warning-800: var(--color-yellow-800);
+  --color-warning-900: var(--color-yellow-900);
+  --color-warning-950: var(--color-yellow-950);
 
   /* Information/Suggestion colors → Cyan
      Use for: info elements, AI suggestions, help text */
@@ -410,6 +410,22 @@ button:focus-visible {
 
 .animate-slide-in-right {
   animation: slide-in-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Simple fade in animation for board cell numbers */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s ease-out;
 }
 
 /* Fade in and out animation for letter numbers */
