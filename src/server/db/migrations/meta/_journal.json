@@ -8,6 +8,13 @@
       "when": 1760527881872,
       "tag": "0000_absurd_patriot",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1760566111857,
+      "tag": "0001_clumsy_meteorite",
+      "breakpoints": true
     }
   ]
 }

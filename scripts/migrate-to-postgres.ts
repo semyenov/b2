@@ -7,8 +7,7 @@
 import type { GameState } from '../src/server/engine/balda'
 import { readdir, readFile, stat } from 'node:fs/promises'
 import { consola } from 'consola'
-import { checkDatabaseConnection, db } from '../src/server/db/client'
-import { games } from '../src/server/db/schema'
+import { checkDatabaseConnection } from '../src/server/db/client'
 
 const storageDir = process.env['STORAGE_DIR'] || './data/games'
 
@@ -31,19 +30,9 @@ async function checkStorageDirectory(): Promise<boolean> {
 }
 
 async function migrateGame(game: GameState): Promise<void> {
-  await db.insert(games).values({
-    id: game.id,
-    size: game.size,
-    board: game.board,
-    players: game.players,
-    aiPlayers: game.aiPlayers || [],
-    currentPlayerIndex: game.currentPlayerIndex,
-    moves: game.moves,
-    scores: game.scores,
-    usedWords: game.usedWords,
-    createdAt: new Date(game.createdAt),
-    updatedAt: new Date(),
-  })
+  // Use the postgresStore which handles the normalized schema
+  const { postgresStore } = await import('../src/server/db/gameStore')
+  await postgresStore.set(game)
 }
 
 async function migrate(): Promise<void> {

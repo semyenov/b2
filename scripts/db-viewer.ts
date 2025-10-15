@@ -46,8 +46,19 @@ async function viewDatabase() {
   console.log('='.repeat(60))
 
   try {
-    // Games table
-    const games = await sql<GameRow[]>`SELECT id, size, jsonb_array_length(moves) as move_count, created_at FROM games ORDER BY created_at DESC LIMIT 10`
+    // Games table with move counts from normalized moves table
+    const games = await sql<GameRow[]>`
+      SELECT
+        g.id,
+        g.size,
+        COUNT(m.id)::integer as move_count,
+        g.created_at
+      FROM games g
+      LEFT JOIN moves m ON g.id = m.game_id
+      GROUP BY g.id, g.size, g.created_at
+      ORDER BY g.created_at DESC
+      LIMIT 10
+    `
     console.log('\n🎮 Games (latest 10):')
     console.log('-'.repeat(60))
     if (games.length === 0) {
@@ -91,6 +102,27 @@ async function viewDatabase() {
       console.log('\n  Sample words:', sampleWords.map(w => w.word).join(', '))
     }
 
+    // Game players
+    const playerCount = await sql<Array<{ count: number }>>`SELECT COUNT(*)::integer as count FROM game_players`
+    console.log('\n👥 Game Participants:')
+    console.log('-'.repeat(60))
+    console.log(`  Total Players: ${playerCount[0]?.count || 0}`)
+
+    // Recent moves
+    const recentMoves = await sql<Array<{ word: string, letter: string, score: number }>>`
+      SELECT word, letter, score
+      FROM moves
+      ORDER BY created_at DESC
+      LIMIT 5
+    `
+    if (recentMoves.length > 0) {
+      console.log('\n♟️  Recent Moves:')
+      console.log('-'.repeat(60))
+      recentMoves.forEach((move) => {
+        console.log(`  Word: ${move.word} | Letter: ${move.letter} | Score: ${move.score}`)
+      })
+    }
+
     // Stats
     const stats = await sql<StatsRow[]>`
       SELECT
@@ -105,6 +137,8 @@ async function viewDatabase() {
       console.log(`  Total Games: ${firstStat.total_games}`)
       console.log(`  Total Users: ${firstStat.total_users}`)
       console.log(`  Total Words: ${firstStat.total_words}`)
+      console.log(`  Total Moves: ${(await sql<Array<{ count: number }>>`SELECT COUNT(*)::integer as count FROM moves`)[0]?.count || 0}`)
+      console.log(`  Total Game Players: ${playerCount[0]?.count || 0}`)
     }
 
     console.log(`\n${'='.repeat(60)}`)
