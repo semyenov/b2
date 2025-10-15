@@ -1,6 +1,6 @@
 import type { SizedDictionary } from '../dictionary'
 import type { BoardPosition, Letter } from './balda'
-import { DEFAULT_SUGGESTION_LIMIT, MAX_SUGGESTION_LIMIT, MAX_WORD_LENGTH, ORTHOGONAL_DIRS } from '../constants'
+import { DEFAULT_SUGGESTION_LIMIT, MAX_SUGGESTION_LIMIT, MAX_WORD_LENGTH, ORTHOGONAL_DIRS } from '../constants/'
 import { calculateWordScore, isAdjacentToExisting, normalizeWord } from './balda'
 
 export interface Suggestion {

@@ -1,7 +1,7 @@
 import type { Dictionary } from './engine/balda'
 import { consola } from 'consola'
 import { objectify, sift } from 'radash'
-import { DEFAULT_ALPHABET } from './constants'
+import { DEFAULT_ALPHABET } from './constants/'
 
 export interface SizedDictionary extends Dictionary {
   size: () => number

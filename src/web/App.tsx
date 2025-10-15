@@ -1,5 +1,5 @@
 import { Banner, CreateGame, GameList, GameScreen, MenuScreen } from '@components'
-import { LOADING_MESSAGES } from './constants'
+import { LOADING_MESSAGES } from './constants/messages'
 import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameControls } from './hooks/useGameControls'

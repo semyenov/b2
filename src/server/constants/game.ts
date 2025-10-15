@@ -1,4 +1,4 @@
-import type { BoardPosition } from './engine/balda'
+import type { BoardPosition } from '../engine/balda'
 
 /**
  * Orthogonal directions for board navigation (up, down, left, right)

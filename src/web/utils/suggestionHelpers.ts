@@ -1,41 +1,11 @@
 import type { BadgeVariant } from '@components/ui'
+import type { ScoreTier } from '@constants/suggestions'
 import type { Suggestion } from '@lib/client'
 import { GAME_CONFIG } from '@constants/game'
+import { TIER_CONFIG } from '@constants/suggestions'
 
-/**
- * Score tier classification
- */
-export type ScoreTier = 'high' | 'medium' | 'low'
-
-/**
- * Tier configuration for visual styling
- */
-export interface TierConfig {
-  label: string
-  icon: string
-  variant: BadgeVariant
-}
-
-/**
- * Tier display configuration
- */
-export const TIER_CONFIG: Record<ScoreTier, TierConfig> = {
-  high: {
-    label: 'Лучшие',
-    icon: '🏆',
-    variant: 'success',
-  },
-  medium: {
-    label: 'Хорошие',
-    icon: '💡',
-    variant: 'warning',
-  },
-  low: {
-    label: 'Другие',
-    icon: '📋',
-    variant: 'gray',
-  },
-}
+// Re-export for backward compatibility
+export type { ScoreTier }
 
 /**
  * Determine score tier based on game thresholds

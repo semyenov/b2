@@ -1,10 +1,6 @@
-import { useEffect, useState } from 'react'
+import { ANIMATION_DURATION_MS } from '@constants/ui'
 
-/**
- * Animation duration in milliseconds
- * Should match the CSS animation duration
- */
-const ANIMATION_DURATION = 300
+import { useEffect, useState } from 'react'
 
 /**
  * useAnimatedPanel Hook
@@ -55,7 +51,7 @@ export function useAnimatedPanel(shouldShow: boolean) {
       const timer = setTimeout(() => {
         setIsVisible(false)
         setIsClosing(false)
-      }, ANIMATION_DURATION)
+      }, ANIMATION_DURATION_MS)
 
       return () => clearTimeout(timer)
     }

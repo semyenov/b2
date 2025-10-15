@@ -1,7 +1,7 @@
 import { consola } from 'consola'
 import { eq, sql } from 'drizzle-orm'
 import { objectify } from 'radash'
-import { DEFAULT_ALPHABET } from '../constants'
+import { DEFAULT_ALPHABET } from '../constants/'
 import { db } from './client'
 import { words } from './schema'
 

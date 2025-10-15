@@ -1,21 +1,12 @@
 import type { GameState } from './engine/balda'
 import { consola } from 'consola'
+import { ARCHIVE_DELAY_MS, WS_STATES } from './constants/websocket'
 
 interface WsClient {
   send: (data: string) => number
   close: (code?: number, reason?: string) => void
   readyState: number
 }
-
-/**
- * WebSocket connection states
- */
-const WS_STATES = {
-  CONNECTING: 0,
-  OPEN: 1,
-  CLOSING: 2,
-  CLOSED: 3,
-} as const
 
 /**
  * Check if a WebSocket client is in a valid state for sending messages
@@ -29,9 +20,6 @@ const clientToGameId = new Map<WsClient, string>()
 
 // Track archive timeouts for games with no clients
 const archiveTimeouts = new Map<string, NodeJS.Timeout>()
-
-// Archive delay: 5 minutes after last client disconnects
-const ARCHIVE_DELAY_MS = 5 * 60 * 1000
 
 /**
  * Callback function to archive a game (injected from routes)
