@@ -68,8 +68,9 @@ export function GamePanel({
       ref={panelRef}
       className={cn(
         'absolute bottom-0 left-0 right-0 z-40',
-        'bg-surface-800 flex flex-col border-t-2 border-info-800',
+        'bg-surface-800 border-t-2 border-info-800',
         'shadow-[0_-8px_24px_rgba(0,0,0,0.7)]',
+        'overflow-y-auto scrollbar-custom',
         isClosing ? 'animate-slide-down-panel' : 'animate-slide-up-panel',
       )}
       style={{
@@ -77,21 +78,15 @@ export function GamePanel({
         paddingBottom: 'var(--height-control-panel)', // Match control panel height
       }}
     >
-      {showSuggestions
+      {showSuggestions && onSuggestionSelect
         ? (
-          /* Suggestions View */
-            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-custom relative">
-              {onSuggestionSelect && (
-                <SuggestionsPanel
-                  suggestions={suggestions}
-                  loadingSuggestions={loadingSuggestions}
-                  onSuggestionSelect={onSuggestionSelect}
-                />
-              )}
-            </div>
+            <SuggestionsPanel
+              suggestions={suggestions}
+              loadingSuggestions={loadingSuggestions}
+              onSuggestionSelect={onSuggestionSelect}
+            />
           )
         : (
-          /* Alphabet Grid */
             <AlphabetPanel
               selectedLetter={selectedLetter}
               disabled={disabled}
