@@ -17,12 +17,13 @@ A high-performance word game server built with [Bun](https://bun.sh), [Elysia](h
 - 🎮 **Complete Game Logic** - Full Balda game implementation with move validation, scoring, and turn management
 - 🔄 **Real-time Updates** - WebSocket support for live game state broadcasting
 - 🤖 **AI Suggestions** - Smart move suggestions using dictionary analysis and letter frequency
-- 📚 **Flexible Dictionary** - Support for custom dictionary files or permissive mode
+- 📚 **PostgreSQL Dictionary** - 50,910+ Russian words with in-memory Trie caching for instant lookups
+- 🗄️ **Normalized Database** - Relational PostgreSQL schema with proper foreign keys and indexes
 - ✅ **Type-Safe API** - Full TypeScript support with runtime validation using TypeBox
-- 🚀 **High Performance** - Built on Bun runtime for maximum speed
+- 🚀 **High Performance** - Built on Bun runtime with optimized path-finding and memoization
 - 🔍 **Detailed Error Handling** - Custom error classes with informative messages
-- 🧩 **Modular Architecture** - Plugin-based route organization
-- 💾 **Persistent Storage** - Games are saved to disk using unstorage with filesystem driver
+- 🧩 **Modular Architecture** - Plugin-based route organization with Elysia framework
+- 💾 **Dual Storage** - PostgreSQL (recommended) or file-based fallback
 
 ### Frontend
 - 🖥️ **CLI Frontend** - Interactive terminal interface built with React Ink
@@ -37,10 +38,33 @@ A high-performance word game server built with [Bun](https://bun.sh), [Elysia](h
 
 ## Quick Start
 
+### Prerequisites
+
+1. **Install Bun** (if not already installed):
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+2. **Start PostgreSQL** (recommended):
+```bash
+docker compose up -d
+```
+
 ### Installation
 
 ```bash
+# Install dependencies
 bun install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your configuration
+
+# Import Russian dictionary (50,910 words)
+bun run dict:import
+
+# Run database migrations
+bunx drizzle-kit migrate
 ```
 
 ### Development
@@ -51,7 +75,11 @@ Start the development server with hot reload:
 bun run dev
 ```
 
-Server will start at `http://localhost:3000`
+Server will start at `http://localhost:3000` with:
+- 🗄️ PostgreSQL database connected
+- 📚 50,910 Russian words loaded
+- 📡 WebSocket support enabled
+- 📖 API docs at `/swagger`
 
 ### CLI Frontend
 
@@ -134,27 +162,30 @@ bun run lint:fix
 Create a `.env` file in the project root:
 
 ```bash
-# Dictionary Configuration
-DICT_PATH=./data/dictionaries/russian.txt
+# Database Configuration (PostgreSQL - Recommended)
+DATABASE_URL=postgresql://balda:balda@localhost:5432/balda
 
 # Server Configuration
 PORT=3000
-
-# Storage Configuration
-STORAGE_DIR=./data/games
-
-# Environment
 NODE_ENV=development
+
+# JWT Authentication
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this-in-production
+
+# Logging
+LOG_LEVEL=debug
 ```
 
 **Available Backend Variables:**
+- `DATABASE_URL` - PostgreSQL connection string (recommended for production)
+  - If not set, falls back to file-based storage in `./data/games`
+  - Example: `postgresql://username:password@localhost:5432/balda`
 - `PORT` - HTTP server port (default: 3000)
-- `DICT_PATH` - Path to dictionary file (optional; uses permissive mode if unset)
-  - **Included:** 50,910 Russian words in `./data/dictionaries/russian.txt`
-  - Format: One word per line, UTF-8 encoding
-  - Case-insensitive matching
-- `NODE_ENV` - Set to `production` to hide detailed error messages
-- `STORAGE_DIR` - Game storage directory (default: `./data/games`)
+- `NODE_ENV` - Environment mode: `development` or `production`
+- `JWT_SECRET` - Secret key for JWT token signing (required for authentication)
+- `JWT_REFRESH_SECRET` - Secret key for refresh token signing (required)
+- `LOG_LEVEL` - Logging verbosity: `debug`, `info`, `warn`, `error` (default: `info`)
 
 ### Web Frontend Configuration
 
@@ -195,100 +226,56 @@ The web frontend uses centralized configuration in `src/web/config/env.ts` for t
 
 ## Recent Updates
 
+### 🗄️ Database Normalization & PostgreSQL Dictionary (Oct 16, 2025)
+
+Complete architectural overhaul of data persistence layer:
+
+**Database Schema Normalization:**
+- ✅ Migrated from denormalized JSONB to properly normalized relational schema
+- ✅ Separate tables for games, players, moves, and used words with foreign keys
+- ✅ Improved query performance with proper indexes
+- ✅ Better data integrity with ON DELETE CASCADE constraints
+- ✅ Enabled advanced analytics queries (top players, move history, statistics)
+
+**PostgreSQL Dictionary Integration:**
+- ✅ Integrated `PostgresDictionary` with hybrid caching strategy
+- ✅ 50,910+ Russian words loaded into in-memory Trie at startup
+- ✅ Instant synchronous lookups via `CachedPostgresDictionary`
+- ✅ Multi-language support ready (Russian implemented)
+- ✅ Dictionary import scripts: `bun run dict:import`
+
+**Migration Tools:**
+- ✅ Complete data migration script with dry-run mode
+- ✅ Safe rollback scripts with confirmation prompts
+- ✅ Database reset utility for clean starts
+- ✅ Comprehensive migration documentation
+
+See [DATABASE_MIGRATION_GUIDE.md](./DATABASE_MIGRATION_GUIDE.md) and [DICTIONARY_SETUP_POSTGRES.md](./DICTIONARY_SETUP_POSTGRES.md) for details.
+
 ### 🚀 Production-Ready Web Frontend (Oct 12, 2025)
 
-Comprehensive production preparation with focus on maintainability and performance:
-
-**Code Cleanup:**
-- ✅ Removed 6 unused legacy components (~21 kB dead code)
-- ✅ Bundle size reduced to 234.57 kB (72.82 kB gzipped)
-- ✅ 40% reduction in component count (15 → 9 files)
-
-**New Infrastructure:**
-- ✅ `config/env.ts` - Type-safe environment configuration
-- ✅ `utils/logger.ts` - Production error logging with tracking
-- ✅ `utils/gameHelpers.ts` - Extracted reusable game utilities
-
-**Enhanced Modules:**
-- ✅ Full JSDoc documentation added to all key modules
-- ✅ Logger integrated into ApiClient and ErrorBoundary
-- ✅ GameList refactored to use extracted helpers (DRY principle)
-
-**Production Features:**
-- ✅ Error tracking with sessionStorage (last 50 errors)
-- ✅ Environment-aware logging (silent debug logs in production)
-- ✅ Centralized configuration management
+Comprehensive production preparation:
+- ✅ Removed 6 unused components, optimized bundle to 72 kB gzipped
+- ✅ Production error logging with sessionStorage tracking
+- ✅ Type-safe environment configuration
+- ✅ Full JSDoc documentation coverage
+- ✅ 100% Russian localization (28 UI strings)
 - ✅ Zero TypeScript errors
-- ✅ Ready for Sentry/LogRocket integration
 
 See [PRODUCTION_READY.md](./PRODUCTION_READY.md) for full production readiness report.
-
-### 🇷🇺 Complete Russian Translation (Oct 12, 2025)
-
-Full Russian localization for web frontend:
-- ✅ All UI components translated (28 strings)
-- ✅ Russian plural form helper (`getRussianPluralForm`)
-- ✅ Error messages and validation in Russian
-- ✅ Redesigned send button with capitalized "ОТПРАВИТЬ"
-- ✅ 100% Russian user-facing content
-
-##
-
-### ✅ Web Frontend Architecture Refactoring (Oct 11, 2025)
-
-Refactored web frontend to follow clean architecture principles with separation of concerns:
-- **Created utilities**: `boardValidation.ts`, `moveValidation.ts` - Pure functions for business logic
-- **Created hooks**: `useCreateGameForm.ts` - Form state management
-- **Reduced component complexity**: 17-33% code reduction in components
-- **Improved testability**: Business logic extracted into testable pure functions
-- **Better maintainability**: Clear separation between presentation, state, and logic layers
-
-Components are now thin presentation layers that delegate to utilities and hooks for all business logic.
-
-For technical details, see [CLIENT_LOGIC_REFACTOR.md](./CLIENT_LOGIC_REFACTOR.md).
-
-### ✅ Critical Bug Fix: Base Word Not Marked as Used (Oct 11, 2025)
-
-Fixed a game-breaking bug where the base word was not added to `usedWords` when creating a new game. This allowed players to reuse the base word (e.g., "АФИША", "БАЛДА") for points, which violates the rules of Balda.
-
-**What was fixed:**
-- Base word is now automatically added to `usedWords` during game creation
-- Players can no longer score points by claiming the base word as their move
-- Game behavior now matches the official Balda rules
-
-For technical details, see [BASE_WORD_FIX.md](./BASE_WORD_FIX.md).
-
-### ✅ Critical Bug Fix: Suggestions Algorithm (Oct 11, 2025)
-
-Fixed a critical bug in the AI suggestions engine where the algorithm was generating invalid move suggestions. The issue was that the DFS path traversal was not tracking visited cells within the current path, allowing the same cell to be reused multiple times in a single word.
-
-**What was fixed:**
-- Added `path: Set<string>` tracking to prevent cell reuse in paths
-- All AI suggestions are now guaranteed to be valid and playable
-- Algorithm now matches the same validation logic used for move verification
-
-For technical details, see [SUGGESTIONS_BUG_FIX.md](./SUGGESTIONS_BUG_FIX.md).
-
-### 🇷🇺 Full Russian Localization (Oct 11, 2025)
-
-The CLI interface has been fully localized to Russian:
-- Russian letters for board columns (А, Б, В, Г, Д)
-- Russian position format (1А, 2Б, 3В)
-- All UI texts, menus, and messages in Russian
-- Russian keyboard layout support for all commands
-
-See [RUSSIAN_LOCALIZATION.md](./RUSSIAN_LOCALIZATION.md) and [RUSSIAN_KEYBOARD_SUPPORT.md](./RUSSIAN_KEYBOARD_SUPPORT.md).
 
 ## Architecture
 
 ### Backend Server
-The backend follows Elysia best practices with a modular plugin architecture:
-- **Custom Error Classes** - Domain-specific errors (`GameNotFoundError`, `InvalidMoveError`, etc.)
+The backend follows Elysia best practices with a modular, production-ready architecture:
+- **Normalized Database** - PostgreSQL with separate tables for games, players, moves, words
+- **Hybrid Dictionary** - PostgreSQL storage with in-memory Trie caching for O(k) lookups
+- **Custom Error Classes** - Domain-specific errors (`GameNotFoundError`, `InvalidMoveError`)
 - **TypeBox Schemas** - Runtime validation with detailed error messages
 - **Plugin System** - Organized route handlers (`dictionaryPlugin`, `gamesPlugin`)
-- **WebSocket Hub** - Centralized broadcast management
-- **Dictionary System** - Trie-based dictionary with prefix support
-- **Persistent Storage** - Unstorage with filesystem driver for game data persistence
+- **WebSocket Hub** - Centralized real-time broadcast management
+- **Drizzle ORM** - Type-safe database queries with full TypeScript inference
+- **Repository Pattern** - Clean separation between domain models and persistence
 
 ### Web Frontend (Production-Ready)
 The web frontend follows clean architecture with strict separation of concerns:
@@ -314,10 +301,13 @@ The web frontend follows clean architecture with strict separation of concerns:
 - ✅ Optimized bundle (234 kB, 72 kB gzipped)
 
 For detailed architecture information, see:
-- [PRODUCTION_READY.md](./PRODUCTION_READY.md) - Production readiness report
+- [ARCHITECT.md](./ARCHITECT.md) - Complete system architecture overview
 - [CLAUDE.md](./CLAUDE.md) - Project overview and development guide
-- [CLIENT_LOGIC_REFACTOR.md](./CLIENT_LOGIC_REFACTOR.md) - Architecture refactoring details
+- [DATABASE_MIGRATION_GUIDE.md](./DATABASE_MIGRATION_GUIDE.md) - Database normalization details
+- [DICTIONARY_SETUP_POSTGRES.md](./DICTIONARY_SETUP_POSTGRES.md) - Dictionary setup guide
+- [PRODUCTION_READY.md](./PRODUCTION_READY.md) - Production deployment guide
 - [WEB_FRONTEND.md](./WEB_FRONTEND.md) - Web frontend documentation
+- [CLI_GUIDE.md](./CLI_GUIDE.md) - CLI usage guide
 
 ## Code Quality
 

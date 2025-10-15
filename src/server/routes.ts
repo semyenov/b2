@@ -230,7 +230,11 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games', tags: ['games'
 
     const dict = await getDictionary()
     const limit = query.limit ? Number(query.limit) : undefined
-    return suggestWords(game.board, dict, { limit, usedWords: game.usedWords })
+    return suggestWords(game.board, dict, {
+      limit,
+      usedWords: game.usedWords,
+      baseWord: game.baseWord,
+    })
   }, {
     query: SuggestQuerySchema,
     response: { 200: SuggestResponseSchema, 404: ErrorSchema },

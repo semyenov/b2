@@ -13,6 +13,7 @@ export interface Suggestion {
 export interface SuggestOptions {
   limit?: number
   usedWords?: string[]
+  baseWord?: string
 }
 
 export function suggestWords(
@@ -23,6 +24,12 @@ export function suggestWords(
   const size = board.length
   const limit = Math.max(1, Math.min(MAX_SUGGESTION_LIMIT, options.limit ?? DEFAULT_SUGGESTION_LIMIT))
   const usedWordsSet = new Set(options.usedWords?.map(w => normalizeWord(w)) ?? [])
+
+  // Defensive check: Ensure base word is always in the used words set
+  // This provides an additional safeguard even if it's not in usedWords array
+  if (options.baseWord) {
+    usedWordsSet.add(normalizeWord(options.baseWord))
+  }
 
   // Pre-calculate letter frequency for scoring
   const freq = dict.getLetterFrequency()

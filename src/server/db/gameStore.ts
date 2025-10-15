@@ -376,6 +376,7 @@ export class PostgresGameStore {
     return {
       id: game.id,
       size: game.size,
+      baseWord: game.baseWord || '',
       board: game.board as (string | null)[][],
       players: playerNames,
       aiPlayers: aiPlayerNames,

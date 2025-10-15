@@ -72,21 +72,61 @@ describe('Suggestion Engine', () => {
       expect(hasScat).toBe(false)
     })
 
-    test('filters out base word from suggestions', () => {
+    test('never suggests the base word', () => {
       const game = cloneGameState(initialGameCAT)
-      // CAT is the base word and should be in usedWords
-      expect(game.usedWords).toContain('CAT')
-
-      // Make sure dictionary has CAT
+      // Make sure 'CAT' is in the dictionary
       mockDictionary.addWord('CAT')
 
-      const suggestions = suggestWords(game.board, mockDictionary, {
+      // Test with baseWord parameter (defensive check)
+      const suggestionsWithBase = suggestWords(game.board, mockDictionary, {
         limit: 20,
-        usedWords: game.usedWords,
+        baseWord: 'CAT',
       })
 
-      // Should NOT suggest the base word CAT
-      const hasCat = suggestions.some(s => s.word === 'CAT')
+      // Should NEVER suggest the base word
+      const hasCat = suggestionsWithBase.some(s => s.word === 'CAT' || s.word === 'cat')
+      expect(hasCat).toBe(false)
+    })
+
+    test('excludes base word even with different casing', () => {
+      const game = cloneGameState(initialGameCAT)
+      mockDictionary.addWord('CAT')
+      mockDictionary.addWord('cat')
+
+      // Test with different casing variations
+      const suggestions1 = suggestWords(game.board, mockDictionary, {
+        limit: 20,
+        baseWord: 'cat', // lowercase
+      })
+      const suggestions2 = suggestWords(game.board, mockDictionary, {
+        limit: 20,
+        baseWord: 'CAT', // uppercase
+      })
+      const suggestions3 = suggestWords(game.board, mockDictionary, {
+        limit: 20,
+        baseWord: 'CaT', // mixed case
+      })
+
+      // None should suggest CAT in any form
+      expect(suggestions1.every(s => s.word.toUpperCase() !== 'CAT')).toBe(true)
+      expect(suggestions2.every(s => s.word.toUpperCase() !== 'CAT')).toBe(true)
+      expect(suggestions3.every(s => s.word.toUpperCase() !== 'CAT')).toBe(true)
+    })
+
+    test('excludes base word even if not in usedWords array', () => {
+      const game = cloneGameState(initialGameCAT)
+      mockDictionary.addWord('CAT')
+
+      // Simulate a bug where base word wasn't added to usedWords
+      // The baseWord parameter should still prevent it from being suggested
+      const suggestions = suggestWords(game.board, mockDictionary, {
+        limit: 20,
+        usedWords: [], // Empty - base word not in usedWords
+        baseWord: 'CAT', // But base word is specified
+      })
+
+      // Should still not suggest CAT thanks to defensive check
+      const hasCat = suggestions.some(s => s.word.toUpperCase() === 'CAT')
       expect(hasCat).toBe(false)
     })
 

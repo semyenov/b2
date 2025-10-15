@@ -151,6 +151,7 @@ export interface AppliedMove extends MoveInput {
 export interface GameState {
   readonly id: string
   readonly size: number
+  readonly baseWord: string
   readonly board: Letter[][]
   readonly players: string[]
   readonly aiPlayers: string[]
@@ -402,6 +403,7 @@ export function createGame(
   return {
     id,
     size,
+    baseWord: normalizeWord(baseWord),
     board,
     players: normalizedPlayers,
     aiPlayers: [...aiPlayers],

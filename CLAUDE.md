@@ -13,14 +13,27 @@ Balda is a word-building game where players take turns adding a single letter to
 
 ## Development Commands
 
+### Backend & Server
 - `bun run dev` - Start backend server with hot reload (port 3000)
-- `bun run cli` - Launch interactive CLI frontend (requires server running)
-- `bun run dev:web` - Start web frontend dev server (port 5173)
-- `bun run dev:all` - Start both backend and web frontend
-- `bun run build:web` - Build web frontend for production
 - `bun run check` - Type-check the codebase (TypeScript noEmit)
 - `bun run lint` - Check ESLint issues
 - `bun run lint:fix` - Auto-fix ESLint issues
+
+### Database & Dictionary
+- `bunx drizzle-kit migrate` - Run database migrations
+- `bun run db:reset --confirm` - Drop and recreate database (destructive!)
+- `bun run db:view` - View database contents (games, moves, words)
+- `bun run dict:import` - Import Russian dictionary to PostgreSQL (50,910 words)
+- `bun run dict:import:en <file> en` - Import custom English dictionary
+- `bun run migrate:normalize` - Migrate old JSONB data to normalized schema
+- `bun run migrate:normalize:dry` - Dry-run migration (preview changes)
+- `bun run migrate:rollback --confirm` - Rollback normalized schema (destructive!)
+
+### Frontend
+- `bun run cli` - Launch interactive CLI frontend (requires server running)
+- `bun run dev:web` - Start web frontend dev server (port 5173)
+- `bun run dev:all` - Start both backend and web frontend concurrently
+- `bun run build:web` - Build web frontend for production
 
 ## Architecture
 
@@ -41,12 +54,20 @@ Smart move suggestions using dictionary analysis:
 - Letter frequency-based scoring (rarity bonus)
 - Returns top N suggestions sorted by score + word length
 
-#### Dictionary System (`src/dictionary.ts`)
+#### Dictionary System
 
-Two implementation modes:
+**Production: PostgreSQL with In-Memory Caching** (`src/server/db/`)
+- **PostgresDictionary** (`dictionaryStore.ts`): PostgreSQL-backed dictionary with 50,910+ Russian words
+- **CachedPostgresDictionary** (`cachedDictionary.ts`): Hybrid approach - loads all words into in-memory Trie at startup
+  - Synchronous `has()` and `hasPrefix()` methods for game engine compatibility
+  - O(k) lookup time where k is word length
+  - Multi-language support (Russian implemented, extensible)
+- **Import Script**: `bun run dict:import` - imports words from text file to PostgreSQL
+
+**Fallback: File-Based** (`src/dictionary.ts`)
 - **TrieDictionary**: Prefix tree for efficient lookups, tracks alphabet and letter frequency
 - **AllowAllSizedDictionary**: Permissive mode for testing (accepts any non-empty string)
-- Lazy-loaded via `getDictionary()` promise cache in routes
+- Automatically used when `DATABASE_URL` not configured
 
 #### API Routes (`src/routes.ts`)
 
@@ -62,11 +83,31 @@ Real-time game state broadcasting:
 - Safe send with readyState checking
 - Broadcasts after each successful move via `POST /games/:id/move`
 
-#### Persistence (`src/store.ts`)
+#### Persistence & Database (`src/server/db/`)
 
-File-based storage using `unstorage`:
+**Production: PostgreSQL with Normalized Schema** (Recommended)
+- **Schema** (`schema.ts`): Drizzle ORM schema with normalized tables
+  - `games` - Core game metadata (id, size, baseWord, status, timestamps)
+  - `game_players` - Player records with junction table pattern (gameId + playerIndex)
+  - `moves` - Individual move history (position, letter, word, score, moveNumber)
+  - `game_words` - Used words tracking with foreign key to games
+  - `users` - User authentication (future feature)
+  - `words` - Dictionary storage with language support
+- **Game Store** (`gameStore.ts`): Repository pattern with JOIN-based queries
+  - Reconstructs `GameState` domain model from normalized tables
+  - Transaction-based writes for data integrity
+  - Incremental move syncing (only inserts new moves)
+- **Migrations**: SQL migrations in `drizzle/` directory managed by drizzle-kit
+- **Scripts**: Migration utilities in `scripts/` directory
+  - `migrate-to-normalized-db.ts` - Data migration with dry-run mode
+  - `rollback-normalized-db.ts` - Safe rollback with confirmation
+  - `reset-db.ts` - Drop and recreate database
+  - `db-viewer.ts` - Inspect database contents
+
+**Fallback: File-Based Storage** (`src/store.ts`)
+- Uses `unstorage` with filesystem driver
 - Games saved as JSON in `STORAGE_DIR` (default: `./data/games`)
-- Async CRUD operations with filtering support
+- Automatically used when `DATABASE_URL` not configured
 
 ### CLI Frontend (`src/cli/`)
 
@@ -171,19 +212,29 @@ Modern React-based web UI built with Vite and Tailwind CSS, following clean arch
 
 ### Key Implementation Patterns
 
-1. **Error Handling**: Custom error classes (`GameNotFoundError`, `InvalidMoveError`) with structured responses
-2. **Performance**: Memoized path-finding, prefix pruning in suggestions, LRU cache management
-3. **Type Safety**: Strict TypeScript, TypeBox runtime validation, immutable state updates
-4. **Real-time Updates**: WebSocket auto-reconnect in CLI, broadcast on state changes
-5. **Code Style**: @antfu/eslint-config (single quotes, no semicolons, 2-space indent)
+1. **Repository Pattern**: `gameStore.ts` translates between domain model (`GameState`) and persistence model (normalized PostgreSQL tables)
+2. **Hybrid Dictionary**: PostgreSQL as source of truth, in-memory Trie for O(k) synchronous lookups
+3. **Error Handling**: Custom error classes (`GameNotFoundError`, `InvalidMoveError`) with structured responses
+4. **Performance**: Memoized path-finding (LRU cache), prefix pruning in suggestions, incremental move syncing
+5. **Type Safety**: Strict TypeScript, TypeBox runtime validation, Drizzle ORM type inference, immutable state updates
+6. **Transaction-Based Writes**: Multi-table inserts wrapped in database transactions for ACID guarantees
+7. **Real-time Updates**: WebSocket auto-reconnect in CLI, broadcast on state changes
+8. **Code Style**: @antfu/eslint-config (single quotes, no semicolons, 2-space indent)
 
 ## Environment Variables
 
 ### Backend
+- `DATABASE_URL` - PostgreSQL connection string (e.g., `postgresql://balda:balda@localhost:5432/balda`)
+  - **Required for production**. Falls back to file-based storage if not set.
 - `PORT` - Backend server port (default: 3000)
-- `DICT_PATH` - Dictionary file path (one word per line, alpha-only)
-- `STORAGE_DIR` - Game persistence directory (default: `./data/games`)
-- `NODE_ENV` - Set to `production` for reduced error verbosity
+- `NODE_ENV` - Environment mode: `development` or `production`
+- `JWT_SECRET` - Secret key for JWT token signing (required for authentication)
+- `JWT_REFRESH_SECRET` - Secret key for refresh token signing (required)
+- `LOG_LEVEL` - Logging verbosity: `debug`, `info`, `warn`, `error` (default: `info`)
+- `STORAGE_DIR` - Game persistence directory for file-based fallback (default: `./data/games`)
+
+**Deprecated (no longer used with PostgreSQL):**
+- `DICT_PATH` - Dictionary file path (only used when DATABASE_URL not set)
 
 ### Web Frontend
 - `VITE_API_URL` - Backend API URL (default: http://localhost:3000)

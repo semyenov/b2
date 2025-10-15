@@ -10,6 +10,7 @@ import type { GameState } from '../../src/server/engine/balda'
 export const initialGameCAT: GameState = {
   id: 'test-game-cat',
   size: 5,
+  baseWord: 'CAT',
   board: [
     [null, null, null, null, null],
     [null, null, null, null, null],
@@ -33,6 +34,7 @@ export const initialGameCAT: GameState = {
 export const initialGameHELLO: GameState = {
   id: 'test-game-hello',
   size: 5,
+  baseWord: 'HELLO',
   board: [
     [null, null, null, null, null],
     [null, null, null, null, null],
@@ -57,6 +59,7 @@ export const initialGameHELLO: GameState = {
 export const gameWithOneMoveCAT: GameState = {
   id: 'test-game-with-move',
   size: 5,
+  baseWord: 'CAT',
   board: [
     [null, null, null, null, null],
     [null, 'S', null, null, null],
@@ -88,6 +91,7 @@ export const gameWithOneMoveCAT: GameState = {
 export const gameWithMultipleMoves: GameState = {
   id: 'test-game-multiple',
   size: 5,
+  baseWord: 'CAT',
   board: [
     [null, null, null, null, null],
     [null, 'S', null, null, null],
@@ -126,6 +130,7 @@ export const gameWithMultipleMoves: GameState = {
 export const gameWithAIPlayers: GameState = {
   id: 'test-game-ai',
   size: 5,
+  baseWord: 'CAT',
   board: [
     [null, null, null, null, null],
     [null, null, null, null, null],

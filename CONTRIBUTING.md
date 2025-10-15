@@ -12,8 +12,9 @@ Before you begin, ensure you have the following installed:
   - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
   - [TypeScript](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-next)
 
-Optional for production deployment:
-- **[PostgreSQL](https://www.postgresql.org/)** >= 14 - For production database (file-based storage used by default)
+Required for full functionality:
+- **[Docker](https://www.docker.com/)** - For PostgreSQL database (recommended)
+- Or **[PostgreSQL](https://www.postgresql.org/)** >= 14 - Manual installation
 
 ## Quick Start
 
@@ -33,18 +34,43 @@ bun install
 
 This will install all required dependencies for both backend and frontend.
 
-### 3. Set Up Environment
+### 3. Start PostgreSQL Database
+
+```bash
+# Start PostgreSQL with Docker Compose (recommended)
+docker compose up -d
+
+# Verify PostgreSQL is running
+docker compose ps
+```
+
+### 4. Set Up Environment
 
 ```bash
 # Copy the example environment file
 cp .env.example .env
 
-# Edit .env with your preferred settings (optional - defaults work fine)
+# Edit .env with your configuration
+# Make sure DATABASE_URL is set:
+# DATABASE_URL=postgresql://balda:balda@localhost:5432/balda
+```
+
+### 5. Run Database Setup
+
+```bash
+# Run database migrations
+bunx drizzle-kit migrate
+
+# Import Russian dictionary (50,910 words)
+bun run dict:import
+
+# Verify setup
+bun run db:view
 ```
 
 See [Environment Variables](#environment-variables) section below for details.
 
-### 4. Start Development Servers
+### 6. Start Development Servers
 
 You have several options:
 
@@ -62,7 +88,7 @@ bun run dev:all
 bun run cli
 ```
 
-### 5. Verify Setup
+### 7. Verify Setup
 
 - **Backend API**: Open http://localhost:3000/health - should return `{"status":"ok"}`
 - **Swagger Docs**: Open http://localhost:3000/swagger - interactive API documentation
@@ -76,10 +102,14 @@ balda/
 ├── src/
 │   ├── server/              # Backend (Elysia/Bun)
 │   │   ├── engine/          # Game logic (balda.ts, suggest.ts)
-│   │   ├── db/              # Database layer (PostgreSQL support)
+│   │   ├── db/              # Database layer (PostgreSQL + Drizzle ORM)
+│   │   │   ├── schema.ts    # Normalized database schema
+│   │   │   ├── gameStore.ts # Game repository with JOINs
+│   │   │   ├── dictionaryStore.ts     # PostgreSQL dictionary
+│   │   │   └── cachedDictionary.ts    # Hybrid Trie cache
 │   │   ├── routes.ts        # API route handlers
-│   │   ├── dictionary.ts    # Dictionary system (Trie-based)
-│   │   ├── store.ts         # File-based storage
+│   │   ├── dictionary.ts    # Legacy file-based dictionary (fallback)
+│   │   ├── store.ts         # Legacy file-based storage (fallback)
 │   │   └── index.ts         # Server entry point
 │   ├── web/                 # Web frontend (React/Vite)
 │   │   ├── components/      # React components (9 active files)
@@ -92,16 +122,20 @@ balda/
 │   │   └── index.tsx        # CLI entry point
 │   └── shared/              # Shared types and schemas
 │       └── schemas.ts       # TypeBox validation schemas
+├── drizzle/                 # Database migrations
+│   ├── 0000_initial_schema.sql
+│   └── 0001_normalized_schema.sql
 ├── data/
-│   ├── dictionaries/        # Dictionary files
-│   │   └── russian.txt      # 50,910 Russian words
-│   └── games/               # Game storage (file-based)
-├── docs/                    # Documentation
-│   ├── adr/                 # Architecture Decision Records
-│   └── DEVELOPMENT.md       # Development workflows
+│   └── dictionaries/        # Dictionary source files
+│       └── russian.txt      # 50,910 Russian words (for import)
 ├── scripts/                 # Utility scripts
+│   ├── import-dictionary.ts # Import words to PostgreSQL
+│   ├── migrate-to-normalized-db.ts  # Data migration
+│   ├── rollback-normalized-db.ts    # Schema rollback
+│   ├── reset-db.ts          # Database reset
+│   └── db-viewer.ts         # Database inspector
 ├── test/                    # Test files
-└── ...                      # Config files
+└── ...                      # Config files (drizzle.config.ts, etc.)
 ```
 
 For detailed architecture information, see [ARCHITECT.md](./ARCHITECT.md).
@@ -351,24 +385,24 @@ Create a `.env` file in the project root (see `.env.example` for template).
 ### Backend Configuration
 
 ```bash
+# Database Configuration (Required for production)
+DATABASE_URL=postgresql://balda:balda@localhost:5432/balda
+
 # Server Configuration
 PORT=3000                                    # HTTP server port
 NODE_ENV=development                         # Environment (development|production)
 
-# Dictionary
-DICT_PATH=./data/dictionaries/russian.txt   # Path to dictionary file
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this-in-production
 
-# Storage
-STORAGE_DIR=./data/games                     # Game storage directory (file-based)
+# Logging
+LOG_LEVEL=debug                              # debug|info|warn|error
+LOG_FORMAT=pretty                            # pretty|json
 
-# Database (PostgreSQL - optional, uses file storage by default)
-# DATABASE_URL=postgresql://balda:balda@localhost:5432/balda
-
-# Authentication (future feature)
-# JWT_SECRET=your-secret-key-change-in-production
-
-# Monitoring (future feature)
-# SENTRY_DSN=https://your-sentry-dsn
+# Legacy/Fallback (only used when DATABASE_URL not set)
+# DICT_PATH=./data/dictionaries/russian.txt  # Dictionary file path (deprecated)
+# STORAGE_DIR=./data/games                   # File-based storage (deprecated)
 ```
 
 ### Web Frontend Configuration
@@ -383,61 +417,77 @@ VITE_API_URL=http://localhost:3000
 
 The web frontend uses centralized configuration in `src/web/config/env.ts` for type-safe environment access.
 
-## Database Setup (Optional)
+## Database Setup
 
-By default, games are stored in JSON files (`./data/games/`). For production deployment, use PostgreSQL:
+PostgreSQL is the primary data storage (recommended for all environments).
 
-### 1. Install PostgreSQL
+### Using Docker Compose (Recommended)
 
 ```bash
-# macOS (Homebrew)
-brew install postgresql@14
+# Start PostgreSQL container
+docker compose up -d
 
-# Ubuntu/Debian
-sudo apt install postgresql postgresql-contrib
+# Run migrations
+bunx drizzle-kit migrate
 
-# Start PostgreSQL service
-brew services start postgresql@14  # macOS
-sudo systemctl start postgresql    # Linux
+# Import dictionary
+bun run dict:import
+
+# View database contents
+bun run db:view
 ```
 
-### 2. Create Database
+### Manual PostgreSQL Setup (Alternative)
+
+If you prefer manual installation:
 
 ```bash
-# Create database and user
+# 1. Install PostgreSQL
+brew install postgresql@14  # macOS
+# or
+sudo apt install postgresql postgresql-contrib  # Ubuntu/Debian
+
+# 2. Create database and user
 createdb balda
 psql balda -c "CREATE USER balda WITH PASSWORD 'balda';"
 psql balda -c "GRANT ALL PRIVILEGES ON DATABASE balda TO balda;"
+
+# 3. Configure environment
+echo 'DATABASE_URL=postgresql://balda:balda@localhost:5432/balda' >> .env
+
+# 4. Run migrations and import dictionary
+bunx drizzle-kit migrate
+bun run dict:import
 ```
 
-### 3. Configure Environment
+### Database Commands
 
 ```bash
-# Add to .env
-DATABASE_URL=postgresql://balda:balda@localhost:5432/balda
+# View database contents (games, moves, words, players)
+bun run db:view
+
+# Reset database (DESTRUCTIVE - deletes all data!)
+bun run db:reset --confirm
+
+# Migrate old JSONB data to normalized schema (if upgrading)
+bun run migrate:normalize
+bun run migrate:normalize:dry  # Dry-run to preview changes
+
+# Rollback to old schema (DESTRUCTIVE!)
+bun run migrate:rollback --confirm
 ```
 
-### 4. Run Migrations
+### Dictionary Management
 
 ```bash
-# Generate migration files
-bun run db:generate
+# Import Russian dictionary (50,910 words)
+bun run dict:import
 
-# Apply migrations
-bun run db:migrate
+# Import custom English dictionary
+bun run dict:import:en ./path/to/english.txt en
 
-# Or push schema directly (development only)
-bun run db:push
-
-# Open Drizzle Studio (database GUI)
-bun run db:studio
-```
-
-### 5. Migrate Existing Games (Optional)
-
-```bash
-# Migrate games from file storage to PostgreSQL
-bun run migrate:to-postgres
+# Import any dictionary
+bun run scripts/import-dictionary.ts <file-path> <language>
 ```
 
 ## API Documentation
