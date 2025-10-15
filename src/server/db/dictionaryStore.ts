@@ -191,6 +191,24 @@ export class PostgresDictionary implements AsyncDictionary {
   }
 
   /**
+   * Get all words from dictionary (for loading into cache)
+   */
+  async getAllWords(): Promise<string[]> {
+    try {
+      const result = await db
+        .select({ word: words.word })
+        .from(words)
+        .where(eq(words.language, this.language))
+
+      return result.map(row => row.word)
+    }
+    catch (error) {
+      consola.error('Failed to get all words:', error)
+      return []
+    }
+  }
+
+  /**
    * Clear cached data (call this if dictionary is updated)
    */
   clearCache(): void {

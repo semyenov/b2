@@ -115,6 +115,8 @@ export const words = pgTable('words', {
   languageIdx: index('words_language_idx').on(table.language),
   // Compound index for language + word lookups
   wordLanguageIdx: index('words_word_language_idx').on(table.word, table.language),
+  // Ensure unique words per language
+  uniqueWordLanguage: unique('words_word_language_unique').on(table.word, table.language),
 }))
 
 // Type exports for type-safe inserts and selects

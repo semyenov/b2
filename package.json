@@ -26,6 +26,8 @@
     "db:reset": "bun run scripts/reset-db.ts --confirm",
     "db:view": "bun run scripts/db-viewer.ts",
     "migrate:users": "bun run scripts/migrate-users-to-postgres.ts",
+    "dict:import": "bun run scripts/import-dictionary.ts",
+    "dict:import:en": "bun run scripts/import-dictionary.ts ./data/dictionaries/english.txt en",
     "migrate:to-postgres": "bun run scripts/migrate-to-postgres.ts",
     "migrate:normalize": "bun run scripts/migrate-to-normalized-db.ts",
     "migrate:normalize:dry": "bun run scripts/migrate-to-normalized-db.ts --dry-run",

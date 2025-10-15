@@ -52,19 +52,29 @@ async function getDictionary(): Promise<SizedDictionary> {
   // Acquire the lock and load the dictionary
   dictionaryLoadingLock = true
   try {
-    const dictPath = process.env['DICT_PATH']
-    if (dictPath) {
-      const { loadDictionaryFromFile } = await import('./dictionary')
-      dictionaryPromise = loadDictionaryFromFile(dictPath).catch((error) => {
-        // Reset on error to allow retry
-        dictionaryPromise = null
-        throw new DictionaryError(`Failed to load dictionary from ${dictPath}: ${error}`)
-      })
-    }
-    else {
-      const { AllowAllSizedDictionary } = await import('./dictionary')
-      dictionaryPromise = Promise.resolve(new AllowAllSizedDictionary())
-    }
+    // Try to load from PostgreSQL first (preferred)
+    const { CachedPostgresDictionary } = await import('./db/cachedDictionary')
+
+    dictionaryPromise = CachedPostgresDictionary.create('ru').catch(async (error) => {
+      logger.warn('Failed to load dictionary from PostgreSQL, falling back to file-based:', error)
+
+      // Fallback to file-based dictionary
+      const dictPath = process.env['DICT_PATH']
+      if (dictPath) {
+        const { loadDictionaryFromFile } = await import('./dictionary')
+        return loadDictionaryFromFile(dictPath).catch((fileError) => {
+          // Reset on error to allow retry
+          dictionaryPromise = null
+          throw new DictionaryError(`Failed to load dictionary from ${dictPath}: ${fileError}`)
+        })
+      }
+      else {
+        // Ultimate fallback: allow all words (for testing)
+        logger.warn('No dictionary available, using AllowAll mode')
+        const { AllowAllSizedDictionary } = await import('./dictionary')
+        return new AllowAllSizedDictionary()
+      }
+    })
   }
   finally {
     dictionaryLoadingLock = false
