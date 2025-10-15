@@ -1,0 +1,71 @@
+{
+  "compilerOptions": {
+    /* ============================================ */
+    /* Language and Environment */
+    /* ============================================ */
+    "target": "ESNext",
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "moduleDetection": "force",
+
+    "baseUrl": ".",
+    /* ============================================ */
+    /* Modules */
+    /* ============================================ */
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+
+    /* ============================================ */
+    /* Advanced */
+    /* ============================================ */
+    "types": ["bun-types"],
+    "allowImportingTsExtensions": true,
+
+    /* ============================================ */
+    /* Type Checking - Ultra Strict */
+    /* ============================================ */
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
+
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noPropertyAccessFromIndexSignature": true,
+    /* Advanced Type Checking */
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "declaration": false,
+    "declarationMap": false,
+
+    /* Note: exactOptionalPropertyTypes disabled - too strict for Elysia/Drizzle */
+    // "exactOptionalPropertyTypes": true,
+
+    /* ============================================ */
+    /* Emit */
+    /* ============================================ */
+    "noEmit": true,
+    "sourceMap": false,
+    "allowSyntheticDefaultImports": true,
+    /* ============================================ */
+    /* Interop Constraints */
+    /* ============================================ */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    "verbatimModuleSyntax": true,
+    /* ============================================ */
+    /* Completeness */
+    /* ============================================ */
+    "skipLibCheck": true
+  }
+}

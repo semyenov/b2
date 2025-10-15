@@ -6,7 +6,7 @@
 
 import postgres from 'postgres'
 
-const sql = postgres(process.env.DATABASE_URL || 'postgresql://balda:balda@localhost:5432/balda')
+const sql = postgres(process.env['DATABASE_URL'] || 'postgresql://balda:balda@localhost:5432/balda')
 
 /**
  * Database query result types

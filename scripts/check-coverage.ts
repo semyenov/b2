@@ -33,8 +33,8 @@ async function checkCoverage() {
 
     // Extract percentages
     const parts = allFilesLine.split('|').map(p => p.trim())
-    const functionsPercent = Number.parseFloat(parts[1])
-    const linesPercent = Number.parseFloat(parts[2])
+    const functionsPercent = Number.parseFloat(parts[1] || '0')
+    const linesPercent = Number.parseFloat(parts[2] || '0')
 
     console.log('\n📊 Coverage Report:')
     console.log('===================\n')

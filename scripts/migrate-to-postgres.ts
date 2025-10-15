@@ -10,7 +10,7 @@ import { consola } from 'consola'
 import { checkDatabaseConnection, db } from '../src/server/db/client'
 import { games } from '../src/server/db/schema'
 
-const storageDir = process.env.STORAGE_DIR || './data/games'
+const storageDir = process.env['STORAGE_DIR'] || './data/games'
 
 interface MigrationStats {
   total: number

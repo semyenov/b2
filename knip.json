@@ -1,0 +1,60 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/server/index.ts",
+    "src/web/main.tsx",
+    "src/cli/index.tsx",
+    "scripts/**/*.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "scripts/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "ignore": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "test/**/*",
+    "dist/**/*",
+    "data/**/*"
+  ],
+  "ignoreDependencies": [
+    "husky",
+    "lint-staged",
+    "@types/node",
+    "bun-types"
+  ],
+  "ignoreExportsUsedInFile": true,
+  "includeEntryExports": true,
+  "rules": {
+    "files": "error",
+    "dependencies": "warn",
+    "devDependencies": "warn",
+    "unlisted": "error",
+    "binaries": "warn",
+    "unresolved": "error",
+    "exports": "warn",
+    "types": "warn",
+    "nsExports": "warn",
+    "nsTypes": "warn",
+    "duplicates": "error",
+    "enumMembers": "warn"
+  },
+  "paths": {
+    "@shared/*": ["src/shared/*"],
+    "@server/*": ["src/server/*"],
+    "@web/*": ["src/web/*"],
+    "@components": ["src/web/components"],
+    "@components/*": ["src/web/components/*"],
+    "@hooks": ["src/web/hooks"],
+    "@hooks/*": ["src/web/hooks/*"],
+    "@utils": ["src/web/utils"],
+    "@utils/*": ["src/web/utils/*"],
+    "@lib/*": ["src/web/lib/*"],
+    "@types": ["src/web/types"],
+    "@types/*": ["src/web/types/*"],
+    "@constants": ["src/web/constants"],
+    "@constants/*": ["src/web/constants/*"],
+    "@config/*": ["src/web/config/*"]
+  }
+}

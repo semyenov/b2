@@ -10,10 +10,10 @@ import { resolve } from 'node:path' // Use test dictionary
 import { afterAll, beforeAll } from 'bun:test'
 
 // Set test environment variables
-process.env.NODE_ENV = 'test'
-process.env.PORT = '3099' // Use different port for tests
-process.env.STORAGE_DIR = './test-data/games' // Use separate storage for tests
-process.env.DICT_PATH = resolve('./test/fixtures/test-dictionary.txt')
+process.env['NODE_ENV'] = 'test'
+process.env['PORT'] = '3099' // Use different port for tests
+process.env['STORAGE_DIR'] = './test-data/games' // Use separate storage for tests
+process.env['DICT_PATH'] = resolve('./test/fixtures/test-dictionary.txt')
 
 beforeAll(async () => {
   try {

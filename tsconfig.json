@@ -1,23 +1,18 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "jsx": "react-jsx",
-    /* Environment - Latest ESNext for Bun */
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "moduleDetection": "force",
-
+    /* ============================================ */
+    /* Project-Specific Path Aliases */
+    /* ============================================ */
     "baseUrl": ".",
-    "module": "ESNext",
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-
-    /* Comprehensive Path Aliases */
     "paths": {
-      /* Cross-layer imports */
-      "@server/*": ["src/server/*"],
+      /* Cross-layer imports - Shared code accessible from server/web */
       "@shared/*": ["src/shared/*"],
 
-      /* Web frontend (all from src/web) */
+      /* Server-side imports */
+      "@server/*": ["src/server/*"],
+
+      /* Web frontend aliases (all from src/web) */
       "@web/*": ["src/web/*"],
       "@components": ["src/web/components"],
       "@components/*": ["src/web/components/*"],
@@ -31,30 +26,18 @@
       "@constants": ["src/web/constants"],
       "@constants/*": ["src/web/constants/*"],
       "@config/*": ["src/web/config/*"]
-    },
-
-    "resolveJsonModule": true,
-    /* Types */
-    "types": ["bun-types"],
-    "allowImportingTsExtensions": true,
-    /* Type checking - Strict mode */
-    "strict": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    // exactOptionalPropertyTypes requires T | undefined = T? everywhere, too strict for now
-    // "exactOptionalPropertyTypes": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-
-    /* Emit */
-    "noEmit": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true
+    }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "data"]
+  "include": [
+    "src/**/*",
+    "scripts/**/*",
+    "test/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "data",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
 }
