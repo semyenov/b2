@@ -150,7 +150,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                     <div className="px-4 py-3 flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-info-500/20 flex items-center justify-center text-xs font-bold text-info-300">
-                          {wordScore}
+                          {word.length}
                         </div>
                         <span className="font-bold text-xl text-surface-300 group-hover:text-info-100 transition-colors duration-200 tracking-wider">
                           {word}
@@ -159,9 +159,9 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
 
                       <div className="flex items-center gap-2">
                         <div className="text-xs font-bold text-surface-500 group-hover:text-info-400 transition-colors duration-200">
-                          {word.length}
+                          {wordScore}
                           {' '}
-                          {getRussianPluralForm(word.length, ['буква', 'буквы', 'букв'])}
+                          {getRussianPluralForm(wordScore, ['очко', 'очка', 'очков'])}
                         </div>
                         <div className="w-2 h-2 bg-info-400/50 group-hover:bg-info-400 transition-colors duration-200" />
                       </div>
