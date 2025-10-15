@@ -19,6 +19,7 @@ export const CreateGameBodySchema = Type.Object({
   baseWord: Type.String({
     minLength: 1,
     error: 'Base word is required and cannot be empty',
+    description: 'Base word must have length equal to board size (validated at application level)',
   }),
   players: Type.Optional(Type.Array(
     Type.String({

@@ -303,7 +303,7 @@ describe('Game Engine - Game Creation', () => {
     test('initializes scores to zero', () => {
       const game = createGame('test-id', {
         size: 5,
-        baseWord: 'CAT',
+        baseWord: 'HELLO',
         players: ['Alice', 'Bob'],
       })
 
@@ -314,19 +314,20 @@ describe('Game Engine - Game Creation', () => {
     test('places base word on board', () => {
       const game = createGame('test-id', {
         size: 5,
-        baseWord: 'CAT',
+        baseWord: 'HELLO',
         players: ['Alice', 'Bob'],
       })
 
-      expect(game.board[2]).toContain('C')
-      expect(game.board[2]).toContain('A')
-      expect(game.board[2]).toContain('T')
+      expect(game.board[2]).toContain('H')
+      expect(game.board[2]).toContain('E')
+      expect(game.board[2]).toContain('L')
+      expect(game.board[2]).toContain('O')
     })
 
     test('uses default players if not provided', () => {
       const game = createGame('test-id', {
         size: 5,
-        baseWord: 'CAT',
+        baseWord: 'HELLO',
       })
 
       expect(game.players).toEqual(['A', 'B'])
@@ -338,13 +339,70 @@ describe('Game Engine - Game Creation', () => {
           size: 2,
           baseWord: 'HI',
         }),
-      ).toThrow()
+      ).toThrow('Board size must be at least 3')
+    })
+
+    test('throws error when base word length does not match board size', () => {
+      expect(() =>
+        createGame('test-id', {
+          size: 5,
+          baseWord: 'CAT', // 3 letters, but board is 5x5
+        }),
+      ).toThrow('Base word length (3) must match board size (5)')
+    })
+
+    test('throws error when base word is too long', () => {
+      expect(() =>
+        createGame('test-id', {
+          size: 3,
+          baseWord: 'HELLO', // 5 letters, but board is 3x3
+        }),
+      ).toThrow('Base word length (5) must match board size (3)')
+    })
+
+    test('throws error when base word is too short', () => {
+      expect(() =>
+        createGame('test-id', {
+          size: 7,
+          baseWord: 'CAT', // 3 letters, but board is 7x7
+        }),
+      ).toThrow('Base word length (3) must match board size (7)')
+    })
+
+    test('accepts base word with correct length for 3x3 board', () => {
+      const game = createGame('test-id', {
+        size: 3,
+        baseWord: 'CAT',
+      })
+
+      expect(game.size).toBe(3)
+      expect(game.baseWord).toBe('CAT')
+    })
+
+    test('accepts base word with correct length for 7x7 board', () => {
+      const game = createGame('test-id', {
+        size: 7,
+        baseWord: 'EXAMPLE',
+      })
+
+      expect(game.size).toBe(7)
+      expect(game.baseWord).toBe('EXAMPLE')
+    })
+
+    test('normalizes base word before length validation', () => {
+      const game = createGame('test-id', {
+        size: 5,
+        baseWord: ' hello ', // Has spaces, but normalizes to 5 letters
+      })
+
+      expect(game.baseWord).toBe('HELLO')
+      expect(game.baseWord.length).toBe(5)
     })
 
     test('handles AI players', () => {
       const game = createGame('test-id', {
         size: 5,
-        baseWord: 'CAT',
+        baseWord: 'HELLO',
         players: ['Human', 'AI'],
         aiPlayers: ['AI'],
       })

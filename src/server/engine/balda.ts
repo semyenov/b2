@@ -391,6 +391,13 @@ export function createGame(
   if (size < 3) {
     throw new Error('Board size must be at least 3')
   }
+
+  // Validate base word length matches board size
+  const normalizedBaseWord = normalizeWord(baseWord)
+  if (normalizedBaseWord.length !== size) {
+    throw new Error(`Base word length (${normalizedBaseWord.length}) must match board size (${size})`)
+  }
+
   const board = createEmptyBoard(size)
   placeBaseWord(board, baseWord)
   // Use provided players or default to ['A', 'B']
