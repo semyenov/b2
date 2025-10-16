@@ -12,6 +12,7 @@ export default defineConfig({
   root: './src/web',
   build: {
     outDir: '../../dist/web',
+    emptyOutDir: true, // Allow emptying outDir outside of root
     sourcemap: true, // Better debugging
     rollupOptions: {
       output: {

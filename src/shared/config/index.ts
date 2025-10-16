@@ -132,15 +132,15 @@ export {
  */
 export const CONFIG = {
   GAME: {
-    RULES: import('./game-rules').then(m => m.GAME_RULES),
-    BOARD: import('./game-rules').then(m => m.BOARD_CONFIG),
-    WORD: import('./game-rules').then(m => m.WORD_CONFIG),
-    PLAYER: import('./game-rules').then(m => m.PLAYER_CONFIG),
-    ALPHABET: import('./game-rules').then(m => m.ALPHABET_CONFIG),
+    RULES: GAME_RULES,
+    BOARD: BOARD_CONFIG,
+    WORD: WORD_CONFIG,
+    PLAYER: PLAYER_CONFIG,
+    ALPHABET: ALPHABET_CONFIG,
   },
-  SCORING: import('./scoring').then(m => m.SCORING_CONFIG),
-  SUGGESTIONS: import('./suggestions').then(m => m.SUGGESTIONS_CONFIG),
-  VALIDATION: import('./validation').then(m => m.VALIDATION_RULES),
-  UI: import('./ui').then(m => m.UI_CONFIG),
-  I18N: import('./i18n').then(m => m.messages),
+  SCORING: SCORING_CONFIG,
+  SUGGESTIONS: SUGGESTIONS_CONFIG,
+  VALIDATION: VALIDATION_RULES,
+  UI: UI_CONFIG,
+  I18N: messages,
 } as const
