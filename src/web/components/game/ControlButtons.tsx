@@ -74,7 +74,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
         </Button>
         <Button
           type="button"
-          variant="primary"
+          variant="warning"
           size="md"
           onClick={onRestartWithNewWord}
           aria-label="Начать новую игру с теми же параметрами"
