@@ -24,6 +24,7 @@ export function App() {
     makeMove: makeApiMove,
     quickStart,
     quickStartVsAI,
+    restartWithNewWord,
     isMyTurn,
     apiClient,
   } = useGameClient()
@@ -138,6 +139,7 @@ export function App() {
             onToggleSuggestions={toggleSuggestions}
             onHideSuggestions={hideSuggestions}
             onExit={handleExitToMenu}
+            onRestartWithNewWord={restartWithNewWord}
           />
         )}
       </div>

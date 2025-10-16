@@ -1,5 +1,4 @@
 import type { Position } from '@types'
-import { useFullscreen } from '@hooks/useFullscreen'
 import { getGameStep } from '@utils/gameStepUtils'
 import { isClearButtonDisabled } from '@utils/uiHelpers'
 import { memo } from 'react'
@@ -18,6 +17,7 @@ export interface ControlButtonsProps {
   onToggleSuggestions: () => void
   onHideSuggestions: () => void
   onExit: () => void
+  onRestartWithNewWord: () => void
 }
 
 /**
@@ -38,9 +38,8 @@ export const ControlButtons = memo<ControlButtonsProps>(({
   onToggleSuggestions,
   onHideSuggestions,
   onExit,
+  onRestartWithNewWord,
 }) => {
-  const { toggleFullscreen } = useFullscreen()
-
   const gameStep = getGameStep({
     isMyTurn,
     selectedCell,
@@ -62,7 +61,7 @@ export const ControlButtons = memo<ControlButtonsProps>(({
 
   return (
     <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 flex-wrap sm:flex-nowrap">
-      {/* Left: Exit and Fullscreen buttons */}
+      {/* Left: Exit, New Game, and Fullscreen buttons */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <Button
           type="button"
@@ -75,12 +74,12 @@ export const ControlButtons = memo<ControlButtonsProps>(({
         </Button>
         <Button
           type="button"
-          variant="gray"
+          variant="primary"
           size="md"
-          onClick={toggleFullscreen}
-          aria-label="Полноэкранный режим"
+          onClick={onRestartWithNewWord}
+          aria-label="Начать новую игру с теми же параметрами"
         >
-          На весь экран
+          Новая игра
         </Button>
       </div>
 

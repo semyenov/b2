@@ -23,6 +23,7 @@ interface GameScreenProps {
   onToggleSuggestions: () => void
   onHideSuggestions: () => void
   onExit: () => void
+  onRestartWithNewWord: () => void
 }
 
 /**
@@ -49,6 +50,7 @@ export const GameScreen = memo(({
   onToggleSuggestions,
   onHideSuggestions,
   onExit,
+  onRestartWithNewWord,
 }: GameScreenProps) => {
   // Use extracted game actions hook
   const { formedWord, handleSubmitMove, handleSuggestionSelect } = useGameActions({
@@ -253,6 +255,7 @@ export const GameScreen = memo(({
             onToggleSuggestions={onToggleSuggestions}
             onHideSuggestions={onHideSuggestions}
             onExit={onExit}
+            onRestartWithNewWord={onRestartWithNewWord}
           />
         </div>
       </div>

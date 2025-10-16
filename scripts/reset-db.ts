@@ -33,6 +33,15 @@ async function resetDatabase() {
     // Connect to postgres database to drop/create balda
     const sql = postgres(postgresUrl, { max: 1 })
 
+    consola.start('Terminating active connections...')
+    await sql.unsafe(`
+      SELECT pg_terminate_backend(pg_stat_activity.pid)
+      FROM pg_stat_activity
+      WHERE pg_stat_activity.datname = 'balda'
+        AND pid <> pg_backend_pid()
+    `)
+    consola.success('✓ Active connections terminated')
+
     consola.start('Dropping database...')
     await sql.unsafe('DROP DATABASE IF EXISTS balda')
     consola.success('✓ Database dropped')

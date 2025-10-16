@@ -313,6 +313,28 @@ export function useGameClient(): UseGameClientReturn {
     }
   }
 
+  const restartWithNewWord = async () => {
+    if (!currentGame || !playerName) {
+      logger.warn('Cannot restart: no current game or player name')
+      return
+    }
+
+    // Get current game parameters
+    const { size, players, aiPlayers } = currentGame
+
+    // Fetch a new random word matching the board size
+    const words = await apiCall(() => apiClient.getRandomWords(size, 1))
+    if (words && words[0]) {
+      // Create new game with same parameters but new base word
+      await createGame({
+        size,
+        baseWord: words[0],
+        players,
+        aiPlayers,
+      })
+    }
+  }
+
   const isMyTurn = () => {
     // currentPlayerIndex is guaranteed to be valid game state
     return !!currentGame && playerName === currentGame.players[currentGame.currentPlayerIndex]!
@@ -339,6 +361,7 @@ export function useGameClient(): UseGameClientReturn {
     makeMove,
     quickStart,
     quickStartVsAI,
+    restartWithNewWord,
 
     // Helpers
     isMyTurn,
