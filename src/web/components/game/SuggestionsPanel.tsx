@@ -21,11 +21,26 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
   loadingSuggestions,
   onSuggestionSelect,
 }) => {
-  // Limit suggestions to max display
+  // Limit and sort suggestions by word length (descending)
   const limitedSuggestions = useMemo(
-    () => suggestions.slice(0, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY),
+    () => suggestions
+      .slice(0, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY)
+      .sort((a, b) => b.word.length - a.word.length),
     [suggestions],
   )
+
+  // Group suggestions by word length
+  const groupedSuggestions = useMemo(() => {
+    const groups: Map<number, typeof limitedSuggestions> = new Map()
+    limitedSuggestions.forEach((suggestion) => {
+      const length = suggestion.word.length
+      if (!groups.has(length)) {
+        groups.set(length, [])
+      }
+      groups.get(length)!.push(suggestion)
+    })
+    return Array.from(groups.entries()).sort((a, b) => b[0] - a[0])
+  }, [limitedSuggestions])
 
   // Loading state
   if (loadingSuggestions) {
@@ -62,24 +77,26 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
   // Content state
   return (
     <PanelContainer>
-      {/* Suggestions Grid */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 auto-rows-min">
-          {limitedSuggestions.map((suggestion, index) => (
-            <div
-              key={`${suggestion.word}-${index}`}
-              className="animate-fade-slide-in"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <SuggestionCard
-                suggestion={suggestion}
-                rank={index + 1}
-                tier={getScoreTier(suggestion.score)}
-                onClick={onSuggestionSelect}
-              />
-            </div>
-          ))}
-        </div>
+      {/* Suggestions List */}
+      <div className="flex-1 min-h-0 flex flex-wrap gap-2 px-4 py-4 overflow-y-auto content-start justify-center">
+        {groupedSuggestions.map(([length, group], groupIndex) => (
+          <div key={`group-${length}`} className="w-full flex flex-wrap gap-2 justify-center">
+            {group.map((suggestion, itemIndex) => (
+              <div
+                key={`${suggestion.word}-${itemIndex}`}
+                className="animate-fade-slide-in"
+                style={{ animationDelay: `${(groupIndex * 10 + itemIndex) * 50}ms` }}
+              >
+                <SuggestionCard
+                  suggestion={suggestion}
+                  rank={groupIndex + 1}
+                  tier={getScoreTier(suggestion.score)}
+                  onClick={onSuggestionSelect}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </PanelContainer>
   )

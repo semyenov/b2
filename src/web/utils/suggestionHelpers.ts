@@ -59,9 +59,10 @@ export function groupSuggestionsByTier(
 /**
  * Get coordinate label for a suggestion position
  * Format: row + column letter (e.g., "2Б")
+ * Converts 0-indexed positions to 1-indexed display (row 0 → "1", col 0 → "А")
  * @param suggestion - Suggestion with position
  * @returns Formatted coordinate string
  */
 export function getSuggestionCoordLabel(suggestion: Suggestion): string {
-  return `${suggestion.position.row}${String.fromCharCode(1040 + suggestion.position.col)}`
+  return `${suggestion.position.row + 1}${String.fromCharCode(1040 + suggestion.position.col)}`
 }

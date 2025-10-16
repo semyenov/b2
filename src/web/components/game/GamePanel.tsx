@@ -74,7 +74,7 @@ export function GamePanel({
         isClosing ? 'animate-slide-down-panel' : 'animate-slide-up-panel',
       )}
       style={{
-        height: 'min(60vh, 500px)',
+        height: 'min(45vh, 380px)',
         paddingBottom: 'var(--height-control-panel)', // Match control panel height
       }}
     >

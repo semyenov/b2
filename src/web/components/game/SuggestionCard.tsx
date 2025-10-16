@@ -68,42 +68,40 @@ export const SuggestionCard = memo(({
       onClick={() => onClick(suggestion)}
       aria-label={`Подсказка ${rank}: ${suggestion.word}, буква ${suggestion.letter} на позиции ${posStr}, ${suggestion.score} очков`}
       className={cn(
-        // Base styles - matching sidebar word list style
+        // Base styles
         'group relative w-full transition-all duration-300',
         'bg-surface-800 border border-surface-700 hover:border-info-400',
         'hover:shadow-lg hover:shadow-info-400/10 hover:scale-[1.005]',
         'hover:bg-surface-700',
         'px-4 py-3',
-        'flex items-center justify-between',
+        'flex items-center gap-3',
         // Keyboard focus
         isKeyboardFocused && 'ring-2 ring-info-400',
       )}
     >
-      <div className="flex items-center gap-3">
-        {/* Score Badge */}
-        <div className="w-8 h-8 bg-info-500/20 flex items-center justify-center text-xs font-bold text-info-300">
-          {Math.round(suggestion.score)}
-        </div>
-
-        {/* Word - Hero Element */}
-        <span className="font-bold text-xl text-surface-300 group-hover:text-surface-300 transition-colors duration-200">
-          {suggestion.word}
-        </span>
+      {/* Score Badge */}
+      <div className="bg-info-500/20 flex items-center justify-center px-2 py-1 text-xs font-bold text-info-300 flex-shrink-0">
+        {Math.round(suggestion.score)}
       </div>
 
-      <div className="flex items-center gap-6">
-        {/* Position Badge */}
-        <div className="flex items-center gap-3">
-          <span className="text-info-200 font-mono font-black text-xl">
-            {posStr}
-          </span>
-          <div className="bg-info-500/20 border border-info-500/30 px-2 py-1 w-8 h-8 flex items-center justify-center">
-            <span className="text-info-300 font-black text-lg">
-              {suggestion.letter}
-            </span>
-          </div>
-        </div>
+      {/* Word - Hero Element */}
+      <span className="font-bold text-xl text-surface-300 group-hover:text-surface-300 transition-colors duration-200 flex-shrink-0">
+        {suggestion.word}
+      </span>
 
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Position Label */}
+      <span className="text-info-200 font-mono font-black text-xl flex-shrink-0">
+        {posStr}
+      </span>
+
+      {/* Letter Badge */}
+      <div className="bg-info-500/20 border border-info-500/30 px-2 py-1 flex items-center justify-center flex-shrink-0">
+        <span className="text-info-300 font-black text-lg">
+          {suggestion.letter}
+        </span>
       </div>
 
       {/* Hover effect overlay */}

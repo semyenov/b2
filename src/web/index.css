@@ -311,6 +311,17 @@ button:focus-visible {
   }
 }
 
+/* Suggestions Grid - matches alphabet structure for consistent spacing */
+.suggestions-grid {
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+}
+
+@media (max-width: 640px) {
+  .suggestions-grid {
+    grid-template-columns: repeat(17, minmax(0, 1fr));
+  }
+}
+
 /* ========================================
    ANIMATIONS
    ======================================== */
