@@ -100,6 +100,3 @@ async function initializeStore(): Promise<IGameStore> {
 }
 
 export const store = await initializeStore()
-
-// Export legacy class name for backwards compatibility
-export const GameStore = FileGameStore

@@ -3,7 +3,6 @@
   "entry": [
     "src/server/index.ts",
     "src/web/main.tsx",
-    "src/cli/index.tsx",
     "scripts/**/*.ts"
   ],
   "project": [
@@ -18,12 +17,7 @@
     "dist/**/*",
     "data/**/*"
   ],
-  "ignoreDependencies": [
-    "husky",
-    "lint-staged",
-    "@types/node",
-    "bun-types"
-  ],
+  "ignoreDependencies": [],
   "ignoreExportsUsedInFile": true,
   "includeEntryExports": true,
   "rules": {
