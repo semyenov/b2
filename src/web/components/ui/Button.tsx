@@ -76,7 +76,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   warning: 'bg-gradient-to-r from-opponent-600 to-opponent-700 hover:from-opponent-500 hover:to-opponent-600 text-white border-2 border-opponent-500 shadow-depth-2 hover:shadow-depth-3',
   danger: 'bg-gradient-to-r from-danger-600 to-danger-700 hover:from-danger-500 hover:to-danger-600 text-white border-2 border-danger-500 shadow-depth-2 hover:shadow-depth-3',
   ghost: 'bg-transparent hover:bg-surface-800 text-surface-300 hover:text-white border-2 border-transparent hover:border-surface-600',
-  muted: 'bg-surface-600 hover:bg-surface-500 text-white shadow-depth-1 hover:shadow-depth-2',
+  muted: 'bg-surface-600 hover:bg-surface-500 text-white border-2 border-surface-500 shadow-depth-1 hover:shadow-depth-2',
   gray: 'bg-surface-700 hover:bg-surface-600 text-white border-2 border-surface-600 shadow-depth-1 hover:shadow-depth-2',
 }
 
