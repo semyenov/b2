@@ -1,20 +1,15 @@
+import type { Suggestion, SuggestOptions } from '../../shared/types'
 import type { SizedDictionary } from '../dictionary'
 import type { BoardPosition, Letter } from './balda'
-import { DEFAULT_SUGGESTION_LIMIT, MAX_SUGGESTION_LIMIT, MAX_WORD_LENGTH, ORTHOGONAL_DIRS } from '../constants/'
+import {
+  ORTHOGONAL_DIRS,
+  SUGGESTION_LIMITS,
+  WORD_CONFIG,
+} from '../../shared/config'
 import { calculateWordScore, isAdjacentToExisting, normalizeWord } from './balda'
 
-export interface Suggestion {
-  position: BoardPosition
-  letter: string
-  word: string
-  score: number
-}
-
-export interface SuggestOptions {
-  limit?: number
-  usedWords?: string[]
-  baseWord?: string
-}
+// Re-export for backward compatibility
+export type { Suggestion, SuggestOptions }
 
 export function suggestWords(
   board: Letter[][],
@@ -22,7 +17,7 @@ export function suggestWords(
   options: SuggestOptions = {},
 ): Suggestion[] {
   const size = board.length
-  const limit = Math.max(1, Math.min(MAX_SUGGESTION_LIMIT, options.limit ?? DEFAULT_SUGGESTION_LIMIT))
+  const limit = Math.max(1, Math.min(SUGGESTION_LIMITS.MAX, options.limit ?? SUGGESTION_LIMITS.DEFAULT))
   const usedWordsSet = new Set(options.usedWords?.map(w => normalizeWord(w)) ?? [])
 
   // Defensive check: Ensure base word is always in the used words set
@@ -133,7 +128,7 @@ function enumerateAroundOptimized(
     }
 
     // Stop if word is too long
-    if (newWord.length >= MAX_WORD_LENGTH) {
+    if (newWord.length >= WORD_CONFIG.MAX_LENGTH) {
       return
     }
 

@@ -1,52 +1,52 @@
 /**
  * Game configuration constants
- * Central location for all magic numbers and configuration values
+ * Imports from shared config with web-specific overrides
  */
 
-export const GAME_CONFIG = {
-  // Suggestions
-  MAX_SUGGESTIONS_DISPLAY: 100,
-
-  // Board
-  DEFAULT_BOARD_SIZE: 5,
-  MIN_WORD_LENGTH: 2,
-
-  // Alphabet
-  ALPHABET_GRID_COLUMNS: 11,
-
-  // AI
-  AI_THINKING_DELAY_MS: 1500,
-
-  // Score thresholds for suggestion coloring
-  SCORE_THRESHOLDS: {
-    HIGH: 10,
-    MEDIUM: 5,
-  },
-} as const
-
-export const BOARD_SIZES = [3, 4, 5, 6, 7] as const
-
-export const RUSSIAN_ALPHABET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split('')
+import {
+  ALPHABET_CONFIG,
+  BOARD_CONFIG,
+  messages,
+  SCORE_THRESHOLDS,
+  SUGGESTION_LIMITS,
+  UI_CONFIG,
+  WORD_CONFIG,
+} from '../../shared/config'
 
 // Note: Game status configuration moved to statusConfig.ts to avoid duplication
 // Import from '../constants/statusConfig' if needed
 
-/**
- * Accessibility labels
- */
-export const A11Y_LABELS = {
-  BOARD_CELL_EMPTY: (coord: string) => `Пустая клетка ${coord}`,
-  BOARD_CELL_FILLED: (coord: string, letter: string) => `Клетка ${coord}, буква ${letter}`,
-  BOARD_CELL_SELECTED: (coord: string, letter: string) => `Выбрана клетка ${coord} для буквы ${letter}`,
-  BOARD_CELL_IN_PATH: (coord: string, letter: string, position: number) => `Клетка ${coord}, буква ${letter}, позиция ${position} в слове`,
+export const GAME_CONFIG = {
+  // Suggestions - from shared config
+  MAX_SUGGESTIONS_DISPLAY: SUGGESTION_LIMITS.MAX_DISPLAY,
 
-  LETTER_BUTTON: (letter: string) => `Выбрать букву ${letter}`,
-  LETTER_BUTTON_SELECTED: (letter: string) => `Буква ${letter} выбрана`,
+  // Board - from shared config
+  DEFAULT_BOARD_SIZE: BOARD_CONFIG.DEFAULT_SIZE,
+  MIN_WORD_LENGTH: WORD_CONFIG.MIN_LENGTH,
 
-  TURN_ANNOUNCEMENT: (playerName: string) => `Ход игрока ${playerName}`,
-  YOUR_TURN: 'Ваш ход',
-  WAITING_FOR_OPPONENT: (playerName: string) => `Ожидание хода игрока ${playerName}`,
+  // Alphabet - web-specific UI layout
+  ALPHABET_GRID_COLUMNS: 11,
 
-  MOVE_SUCCESS: (word: string, score: number) => `Слово ${word} принято, ${score} очков`,
-  MOVE_ERROR: (error: string) => `Ошибка: ${error}`,
+  // AI - from shared config
+  AI_THINKING_DELAY_MS: UI_CONFIG.AI.THINKING_DELAY_MS,
+
+  // Score thresholds - from shared config
+  SCORE_THRESHOLDS: {
+    HIGH: SCORE_THRESHOLDS.HIGH,
+    MEDIUM: SCORE_THRESHOLDS.MEDIUM,
+  },
 } as const
+
+// Valid board sizes - derived from shared config
+export const BOARD_SIZES = [
+  BOARD_CONFIG.MIN_SIZE,
+  4,
+  BOARD_CONFIG.DEFAULT_SIZE,
+  6,
+  BOARD_CONFIG.MAX_SIZE,
+] as const
+
+// Russian alphabet - from shared config
+export const RUSSIAN_ALPHABET = ALPHABET_CONFIG.RUSSIAN.split('')
+
+export const A11Y_LABELS = messages.a11y

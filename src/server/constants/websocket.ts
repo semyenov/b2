@@ -3,9 +3,12 @@
  * Configuration for WebSocket communication and game archiving
  */
 
+import { UI_CONFIG } from '../../shared/config'
+
 /**
  * WebSocket connection states
  * Maps to standard WebSocket readyState values
+ * These are standard constants, not configuration
  */
 export const WS_STATES = {
   CONNECTING: 0,
@@ -16,6 +19,6 @@ export const WS_STATES = {
 
 /**
  * Archive delay for games with no active clients
- * Games are automatically archived 5 minutes after the last client disconnects
+ * Re-exported from shared config
  */
-export const ARCHIVE_DELAY_MS = 5 * 60 * 1000 // 5 minutes
+export const ARCHIVE_DELAY_MS = UI_CONFIG.ARCHIVE.DELAY_MS

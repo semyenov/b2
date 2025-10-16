@@ -6,7 +6,19 @@ export default antfu({
     indent: 2,
     quotes: 'single',
   },
-  ignores: ['**/*.md'],
+  ignores: [
+    // Documentation
+    '**/*.md',
+    // Auto-generated files
+    'drizzle/',
+    'dist/',
+    'node_modules/',
+    // Build outputs
+    '*.tsbuildinfo',
+    'coverage/',
+    '.next/',
+    '.vite/',
+  ],
   rules: {
     // Allow Cyrillic alphabet ranges in regex (used for Russian word support)
     'regexp/no-obscure-range': 'off',

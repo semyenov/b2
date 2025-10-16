@@ -5,10 +5,10 @@
  * Provides consistent status indicators across the application
  */
 
-/**
- * Game status types
- */
-export type GameStatus = 'waiting' | 'in_progress' | 'finished'
+import type { GameStatus } from '../types'
+
+// Re-export for modules that use STATUS_CONFIG
+export type { GameStatus }
 
 /**
  * Status configuration for display

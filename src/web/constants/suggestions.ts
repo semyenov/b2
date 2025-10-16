@@ -1,42 +1,11 @@
 /**
  * Suggestions Constants
- * Configuration for suggestion display and tier classification
+ * Re-exports from shared config
  */
 
-import type { BadgeVariant } from '../components/ui'
+import type { ScoreTier } from '../../shared/config'
+import { TIER_CONFIG } from '../../shared/config'
 
-/**
- * Score tier classification
- */
-export type ScoreTier = 'high' | 'medium' | 'low'
-
-/**
- * Tier configuration for visual styling
- */
-export interface TierConfig {
-  label: string
-  icon: string
-  variant: BadgeVariant
-}
-
-/**
- * Tier display configuration
- * Maps score tiers to visual presentation
- */
-export const TIER_CONFIG: Readonly<Record<ScoreTier, TierConfig>> = Object.freeze({
-  high: {
-    label: 'Лучшие',
-    icon: '🏆',
-    variant: 'success',
-  },
-  medium: {
-    label: 'Хорошие',
-    icon: '💡',
-    variant: 'warning',
-  },
-  low: {
-    label: 'Другие',
-    icon: '📋',
-    variant: 'gray',
-  },
-})
+// Re-export for local usage
+export { TIER_CONFIG }
+export type { ScoreTier }

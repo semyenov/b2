@@ -4,11 +4,11 @@ import { objectify, sift } from 'radash'
 import { DEFAULT_ALPHABET } from './constants/'
 
 export interface SizedDictionary extends Dictionary {
-  size: () => number
-  hasPrefix: (prefix: string) => boolean
-  getAlphabet: () => string[]
-  getLetterFrequency: () => Record<string, number>
-  getRandomWords: (length: number, count: number) => string[]
+  readonly hasPrefix: (prefix: string) => boolean // Override optional with required
+  readonly size: () => number
+  readonly getAlphabet: () => string[]
+  readonly getLetterFrequency: () => Record<string, number>
+  readonly getRandomWords: (length: number, count: number) => string[]
 }
 
 class TrieNode {

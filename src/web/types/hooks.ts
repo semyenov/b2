@@ -4,12 +4,11 @@
  */
 
 import type { ApiClient, GameState, MoveBody, Suggestion } from '@lib/client'
-import type { Position } from './game'
+import type { Position } from '../../shared/types'
+import type { Screen } from './ui'
 
-/**
- * Screen navigation type
- */
-export type Screen = 'menu' | 'list' | 'create' | 'play'
+// Re-export for barrel export
+export type { Screen }
 
 /**
  * Return type for useGameClient hook

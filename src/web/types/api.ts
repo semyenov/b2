@@ -1,11 +1,7 @@
 /**
  * API-related type definitions
- * Consolidates types for backend communication
+ * Web-specific API types (WebSocket, Error handling)
  */
-
-// Re-export main API types from client
-// These are derived from TypeBox schemas in @shared/schemas
-export type { CreateGameBody, GameState, MoveBody, Placement, Suggestion } from '@lib/client'
 
 /**
  * WebSocket message types
@@ -24,13 +20,4 @@ export interface ApiErrorResponse {
   error?: string
   message?: string
   statusCode?: number
-}
-
-/**
- * Dictionary metadata response
- */
-export interface DictionaryMetadata {
-  wordCount: number
-  alphabet: string[]
-  letterFrequency: Record<string, number>
 }

@@ -4,7 +4,7 @@ import type { Suggestion } from '@lib/client'
 import { GAME_CONFIG } from '@constants/game'
 import { TIER_CONFIG } from '@constants/suggestions'
 
-// Re-export for backward compatibility
+// Re-export for modules that use these utilities
 export type { ScoreTier }
 
 /**

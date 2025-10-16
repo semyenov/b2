@@ -1,27 +1,36 @@
-import type { BoardPosition } from '../engine/balda'
+/**
+ * Game constants - Re-exports from shared config
+ * Maintained for backward compatibility with existing server imports
+ */
+
+import {
+  ALPHABET_CONFIG,
+  ORTHOGONAL_DIRS as SHARED_ORTHOGONAL_DIRS,
+  SUGGESTION_LIMITS,
+  WORD_CONFIG,
+} from '../../shared/config'
 
 /**
  * Orthogonal directions for board navigation (up, down, left, right)
+ * Re-exported from shared config
  */
-export const ORTHOGONAL_DIRS: Readonly<readonly BoardPosition[]> = Object.freeze([
-  { row: -1, col: 0 }, // up
-  { row: 1, col: 0 }, // down
-  { row: 0, col: -1 }, // left
-  { row: 0, col: 1 }, // right
-])
+export const ORTHOGONAL_DIRS = SHARED_ORTHOGONAL_DIRS
 
 /**
  * Default alphabet for dictionary (Latin + Cyrillic)
+ * Re-exported from shared config
  */
-export const DEFAULT_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
+export const DEFAULT_ALPHABET = ALPHABET_CONFIG.DEFAULT
 
 /**
  * Maximum word length for word enumeration in suggestions
+ * Re-exported from shared config
  */
-export const MAX_WORD_LENGTH = 8
+export const MAX_WORD_LENGTH = WORD_CONFIG.MAX_LENGTH
 
 /**
  * Default and maximum suggestion limits
+ * Re-exported from shared config for backward compatibility
  */
-export const DEFAULT_SUGGESTION_LIMIT = 20
-export const MAX_SUGGESTION_LIMIT = 200
+export const DEFAULT_SUGGESTION_LIMIT = SUGGESTION_LIMITS.DEFAULT
+export const MAX_SUGGESTION_LIMIT = SUGGESTION_LIMITS.MAX

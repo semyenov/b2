@@ -1,27 +1,22 @@
 /**
- * Type Definitions - TypeScript type exports
+ * Type Definitions - Direct exports from sources
  *
- * Centralized exports for all type definitions
- * Organized by domain: game, API, hooks, UI
+ * No re-export indirection - imports directly from:
+ * - Shared types (domain models)
+ * - Local web types (UI-specific)
+ * - API client types (generated from schemas)
  */
 
-// API Types
-export type {
-  ApiErrorResponse,
-  CreateGameBody,
-  DictionaryMetadata,
-  GameState,
-  MoveBody,
-  Placement,
-  Suggestion,
-  WebSocketGameUpdate,
-  WebSocketMessage,
-} from './api'
+// Shared Domain Types (from @shared/types)
+export type { Board, GameStatus, Position } from '../../shared/types'
 
-// Game Types
-export type { Board, Position } from './game'
+// API Client Types (from lib/client)
+export type { CreateGameBody, GameState, MoveBody, Placement, Suggestion } from '../lib/client'
 
-// Hook Types
+// Web-Specific API Types
+export type { ApiErrorResponse, WebSocketGameUpdate, WebSocketMessage } from './api'
+
+// Web-Specific Hook Types
 export type {
   Screen,
   UseCreateGameFormReturn,
@@ -32,10 +27,9 @@ export type {
   UseSuggestionsReturn,
 } from './hooks'
 
-// UI Types
+// Web-Specific UI Types
 export type {
   BannerVariant,
-  GameStatus,
   GameStatusConfig,
   GameStep,
 } from './ui'

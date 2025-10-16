@@ -3,11 +3,11 @@
  * This file is loaded before all tests
  */
 
-import { afterAll, beforeAll } from 'bun:test'
 // Create test storage directory
 import { mkdir } from 'node:fs/promises'
-
 import { resolve } from 'node:path' // Use test dictionary
+
+import { afterAll, beforeAll } from 'bun:test'
 
 // Set test environment variables
 process.env['NODE_ENV'] = 'test'

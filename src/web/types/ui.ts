@@ -15,12 +15,6 @@ export type Screen = 'menu' | 'list' | 'create' | 'play'
 export type GameStep = 'waiting' | 'select-cell' | 'select-letter' | 'build-word' | 'ready-to-submit'
 
 /**
- * Game status for display
- * Matches backend game status
- */
-export type GameStatus = 'waiting' | 'in_progress' | 'finished'
-
-/**
  * Banner/notification variants
  */
 export type BannerVariant = 'error' | 'loading' | 'warning'

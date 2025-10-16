@@ -37,6 +37,114 @@ Balda is a word-building game where players take turns adding a single letter to
 
 ## Architecture
 
+### Shared Modules (`src/shared/`) - Foundation Layer
+
+Centralized configuration and type definitions shared between server and web clients. Eliminates duplication and ensures consistency across the codebase.
+
+#### Shared Configuration (`src/shared/config/`)
+
+Single source of truth for all game rules, scoring, and UI settings (1000+ lines across 6 files):
+
+- **`game-rules.ts`** - Core game mechanics
+  - Board configuration (sizes 3-7, default 5x5)
+  - Word length constraints (min 2, max 8 for suggestions)
+  - Player limits (2-4 players)
+  - Turn timing and validation rules
+  - Alphabets (Russian Cyrillic, Latin, combined)
+  - `ORTHOGONAL_DIRS` - Movement directions for adjacency checking
+
+- **`scoring.ts`** - Letter scoring and calculation
+  - Russian Cyrillic scoring (А=1, Я=6, rare letters higher)
+  - Latin alphabet scoring (A=1, Z=5)
+  - `calculateWordScore()`, `getLetterScore()` helper functions
+  - Score distribution and tier helpers
+
+- **`suggestions.ts`** - AI suggestion engine settings
+  - Limits: default 20, max request 200, max display 100
+  - Score tiers (high ≥10, medium ≥5, low <5)
+  - Tier styling configuration for UI
+
+- **`validation.ts`** - Input validation patterns
+  - Player name rules (2-20 chars, alphanumeric + spaces/hyphens)
+  - Game ID format (UUID v4)
+  - Base word validation (letters only, length matches board)
+  - Helper functions: `isValidPlayerName()`, `isValidBaseWord()`, etc.
+
+- **`ui.ts`** - UI timing and performance settings
+  - Animation durations (toast 3s, transitions 200-500ms)
+  - Performance thresholds (debounce 300ms, max suggestions 100)
+  - AI thinking delays (1.5s natural pause)
+  - WebSocket configuration (reconnect, ping intervals)
+  - Archive delay (5 minutes for inactive games)
+
+- **`i18n/`** - Internationalization (Russian primary)
+  - `ru.ts` - Complete Russian translations (200+ strings)
+  - `index.ts` - Utilities: `translateError()`, `formatTimeAgo()`, `getRussianPlural()`
+  - Error messages, loading states, success notifications
+  - Accessibility labels for screen readers
+  - Game status descriptions
+
+**Usage Pattern:**
+```typescript
+import { BOARD_CONFIG, WORD_CONFIG, SUGGESTION_LIMITS } from '@shared/config'
+
+const size = BOARD_CONFIG.DEFAULT_SIZE // 5
+const maxWord = WORD_CONFIG.MAX_LENGTH // 8
+const limit = SUGGESTION_LIMITS.MAX // 200
+```
+
+#### Shared Types (`src/shared/types/`)
+
+Type-safe domain models with helper functions (900+ lines across 5 files):
+
+- **`game.ts`** - Core game state types
+  - `Position` - Board coordinates with helper functions
+  - `Board` - 2D array of letters (string | null)[][]
+  - `Letter` - Single letter type (string | null)
+  - `GameState` - Complete game state (board, players, scores, moves)
+  - `GameConfig` - Game creation parameters
+  - `GameStatus` - Game lifecycle states
+  - Helpers: `isPosition()`, `isSamePosition()`, `isInBounds()`, `positionToCoord()`
+
+- **`move.ts`** - Move validation and execution
+  - `MoveInput` - Player move submission (playerId, position, letter, word)
+  - `AppliedMove` - Move with timestamp
+  - `MoveResult` - Success/failure discriminated union
+  - `MoveValidationError` - Specific error types
+  - Type guards: `isMoveSuccess()`, `isMoveFailure()`, `getMoveError()`
+
+- **`suggestion.ts`** - AI move suggestions
+  - `Suggestion` - Position, letter, word, score
+  - `SuggestOptions` - Limit, used words, base word filtering
+  - `RankedSuggestion` - With rank and tier metadata
+  - `SuggestionsResponse` - API response with timing
+  - Utilities: `compareSuggestions()`, `filterByMinScore()`, `groupByTier()`
+
+- **`dictionary.ts`** - Word validation interfaces
+  - `Dictionary` - Synchronous word checking (has, hasPrefix)
+  - `SizedDictionary` - With metadata (size, alphabet, frequency)
+  - `AsyncDictionary` - Promise-based validation
+  - `DictionaryMetadata` - API response type
+  - Type guards: `hasPrefixSupport()`, `isAsyncDictionary()`, `isSizedDictionary()`
+
+- **`result.ts`** - Functional error handling pattern
+  - `Result<T, E>` - Rust-inspired success/failure type
+  - Factory functions: `ok()`, `err()`
+  - Type guards: `isOk()`, `isErr()`
+  - Operators: `map()`, `mapErr()`, `andThen()`, `combine()`
+  - Conversion: `toPromise()`, `fromPromise()`
+  - Extraction: `unwrap()`, `unwrapOr()`
+
+**Import Strategy:**
+```typescript
+// Server and web both import from shared
+import type { GameState, Position, MoveResult } from '@shared/types'
+import { isOk, ok, err, type Result } from '@shared/types'
+
+// Server engine re-exports for backward compatibility
+export type { GameState, Position } from '@shared/types'
+```
+
 ### Backend Server (`src/`)
 
 #### Core Game Engine (`src/engine/balda.ts`)
@@ -212,14 +320,19 @@ Modern React-based web UI built with Vite and Tailwind CSS, following clean arch
 
 ### Key Implementation Patterns
 
-1. **Repository Pattern**: `gameStore.ts` translates between domain model (`GameState`) and persistence model (normalized PostgreSQL tables)
-2. **Hybrid Dictionary**: PostgreSQL as source of truth, in-memory Trie for O(k) synchronous lookups
-3. **Error Handling**: Custom error classes (`GameNotFoundError`, `InvalidMoveError`) with structured responses
-4. **Performance**: Memoized path-finding (LRU cache), prefix pruning in suggestions, incremental move syncing
-5. **Type Safety**: Strict TypeScript, TypeBox runtime validation, Drizzle ORM type inference, immutable state updates
-6. **Transaction-Based Writes**: Multi-table inserts wrapped in database transactions for ACID guarantees
-7. **Real-time Updates**: WebSocket auto-reconnect in CLI, broadcast on state changes
-8. **Code Style**: @antfu/eslint-config (single quotes, no semicolons, 2-space indent)
+1. **Shared Modules Architecture**: Centralized types and configuration in `src/shared/` (1,900+ lines)
+   - Single source of truth for game rules, scoring, validation, i18n
+   - Type-safe domain models shared between server and web
+   - Re-export strategy for backward compatibility during migration
+   - Hierarchical config objects (`SUGGESTION_LIMITS.MAX` vs flat constants)
+2. **Repository Pattern**: `gameStore.ts` translates between domain model (`GameState`) and persistence model (normalized PostgreSQL tables)
+3. **Hybrid Dictionary**: PostgreSQL as source of truth, in-memory Trie for O(k) synchronous lookups
+4. **Error Handling**: Result<T, E> pattern (functional style) + custom error classes with structured responses
+5. **Performance**: Memoized path-finding (LRU cache), prefix pruning in suggestions, incremental move syncing
+6. **Type Safety**: Strict TypeScript, shared type definitions, TypeBox runtime validation, Drizzle ORM type inference, immutable state updates
+7. **Transaction-Based Writes**: Multi-table inserts wrapped in database transactions for ACID guarantees
+8. **Real-time Updates**: WebSocket auto-reconnect in CLI, broadcast on state changes
+9. **Code Style**: @antfu/eslint-config (single quotes, no semicolons, 2-space indent)
 
 ## Environment Variables
 

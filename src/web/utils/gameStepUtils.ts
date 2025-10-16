@@ -5,8 +5,8 @@
 
 import type { GameStep, Position } from '@types'
 
-// Re-export for backwards compatibility
-export type { GameStep } from '@types'
+// Re-export for modules that use this utility
+export type { GameStep }
 
 interface GameStepParams {
   isMyTurn: boolean

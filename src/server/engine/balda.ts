@@ -1,11 +1,36 @@
+import type {
+  AppliedMove,
+  Dictionary,
+  Direction,
+  GameConfig,
+  GameState,
+  Letter,
+  MoveInput,
+  MoveResult,
+  Position,
+  PositionValidation,
+} from '../../shared/types'
 import { list, objectify, unique } from 'radash'
-import { DEFAULT_LETTER_SCORE, LETTER_SCORES } from '../../shared/constants/scoring'
-import { ORTHOGONAL_DIRS } from '../constants'
+import { DEFAULT_LETTER_SCORE, LETTER_SCORES, ORTHOGONAL_DIRS } from '../../shared/config'
+
+// Re-export types for backward compatibility
+export type {
+  AppliedMove,
+  Dictionary,
+  Direction,
+  GameConfig,
+  GameState,
+  Letter,
+  MoveInput,
+  MoveResult,
+  PositionValidation,
+}
+export type { Position as BoardPosition }
 
 /**
  * Generate a stable cache key for board state and word parameters
  */
-function generateCacheKey(board: Letter[][], word: string, mustInclude: BoardPosition): string {
+function generateCacheKey(board: Letter[][], word: string, mustInclude: Position): string {
   // Create a hash of the board state by flattening and joining
   // Use '-' for null to avoid collision with empty string letters
   const boardHash = board.map(row => row.map(cell => cell === null ? '-' : cell).join(',')).join('|')
@@ -16,15 +41,15 @@ function generateCacheKey(board: Letter[][], word: string, mustInclude: BoardPos
  * Simple memoization utility for expensive function calls with proper LRU eviction
  */
 function memoize(
-  fn: (board: Letter[][], word: string, mustInclude: BoardPosition) => boolean,
-  keyGenerator: (board: Letter[][], word: string, mustInclude: BoardPosition) => string,
+  fn: (board: Letter[][], word: string, mustInclude: Position) => boolean,
+  keyGenerator: (board: Letter[][], word: string, mustInclude: Position) => string,
   maxSize = 1000,
-): (board: Letter[][], word: string, mustInclude: BoardPosition) => boolean {
+): (board: Letter[][], word: string, mustInclude: Position) => boolean {
   const cache = new Map<string, boolean>()
   const accessOrder = new Map<string, number>()
   let accessCounter = 0
 
-  return (board: Letter[][], word: string, mustInclude: BoardPosition): boolean => {
+  return (board: Letter[][], word: string, mustInclude: Position): boolean => {
     const key = keyGenerator(board, word, mustInclude)
 
     if (cache.has(key)) {
@@ -65,7 +90,7 @@ function memoize(
  * Create a memoized version of existsPathForWord for repeated calls
  */
 const memoizedExistsPathForWord = memoize(
-  (board: Letter[][], word: string, mustInclude: BoardPosition): boolean => {
+  (board: Letter[][], word: string, mustInclude: Position): boolean => {
     // Implementation moved from the original function
     const size = board.length
     const target = normalizeWord(word)
@@ -75,7 +100,7 @@ const memoizedExistsPathForWord = memoize(
     const first = target[0]
     if (!first)
       return false
-    const starts: BoardPosition[] = []
+    const starts: Position[] = []
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
         // Non-null assertion: loop bounds guarantee valid array access
@@ -90,7 +115,7 @@ const memoizedExistsPathForWord = memoize(
     const mustKey = `${mustInclude.row},${mustInclude.col}`
 
     for (const start of starts) {
-      const stack: Array<{ pos: BoardPosition, index: number, path: Set<string> }> = [
+      const stack: Array<{ pos: Position, index: number, path: Set<string> }> = [
         { pos: start, index: 0, path: new Set([`${start.row},${start.col}`]) },
       ]
 
@@ -130,78 +155,10 @@ const memoizedExistsPathForWord = memoize(
   500, // Limit cache size to prevent memory issues
 )
 
-export type Letter = string | null
-
-export interface BoardPosition {
-  readonly row: number
-  readonly col: number
-}
-
-export interface MoveInput {
-  readonly playerId: string
-  readonly position: BoardPosition
-  readonly letter: string
-  readonly word: string
-}
-
-export interface AppliedMove extends MoveInput {
-  readonly appliedAt: number
-}
-
-export interface GameState {
-  readonly id: string
-  readonly size: number
-  readonly baseWord: string
-  readonly board: Letter[][]
-  readonly players: string[]
-  readonly aiPlayers: string[]
-  readonly currentPlayerIndex: number
-  readonly moves: AppliedMove[]
-  readonly createdAt: number
-  readonly scores: Record<string, number>
-  readonly usedWords: string[]
-  readonly version: number // Optimistic locking version
-}
-
-export interface Dictionary {
-  readonly has: (word: string) => boolean
-  readonly hasPrefix?: (prefix: string) => boolean
-}
-
-/**
- * Game configuration for creating new games
- */
-export interface GameConfig {
-  readonly size: number
-  readonly baseWord: string
-  readonly players?: string[]
-  readonly aiPlayers?: string[]
-}
-
-/**
- * Result of applying a move to a game
- */
-export type MoveResult
-  = | { readonly ok: true, readonly game: GameState }
-    | { readonly ok: false, readonly message: string }
-
-/**
- * Valid directions for board navigation
- */
-export type Direction = 'up' | 'down' | 'left' | 'right'
-
-/**
- * Position validation result
- */
-export interface PositionValidation {
-  readonly isValid: boolean
-  readonly reason?: string
-}
-
 /**
  * Validate if a position can be used for placement
  */
-function validatePlacement(game: GameState, position: BoardPosition): { ok: true } | { ok: false, message: string } {
+function validatePlacement(game: GameState, position: Position): { ok: true } | { ok: false, message: string } {
   // Non-null assertion: position is validated by caller
   if (game.board[position.row]![position.col] !== null) {
     return { ok: false, message: 'Cell is already occupied' }
@@ -215,7 +172,7 @@ function validatePlacement(game: GameState, position: BoardPosition): { ok: true
 /**
  * Create a new board state with a letter placed at the given position
  */
-function createBoardWithPlacement(board: Letter[][], position: BoardPosition, letter: string): Letter[][] {
+function createBoardWithPlacement(board: Letter[][], position: Position, letter: string): Letter[][] {
   return board.map(row => [...row])
     .map((row, r) =>
       r === position.row
@@ -234,11 +191,11 @@ export function createEmptyBoard(size: number): Letter[][] {
   return list(0, size - 1, () => list(0, size - 1, () => null))
 }
 
-export function isInside(size: number, { row, col }: BoardPosition): boolean {
+export function isInside(size: number, { row, col }: Position): boolean {
   return row >= 0 && row < size && col >= 0 && col < size
 }
 
-export function canPlace(board: Letter[][], pos: BoardPosition): boolean {
+export function canPlace(board: Letter[][], pos: Position): boolean {
   // Non-null assertion: isInside() check guarantees valid access
   return isInside(board.length, pos) && board[pos.row]![pos.col] === null
 }
@@ -291,8 +248,8 @@ export function calculateWordScore(word: string): number {
  */
 export function forEachNeighbor(
   size: number,
-  pos: BoardPosition,
-  cb: (n: BoardPosition) => void,
+  pos: Position,
+  cb: (n: Position) => void,
 ): void {
   for (const d of ORTHOGONAL_DIRS) {
     const n = { row: pos.row + d.row, col: pos.col + d.col }
@@ -301,7 +258,7 @@ export function forEachNeighbor(
   }
 }
 
-export function isAdjacentToExisting(board: Letter[][], pos: BoardPosition): boolean {
+export function isAdjacentToExisting(board: Letter[][], pos: Position): boolean {
   let adjacent = false
   forEachNeighbor(board.length, pos, (n) => {
     // Non-null assertion: forEachNeighbor only calls with valid positions
@@ -314,7 +271,7 @@ export function isAdjacentToExisting(board: Letter[][], pos: BoardPosition): boo
 export function existsPathForWord(
   board: Letter[][],
   word: string,
-  mustInclude: BoardPosition,
+  mustInclude: Position,
 ): boolean {
   // Use memoization for repeated calls with same parameters (useful for suggestion engine)
   // Note: Board state changes frequently, so we don't cache based on board content
@@ -426,13 +383,13 @@ export function createGame(
 export function findPlacementsForWord(
   board: Letter[][],
   rawWord: string,
-): Array<{ position: BoardPosition, letter: string }> {
+): Array<{ position: Position, letter: string }> {
   const word = normalizeWord(rawWord)
   if (!word)
     return []
 
   const size = board.length
-  const results: Array<{ position: BoardPosition, letter: string }> = []
+  const results: Array<{ position: Position, letter: string }> = []
   const candidateLetters = unique(word.split(''))
 
   for (let r = 0; r < size; r++) {
