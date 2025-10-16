@@ -153,7 +153,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <div className="text-xs font-bold text-surface-500 group-hover:text-info-400 transition-colors duration-200">
+                          <div className="text-xs font-bold text-surface-500 group-hover:text-info-400 transition-colors duration-200 uppercase">
                             {wordScore}
                             {' '}
                             {getRussianPluralForm(wordScore, ['очко', 'очка', 'очков'])}
