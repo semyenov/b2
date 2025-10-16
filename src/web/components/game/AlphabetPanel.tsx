@@ -35,7 +35,7 @@ export const AlphabetPanel = memo<AlphabetPanelProps>(({
         role="group"
         aria-label="Выбор буквы для размещения на доске"
       >
-        <div className="alphabet-grid grid gap-2 h-full">
+        <div className="alphabet-grid grid grid-cols-6 gap-2 h-full">
           {RUSSIAN_ALPHABET.map((letter) => {
             const isDisabled = !!disabled
             const isSelected = selectedLetter === letter

@@ -275,6 +275,16 @@ button:focus-visible {
   background: linear-gradient(180deg, #818cf8 0%, #6366f1 100%);
 }
 
+/* Hide scrollbar while preserving scroll functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
 /* ========================================
    UTILITY CLASSES
    ======================================== */

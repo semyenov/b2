@@ -106,7 +106,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
       </div>
 
       {/* Enhanced words list */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0 relative">
+      <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0 relative hide-scrollbar">
         <div className="space-y-2">
           {playerWords.length === 0
             ? (

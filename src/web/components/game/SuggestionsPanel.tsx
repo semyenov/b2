@@ -80,7 +80,7 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
       {/* Suggestions List */}
       <div className="flex-1 min-h-0 flex flex-wrap gap-2 px-4 py-4 overflow-y-auto content-start justify-center">
         {groupedSuggestions.map(([length, group], groupIndex) => (
-          <div key={`group-${length}`} className="w-full flex flex-wrap gap-2 justify-center">
+          <div key={`group-${length}`} className={`w-full flex flex-wrap gap-2 justify-center ${groupIndex > 0 ? 'mt-2' : ''}`}>
             {group.map((suggestion, itemIndex) => (
               <div
                 key={`${suggestion.word}-${itemIndex}`}
