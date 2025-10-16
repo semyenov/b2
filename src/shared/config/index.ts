@@ -20,6 +20,20 @@
  * ```
  */
 
+// Import values for internal use in CONFIG object
+import {
+  ALPHABET_CONFIG as _ALPHABET_CONFIG,
+  BOARD_CONFIG as _BOARD_CONFIG,
+  GAME_RULES as _GAME_RULES,
+  PLAYER_CONFIG as _PLAYER_CONFIG,
+  WORD_CONFIG as _WORD_CONFIG,
+} from './game-rules'
+import { messages as _messages } from './i18n'
+import { SCORING_CONFIG as _SCORING_CONFIG } from './scoring'
+import { SUGGESTIONS_CONFIG as _SUGGESTIONS_CONFIG } from './suggestions'
+import { UI_CONFIG as _UI_CONFIG } from './ui'
+import { VALIDATION_RULES as _VALIDATION_RULES } from './validation'
+
 // ============================================
 // Core Game Configuration
 // ============================================
@@ -132,15 +146,15 @@ export {
  */
 export const CONFIG = {
   GAME: {
-    RULES: GAME_RULES,
-    BOARD: BOARD_CONFIG,
-    WORD: WORD_CONFIG,
-    PLAYER: PLAYER_CONFIG,
-    ALPHABET: ALPHABET_CONFIG,
+    RULES: _GAME_RULES,
+    BOARD: _BOARD_CONFIG,
+    WORD: _WORD_CONFIG,
+    PLAYER: _PLAYER_CONFIG,
+    ALPHABET: _ALPHABET_CONFIG,
   },
-  SCORING: SCORING_CONFIG,
-  SUGGESTIONS: SUGGESTIONS_CONFIG,
-  VALIDATION: VALIDATION_RULES,
-  UI: UI_CONFIG,
-  I18N: messages,
+  SCORING: _SCORING_CONFIG,
+  SUGGESTIONS: _SUGGESTIONS_CONFIG,
+  VALIDATION: _VALIDATION_RULES,
+  UI: _UI_CONFIG,
+  I18N: _messages,
 } as const
