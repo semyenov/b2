@@ -140,26 +140,6 @@ class Logger {
  */
 export const logger = new Logger()
 
-/**
- * Get recent errors from session storage (for debugging)
- */
-export function getRecentErrors(): unknown[] {
-  try {
-    return JSON.parse(sessionStorage.getItem('app_errors') || '[]')
-  }
-  catch {
-    return []
-  }
-}
-
-/**
- * Clear error log
- */
-export function clearErrorLog(): void {
-  try {
-    sessionStorage.removeItem('app_errors')
-  }
-  catch {
-    // Silently fail
-  }
-}
+// Future use: Error retrieval and management
+// export function getRecentErrors(): unknown[]
+// export function clearErrorLog(): void

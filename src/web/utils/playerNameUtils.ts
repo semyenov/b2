@@ -11,26 +11,6 @@ export function generatePlayerName(): string {
   return `Player_${Date.now()}`
 }
 
-/**
- * Prompt user for player name with fallback to generated name
- * @param defaultName - Optional default name to show in prompt
- * @returns Player name entered by user or generated name
- */
-export function promptPlayerName(defaultName?: string): string {
-  // eslint-disable-next-line no-alert
-  const name = window.prompt(
-    'Введите ваше имя:',
-    defaultName || generatePlayerName(),
-  )
-
-  return name?.trim() || generatePlayerName()
-}
-
-/**
- * Validate player name
- * @param name - Name to validate
- * @returns True if name is valid
- */
-export function isValidPlayerName(name: string): boolean {
-  return name.trim().length > 0 && name.length <= 50
-}
+// Future use: Player name prompt and validation
+// export function promptPlayerName(defaultName?: string): string
+// export function isValidPlayerName(name: string): boolean

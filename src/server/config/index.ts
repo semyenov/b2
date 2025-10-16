@@ -176,13 +176,6 @@ export function getConfig(): AppConfig {
 }
 
 /**
- * Reset configuration cache (useful for testing)
- */
-export function resetConfig(): void {
-  cachedConfig = null
-}
-
-/**
  * Export config singleton
  * This will be populated after loadConfig() is called
  */

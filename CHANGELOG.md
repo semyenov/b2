@@ -7,7 +7,128 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Major Changes
+### No unreleased changes
+
+---
+
+## [1.1.0] - 2025-10-16
+
+### 🧹 Code Cleanup & Dependency Optimization
+
+This release focuses on removing unused code, optimizing dependencies, and improving project maintainability based on comprehensive knip analysis.
+
+### Removed
+
+#### Unused Files (5 files deleted)
+- **Deprecated Services**:
+  - `src/server/services/user.deprecated.ts` - Old file-based user service (migration complete)
+
+- **Unused Components**:
+  - `src/web/components/game/PanelHeader.tsx` - Unused panel header component
+
+- **Barrel Export Files** (removed indirection layers):
+  - `src/web/constants/index.ts`
+  - `src/web/hooks/index.ts`
+  - `src/web/utils/index.ts`
+
+**Impact**: Removed ~8 kB of dead code, improved maintainability
+
+#### Dependencies (7 packages removed)
+- **CLI Framework** (CLI fully removed):
+  - `ink` (^6.3.1)
+  - `ink-select-input` (^6.2.0)
+  - `ink-spinner` (^5.0.0)
+  - `ink-text-input` (^6.0.0)
+
+- **Unused Utilities**:
+  - `pathe` (^2.0.3)
+
+- **Unused Type Definitions**:
+  - `@types/bcrypt` (^6.0.0)
+  - `@types/bcryptjs` (^3.0.0)
+
+**Impact**:
+- Reduced `node_modules` size by ~15 MB
+- Faster installation times
+- Reduced security audit surface area
+
+#### Internal Utilities
+- `resetConfig()` in `src/server/config/index.ts` - Test-only utility
+- `promptPlayerName()`, `isValidPlayerName()` in `src/web/utils/playerNameUtils.ts` - Unused
+- `getRecentErrors()`, `clearErrorLog()` in `src/web/utils/logger.ts` - Commented out for future use
+
+### Changed
+
+#### Configuration
+- **package.json**:
+  - Removed `"module": "src/index.js"` (file doesn't exist)
+  - Changed to `"type": "module"` for ES module support
+  - Removed `cli` script
+
+- **knip.json**:
+  - Removed `src/cli/index.tsx` from entry points (CLI removed)
+  - Cleared unnecessary `ignoreDependencies`
+
+- **eslint.config.mjs**:
+  - ✅ Migrated from deprecated `.eslintignore` to modern `ignores` property
+  - Added organized ignore patterns with comments
+  - No more ESLint deprecation warnings
+
+#### Code Quality
+- **Fixed Duplicate Exports**:
+  - Removed duplicate `GameStore` export in `src/server/store.ts`
+
+- **Import Optimization**:
+  - Removed barrel export indirection
+  - All imports now go directly to source files
+
+### Fixed
+- ✅ ESLint deprecation warning about `.eslintignore` file
+- ✅ knip configuration issues with non-existent entry points
+- ✅ Duplicate export detection
+
+### Statistics
+
+| Metric | Before | After | Change |
+|--------|--------|-------|--------|
+| Unused Files | 5 | 0 | -5 |
+| Unused Dependencies | 7 | 0 | -7 |
+| Config Issues | 6+ | 0 | Fixed |
+| Estimated Bundle Size Reduction | - | - | ~15-20 kB |
+| node_modules Size Reduction | - | - | ~15 MB |
+
+### Migration Notes
+
+#### For Developers
+
+1. **CLI Removed**: If you were using `bun run cli`, switch to web frontend:
+   ```bash
+   bun run dev:web  # Instead of bun run cli
+   ```
+
+2. **Direct Imports Required**: Barrel exports removed. Update imports:
+   ```typescript
+   // ❌ Old (no longer works)
+   import { useGameClient } from '@hooks'
+   import { GAME_CONFIG } from '@constants'
+
+   // ✅ New (required)
+   import { useGameClient } from '@hooks/useGameClient'
+   import { GAME_CONFIG } from '@constants/game'
+   ```
+
+3. **Removed Utilities**: If you used these, implement alternatives:
+   - `resetConfig()` - Access config directly in tests
+   - `promptPlayerName()` - Use your own prompt implementation
+   - `getRecentErrors()` - Access `sessionStorage.getItem('app_errors')`
+
+### Breaking Changes
+
+**None** - All changes are internal cleanup. The public API surface remains unchanged.
+
+---
+
+## Major Changes
 
 #### Database Normalization (2025-10-16)
 

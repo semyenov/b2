@@ -26,7 +26,6 @@ A high-performance word game server built with [Bun](https://bun.sh), [Elysia](h
 - 💾 **Dual Storage** - PostgreSQL (recommended) or file-based fallback
 
 ### Frontend
-- 🖥️ **CLI Frontend** - Interactive terminal interface built with React Ink
 - 🌐 **Web Frontend** - Production-ready React web UI (Vite + Tailwind CSS)
   - 🇷🇺 **Fully Localized** - Complete Russian translation
   - 📦 **Optimized Bundle** - 234 kB (72 kB gzipped)
