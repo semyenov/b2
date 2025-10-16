@@ -110,15 +110,10 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
         <div className="space-y-2">
           {playerWords.length === 0
             ? (
-                <div className="flex flex-col items-center justify-center h-full text-center px-6">
-                  <div className="space-y-6">
-                    <div className="space-y-0.5">
-                      <div className="text-surface-500 text-2xl font-bold tracking-wide uppercase leading-tight">
-                        ПУСТО
-                      </div>
-                      <div className="text-surface-600 text-sm leading-tight max-w-[200px]">
-                        составляйте слова, чтобы увидеть их здесь
-                      </div>
+                <div className="flex flex-col items-center justify-center h-full text-center">
+                  <div className="space-y-4">
+                    <div className="text-surface-500 text-2xl font-bold tracking-wide uppercase">
+                      ПУСТО
                     </div>
                     <div className="flex flex-col gap-3 opacity-30">
                       <div className="h-px w-24 bg-gradient-to-r from-transparent via-surface-700 to-transparent mx-auto" />
