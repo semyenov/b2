@@ -5,7 +5,7 @@
 
 export const GAME_CONFIG = {
   // Suggestions
-  MAX_SUGGESTIONS_DISPLAY: 20,
+  MAX_SUGGESTIONS_DISPLAY: 100,
 
   // Board
   DEFAULT_BOARD_SIZE: 5,

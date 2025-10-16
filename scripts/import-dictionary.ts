@@ -7,6 +7,7 @@
 import { readFile } from 'node:fs/promises'
 import { consola } from 'consola'
 import { sift } from 'radash'
+import { loadConfig } from '../src/server/config'
 import { checkDatabaseConnection, db } from '../src/server/db/client'
 import { words } from '../src/server/db/schema'
 
@@ -25,6 +26,9 @@ async function importDictionary(
   language: string = DEFAULT_LANGUAGE,
 ): Promise<void> {
   consola.start(`Importing dictionary from ${filePath} (language: ${language})...`)
+
+  // Load configuration
+  await loadConfig()
 
   // Check database connection
   const connected = await checkDatabaseConnection()

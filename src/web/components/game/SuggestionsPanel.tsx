@@ -62,9 +62,9 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
   // Content state
   return (
     <PanelContainer>
-      {/* Suggestions List */}
+      {/* Suggestions Grid */}
       <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
-        <div className="space-y-2">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 auto-rows-min">
           {limitedSuggestions.map((suggestion, index) => (
             <div
               key={`${suggestion.word}-${index}`}

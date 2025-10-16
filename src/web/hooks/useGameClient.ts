@@ -29,6 +29,7 @@ export function useGameClient(): UseGameClientReturn {
   const apiClient = useRef(new ApiClient()).current
   const wsRef = useRef<WebSocket | null>(null)
   const lastProcessedMoveCount = useRef(0)
+  const aiMoveInProgress = useRef(false)
   const wsConnected = useRef(false)
 
   // Check server health on mount
@@ -188,6 +189,7 @@ export function useGameClient(): UseGameClientReturn {
 
     if (!isAITurn) {
       setAIThinking(false)
+      aiMoveInProgress.current = false
       return
     }
 
@@ -200,8 +202,19 @@ export function useGameClient(): UseGameClientReturn {
       return
     }
 
+    // CRITICAL: Prevent race condition during AI "thinking" delay
+    // If AI move is already in progress, skip to prevent double-submission
+    if (aiMoveInProgress.current) {
+      logger.debug('AI move already in progress, skipping duplicate trigger', {
+        currentMoves: currentGame.moves.length,
+      })
+      return
+    }
+
     // AI's turn - make a move
     const makeAIMove = async () => {
+      // Mark AI move as in progress BEFORE any async operations
+      aiMoveInProgress.current = true
       setAIThinking(true)
       setAIError(null)
 
@@ -265,6 +278,8 @@ export function useGameClient(): UseGameClientReturn {
       }
       finally {
         setAIThinking(false)
+        // Clear in-progress flag after move completes (success or failure)
+        aiMoveInProgress.current = false
       }
     }
 

@@ -31,11 +31,11 @@ export const AlphabetPanel = memo<AlphabetPanelProps>(({
     <PanelContainer>
       {/* Alphabet Grid */}
       <div
-        className="flex-1 min-h-0 flex items-center justify-center px-4 py-8"
+        className="flex-1 min-h-0 flex items-center justify-center px-4 py-4"
         role="group"
         aria-label="Выбор буквы для размещения на доске"
       >
-        <div className="alphabet-grid grid gap-1 max-w-5xl h-full">
+        <div className="alphabet-grid grid gap-2 h-full">
           {RUSSIAN_ALPHABET.map((letter) => {
             const isDisabled = !!disabled
             const isSelected = selectedLetter === letter

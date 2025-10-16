@@ -33,7 +33,7 @@ export const LetterButton = memo<LetterButtonProps>(({
       return 'bg-user-600 border-user-300 text-white shadow-lg ring-2 ring-user-400'
     }
     if (isHovered) {
-      return 'bg-user-400 border-user-300 text-surface-900 shadow-lg ring-2 ring-user-400'
+      return 'bg-user-400 border-user-400 text-surface-900 shadow-lg ring-2 ring-user-500'
     }
     if (isDisabled) {
       return 'bg-surface-800 text-surface-500 cursor-not-allowed border-surface-700'
@@ -52,7 +52,7 @@ export const LetterButton = memo<LetterButtonProps>(({
       aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
       aria-pressed={isSelected}
       className={cn(
-        'h-full aspect-square font-black text-xl sm:text-2xl transition-all duration-300 border-2',
+        'w-full aspect-square font-black text-xl sm:text-2xl transition-all duration-300 border-2',
         'group relative',
         getButtonStyle(),
         !isDisabled && 'cursor-pointer',

@@ -7,6 +7,7 @@ import type { Board, Position } from '@types'
 
 /**
  * DFS search for word path on board (orthogonal adjacency only)
+ * Ensures the path includes the mustInclude position (newly placed letter)
  */
 function dfsWordSearch(
   board: Board,
@@ -15,9 +16,15 @@ function dfsWordSearch(
   col: number,
   visited: Set<string>,
   path: Position[],
+  mustInclude: Position,
 ): Position[] | null {
-  if (path.length === word.length)
-    return path
+  if (path.length === word.length) {
+    // Verify path includes the newly placed letter position
+    const includesNewLetter = path.some(
+      pos => pos.row === mustInclude.row && pos.col === mustInclude.col,
+    )
+    return includesNewLetter ? path : null
+  }
 
   const key = `${row},${col}`
   visited.add(key)
@@ -48,6 +55,7 @@ function dfsWordSearch(
         newCol,
         new Set(visited),
         [...path, { row: newRow, col: newCol }],
+        mustInclude,
       )
       if (result)
         return result
@@ -59,6 +67,7 @@ function dfsWordSearch(
 
 /**
  * Find path for a word on the board (with new letter placed)
+ * Ensures the returned path includes the newly placed letter position
  */
 export function findWordPath(
   board: Board,
@@ -83,6 +92,7 @@ export function findWordPath(
           col,
           new Set<string>(),
           [{ row, col }],
+          newLetterPos, // Ensure path includes the newly placed letter
         )
         if (path)
           return path

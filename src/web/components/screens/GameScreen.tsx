@@ -76,23 +76,22 @@ export const GameScreen = memo(({
   // Recent opponent move highlighting (2 seconds)
   const [recentOpponentPath, setRecentOpponentPath] = useState<Position[] | null>(null)
   const [opponentNewLetterPosition, setOpponentNewLetterPosition] = useState<Position | null>(null)
-  const previousMoveCountRef = useRef<number>(0)
+  const lastHighlightedMoveIdRef = useRef<string | null>(null)
+  const highlightTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   // Detect opponent moves and highlight for 2 seconds
   useEffect(() => {
-    const currentMoveCount = game.moves.length
-
-    // Only proceed if a new move was added
-    if (currentMoveCount <= previousMoveCountRef.current) {
-      previousMoveCountRef.current = currentMoveCount
-      return
-    }
-
-    previousMoveCountRef.current = currentMoveCount
-
     // Get the most recent move
     const lastMove = game.moves[game.moves.length - 1]
     if (!lastMove) {
+      return
+    }
+
+    // Create unique move identifier (position + letter + word + moveNumber)
+    const moveId = `${lastMove.position.row}-${lastMove.position.col}-${lastMove.letter}-${lastMove.word}-${game.moves.length}`
+
+    // Skip if we've already highlighted this exact move
+    if (lastHighlightedMoveIdRef.current === moveId) {
       return
     }
 
@@ -100,7 +99,15 @@ export const GameScreen = memo(({
     if (lastMove.playerId === playerName) {
       // Player's own move, don't highlight
       setRecentOpponentPath(null)
+      setOpponentNewLetterPosition(null)
+      lastHighlightedMoveIdRef.current = moveId
       return
+    }
+
+    // Clear any existing timer before setting new one
+    if (highlightTimerRef.current) {
+      clearTimeout(highlightTimerRef.current)
+      highlightTimerRef.current = null
     }
 
     // Compute the path for opponent's move
@@ -113,14 +120,18 @@ export const GameScreen = memo(({
 
     setRecentOpponentPath(path)
     setOpponentNewLetterPosition(lastMove.position)
+    lastHighlightedMoveIdRef.current = moveId
 
     // Clear after 2 seconds
-    const timer = setTimeout(() => {
+    highlightTimerRef.current = setTimeout(() => {
       setRecentOpponentPath(null)
       setOpponentNewLetterPosition(null)
+      highlightTimerRef.current = null
     }, 2000)
 
-    return () => clearTimeout(timer)
+    // NOTE: No cleanup function here!
+    // We manually clear old timers before setting new ones (lines 107-111)
+    // Cleanup would cancel active timers when dependencies change, breaking the fade
   }, [game.moves, game.board, playerName])
 
   // Handle word hover in sidebar - compute path for highlighted word

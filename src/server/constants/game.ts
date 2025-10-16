@@ -3,7 +3,7 @@ import type { BoardPosition } from '../engine/balda'
 /**
  * Orthogonal directions for board navigation (up, down, left, right)
  */
-export const ORTHOGONAL_DIRS: Readonly<BoardPosition[]> = Object.freeze([
+export const ORTHOGONAL_DIRS: Readonly<readonly BoardPosition[]> = Object.freeze([
   { row: -1, col: 0 }, // up
   { row: 1, col: 0 }, // down
   { row: 0, col: -1 }, // left
