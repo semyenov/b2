@@ -84,7 +84,7 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
             {group.map((suggestion, itemIndex) => (
               <div
                 key={`${suggestion.word}-${itemIndex}`}
-                className="animate-fade-slide-in"
+                className="animate-fadeIn"
                 style={{ animationDelay: `${(groupIndex * 10 + itemIndex) * 50}ms` }}
               >
                 <SuggestionCard
