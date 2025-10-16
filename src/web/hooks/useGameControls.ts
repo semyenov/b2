@@ -3,7 +3,7 @@ import type { Screen } from './useGameClient'
 import { useCallback, useState } from 'react'
 
 interface UseGameControlsOptions {
-  makeApiMove: (move: MoveBody) => Promise<void>
+  makeApiMove: (move: MoveBody) => Promise<boolean>
   clearSuggestions: () => void
   clearInteraction: () => void
   setScreen: (screen: Screen) => void
@@ -16,7 +16,7 @@ interface UseGameControlsReturn {
   showSuggestions: boolean
   toggleSuggestions: () => void
   hideSuggestions: () => void
-  makeMove: (move: MoveBody) => Promise<void>
+  makeMove: (move: MoveBody) => Promise<boolean>
   handleExitToMenu: () => void
 }
 
@@ -45,11 +45,12 @@ export function useGameControls({
 
   // Wrapper to clear selections after move
   const makeMove = useCallback(
-    async (move: MoveBody) => {
-      await makeApiMove(move)
+    async (move: MoveBody): Promise<boolean> => {
+      const success = await makeApiMove(move)
       clearSuggestions()
       clearInteraction()
       setShowSuggestions(false)
+      return success
     },
     [makeApiMove, clearSuggestions, clearInteraction],
   )

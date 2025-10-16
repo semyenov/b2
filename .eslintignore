@@ -1,0 +1,10 @@
+# Auto-generated files
+drizzle/
+dist/
+node_modules/
+
+# Build outputs
+*.tsbuildinfo
+coverage/
+.next/
+.vite/

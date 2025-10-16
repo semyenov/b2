@@ -298,8 +298,8 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games', tags: ['games'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore - Elysia type system complexities with JWT plugins cause type inference issues
 export function registerRoutes(app: Elysia): Elysia {
-  // Import auth routes
-  const authPluginImport = import('./routes/auth').then(m => m.authPlugin)
+  // Import and create auth routes (lazy loaded after config is initialized)
+  const authPluginImport = import('./routes/auth').then(m => m.createAuthPlugin())
 
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore - Elysia type system complexities

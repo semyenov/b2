@@ -159,6 +159,7 @@ export interface GameState {
   readonly createdAt: number
   readonly scores: Record<string, number>
   readonly usedWords: string[]
+  readonly version: number // Optimistic locking version
 }
 
 export interface Dictionary {
@@ -409,6 +410,7 @@ export function createGame(
     createdAt: Date.now(),
     scores,
     usedWords: [normalizeWord(baseWord)],
+    version: 1, // Initial version for optimistic locking
   }
 }
 

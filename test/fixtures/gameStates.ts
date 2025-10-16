@@ -24,6 +24,7 @@ export const initialGameCAT: GameState = {
   createdAt: Date.now(),
   scores: { Alice: 0, Bob: 0 },
   usedWords: ['CAT'],
+  version: 1,
 }
 
 /**
@@ -46,6 +47,7 @@ export const initialGameHELLO: GameState = {
   createdAt: Date.now(),
   scores: { Player1: 0, Player2: 0 },
   usedWords: ['HELLO'],
+  version: 1,
 }
 
 /**
@@ -77,6 +79,7 @@ export const gameWithOneMoveCAT: GameState = {
   createdAt: Date.now() - 5000,
   scores: { Alice: 8, Bob: 0 }, // SCAT score
   usedWords: ['CAT', 'SCAT'],
+  version: 2, // One move applied
 }
 
 /**
@@ -114,6 +117,7 @@ export const gameWithMultipleMoves: GameState = {
   createdAt: Date.now() - 10000,
   scores: { Alice: 8, Bob: 8 },
   usedWords: ['CAT', 'SCAT', 'CART'],
+  version: 3, // Two moves applied
 }
 
 /**
@@ -136,6 +140,7 @@ export const gameWithAIPlayers: GameState = {
   createdAt: Date.now(),
   scores: { 'Human': 0, 'AI-Bot': 0 },
   usedWords: ['CAT'],
+  version: 1,
 }
 
 /**
@@ -150,5 +155,6 @@ export function cloneGameState(game: GameState): GameState {
     moves: game.moves.map(move => ({ ...move })),
     scores: { ...game.scores },
     usedWords: [...game.usedWords],
+    version: game.version,
   }
 }

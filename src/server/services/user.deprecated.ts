@@ -1,9 +1,21 @@
+/**
+ * DEPRECATED: File-based user service
+ *
+ * This file is deprecated and should not be used in new code.
+ * Use '../services/userPostgres' instead for PostgreSQL-based storage.
+ *
+ * To migrate existing users from file storage to PostgreSQL:
+ *   bun run migrate:users
+ *
+ * This file is kept for reference and migration purposes only.
+ */
+
 import type { User } from '../models/user'
 import bcrypt from 'bcryptjs'
 import { createStorage } from 'unstorage'
 import fsDriver from 'unstorage/drivers/fs'
 
-// User storage using unstorage with file-system backend
+// User storage using unstorage with file-system backend (DEPRECATED)
 const storage = createStorage({
   driver: fsDriver({
     // TypeScript requires bracket notation for process.env access with noUncheckedIndexedAccess
@@ -12,7 +24,8 @@ const storage = createStorage({
 })
 
 /**
- * User service - handles user CRUD operations
+ * @deprecated Use userService from '../services/userPostgres' instead
+ * User service - handles user CRUD operations (FILE-BASED - DEPRECATED)
  */
 export const userService = {
   /**

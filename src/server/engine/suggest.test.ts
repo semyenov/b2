@@ -72,6 +72,24 @@ describe('Suggestion Engine', () => {
       expect(hasScat).toBe(false)
     })
 
+    test('filters out base word from suggestions', () => {
+      const game = cloneGameState(initialGameCAT)
+      // CAT is the base word and should be in usedWords
+      expect(game.usedWords).toContain('CAT')
+
+      // Make sure dictionary has CAT
+      mockDictionary.addWord('CAT')
+
+      const suggestions = suggestWords(game.board, mockDictionary, {
+        limit: 20,
+        usedWords: game.usedWords,
+      })
+
+      // Should NOT suggest the base word CAT
+      const hasCat = suggestions.some(s => s.word === 'CAT')
+      expect(hasCat).toBe(false)
+    })
+
     test('suggests words with letters adjacent to existing', () => {
       const game = cloneGameState(initialGameCAT)
       const suggestions = suggestWords(game.board, mockDictionary, { limit: 5 })

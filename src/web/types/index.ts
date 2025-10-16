@@ -24,7 +24,6 @@ export type { Board, Position } from './game'
 // Hook Types
 export type {
   Screen,
-  UseAIPlayerReturn,
   UseCreateGameFormReturn,
   UseFullscreenReturn,
   UseGameClientReturn,

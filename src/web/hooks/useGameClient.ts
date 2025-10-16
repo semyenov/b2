@@ -1,8 +1,10 @@
 import type { CreateGameBody, GameState, MoveBody } from '@lib/client'
 import type { Screen, UseGameClientReturn } from '@types'
+import { GAME_CONFIG } from '@constants/game'
 import { ERROR_MESSAGES, translateErrorMessage } from '@constants/messages'
 import { ApiClient } from '@lib/client'
-import { useEffect, useRef, useState } from 'react'
+import { logger } from '@utils/logger'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 // Re-export for backwards compatibility
 export type { Screen, UseGameClientReturn } from '@types'
@@ -19,9 +21,15 @@ export function useGameClient(): UseGameClientReturn {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
 
+  // AI state
+  const [aiThinking, setAIThinking] = useState(false)
+  const [aiError, setAIError] = useState<string | null>(null)
+
   // Refs
   const apiClient = useRef(new ApiClient()).current
   const wsRef = useRef<WebSocket | null>(null)
+  const lastProcessedMoveCount = useRef(0)
+  const wsConnected = useRef(false)
 
   // Check server health on mount
   useEffect(() => {
@@ -33,23 +41,38 @@ export function useGameClient(): UseGameClientReturn {
   // WebSocket connection management
   useEffect(() => {
     if (screen === 'play' && gameId && !wsRef.current) {
+      logger.info('Connecting WebSocket for game', { gameId })
       wsRef.current = apiClient.connectWebSocket(
         gameId,
-        updatedGame => setCurrentGame(updatedGame),
-        () => setError(ERROR_MESSAGES.CONNECTION_LOST),
+        (updatedGame) => {
+          wsConnected.current = true
+          logger.debug('WebSocket game update received', {
+            gameId: updatedGame.id,
+            moves: updatedGame.moves.length,
+            currentPlayerIndex: updatedGame.currentPlayerIndex,
+          })
+          setCurrentGame(updatedGame)
+        },
+        () => {
+          wsConnected.current = false
+          logger.warn('WebSocket connection lost')
+          setError(ERROR_MESSAGES.CONNECTION_LOST)
+        },
       )
     }
 
     return () => {
       if (wsRef.current && screen !== 'play') {
+        logger.info('Closing WebSocket connection')
         wsRef.current.close()
         wsRef.current = null
+        wsConnected.current = false
       }
     }
   }, [screen, gameId, apiClient])
 
   // API wrapper with error handling
-  const apiCall = async <T>(fn: () => Promise<T>): Promise<T | null> => {
+  const apiCall = useCallback(async <T>(fn: () => Promise<T>): Promise<T | null> => {
     setLoading(true)
     setError('')
     try {
@@ -63,7 +86,7 @@ export function useGameClient(): UseGameClientReturn {
     finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   const loadGames = async () => {
     const result = await apiCall(() => apiClient.getGames())
@@ -110,15 +133,143 @@ export function useGameClient(): UseGameClientReturn {
     }
   }
 
-  const makeMove = async (move: MoveBody) => {
+  const makeMove = useCallback(async (move: MoveBody): Promise<boolean> => {
     if (!currentGame) {
+      logger.warn('Cannot make move: currentGame is null')
+      return false
+    }
+
+    logger.debug('Making move:', { move, currentMoves: currentGame.moves.length })
+    const result = await apiCall(() => apiClient.makeMove(currentGame.id, move))
+
+    if (result) {
+      logger.info('Move successful:', {
+        word: move.word,
+        playerId: move.playerId,
+        totalMoves: result.moves.length,
+        previousMoves: currentGame.moves.length,
+      })
+      // CRITICAL FIX: Update local state immediately with the move result
+      // Don't rely solely on WebSocket broadcast which has 50ms delay
+      setCurrentGame(result)
+      return true
+    }
+    else {
+      logger.error('Move failed: result is null')
+      return false
+    }
+  }, [currentGame, apiClient, apiCall])
+
+  // AI Player automation
+  // Integrated into useGameClient for consistent state management
+  useEffect(() => {
+    logger.debug('AI effect triggered', {
+      hasCurrentGame: !!currentGame,
+      currentPlayerIndex: currentGame?.currentPlayerIndex,
+      movesLength: currentGame?.moves.length,
+      lastProcessed: lastProcessedMoveCount.current,
+      aiPlayers: currentGame?.aiPlayers,
+    })
+
+    if (!currentGame) {
+      setAIThinking(false)
       return
     }
-    const result = await apiCall(() => apiClient.makeMove(currentGame.id, move))
-    if (!result) {
-      // Error already set by apiCall
+
+    // Check if current player is AI
+    const currentPlayer = currentGame.players[currentGame.currentPlayerIndex]!
+    const isAITurn = currentGame.aiPlayers.includes(currentPlayer)
+
+    logger.debug('AI turn check', {
+      currentPlayer,
+      isAITurn,
+      aiPlayers: currentGame.aiPlayers,
+    })
+
+    if (!isAITurn) {
+      setAIThinking(false)
+      return
     }
-  }
+
+    // Don't re-trigger if we already processed this turn
+    if (currentGame.moves.length === lastProcessedMoveCount.current) {
+      logger.debug('AI turn already processed, skipping', {
+        currentMoves: currentGame.moves.length,
+        lastProcessed: lastProcessedMoveCount.current,
+      })
+      return
+    }
+
+    // AI's turn - make a move
+    const makeAIMove = async () => {
+      setAIThinking(true)
+      setAIError(null)
+
+      try {
+        logger.info('AI turn detected:', {
+          player: currentPlayer,
+          moveCount: currentGame.moves.length,
+        })
+
+        // Simulate "thinking" delay for better UX
+        await new Promise(resolve => setTimeout(resolve, GAME_CONFIG.AI_THINKING_DELAY_MS))
+
+        // Load suggestions
+        const suggestions = await apiClient.getSuggestions(currentGame.id, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY)
+
+        if (suggestions.length > 0) {
+          // Select best suggestion (first one is highest scored)
+          const bestMove = suggestions[0]!
+
+          // Construct move body
+          const moveBody: MoveBody = {
+            playerId: currentPlayer,
+            position: bestMove.position,
+            letter: bestMove.letter,
+            word: bestMove.word.toUpperCase(),
+          }
+
+          logger.debug('AI making move:', { moveBody, suggestion: bestMove })
+
+          // Submit the move using the same state-updating function as user moves
+          const success = await makeMove(moveBody)
+
+          if (success) {
+            // Update counter after successful AI move to prevent re-triggering
+            lastProcessedMoveCount.current = currentGame.moves.length + 1
+            logger.debug('AI move completed, updated counter', {
+              lastProcessed: lastProcessedMoveCount.current,
+            })
+          }
+        }
+        else {
+          // No valid moves available - game is stuck
+          setAIError(ERROR_MESSAGES.AI_NO_MOVES)
+          logger.warn('AI has no valid moves available', {
+            gameId: currentGame.id,
+            player: currentPlayer,
+          })
+          // Reset to allow future detection if game state changes
+          lastProcessedMoveCount.current = currentGame.moves.length
+        }
+      }
+      catch (error) {
+        const errorMessage = error instanceof Error ? translateErrorMessage(error.message) : ERROR_MESSAGES.AI_MOVE_FAILED
+        setAIError(errorMessage)
+        logger.error('AI move failed', error as Error, {
+          gameId: currentGame.id,
+          player: currentPlayer,
+        })
+        // Reset to allow retry on next state change
+        lastProcessedMoveCount.current = currentGame.moves.length
+      }
+      finally {
+        setAIThinking(false)
+      }
+    }
+
+    makeAIMove()
+  }, [currentGame, makeMove, apiClient])
 
   const quickStart = async () => {
     const words = await apiCall(() => apiClient.getRandomWords(5, 1))
@@ -161,6 +312,8 @@ export function useGameClient(): UseGameClientReturn {
     playerName,
     loading,
     error,
+    aiThinking,
+    aiError,
 
     // Actions
     setScreen,

@@ -15,14 +15,26 @@ export type Placement = Static<typeof PlacementSchema>
 export type Suggestion = Static<typeof SuggestionSchema>
 
 /**
+ * Get API base URL based on environment
+ * In development: uses http://localhost:3000 (direct backend connection)
+ * In production: can be overridden via VITE_API_URL environment variable
+ * Can be overridden via constructor parameter
+ */
+function getDefaultApiBaseUrl(): string {
+  // Use direct backend URL (no proxy)
+  // CORS is configured in backend to allow cross-origin requests
+  return import.meta.env['VITE_API_URL'] || 'http://localhost:3000'
+}
+
+/**
  * API Client for Balda Game Backend
  * Handles all HTTP and WebSocket communication with the game server
  */
 export class ApiClient {
   /**
-   * @param baseUrl - Base URL for API endpoints (default: '/api')
+   * @param baseUrl - Base URL for API endpoints (default: '/api' for Vite proxy)
    */
-  constructor(private baseUrl: string = '/api') { }
+  constructor(private baseUrl: string = getDefaultApiBaseUrl()) { }
 
   /**
    * Fetch JSON from API with error handling
@@ -59,12 +71,9 @@ export class ApiClient {
     onMessage: (game: GameState) => void,
     onClose?: () => void,
   ): WebSocket {
-    // In development, connect directly to the backend server
-    // In production, use the same host as the frontend
-    const isDev = window.location.hostname === 'localhost' && window.location.port === '5173'
-    const wsHost = isDev ? 'localhost:3000' : window.location.host
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const wsUrl = `${wsProtocol}//${wsHost}/games/${gameId}/ws`
+    // Convert HTTP base URL to WebSocket URL
+    const wsBaseUrl = this.baseUrl.replace(/^http/, 'ws')
+    const wsUrl = `${wsBaseUrl}/games/${gameId}/ws`
 
     const ws = new WebSocket(wsUrl)
 

@@ -1,37 +1,58 @@
 import { consola, createConsola } from 'consola'
-
-const isProduction = process.env['NODE_ENV'] === 'production'
-const logLevel = process.env['LOG_LEVEL'] ?? (isProduction ? 'info' : 'debug')
-const logFormat = process.env['LOG_FORMAT'] ?? (isProduction ? 'json' : 'pretty')
+import { getConfig } from '../config'
 
 /**
  * Application logger with structured logging support
+ * Configuration is accessed lazily on first use
  */
-export const logger = createConsola({
-  level: getLogLevel(logLevel),
-  formatOptions: {
-    date: true,
-    colors: logFormat !== 'json',
-    compact: logFormat === 'json',
+let loggerInstance: ReturnType<typeof createConsola> | null = null
+
+function getLogger() {
+  if (!loggerInstance) {
+    const config = getConfig()
+    loggerInstance = createConsola({
+      level: getLogLevel(config.logging.level),
+      formatOptions: {
+        date: true,
+        colors: config.logging.colors,
+        compact: config.logging.format === 'json',
+      },
+      reporters: config.logging.format === 'json'
+        ? [
+            {
+              log(logObj) {
+                const { date, type, tag, args, level: _level, ...rest } = logObj
+                const logData = {
+                  timestamp: date?.toISOString(),
+                  level: type,
+                  tag,
+                  message: args.join(' '),
+                  ...rest,
+                }
+                // Use process.stdout.write for structured logging to avoid ESLint console rules
+                process.stdout.write(`${JSON.stringify(logData)}\n`)
+              },
+            },
+          ]
+        : undefined,
+    })
+  }
+  return loggerInstance
+}
+
+/**
+ * Export logger with lazy initialization
+ * Config is only accessed when logger methods are called
+ */
+export const logger = new Proxy({} as ReturnType<typeof createConsola>, {
+  get(_target, prop) {
+    const instance = getLogger()
+    const value = instance[prop as keyof typeof instance]
+    if (typeof value === 'function') {
+      return value.bind(instance)
+    }
+    return value
   },
-  reporters: logFormat === 'json'
-    ? [
-        {
-          log(logObj) {
-            const { date, type, tag, args, level: _level, ...rest } = logObj
-            const logData = {
-              timestamp: date?.toISOString(),
-              level: type,
-              tag,
-              message: args.join(' '),
-              ...rest,
-            }
-            // Use process.stdout.write for structured logging to avoid ESLint console rules
-            process.stdout.write(`${JSON.stringify(logData)}\n`)
-          },
-        },
-      ]
-    : undefined,
 })
 
 /**

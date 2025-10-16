@@ -1,8 +1,13 @@
 import type { AppliedMove, GameState } from '../engine/balda'
 import { consola } from 'consola'
-import { desc, eq } from 'drizzle-orm'
+import { and, desc, eq, inArray } from 'drizzle-orm'
+import { calculateWordScore, normalizeWord } from '../engine/balda'
 import { db } from './client'
+import { OptimisticLockError, withRetry, wrapDatabaseOperation } from './errors'
 import { gamePlayers, games, gameWords, moves } from './schema'
+
+// Type for Drizzle transaction - extracted from db.transaction callback parameter
+type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
 
 /**
  * PostgreSQL-based game store using Drizzle ORM with normalized schema
@@ -11,32 +16,99 @@ import { gamePlayers, games, gameWords, moves } from './schema'
 export class PostgresGameStore {
   /**
    * Get all games from the database (with full state reconstruction)
+   * Optimized to fetch all data in batches instead of N+1 queries
    */
   async getAll(): Promise<GameState[]> {
-    try {
+    return wrapDatabaseOperation('getAll', async () => {
+      // Fetch all games
       const allGames = await db.select().from(games)
-      const gameStates: GameState[] = []
 
-      for (const game of allGames) {
-        const state = await this.get(game.id)
-        if (state) {
-          gameStates.push(state)
+      if (allGames.length === 0) {
+        return []
+      }
+
+      const gameIds = allGames.map(g => g.id)
+
+      // Fetch ALL players for all games in one query
+      const allPlayers = await db
+        .select()
+        .from(gamePlayers)
+        .where(inArray(gamePlayers.gameId, gameIds))
+        .orderBy(gamePlayers.playerIndex)
+
+      // Fetch ALL moves for all games in one query
+      const allMoves = await db
+        .select({
+          gameId: moves.gameId,
+          id: moves.id,
+          gamePlayerId: moves.gamePlayerId,
+          positionRow: moves.positionRow,
+          positionCol: moves.positionCol,
+          letter: moves.letter,
+          word: moves.word,
+          score: moves.score,
+          moveNumber: moves.moveNumber,
+          createdAt: moves.createdAt,
+        })
+        .from(moves)
+        .where(inArray(moves.gameId, gameIds))
+        .orderBy(moves.moveNumber)
+
+      // Fetch ALL words for all games in one query
+      const allWords = await db
+        .select({
+          gameId: gameWords.gameId,
+          word: gameWords.word,
+        })
+        .from(gameWords)
+        .where(inArray(gameWords.gameId, gameIds))
+
+      // Group data by game ID
+      const playersByGame = new Map<string, Array<typeof gamePlayers.$inferSelect>>()
+      const movesByGame = new Map<string, typeof allMoves>()
+      const wordsByGame = new Map<string, Array<{ word: string }>>()
+
+      for (const player of allPlayers) {
+        if (!playersByGame.has(player.gameId)) {
+          playersByGame.set(player.gameId, [])
         }
+        playersByGame.get(player.gameId)?.push(player)
+      }
+
+      for (const move of allMoves) {
+        if (!movesByGame.has(move.gameId)) {
+          movesByGame.set(move.gameId, [])
+        }
+        movesByGame.get(move.gameId)?.push(move)
+      }
+
+      for (const word of allWords) {
+        if (!wordsByGame.has(word.gameId)) {
+          wordsByGame.set(word.gameId, [])
+        }
+        wordsByGame.get(word.gameId)?.push({ word: word.word })
+      }
+
+      // Reconstruct all game states
+      const gameStates: GameState[] = []
+      for (const game of allGames) {
+        const players = playersByGame.get(game.id) ?? []
+        const gameMoves = movesByGame.get(game.id) ?? []
+        const words = wordsByGame.get(game.id) ?? []
+
+        const state = this.reconstructGameState(game, players, gameMoves, words)
+        gameStates.push(state)
       }
 
       return gameStates
-    }
-    catch (error) {
-      consola.error('Failed to get all games:', error)
-      throw error
-    }
+    })
   }
 
   /**
    * Get a single game by ID with all related data (players, moves, words)
    */
   async get(id: string): Promise<GameState | null> {
-    try {
+    return wrapDatabaseOperation('get', async () => {
       // Get game record
       const [game] = await db
         .select()
@@ -80,18 +152,14 @@ export class PostgresGameStore {
 
       // Reconstruct GameState
       return this.reconstructGameState(game, players, gameMoves, words)
-    }
-    catch (error) {
-      consola.error(`Failed to get game ${id}:`, error)
-      throw error
-    }
+    }, { gameId: id })
   }
 
   /**
    * Check if a game exists
    */
   async has(id: string): Promise<boolean> {
-    try {
+    return wrapDatabaseOperation('has', async () => {
       const result = await db
         .select({ id: games.id })
         .from(games)
@@ -99,108 +167,131 @@ export class PostgresGameStore {
         .limit(1)
 
       return result.length > 0
-    }
-    catch (error) {
-      consola.error(`Failed to check if game ${id} exists:`, error)
-      throw error
-    }
+    }, { gameId: id })
   }
 
   /**
    * Save or update a game (handles normalized structure)
    * This is a complex operation that updates multiple tables in a transaction
+   * Uses retry logic for transient failures (deadlocks, serialization errors)
    */
   async set(game: GameState): Promise<void> {
-    try {
-      await db.transaction(async (tx) => {
-        const exists = await this.has(game.id)
+    return wrapDatabaseOperation(
+      'set',
+      () => withRetry(
+        async () => {
+          await db.transaction(async (tx) => {
+            // Check if game exists WITHIN the transaction for proper isolation
+            const existingGame = await tx
+              .select({ id: games.id })
+              .from(games)
+              .where(eq(games.id, game.id))
+              .limit(1)
 
-        if (exists) {
-          // Update existing game
-          await tx
-            .update(games)
-            .set({
-              size: game.size,
-              board: game.board,
-              currentPlayerIndex: game.currentPlayerIndex,
-              updatedAt: new Date(),
-              status: this.calculateStatus(game),
-            })
-            .where(eq(games.id, game.id))
+            const exists = existingGame.length > 0
 
-          // For updates, we need to sync players, moves, and words
-          // This is complex - for now, we'll handle moves incrementally
-          await this.syncMovesForGame(tx, game)
-        }
-        else {
-          // Extract base word from board
-          const baseWord = this.extractBaseWord(game.board)
+            if (exists) {
+              // Update existing game with optimistic locking
+              const result = await tx
+                .update(games)
+                .set({
+                  size: game.size,
+                  board: game.board,
+                  currentPlayerIndex: game.currentPlayerIndex,
+                  updatedAt: new Date(),
+                  status: this.calculateStatus(game),
+                  version: game.version + 1, // Increment version
+                })
+                .where(and(
+                  eq(games.id, game.id),
+                  eq(games.version, game.version), // Optimistic lock check
+                ))
+                .returning({ id: games.id })
 
-          // Insert new game
-          await tx.insert(games).values({
-            id: game.id,
-            size: game.size,
-            board: game.board,
-            baseWord,
-            status: this.calculateStatus(game),
-            currentPlayerIndex: game.currentPlayerIndex,
-            createdAt: new Date(game.createdAt),
-            updatedAt: new Date(),
+              // Check if update succeeded (version matched)
+              if (result.length === 0) {
+                throw new OptimisticLockError(
+                  `Game ${game.id} was modified by another process`,
+                  game.id,
+                  game.version,
+                )
+              }
+
+              // For updates, we need to sync players, moves, and words
+              // This is complex - for now, we'll handle moves incrementally
+              await this.syncMovesForGame(tx, game)
+            }
+            else {
+              // Extract base word from board
+              const baseWord = this.extractBaseWord(game.board)
+
+              // Insert new game
+              await tx.insert(games).values({
+                id: game.id,
+                size: game.size,
+                board: game.board,
+                baseWord,
+                status: this.calculateStatus(game),
+                currentPlayerIndex: game.currentPlayerIndex,
+                version: 1, // Initial version
+                createdAt: new Date(game.createdAt),
+                updatedAt: new Date(),
+              })
+
+              // Insert players
+              await this.createPlayersForGame(tx, game)
+
+              // Insert base word into game_words table (Issue #2 fix)
+              // Base word has no associated move, so moveId is null
+              await tx.insert(gameWords).values({
+                gameId: game.id,
+                word: baseWord,
+                moveId: null,
+              })
+
+              // Insert moves (if any)
+              await this.syncMovesForGame(tx, game)
+            }
           })
-
-          // Insert players
-          await this.createPlayersForGame(tx, game)
-
-          // Insert moves (if any)
-          await this.syncMovesForGame(tx, game)
-        }
-      })
-    }
-    catch (error) {
-      consola.error(`Failed to save game ${game.id}:`, error)
-      throw error
-    }
+        },
+        { maxAttempts: 3, initialDelay: 100 },
+      ),
+      { gameId: game.id },
+    )
   }
 
   /**
    * Delete a game by ID (cascade deletes players, moves, words)
    */
   async delete(id: string): Promise<void> {
-    try {
-      await db.delete(games).where(eq(games.id, id))
-    }
-    catch (error) {
-      consola.error(`Failed to delete game ${id}:`, error)
-      throw error
-    }
+    await wrapDatabaseOperation(
+      'delete',
+      () => db.delete(games).where(eq(games.id, id)),
+      { gameId: id },
+    )
   }
 
   /**
    * Clear all games (use with caution!)
    */
   async clear(): Promise<void> {
-    try {
-      await db.delete(games)
-      consola.warn('All games cleared from database')
-    }
-    catch (error) {
-      consola.error('Failed to clear games:', error)
-      throw error
-    }
+    return wrapDatabaseOperation(
+      'clear',
+      async () => {
+        await db.delete(games)
+        consola.warn('All games cleared from database')
+      },
+    )
   }
 
   /**
    * Count total number of games
    */
   async count(): Promise<number> {
-    try {
+    return wrapDatabaseOperation('count', async () => {
       const result = await db.select().from(games)
       return result.length
-    }
-    catch (error) {
-      consola.error('Failed to count games:', error)
-      throw error
-    }
+    })
   }
 
   /**
@@ -278,6 +369,10 @@ export class PostgresGameStore {
       }
     }
 
+    // Reconstruct usedWords: base word + words from moves
+    // Base word is always used (it's the starting word on the board)
+    const usedWords = [game.baseWord, ...words.map(w => w.word)]
+
     return {
       id: game.id,
       size: game.size,
@@ -288,14 +383,15 @@ export class PostgresGameStore {
       moves: appliedMoves,
       createdAt: game.createdAt.getTime(),
       scores,
-      usedWords: words.map(w => w.word),
+      usedWords,
+      version: game.version, // Optimistic locking version
     }
   }
 
   /**
    * Create player records for a new game
    */
-  private async createPlayersForGame(tx: any, game: GameState): Promise<Map<string, string>> {
+  private async createPlayersForGame(tx: DbTransaction, game: GameState): Promise<Map<string, string>> {
     const playerNameToId = new Map<string, string>()
 
     for (let i = 0; i < game.players.length; i++) {
@@ -324,7 +420,7 @@ export class PostgresGameStore {
   /**
    * Sync moves for a game (insert new moves only)
    */
-  private async syncMovesForGame(tx: any, game: GameState): Promise<void> {
+  private async syncMovesForGame(tx: DbTransaction, game: GameState): Promise<void> {
     // Get existing move count for this game
     const existingMoves = await tx
       .select({ moveNumber: moves.moveNumber })
@@ -362,7 +458,7 @@ export class PostgresGameStore {
       }
 
       // Calculate score from move
-      const score = this.calculateMoveScore(move.word)
+      const score = calculateWordScore(move.word)
 
       // Insert move
       const [insertedMove] = await tx.insert(moves).values({
@@ -389,86 +485,8 @@ export class PostgresGameStore {
   }
 
   /**
-   * Calculate move score based on word letters
-   * (Copied from migration script for consistency)
-   */
-  private calculateMoveScore(word: string): number {
-    const LETTER_SCORES: Record<string, number> = {
-      // Common Russian letters
-      А: 1,
-      Е: 1,
-      И: 1,
-      Н: 1,
-      О: 1,
-      Р: 1,
-      С: 1,
-      Т: 1,
-      // Medium frequency Russian letters
-      В: 2,
-      Д: 2,
-      К: 2,
-      Л: 2,
-      М: 2,
-      П: 2,
-      У: 2,
-      Я: 2,
-      // Less common Russian letters
-      Б: 3,
-      Г: 3,
-      Ж: 3,
-      З: 3,
-      Й: 3,
-      Х: 3,
-      Ц: 3,
-      Ч: 3,
-      // Rare Russian letters
-      Ё: 4,
-      Ш: 4,
-      Щ: 4,
-      Ъ: 4,
-      Ы: 4,
-      Ь: 4,
-      Э: 4,
-      Ю: 4,
-      Ф: 4,
-      // Latin letters
-      A: 2,
-      B: 2,
-      C: 2,
-      D: 2,
-      E: 2,
-      F: 2,
-      G: 2,
-      H: 2,
-      I: 2,
-      J: 2,
-      K: 2,
-      L: 2,
-      M: 2,
-      N: 2,
-      O: 2,
-      P: 2,
-      Q: 3,
-      R: 2,
-      S: 2,
-      T: 2,
-      U: 2,
-      V: 2,
-      W: 3,
-      X: 3,
-      Y: 3,
-      Z: 3,
-    }
-
-    let score = 0
-    for (const letter of word.toUpperCase()) {
-      score += LETTER_SCORES[letter] ?? 1
-    }
-    return score
-  }
-
-  /**
    * Extract base word from board center row
+   * Returns normalized (uppercase) word to match game logic expectations
    */
   private extractBaseWord(board: (string | null)[][]): string {
     const size = board.length
@@ -490,7 +508,8 @@ export class PostgresGameStore {
       throw new Error('No base word found in center row')
     }
 
-    return letters.join('')
+    // CRITICAL: Normalize the base word to match game logic (Issue #1)
+    return normalizeWord(letters.join(''))
   }
 
   /**

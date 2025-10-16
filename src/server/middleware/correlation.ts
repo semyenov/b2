@@ -1,4 +1,5 @@
 import { Elysia } from 'elysia'
+import { getConfig } from '../config'
 import { logger, logRequest, logResponse } from '../monitoring/logger'
 
 /**
@@ -7,6 +8,7 @@ import { logger, logRequest, logResponse } from '../monitoring/logger'
  * - Generates or extracts correlation IDs from headers
  * - Logs requests and responses with correlation IDs
  * - Tracks request duration
+ * - Configuration is accessed lazily when needed
  */
 export const correlationMiddleware = new Elysia({ name: 'correlation' })
   .derive(({ headers }) => {
@@ -49,12 +51,15 @@ export const correlationMiddleware = new Elysia({ name: 'correlation' })
     // Type assertion needed: TypeScript can't infer that derive() adds 'correlationId'
     const url = new URL(context.request.url)
 
+    // Access config lazily
+    const config = getConfig()
+
     // Handle both Error instances and other error types
     const errorInfo = context.error instanceof Error
       ? {
           name: context.error.name,
           message: context.error.message,
-          stack: process.env.NODE_ENV === 'production' ? undefined : context.error.stack,
+          stack: config.server.isProduction ? undefined : context.error.stack,
         }
       : {
           name: 'UnknownError',

@@ -28,6 +28,7 @@ export const games = pgTable('games', {
   baseWord: text('base_word').notNull(), // Extracted from board center
   status: text('status').notNull().default('in_progress').$type<'waiting' | 'in_progress' | 'finished'>(),
   currentPlayerIndex: integer('current_player_index').notNull().default(0),
+  version: integer('version').notNull().default(1), // Optimistic locking version
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   finishedAt: timestamp('finished_at'), // Nullable - set when game ends
@@ -35,6 +36,8 @@ export const games = pgTable('games', {
   createdAtIdx: index('games_created_at_idx').on(table.createdAt),
   updatedAtIdx: index('games_updated_at_idx').on(table.updatedAt),
   statusIdx: index('games_status_idx').on(table.status),
+  // Compound index for filtering by status + time
+  statusUpdatedIdx: index('games_status_updated_at_idx').on(table.status, table.updatedAt),
 }))
 
 /**
@@ -76,6 +79,8 @@ export const moves = pgTable('moves', {
   gamePlayerIdIdx: index('moves_game_player_id_idx').on(table.gamePlayerId),
   gameMoveNumberIdx: index('moves_game_id_move_number_idx').on(table.gameId, table.moveNumber),
   positionIdx: index('moves_position_idx').on(table.positionRow, table.positionCol),
+  // Compound index for player move history queries
+  playerTimeIdx: index('moves_game_player_id_created_at_idx').on(table.gamePlayerId, table.createdAt),
 }))
 
 /**
@@ -86,12 +91,14 @@ export const gameWords = pgTable('game_words', {
   id: uuid('id').primaryKey().defaultRandom(),
   gameId: uuid('game_id').notNull().references(() => games.id, { onDelete: 'cascade' }),
   word: text('word').notNull(),
-  moveId: uuid('move_id').notNull().references(() => moves.id, { onDelete: 'cascade' }), // Which move created this word
+  moveId: uuid('move_id').references(() => moves.id, { onDelete: 'cascade' }), // Nullable - null for base word, set for move-created words
   createdAt: timestamp('created_at').notNull().defaultNow(),
 }, table => ({
   gameIdIdx: index('game_words_game_id_idx').on(table.gameId),
   wordIdx: index('game_words_word_idx').on(table.word),
   moveIdIdx: index('game_words_move_id_idx').on(table.moveId),
+  // Compound index for uniqueness checks (word used in specific game)
+  gameWordIdx: index('game_words_game_id_word_idx').on(table.gameId, table.word),
 }))
 
 /**

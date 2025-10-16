@@ -24,6 +24,8 @@ export interface UseGameClientReturn {
   playerName: string
   loading: boolean
   error: string
+  aiThinking: boolean
+  aiError: string | null
 
   // Actions
   setScreen: (screen: Screen) => void
@@ -31,7 +33,7 @@ export interface UseGameClientReturn {
   loadGames: () => Promise<void>
   createGame: (body: import('../lib/client').CreateGameBody) => Promise<void>
   joinGame: (id: string, name: string) => Promise<void>
-  makeMove: (move: MoveBody) => Promise<void>
+  makeMove: (move: MoveBody) => Promise<boolean>
   quickStart: () => Promise<void>
   quickStartVsAI: () => Promise<void>
 
@@ -74,17 +76,8 @@ export interface UseGameControlsReturn {
   showSuggestions: boolean
   toggleSuggestions: () => void
   hideSuggestions: () => void
-  makeMove: (move: MoveBody) => Promise<void>
+  makeMove: (move: MoveBody) => Promise<boolean>
   handleExitToMenu: () => void
-}
-
-/**
- * Return type for useAIPlayer hook
- * AI player automation
- */
-export interface UseAIPlayerReturn {
-  aiThinking: boolean
-  aiError: string | null
 }
 
 /**

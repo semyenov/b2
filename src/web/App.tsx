@@ -1,6 +1,5 @@
 import { Banner, CreateGame, GameList, GameScreen, MenuScreen } from '@components'
 import { LOADING_MESSAGES } from './constants/messages'
-import { useAIPlayer } from './hooks/useAIPlayer'
 import { useGameClient } from './hooks/useGameClient'
 import { useGameControls } from './hooks/useGameControls'
 import { useGameInteraction } from './hooks/useGameInteraction'
@@ -8,7 +7,7 @@ import { useLiveRegion } from './hooks/useLiveRegion'
 import { useSuggestions } from './hooks/useSuggestions'
 
 export function App() {
-  // Core game client logic
+  // Core game client logic (now includes AI automation)
   const {
     screen,
     games,
@@ -16,6 +15,7 @@ export function App() {
     playerName,
     loading,
     error,
+    aiError,
     setScreen,
     setError,
     loadGames,
@@ -27,12 +27,6 @@ export function App() {
     isMyTurn,
     apiClient,
   } = useGameClient()
-
-  // AI player automation
-  const { aiError } = useAIPlayer({
-    currentGame,
-    apiClient,
-  })
 
   // Suggestions logic
   const {

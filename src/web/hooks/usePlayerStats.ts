@@ -1,4 +1,5 @@
 import type { GameState } from '@lib/client'
+import { logger } from '@utils/logger'
 import { useMemo } from 'react'
 
 interface UsePlayerStatsOptions {
@@ -49,6 +50,16 @@ export function usePlayerStats({ game, playerIndex }: UsePlayerStatsOptions): Pl
     const playerWords = game.moves
       .filter(move => move.playerId === player)
       .map(move => move.word)
+
+    // Debug logging to help identify filtering issues
+    logger.debug('usePlayerStats:', {
+      playerIndex,
+      playerName: player,
+      totalMoves: game.moves.length,
+      playerMoves: playerWords.length,
+      allPlayers: game.players,
+      movePlayerIds: game.moves.map(m => m.playerId),
+    })
 
     // Calculate total letter count (sum of word lengths)
     const letterCount = game.moves

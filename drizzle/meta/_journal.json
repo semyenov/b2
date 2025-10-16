@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1760602680566,
+      "tag": "0000_regular_oracle",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1760615322611,
+      "tag": "0001_overconfident_skrulls",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760616395755,
+      "tag": "0002_friendly_chimera",
+      "breakpoints": true
+    }
+  ]
+}

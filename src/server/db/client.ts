@@ -1,6 +1,7 @@
 import { consola } from 'consola'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
+import { getConfig } from '../config'
 import * as schema from './schema'
 
 /**
@@ -8,30 +9,55 @@ import * as schema from './schema'
  * - Uses connection pooling for performance
  * - Prepared statements for security and speed
  * - Graceful shutdown on SIGTERM
+ * - Configuration loaded lazily on first access
  */
 
-const databaseUrl = process.env['DATABASE_URL']
-if (!databaseUrl) {
-  throw new Error('DATABASE_URL environment variable is required')
+let client: ReturnType<typeof postgres> | null = null
+let dbInstance: ReturnType<typeof drizzle> | null = null
+
+function initializeDatabase() {
+  if (dbInstance) {
+    return { client: client!, db: dbInstance }
+  }
+
+  const config = getConfig()
+
+  // Create postgres client with connection pool
+  client = postgres(config.database.url, {
+    max: config.database.maxConnections,
+    idle_timeout: config.database.idleTimeout,
+    connect_timeout: config.database.connectTimeout,
+    prepare: config.database.preparedStatements,
+    onnotice: () => {}, // Ignore PostgreSQL notices
+  })
+
+  // Create Drizzle ORM instance
+  dbInstance = drizzle(client, { schema })
+
+  return { client, db: dbInstance }
 }
 
-// Create postgres client with connection pool
-const client = postgres(databaseUrl, {
-  max: 20, // Maximum connections in pool
-  idle_timeout: 20, // Close idle connections after 20s
-  connect_timeout: 10, // Timeout after 10s
-  prepare: true, // Use prepared statements
-  onnotice: () => {}, // Ignore PostgreSQL notices
+/**
+ * Get database instance (lazy initialization)
+ */
+export const db = new Proxy({} as ReturnType<typeof drizzle>, {
+  get(_target, prop) {
+    const { db } = initializeDatabase()
+    const value = db[prop as keyof typeof db]
+    if (typeof value === 'function') {
+      return value.bind(db)
+    }
+    return value
+  },
 })
-
-// Create Drizzle ORM instance
-export const db = drizzle(client, { schema })
 
 // Graceful shutdown handler
 async function shutdown() {
-  consola.info('Closing database connection...')
-  await client.end({ timeout: 5 })
-  consola.success('Database connection closed')
+  if (client) {
+    consola.info('Closing database connection...')
+    await client.end({ timeout: 5 })
+    consola.success('Database connection closed')
+  }
   process.exit(0)
 }
 
@@ -41,7 +67,8 @@ process.on('SIGINT', shutdown)
 // Health check function
 export async function checkDatabaseConnection(): Promise<boolean> {
   try {
-    await client`SELECT 1`
+    const { client: dbClient } = initializeDatabase()
+    await dbClient`SELECT 1`
     consola.success('Database connection established')
     return true
   }
@@ -51,5 +78,8 @@ export async function checkDatabaseConnection(): Promise<boolean> {
   }
 }
 
-// Export the client for advanced queries
-export { client }
+// Export function to get the client for advanced queries
+export function getClient() {
+  const { client: dbClient } = initializeDatabase()
+  return dbClient
+}

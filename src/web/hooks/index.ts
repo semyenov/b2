@@ -5,8 +5,6 @@
  * Organized by domain: game client, AI, interactions, UI state, and utilities
  */
 
-// AI & Suggestions
-export { useAIPlayer } from './useAIPlayer'
 // Animation & Visual
 export { useAnimatedPanel } from './useAnimatedPanel'
 
@@ -18,7 +16,7 @@ export { useCreateGameForm } from './useCreateGameForm'
 export { useFullscreen } from './useFullscreen'
 export { useGameActions } from './useGameActions'
 
-// Game Client & State Management
+// Game Client & State Management (includes AI automation)
 export { useGameClient } from './useGameClient'
 
 export type { Screen, UseGameClientReturn } from './useGameClient'
@@ -32,12 +30,12 @@ export { useKeyboardNavigation } from './useKeyboardNavigation'
 export { useLiveRegion } from './useLiveRegion'
 // Game Stats
 export { usePlayerStats } from './usePlayerStats'
+// AI & Suggestions
 export { useSuggestions } from './useSuggestions'
 
 export type { UseGameInteractionReturn } from '@types'
 
 export type { UseGameControlsReturn } from '@types'
-export type { UseAIPlayerReturn } from '@types'
 
 export type { UseSuggestionsReturn } from '@types'
 

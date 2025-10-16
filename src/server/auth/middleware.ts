@@ -1,5 +1,5 @@
 import { Elysia } from 'elysia'
-import { jwtPlugin } from './jwt'
+import { createJwtPlugin } from './jwt'
 
 /**
  * Authentication error
@@ -34,31 +34,39 @@ export class AuthorizationError extends Error {
 }
 
 /**
- * Authentication middleware - ensures user is logged in
+ * Create authentication middleware - ensures user is logged in
  * Use this to protect routes that require authentication
+ *
+ * Must be called after loadConfig() to access JWT configuration
  */
-export const authMiddleware = new Elysia({ name: 'auth-middleware' })
-  .use(jwtPlugin)
-  .error({
-    AUTHENTICATION_ERROR: AuthenticationError,
-    AUTHORIZATION_ERROR: AuthorizationError,
-  })
-  .onBeforeHandle((context: any) => {
-    // Type assertion needed: TypeScript can't infer that jwtPlugin adds 'user' property
-    // Runtime type is guaranteed by Elysia plugin system
-    if (!context.user) {
-      context.set.status = 401
-      throw new AuthenticationError('Authentication required. Please login.')
-    }
-  })
+export function createAuthMiddleware() {
+  return new Elysia({ name: 'auth-middleware' })
+    .use(createJwtPlugin())
+    .error({
+      AUTHENTICATION_ERROR: AuthenticationError,
+      AUTHORIZATION_ERROR: AuthorizationError,
+    })
+    .onBeforeHandle((context: any) => {
+      // Type assertion needed: TypeScript can't infer that jwtPlugin adds 'user' property
+      // Runtime type is guaranteed by Elysia plugin system
+      if (!context.user) {
+        context.set.status = 401
+        throw new AuthenticationError('Authentication required. Please login.')
+      }
+    })
+}
 
 /**
- * Optional authentication middleware - extracts user if present but doesn't require it
+ * Create optional authentication middleware - extracts user if present but doesn't require it
+ *
+ * Must be called after loadConfig() to access JWT configuration
  */
-export const optionalAuthMiddleware = new Elysia({ name: 'optional-auth-middleware' })
-  .use(jwtPlugin)
-  .derive((context: any) => {
-    // Type assertion needed: TypeScript can't infer that jwtPlugin adds 'user' property
-    // Runtime type is guaranteed by Elysia plugin system
-    return { currentUser: context.user ?? null }
-  })
+export function createOptionalAuthMiddleware() {
+  return new Elysia({ name: 'optional-auth-middleware' })
+    .use(createJwtPlugin())
+    .derive((context: any) => {
+      // Type assertion needed: TypeScript can't infer that jwtPlugin adds 'user' property
+      // Runtime type is guaranteed by Elysia plugin system
+      return { currentUser: context.user ?? null }
+    })
+}

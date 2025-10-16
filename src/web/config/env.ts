@@ -1,6 +1,11 @@
 /**
- * Environment Configuration
+ * Web Frontend Environment Configuration
  * Centralized environment variable management with validation
+ *
+ * This configuration is separate from the backend config because:
+ * - Vite builds run in a different context than the server
+ * - Frontend only needs a subset of configuration (API URL, mode)
+ * - Environment variables are injected at build time with VITE_ prefix
  */
 
 interface EnvironmentConfig {
@@ -18,14 +23,35 @@ interface EnvironmentConfig {
 
 /**
  * Validates and returns environment configuration
- * Throws error if required environment variables are missing
+ * Throws error if configuration is invalid
  */
 function getEnvironmentConfig(): EnvironmentConfig {
   // TypeScript requires bracket notation for import.meta.env access with noUncheckedIndexedAccess
   const mode = (import.meta.env['MODE'] || 'development') as EnvironmentConfig['mode']
 
-  // Default URLs - can be overridden with environment variables
+  // Validate mode
+  if (!['development', 'production', 'test'].includes(mode)) {
+    throw new Error(`Invalid MODE: ${mode}. Must be one of: development, production, test`)
+  }
+
+  // Get API URL with validation
   const apiBaseUrl = import.meta.env['VITE_API_URL'] || 'http://localhost:3000'
+
+  // Validate API URL format
+  try {
+    // Validate URL by parsing it (result not needed)
+    void new URL(apiBaseUrl)
+  }
+  catch {
+    throw new Error(`Invalid VITE_API_URL: ${apiBaseUrl}. Must be a valid URL (e.g., http://localhost:3000)`)
+  }
+
+  // Warn if using default in production
+  if (mode === 'production' && apiBaseUrl === 'http://localhost:3000') {
+    console.warn('⚠️  Using default API URL (http://localhost:3000) in production. Set VITE_API_URL environment variable.')
+  }
+
+  // Generate WebSocket URL from API URL
   const wsBaseUrl = apiBaseUrl.replace(/^http/, 'ws')
 
   return {
