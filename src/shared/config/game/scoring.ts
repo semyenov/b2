@@ -6,10 +6,10 @@
  * Rare letters get higher scores to encourage diverse word formation and strategic gameplay.
  *
  * Score Distribution:
- * - Score 1: Common letters (high frequency) - 8 Russian letters
- * - Score 2: Medium frequency letters - 16 letters (8 Russian + 8 Latin)
- * - Score 3: Less common letters - 16 letters (8 Russian + Latin Q,W,X,Y,Z)
- * - Score 4: Rare letters - 9 Russian letters
+ * - Score 1: Common letters (high frequency) - 8 Russian letters (А,Е,И,Н,О,Р,С,Т)
+ * - Score 2: Medium frequency - 8 Russian (В,Д,К,Л,М,П,У,Я) + 21 Latin (A-V)
+ * - Score 3: Less common - 8 Russian (Б,Г,Ж,З,Й,Х,Ц,Ч) + 5 Latin (Q,W,X,Y,Z)
+ * - Score 4: Rare letters (highest value) - 9 Russian (Ё,Ш,Щ,Ъ,Ы,Ь,Э,Ю,Ф)
  */
 
 /**
@@ -23,14 +23,14 @@ export const LETTER_SCORES: Readonly<Record<string, number>> = Object.freeze({
 
   // Common Russian letters (Score: 1)
   // These appear most frequently in Russian text
-  А: 3, // A - most common vowel
-  Е: 3, // E/Ye - very common
-  И: 3, // I - common vowel
-  Н: 3, // N - very common consonant
-  О: 3, // O - common vowel
-  Р: 3, // R - common consonant
-  С: 3, // S - very common consonant
-  Т: 3, // T - most common consonant
+  А: 1, // A - most common vowel
+  Е: 1, // E/Ye - very common
+  И: 1, // I - common vowel
+  Н: 1, // N - very common consonant
+  О: 1, // O - common vowel
+  Р: 1, // R - common consonant
+  С: 1, // S - very common consonant
+  Т: 1, // T - most common consonant
 
   // Medium frequency Russian letters (Score: 2)
   В: 2, // V - fairly common
@@ -43,26 +43,26 @@ export const LETTER_SCORES: Readonly<Record<string, number>> = Object.freeze({
   Я: 2, // Ya - fairly common
 
   // Less common Russian letters (Score: 3)
-  Б: 1, // B - less common
-  Г: 1, // G - less common
-  Ж: 1, // Zh - less common
-  З: 1, // Z - less common
-  Й: 1, // Y (short) - less common
-  Х: 1, // Kh - less common
-  Ц: 1, // Ts - less common
-  Ч: 1, // Ch - less common
+  Б: 3, // B - less common
+  Г: 3, // G - less common
+  Ж: 3, // Zh - less common
+  З: 3, // Z - less common
+  Й: 3, // Y (short) - less common
+  Х: 3, // Kh - less common
+  Ц: 3, // Ts - less common
+  Ч: 3, // Ch - less common
 
   // Rare Russian letters (Score: 4)
   // Highest value for strategic gameplay
-  Ё: 0, // Yo - very rare (often replaced with Е)
-  Ш: 0, // Sh - rare
-  Щ: 0, // Shch - rare
-  Ъ: 0, // Hard sign - very rare
-  Ы: 0, // Y - rare vowel
-  Ь: 0, // Soft sign - rare
-  Э: 0, // E - rare
-  Ю: 0, // Yu - rare
-  Ф: 0, // F - rare (often in borrowed words)
+  Ё: 4, // Yo - very rare (often replaced with Е)
+  Ш: 4, // Sh - rare
+  Щ: 4, // Shch - rare
+  Ъ: 4, // Hard sign - very rare
+  Ы: 4, // Y - rare vowel
+  Ь: 4, // Soft sign - rare
+  Э: 4, // E - rare
+  Ю: 4, // Yu - rare
+  Ф: 4, // F - rare (often in borrowed words)
 
   // ========================================
   // LATIN LETTERS (English)
@@ -118,7 +118,7 @@ export const SCORING_METADATA = {
   /**
    * Maximum possible letter score
    */
-  MAX_SCORE: 0,
+  MAX_SCORE: 4,
 
   /**
    * Score multiplier for future game modes

@@ -2,57 +2,85 @@
  * Shared Configuration - Main Export
  * Centralized configuration for the Balda game
  *
- * This module provides a single import point for all game configuration:
- * - Game rules and mechanics
- * - Scoring system
- * - Suggestions engine
- * - Validation rules
- * - UI/UX constants
- * - Internationalization (i18n)
+ * This module provides a single import point for all shared game configuration:
+ * - Game: Core rules, scoring, and alphabets
+ * - Constants: Limits, validation, and timing
+ * - Types: Shared type definitions
+ * - I18n: Internationalization and localization
  *
  * @example
  * ```typescript
- * import { GAME_RULES, SCORING_CONFIG, messages } from '@shared/config'
+ * import { GAME, CONSTANTS, messages } from '@shared/config'
  *
- * const boardSize = GAME_RULES.BOARD.DEFAULT_SIZE // 5
- * const scoreFor_A = SCORING_CONFIG.LETTER_SCORES['А'] // 1
- * const errorMsg = messages.errors.GENERIC_ERROR // 'Произошла ошибка'
+ * // Access game rules
+ * const boardSize = GAME.RULES.BOARD.DEFAULT_SIZE // 5
+ * const letterScore = GAME.SCORING.getLetterScore('А') // 1
+ *
+ * // Access constants
+ * const suggestionLimit = CONSTANTS.SUGGESTION_LIMITS.MAX // 200
+ * const isValid = CONSTANTS.isValidPlayerName('Player1') // true
+ *
+ * // Access i18n
+ * const error = messages.errors.GENERIC_ERROR // 'Произошла ошибка'
  * ```
  */
 
-// Import values for internal use in CONFIG object
+// ============================================
+// Game Domain (rules, scoring, alphabets)
+// ============================================
+// ============================================
+// Convenience Grouped Exports
+// ============================================
+
 import {
-  ALPHABET_CONFIG as _ALPHABET_CONFIG,
-  BOARD_CONFIG as _BOARD_CONFIG,
+  AI_TIMING as _AI_TIMING,
+  ANIMATION_TIMING as _ANIMATION_TIMING,
+  BASE_WORD_VALIDATION as _BASE_WORD_VALIDATION,
+  EMAIL_VALIDATION as _EMAIL_VALIDATION,
+  GAME_ID_VALIDATION as _GAME_ID_VALIDATION,
+  getScoreTier as _getScoreTier,
+  isValidBaseWord as _isValidBaseWord,
+  isValidEmail as _isValidEmail,
+  isValidGameId as _isValidGameId,
+  isValidPlayerName as _isValidPlayerName,
+  MOVE_VALIDATION as _MOVE_VALIDATION,
+  PASSWORD_VALIDATION as _PASSWORD_VALIDATION,
+  PERFORMANCE_TIMING as _PERFORMANCE_TIMING,
+  PLAYER_NAME_VALIDATION as _PLAYER_NAME_VALIDATION,
+  SCORE_THRESHOLDS as _SCORE_THRESHOLDS,
+  SUGGESTION_LIMITS as _SUGGESTION_LIMITS,
+  TIER_CONFIG as _TIER_CONFIG,
+  TOAST_TIMING as _TOAST_TIMING,
+  USERNAME_VALIDATION as _USERNAME_VALIDATION,
+  WEBSOCKET_TIMING as _WEBSOCKET_TIMING,
+} from './constants'
+
+import {
+  ALPHABETS as _ALPHABETS,
+  calculateWordScore as _calculateWordScore,
+  filterToAlphabet as _filterToAlphabet,
   GAME_RULES as _GAME_RULES,
-  PLAYER_CONFIG as _PLAYER_CONFIG,
-  WORD_CONFIG as _WORD_CONFIG,
-} from './game-rules'
+  getAlphabet as _getAlphabet,
+  getLettersByScore as _getLettersByScore,
+  getLetterScore as _getLetterScore,
+  getScoreDistribution as _getScoreDistribution,
+  isValidChar as _isValidChar,
+  LETTER_SCORES as _LETTER_SCORES,
+  SCORING_METADATA as _SCORING_METADATA,
+} from './game'
+
 import { messages as _messages } from './i18n'
-import { SCORING_CONFIG as _SCORING_CONFIG } from './scoring'
-import { SUGGESTIONS_CONFIG as _SUGGESTIONS_CONFIG } from './suggestions'
-import { UI_CONFIG as _UI_CONFIG } from './ui'
-import { VALIDATION_RULES as _VALIDATION_RULES } from './validation'
 
 // ============================================
-// Core Game Configuration
+// Constants (limits, validation, timing)
 // ============================================
+export * from './constants'
 
-export {
-  ALPHABET_CONFIG,
-  BOARD_CONFIG,
-  GAME_RULES,
-  ORTHOGONAL_DIRS,
-  PLAYER_CONFIG,
-  TURN_CONFIG,
-  WORD_CONFIG,
-} from './game-rules'
-export type { BoardPosition, BoardSize } from './game-rules'
+export * from './game'
 
 // ============================================
-// Scoring System
+// Internationalization
 // ============================================
-
 export {
   DEFAULT_LOCALE,
   ERROR_MESSAGE_MAP,
@@ -64,97 +92,80 @@ export {
   translateError,
 } from './i18n'
 
-// ============================================
-// Suggestions Engine
-// ============================================
-
 export type { Locale, LocaleCode } from './i18n'
-export {
-  calculateWordScore,
-  DEFAULT_LETTER_SCORE,
-  getLettersByScore,
-  getLetterScore,
-  getScoreDistribution,
-  LETTER_SCORES,
-  SCORING_CONFIG,
-  SCORING_METADATA,
-} from './scoring'
-
 // ============================================
-// Validation Rules
+// Shared Types
 // ============================================
-
-export {
-  getScoreTier,
-  SCORE_THRESHOLDS,
-  SUGGESTION_LIMITS,
-  SUGGESTIONS_CONFIG,
-  TIER_CONFIG,
-} from './suggestions'
-
-// ============================================
-// UI/UX Configuration
-// ============================================
-
-export type { ScoreTier, TierConfig } from './suggestions'
-export {
-  AI_CONFIG,
-  ANIMATION_CONFIG,
-  ARCHIVE_CONFIG,
-  LAYOUT_CONFIG,
-  PERFORMANCE_CONFIG,
-  TOAST_CONFIG,
-  UI_CONFIG,
-  WEBSOCKET_CONFIG,
-  WS_STATES,
-} from './ui'
-
-// ============================================
-// Internationalization (i18n)
-// ============================================
-
-export type { WebSocketState } from './ui'
-export {
-  BASE_WORD_VALIDATION,
-  EMAIL_VALIDATION,
-  GAME_ID_VALIDATION,
-  isValidBaseWord,
-  isValidEmail,
-  isValidGameId,
-  isValidPlayerName,
-  MOVE_VALIDATION,
-  PASSWORD_VALIDATION,
-  PLAYER_NAME_VALIDATION,
-  USERNAME_VALIDATION,
-  VALIDATION_RULES,
-} from './validation'
-
-// ============================================
-// Convenience Re-exports
-// ============================================
+export * from './types'
 
 /**
- * All configuration grouped by category
- * Use this for organized imports when you need multiple configs
- *
- * @example
- * ```typescript
- * import { CONFIG } from '@shared/config'
- *
- * const { GAME_RULES, SCORING_CONFIG, UI_CONFIG } = CONFIG
- * ```
+ * Game configuration grouped by domain
+ * Provides organized access to game-related configs
+ */
+export const GAME = {
+  /** Game rules (board, word, player, turn) */
+  RULES: _GAME_RULES,
+  /** Letter scoring system */
+  SCORING: {
+    LETTER_SCORES: _LETTER_SCORES,
+    METADATA: _SCORING_METADATA,
+    getLetterScore: _getLetterScore,
+    calculateWordScore: _calculateWordScore,
+    getLettersByScore: _getLettersByScore,
+    getScoreDistribution: _getScoreDistribution,
+  },
+  /** Alphabets (Russian, Latin, combined) */
+  ALPHABETS: {
+    ..._ALPHABETS,
+    isValidChar: _isValidChar,
+    filterToAlphabet: _filterToAlphabet,
+    getAlphabet: _getAlphabet,
+  },
+} as const
+
+/**
+ * Constants grouped by category
+ * Provides organized access to limits, validation, and timing
+ */
+export const CONSTANTS = {
+  /** Suggestion limits and score thresholds */
+  LIMITS: {
+    SUGGESTION_LIMITS: _SUGGESTION_LIMITS,
+    SCORE_THRESHOLDS: _SCORE_THRESHOLDS,
+    TIER_CONFIG: _TIER_CONFIG,
+    getScoreTier: _getScoreTier,
+  },
+  /** Validation patterns and helper functions */
+  VALIDATION: {
+    PLAYER_NAME: _PLAYER_NAME_VALIDATION,
+    BASE_WORD: _BASE_WORD_VALIDATION,
+    MOVE: _MOVE_VALIDATION,
+    GAME_ID: _GAME_ID_VALIDATION,
+    EMAIL: _EMAIL_VALIDATION,
+    PASSWORD: _PASSWORD_VALIDATION,
+    USERNAME: _USERNAME_VALIDATION,
+    isValidPlayerName: _isValidPlayerName,
+    isValidBaseWord: _isValidBaseWord,
+    isValidEmail: _isValidEmail,
+    isValidGameId: _isValidGameId,
+  },
+  /** Timing constants (animation, AI, WebSocket, toast) */
+  TIMING: {
+    ANIMATION: _ANIMATION_TIMING,
+    AI: _AI_TIMING,
+    WEBSOCKET: _WEBSOCKET_TIMING,
+    TOAST: _TOAST_TIMING,
+    PERFORMANCE: _PERFORMANCE_TIMING,
+  },
+} as const
+
+/**
+ * Complete configuration object
+ * Legacy export for backward compatibility
+ * @deprecated Use GAME and CONSTANTS instead for better tree-shaking
  */
 export const CONFIG = {
-  GAME: {
-    RULES: _GAME_RULES,
-    BOARD: _BOARD_CONFIG,
-    WORD: _WORD_CONFIG,
-    PLAYER: _PLAYER_CONFIG,
-    ALPHABET: _ALPHABET_CONFIG,
-  },
-  SCORING: _SCORING_CONFIG,
-  SUGGESTIONS: _SUGGESTIONS_CONFIG,
-  VALIDATION: _VALIDATION_RULES,
-  UI: _UI_CONFIG,
+  GAME,
+  CONSTANTS,
   I18N: _messages,
 } as const

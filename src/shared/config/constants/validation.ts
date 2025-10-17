@@ -1,5 +1,5 @@
 /**
- * Validation Rules Configuration
+ * Validation Constants
  * Input validation patterns and constraints
  *
  * Defines validation rules for:
@@ -7,6 +7,9 @@
  * - Game IDs
  * - Base words
  * - Move constraints
+ *
+ * NOTE: This is the SINGLE SOURCE OF TRUTH for validation constants.
+ * Previously duplicated across validation.ts and game-rules.ts - now consolidated here.
  */
 
 /**
@@ -53,12 +56,6 @@ export const BASE_WORD_VALIDATION = {
  * Move validation constraints
  */
 export const MOVE_VALIDATION = {
-  /**
-   * Minimum word length for a valid move
-   * Hardcoded in suggest.ts line 130, now centralized
-   */
-  MIN_WORD_LENGTH: 3,
-
   /**
    * Single letter constraint (for letter placement)
    */
@@ -148,7 +145,7 @@ export const USERNAME_VALIDATION = {
 /**
  * Consolidated validation configuration
  */
-export const VALIDATION_RULES = {
+export const VALIDATION = {
   PLAYER_NAME: PLAYER_NAME_VALIDATION,
   BASE_WORD: BASE_WORD_VALIDATION,
   MOVE: MOVE_VALIDATION,
@@ -157,6 +154,10 @@ export const VALIDATION_RULES = {
   PASSWORD: PASSWORD_VALIDATION,
   USERNAME: USERNAME_VALIDATION,
 } as const
+
+// ============================================
+// Validation Helper Functions
+// ============================================
 
 /**
  * Helper function to validate player name

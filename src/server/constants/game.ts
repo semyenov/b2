@@ -4,7 +4,7 @@
  */
 
 import {
-  ALPHABET_CONFIG,
+  ALPHABETS,
   ORTHOGONAL_DIRS as SHARED_ORTHOGONAL_DIRS,
   SUGGESTION_LIMITS,
   WORD_CONFIG,
@@ -20,7 +20,7 @@ export const ORTHOGONAL_DIRS = SHARED_ORTHOGONAL_DIRS
  * Default alphabet for dictionary (Latin + Cyrillic)
  * Re-exported from shared config
  */
-export const DEFAULT_ALPHABET = ALPHABET_CONFIG.DEFAULT
+export const DEFAULT_ALPHABET = ALPHABETS.DEFAULT
 
 /**
  * Maximum word length for word enumeration in suggestions

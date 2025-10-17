@@ -6,7 +6,6 @@
  * - Board dimensions and constraints
  * - Word length requirements
  * - Player count limits
- * - Alphabet definitions
  * - Movement directions
  */
 
@@ -84,12 +83,6 @@ export const PLAYER_CONFIG = {
    * Default player count for new games
    */
   DEFAULT_COUNT: 2,
-
-  /**
-   * Player name constraints
-   */
-  NAME_MIN_LENGTH: 1,
-  NAME_MAX_LENGTH: 20,
 } as const
 
 /**
@@ -101,27 +94,6 @@ export const TURN_CONFIG = {
    * After timeout, turn automatically passes to next player
    */
   TIMEOUT_MS: 5 * 60 * 1000,
-} as const
-
-/**
- * Alphabet definitions
- */
-export const ALPHABET_CONFIG = {
-  /**
-   * Russian (Cyrillic) alphabet including Ё
-   */
-  RUSSIAN: 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ',
-
-  /**
-   * Latin alphabet (English)
-   */
-  LATIN: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-
-  /**
-   * Combined alphabet (Latin + Cyrillic)
-   * Used for multi-language dictionary support
-   */
-  DEFAULT: 'ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ',
 } as const
 
 /**
@@ -144,7 +116,6 @@ export const GAME_RULES = {
   WORD: WORD_CONFIG,
   PLAYER: PLAYER_CONFIG,
   TURN: TURN_CONFIG,
-  ALPHABET: ALPHABET_CONFIG,
   ORTHOGONAL_DIRS,
 } as const
 

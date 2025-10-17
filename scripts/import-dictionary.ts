@@ -5,7 +5,7 @@
  */
 
 import { readFile } from 'node:fs/promises'
-import { loadConfig } from '@shared/config/server'
+import { loadConfig } from '@server/config'
 import { consola } from 'consola'
 import { sift } from 'radash'
 import { checkDatabaseConnection, db } from '../src/server/db/client'

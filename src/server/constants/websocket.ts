@@ -3,7 +3,7 @@
  * Configuration for WebSocket communication and game archiving
  */
 
-import { UI_CONFIG } from '../../shared/config'
+import { WEBSOCKET_TIMING } from '../../shared/config'
 
 /**
  * WebSocket connection states
@@ -21,4 +21,4 @@ export const WS_STATES = {
  * Archive delay for games with no active clients
  * Re-exported from shared config
  */
-export const ARCHIVE_DELAY_MS = UI_CONFIG.ARCHIVE.DELAY_MS
+export const ARCHIVE_DELAY_MS = WEBSOCKET_TIMING.ARCHIVE_DELAY_MS

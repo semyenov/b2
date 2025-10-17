@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: balda
       POSTGRES_PASSWORD: balda
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./src/server/db/migrations:/docker-entrypoint-initdb.d
@@ -33,21 +33,20 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost}
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       postgres:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test:
-        [
-          "CMD",
-          "wget",
-          "--no-verbose",
-          "--tries=1",
-          "--spider",
-          "http://localhost:3000/health",
-        ]
+        - CMD
+        - wget
+        - --no-verbose
+        - --tries=1
+        - --spider
+        - 'http://localhost:3000/health'
+
       interval: 30s
       timeout: 10s
       retries: 3
@@ -60,7 +59,7 @@ services:
       dockerfile: Dockerfile.web
     container_name: balda_web
     ports:
-      - "8080:80"
+      - '8080:80'
     environment:
       - NODE_ENV=production
     depends_on:
@@ -68,14 +67,13 @@ services:
     restart: unless-stopped
     healthcheck:
       test:
-        [
-          "CMD",
-          "wget",
-          "--no-verbose",
-          "--tries=1",
-          "--spider",
-          "http://localhost:80",
-        ]
+        - CMD
+        - wget
+        - --no-verbose
+        - --tries=1
+        - --spider
+        - 'http://localhost:80'
+
       interval: 30s
       timeout: 5s
       retries: 3
@@ -85,7 +83,7 @@ services:
     image: caddy:2-alpine
     container_name: balda_caddy
     ports:
-      - "80:80"
+      - '80:80'
       # - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile

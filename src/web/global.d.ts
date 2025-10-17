@@ -2,7 +2,7 @@
  * Global type declarations for Vite-injected values
  */
 
-import type { WebConfig } from '@shared/config/web/schema'
+import type { WebConfig } from '@web/config/schema'
 
 declare global {
   /**

@@ -6,8 +6,8 @@ import type {
   SuggestionSchema,
 } from '@shared/schemas'
 import type { Static } from '@sinclair/typebox'
-import { config } from '@shared/config/web/env'
 import { logger } from '@utils/logger'
+import { config } from '@web/config/env'
 
 export type GameState = Static<typeof GameStateSchema>
 export type CreateGameBody = Static<typeof CreateGameBodySchema>

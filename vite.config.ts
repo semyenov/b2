@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { loadConfig } from './src/shared/config/web'
+import { loadConfig } from './src/web/config'
 
 export default defineConfig(async () => {
   // Load web config using c12 (same pattern as backend)
@@ -19,9 +19,6 @@ export default defineConfig(async () => {
     // Inject configuration into the app at build time
     define: {
       __WEB_CONFIG__: JSON.stringify(webConfig),
-      __APP_VERSION__: JSON.stringify(webConfig.app.version),
-      __API_BASE_URL__: JSON.stringify(webConfig.api.baseUrl),
-      __WS_BASE_URL__: JSON.stringify(webConfig.api.wsBaseUrl),
     },
 
     build: {

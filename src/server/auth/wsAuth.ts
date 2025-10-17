@@ -4,7 +4,7 @@
  */
 
 import type { JWTPayloadSpec } from '@elysiajs/jwt'
-import { getConfig } from '@shared/config/server'
+import { getConfig } from '@server/config'
 import { consola } from 'consola'
 
 export interface AuthenticatedWsData {

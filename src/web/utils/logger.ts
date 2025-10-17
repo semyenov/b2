@@ -3,7 +3,7 @@
  * Centralized logging with different levels and optional external service integration
  */
 
-import { config } from '@shared/config/web/env'
+import { config } from '@web/config/env'
 
 /** Log levels in order of severity */
 export enum LogLevel {

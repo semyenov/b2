@@ -1,6 +1,6 @@
 import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
-import { loadConfig } from '@shared/config/server'
+import { loadConfig } from '@server/config'
 import { Elysia } from 'elysia'
 import { rateLimit } from 'elysia-rate-limit'
 import { GameIdParamsSchema } from '../shared/schemas'

@@ -23,7 +23,7 @@ beforeAll(async () => {
     await mkdir('./test-data/games', { recursive: true })
 
     // Load configuration for tests
-    const { loadConfig } = await import('../src/shared/config/server')
+    const { loadConfig } = await import('../src/server/config')
     await loadConfig()
   }
   catch (error) {

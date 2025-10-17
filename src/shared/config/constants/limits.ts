@@ -1,14 +1,12 @@
 /**
- * Suggestions Configuration
- * AI move suggestion engine settings
+ * Limit Constants
+ * Numeric limits and thresholds for suggestions and other features
  *
- * Controls suggestion generation, scoring, and display:
- * - Request/display limits
- * - Score tier classification
- * - Visual styling for tiers
+ * Centralizes all limit-related constants to avoid duplication
+ * and ensure consistency across the codebase.
  */
 
-import type { BadgeVariant } from '../../web/components/ui'
+import type { BadgeVariant } from '../types/ui-types'
 
 /**
  * Suggestion request limits
@@ -87,15 +85,6 @@ export const TIER_CONFIG: Readonly<Record<ScoreTier, TierConfig>> = Object.freez
     variant: 'gray',
   },
 })
-
-/**
- * Consolidated suggestions configuration
- */
-export const SUGGESTIONS_CONFIG = {
-  LIMITS: SUGGESTION_LIMITS,
-  SCORE_THRESHOLDS,
-  TIER_CONFIG,
-} as const
 
 /**
  * Helper function to determine score tier

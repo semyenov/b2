@@ -4,12 +4,12 @@
  */
 
 import {
-  ALPHABET_CONFIG,
+  AI_TIMING,
+  ALPHABETS,
   BOARD_CONFIG,
   messages,
   SCORE_THRESHOLDS,
   SUGGESTION_LIMITS,
-  UI_CONFIG,
   WORD_CONFIG,
 } from '../../shared/config'
 
@@ -28,7 +28,7 @@ export const GAME_CONFIG = {
   ALPHABET_GRID_COLUMNS: 11,
 
   // AI - from shared config
-  AI_THINKING_DELAY_MS: UI_CONFIG.AI.THINKING_DELAY_MS,
+  AI_THINKING_DELAY_MS: AI_TIMING.THINKING_DELAY_MS,
 
   // Score thresholds - from shared config
   SCORE_THRESHOLDS: {
@@ -47,6 +47,6 @@ export const BOARD_SIZES = [
 ] as const
 
 // Russian alphabet - from shared config
-export const RUSSIAN_ALPHABET = ALPHABET_CONFIG.RUSSIAN.split('')
+export const RUSSIAN_ALPHABET = ALPHABETS.RUSSIAN.split('')
 
 export const A11Y_LABELS = messages.a11y

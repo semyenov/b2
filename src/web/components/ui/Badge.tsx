@@ -1,16 +1,7 @@
+import type { BadgeSize, BadgeVariant } from '@shared/config/types/ui-types'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@utils/classNames'
 import { forwardRef, memo } from 'react'
-
-/**
- * Badge variants define color scheme
- */
-export type BadgeVariant = 'success' | 'warning' | 'danger' | 'info' | 'gray'
-
-/**
- * Badge sizes
- */
-export type BadgeSize = 'sm' | 'md' | 'lg'
 
 interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'className'> {
   /**
