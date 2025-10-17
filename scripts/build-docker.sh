@@ -45,7 +45,7 @@ check_dependencies() {
         exit 1
     fi
     
-    if ! command -v docker-compose &> /dev/null; then
+    if ! command -v docker compose &> /dev/null; then
         print_error "Docker Compose is not installed. Please install Docker Compose first."
         exit 1
     fi
@@ -170,13 +170,13 @@ main() {
     print_success "🎉 Build completed successfully!"
     echo ""
     print_status "To start the application:"
-    echo "  docker-compose up -d"
+    echo "  docker compose up -d"
     echo ""
     print_status "To view logs:"
-    echo "  docker-compose logs -f"
+    echo "  docker compose logs -f"
     echo ""
     print_status "To stop the application:"
-    echo "  docker-compose down"
+    echo "  docker compose down"
     echo ""
 }
 

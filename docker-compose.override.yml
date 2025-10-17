@@ -1,5 +1,5 @@
-# # Development override for docker-compose.yml
-# # This file is automatically loaded by docker-compose for development
+# # Development override for docker compose.yml
+# # This file is automatically loaded by docker compose for development
 
 # version: "3.8"
 

@@ -46,26 +46,26 @@ The application consists of the following services:
 
 ```bash
 # Start all services in development mode
-docker-compose up
+docker compose up
 
 # Start specific services
-docker-compose up postgres api web caddy
+docker compose up postgres api web caddy
 
 # Build and start
-docker-compose up --build
+docker compose up --build
 
 # Run in background
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Production
 
 ```bash
 # Start production services
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 
 # With custom environment file
-docker-compose --env-file .env.production up -d
+docker compose --env-file .env.production up -d
 ```
 
 ## Environment Variables
@@ -90,7 +90,7 @@ NODE_ENV=production
 
 ```
 ├── docker-compose.yml              # Main compose file
-├── docker-compose.override.yml     # Development overrides
+├── docker compose.override.yml     # Development overrides
 ├── Caddyfile                       # Production Caddy config
 ├── Caddyfile.dev                   # Development Caddy config
 ├── Dockerfile.api                  # Production API Dockerfile
@@ -144,26 +144,26 @@ All services are connected via Docker's default bridge network. Services can com
 
 ```bash
 # View all logs
-docker-compose logs
+docker compose logs
 
 # View specific service logs
-docker-compose logs api
-docker-compose logs web
-docker-compose logs caddy
-docker-compose logs postgres
+docker compose logs api
+docker compose logs web
+docker compose logs caddy
+docker compose logs postgres
 
 # Follow logs in real-time
-docker-compose logs -f api
+docker compose logs -f api
 ```
 
 ### Restart Services
 
 ```bash
 # Restart all services
-docker-compose restart
+docker compose restart
 
 # Restart specific service
-docker-compose restart api
+docker compose restart api
 ```
 
 ## Security Notes

@@ -43,7 +43,7 @@ check_dependencies() {
         exit 1
     fi
     
-    if ! command -v docker-compose &> /dev/null; then
+    if ! command -v docker compose &> /dev/null; then
         print_error "Docker Compose is not installed. Please install Docker Compose first."
         exit 1
     fi
@@ -92,15 +92,15 @@ build_dev_images() {
 start_dev_services() {
     print_status "Starting development services..."
     
-    # Start services with docker-compose
-    docker-compose up -d postgres
+    # Start services with docker compose
+    docker compose up -d postgres
     
     # Wait for database to be ready
     print_status "Waiting for database to be ready..."
     sleep 10
     
     # Start API and Web services
-    docker-compose up -d api web caddy
+    docker compose up -d api web caddy
     
     print_success "Development services started"
 }
@@ -111,7 +111,7 @@ show_status() {
     echo ""
     
     # Show running containers
-    docker-compose ps
+    docker compose ps
     
     echo ""
     print_status "Service URLs:"
@@ -126,13 +126,13 @@ show_status() {
 # Show logs
 show_logs() {
     print_status "Showing service logs..."
-    docker-compose logs -f
+    docker compose logs -f
 }
 
 # Stop services
 stop_services() {
     print_status "Stopping development services..."
-    docker-compose down
+    docker compose down
     print_success "Development services stopped"
 }
 
@@ -141,7 +141,7 @@ cleanup() {
     print_status "Cleaning up development environment..."
     
     # Stop and remove containers
-    docker-compose down -v
+    docker compose down -v
     
     # Remove development images
     docker rmi balda-api-dev balda-web-dev 2>/dev/null || true

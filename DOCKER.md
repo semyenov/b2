@@ -25,13 +25,13 @@
 
 4. **Start services:**
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 5. **Check status:**
    ```bash
-   docker-compose ps
-   docker-compose logs -f api
+   docker compose ps
+   docker compose logs -f api
    ```
 
 6. **Access application:**
@@ -45,10 +45,10 @@ Use the override file for development with hot reload:
 
 ```bash
 # Start with development overrides
-docker-compose -f docker-compose.yml -f docker-compose.override.yml up
+docker compose -f docker-compose.yml -f docker compose.override.yml up
 
 # Or simply (override is loaded automatically)
-docker-compose up
+docker compose up
 ```
 
 ## Services
@@ -80,47 +80,47 @@ docker-compose up
 ### View logs
 ```bash
 # All services
-docker-compose logs -f
+docker compose logs -f
 
 # Specific service
-docker-compose logs -f api
-docker-compose logs -f postgres
+docker compose logs -f api
+docker compose logs -f postgres
 ```
 
 ### Restart services
 ```bash
 # All services
-docker-compose restart
+docker compose restart
 
 # Specific service
-docker-compose restart api
+docker compose restart api
 ```
 
 ### Rebuild after code changes
 ```bash
-docker-compose build --no-cache api web
-docker-compose up -d
+docker compose build --no-cache api web
+docker compose up -d
 ```
 
 ### Database operations
 ```bash
 # Access PostgreSQL
-docker-compose exec postgres psql -U balda -d balda
+docker compose exec postgres psql -U balda -d balda
 
 # Run migrations
-docker-compose exec api bun run db:migrate
+docker compose exec api bun run db:migrate
 
 # Reset database (⚠️ DESTRUCTIVE)
-docker-compose exec api bun run db:reset --confirm
+docker compose exec api bun run db:reset --confirm
 ```
 
 ### Stop and clean up
 ```bash
 # Stop services
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (⚠️ DELETES DATA)
-docker-compose down -v
+docker compose down -v
 ```
 
 ## Environment Variables
@@ -153,13 +153,13 @@ docker-compose down -v
 ### API won't start
 ```bash
 # Check if database is ready
-docker-compose logs postgres
+docker compose logs postgres
 
 # Check API logs
-docker-compose logs api
+docker compose logs api
 
 # Verify environment variables
-docker-compose exec api env | grep JWT
+docker compose exec api env | grep JWT
 ```
 
 ### Port conflicts
@@ -176,7 +176,7 @@ If ports 3000, 5432, or 8080 are in use:
 docker network inspect b2_default
 
 # Verify DATABASE_URL
-docker-compose exec api printenv DATABASE_URL
+docker compose exec api printenv DATABASE_URL
 ```
 
 ## Architecture
@@ -203,7 +203,7 @@ docker-compose exec api printenv DATABASE_URL
 1. **Use Docker BuildKit** for faster builds:
    ```bash
    export DOCKER_BUILDKIT=1
-   docker-compose build
+   docker compose build
    ```
 
 2. **Layer caching**: Dependencies are cached in separate layer for faster rebuilds
@@ -214,7 +214,7 @@ docker-compose exec api printenv DATABASE_URL
 
 ## Production Recommendations
 
-- Use `docker-compose.prod.yml` for production overrides
+- Use `docker compose.prod.yml` for production overrides
 - Enable resource limits (CPU, memory)
 - Set up log aggregation (Loki, ELK)
 - Use Docker secrets for sensitive data

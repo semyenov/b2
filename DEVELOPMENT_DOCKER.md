@@ -55,7 +55,7 @@ bun run dev:docker:clean
 
 ## 🐳 Docker Compose Override
 
-The `docker-compose.override.yml` provides development-specific configuration:
+The `docker compose.override.yml` provides development-specific configuration:
 
 ### API Service Override
 ```yaml
@@ -110,18 +110,18 @@ bun run dev:docker:clean
 
 ```bash
 # Start services manually
-docker-compose up -d
+docker compose up -d
 
 # View specific service logs
-docker-compose logs -f api
-docker-compose logs -f web
+docker compose logs -f api
+docker compose logs -f web
 
 # Rebuild specific service
-docker-compose build api
-docker-compose up -d api
+docker compose build api
+docker compose up -d api
 
 # Stop specific service
-docker-compose stop api
+docker compose stop api
 ```
 
 ## 🌐 Service URLs
@@ -191,18 +191,18 @@ bun run dev:docker:clean
 ### Logs
 ```bash
 # View all logs
-docker-compose logs -f
+docker compose logs -f
 
 # View specific service logs
-docker-compose logs -f api
-docker-compose logs -f web
-docker-compose logs -f postgres
+docker compose logs -f api
+docker compose logs -f web
+docker compose logs -f postgres
 ```
 
 ### Service Status
 ```bash
 # Show running containers
-docker-compose ps
+docker compose ps
 
 # Show resource usage
 docker stats
@@ -241,34 +241,34 @@ CORS_ORIGIN=http://localhost:5173
 2. **Container won't start**
    ```bash
    # Check logs
-   docker-compose logs api
-   docker-compose logs web
+   docker compose logs api
+   docker compose logs web
    
    # Rebuild containers
-   docker-compose build --no-cache
+   docker compose build --no-cache
    ```
 
 3. **Hot reloading not working**
    ```bash
    # Check volume mounts
-   docker-compose exec api ls -la /app
-   docker-compose exec web ls -la /app
+   docker compose exec api ls -la /app
+   docker compose exec web ls -la /app
    ```
 
 4. **Database connection issues**
    ```bash
    # Check database status
-   docker-compose logs postgres
+   docker compose logs postgres
    
    # Test connection
-   docker-compose exec api bun run db:view
+   docker compose exec api bun run db:view
    ```
 
 ### Debug Commands
 
 ```bash
 # Check container status
-docker-compose ps
+docker compose ps
 
 # Check resource usage
 docker stats
@@ -313,13 +313,13 @@ docker volume inspect b2_postgres_data
 ### Custom Development Setup
 ```bash
 # Override specific services
-docker-compose up -d postgres api
+docker compose up -d postgres api
 
 # Use custom environment file
-docker-compose --env-file .env.custom up
+docker compose --env-file .env.custom up
 
 # Scale services
-docker-compose up --scale api=2
+docker compose up --scale api=2
 ```
 
 ### Integration with IDE

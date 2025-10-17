@@ -60,10 +60,10 @@ docker build -f Dockerfile.web -t balda-web .
 
 ```bash
 # Development
-docker-compose up
+docker compose up
 
 # Production
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 ## 🔧 Build Script Features
@@ -160,8 +160,8 @@ docker run --rm balda-web wget --spider http://localhost:80
 3. **Health check failures**
    ```bash
    # Check if services are running
-   docker-compose logs api
-   docker-compose logs web
+   docker compose logs api
+   docker compose logs web
    ```
 
 4. **Permission issues**
@@ -181,7 +181,7 @@ docker inspect balda-api
 docker inspect balda-web
 
 # View container logs
-docker-compose logs -f
+docker compose logs -f
 
 # Enter container for debugging
 docker exec -it balda_api sh
@@ -226,7 +226,7 @@ docker exec -it balda_web sh
 
 ### Development
 ```bash
-docker-compose up
+docker compose up
 ```
 
 ### Production
@@ -236,7 +236,7 @@ export JWT_SECRET="your-secret-key"
 export JWT_REFRESH_SECRET="your-refresh-secret"
 
 # Start production services
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 ### Environment Variables
