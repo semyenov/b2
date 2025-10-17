@@ -31,15 +31,9 @@ export default defineConfig(async () => {
       rollupOptions: {
         output: {
           manualChunks: {
+            // Split React vendor bundle
             'react-vendor': ['react', 'react-dom'],
-            'lib': ['@lib'],
-            'hooks': ['@hooks'],
-            'components': ['@components'],
-            'utils': ['@utils'],
-            'config': ['@config'],
-            'types': ['@types'],
-            'constants': ['@constants'],
-            'shared': ['@shared'],
+            // Let Vite automatically chunk the rest
           },
         },
       },
