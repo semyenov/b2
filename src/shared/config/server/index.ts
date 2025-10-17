@@ -139,7 +139,7 @@ function mergeEnvVariables(baseConfig: Partial<AppConfig>): Partial<AppConfig> {
     },
     logging: {
       ...baseConfig.logging,
-      level: (env['LOG_LEVEL'] || baseConfig.logging?.level || (isProduction ? 'info' : 'debug')) as any,
+      level: (env['LOG_LEVEL'] || baseConfig.logging?.level || (isProduction ? 'info' : 'debug')) as 'debug' | 'info' | 'warn' | 'error' | 'silent',
       format: (env['LOG_FORMAT'] || baseConfig.logging?.format || (isProduction ? 'json' : 'pretty')) as 'json' | 'pretty',
       colors: parseBoolean(env['LOG_COLORS'], baseConfig.logging?.colors ?? !isProduction),
     },
@@ -188,7 +188,7 @@ function mergeEnvVariables(baseConfig: Partial<AppConfig>): Partial<AppConfig> {
         enabled: parseBoolean(env['CSP_ENABLED'], baseConfig.security?.csp?.enabled ?? true),
         directives: baseConfig.security?.csp?.directives || {},
       },
-      frameOptions: (env['FRAME_OPTIONS'] || baseConfig.security?.frameOptions || 'DENY') as any,
+      frameOptions: (env['FRAME_OPTIONS'] || baseConfig.security?.frameOptions || 'DENY') as 'DENY' | 'SAMEORIGIN' | string,
       contentTypeOptions: parseBoolean(env['CONTENT_TYPE_OPTIONS'], baseConfig.security?.contentTypeOptions ?? true),
       xssProtection: parseBoolean(env['XSS_PROTECTION'], baseConfig.security?.xssProtection ?? true),
     },
@@ -238,7 +238,7 @@ function mergeEnvVariables(baseConfig: Partial<AppConfig>): Partial<AppConfig> {
     ai: {
       ...baseConfig.ai,
       thinkingDelay: parseNumber(env['AI_THINKING_DELAY'], baseConfig.ai?.thinkingDelay || 1500),
-      difficulty: (env['AI_DIFFICULTY'] || baseConfig.ai?.difficulty || 'medium') as any,
+      difficulty: (env['AI_DIFFICULTY'] || baseConfig.ai?.difficulty || 'medium') as 'easy' | 'medium' | 'hard',
       maxSuggestions: parseNumber(env['AI_MAX_SUGGESTIONS'], baseConfig.ai?.maxSuggestions || 100),
       randomizeEasy: parseBoolean(env['AI_RANDOMIZE_EASY'], baseConfig.ai?.randomizeEasy ?? true),
     },

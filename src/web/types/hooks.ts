@@ -35,6 +35,7 @@ export interface UseGameClientReturn {
   makeMove: (move: MoveBody) => Promise<boolean>
   quickStart: () => Promise<void>
   quickStartVsAI: () => Promise<void>
+  restartWithNewWord: () => Promise<void>
 
   // Helpers
   isMyTurn: () => boolean
