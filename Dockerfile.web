@@ -1,0 +1,32 @@
+# Dockerfile for Balda Web Frontend
+FROM oven/bun:1-alpine AS base
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json bun.lock ./
+
+# Install dependencies
+RUN bun install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build the frontend explicitly
+RUN bun run build:web
+
+# Production stage with nginx
+FROM nginx:alpine AS production
+
+# Copy built frontend
+COPY --from=base /app/dist/web /usr/share/nginx/html
+
+# Copy nginx configuration (if it exists, otherwise use default)
+COPY --chown=nginx:nginx nginx.conf /etc/nginx/nginx.conf 2>/dev/null || true
+
+# Expose port 80 (standard nginx port)
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

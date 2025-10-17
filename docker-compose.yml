@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: balda
       POSTGRES_PASSWORD: balda
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./src/server/db/migrations:/docker-entrypoint-initdb.d
@@ -19,6 +19,74 @@ services:
       timeout: 5s
       retries: 5
 
+  # Backend API server
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: balda_api
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://balda:balda@postgres:5432/balda
+      # SECURITY: Set these in .env file or environment variables
+      # Never use default secrets in production!
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET must be set}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Frontend web server (nginx)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: balda_web
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - api
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Caddy reverse proxy
+  caddy:
+    image: caddy:2-alpine
+    container_name: balda_caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./dist/web:/srv
+    depends_on:
+      - api
+      - web
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+    driver: local
+  caddy_data:
+    driver: local
+  caddy_config:
     driver: local

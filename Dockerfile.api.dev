@@ -1,0 +1,20 @@
+# Development Dockerfile for Balda API Server
+FROM oven/bun:1-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json bun.lock ./
+
+# Install all dependencies (including dev dependencies)
+RUN bun install
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Start the development server
+CMD ["bun", "run", "dev"]

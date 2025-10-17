@@ -1,0 +1,40 @@
+# Development override for docker-compose.yml
+# This file is automatically loaded by docker-compose for development
+
+version: "3.8"
+
+services:
+  # Override API service for development
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api.dev
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://balda:balda@postgres:5432/balda
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: bun run dev
+    ports:
+      - "3000:3000"
+
+  # Override web service for development
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web.dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: bun run dev
+    ports:
+      - "5173:5173"
+
+  # Override Caddy for development
+  caddy:
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile
+      - ./dist/web:/srv

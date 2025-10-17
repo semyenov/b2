@@ -1,0 +1,23 @@
+# Development Dockerfile for Balda Web Frontend
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install bun
+RUN npm install -g bun
+
+# Copy package files
+COPY package.json bun.lock ./
+
+# Install dependencies
+RUN bun install
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 5173
+
+# Start the development server
+CMD ["bun", "run", "dev"]
