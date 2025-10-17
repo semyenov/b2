@@ -8,6 +8,10 @@
     "paths": {
       /* Cross-layer imports - Shared code accessible from server/web */
       "@shared/*": ["src/shared/*"],
+      "@shared/config/server": ["src/shared/config/server"],
+      "@shared/config/server/*": ["src/shared/config/server/*"],
+      "@shared/config/web": ["src/shared/config/web"],
+      "@shared/config/web/*": ["src/shared/config/web/*"],
 
       /* Server-side imports */
       "@server/*": ["src/server/*"],

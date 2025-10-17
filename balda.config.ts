@@ -11,7 +11,7 @@
  * like JWT secrets and database credentials.
  */
 
-import type { AppConfig } from './src/server/config/schema'
+import type { AppConfig } from './src/shared/config/server/schema'
 
 type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K]
