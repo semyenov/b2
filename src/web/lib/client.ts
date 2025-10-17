@@ -6,7 +6,7 @@ import type {
   SuggestionSchema,
 } from '@shared/schemas'
 import type { Static } from '@sinclair/typebox'
-import { env } from '@config/env'
+import { config } from '@shared/config/web/env'
 import { logger } from '@utils/logger'
 
 export type GameState = Static<typeof GameStateSchema>
@@ -26,9 +26,9 @@ export type Suggestion = Static<typeof SuggestionSchema>
  */
 export class ApiClient {
   /**
-   * @param baseUrl - Base URL for API endpoints (default: auto-detected from env config)
+   * @param baseUrl - Base URL for API endpoints (default: auto-detected from config)
    */
-  constructor(private baseUrl: string = env.apiBaseUrl) { }
+  constructor(private baseUrl: string = config.api.baseUrl) { }
 
   /**
    * Fetch JSON from API with error handling

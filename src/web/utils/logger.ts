@@ -3,7 +3,7 @@
  * Centralized logging with different levels and optional external service integration
  */
 
-import { env } from '@config/env'
+import { config } from '@shared/config/web/env'
 
 /** Log levels in order of severity */
 export enum LogLevel {
@@ -21,7 +21,7 @@ class Logger {
 
   constructor() {
     // In production, only log warnings and errors
-    this.minLevel = env.isProduction ? LogLevel.WARN : LogLevel.DEBUG
+    this.minLevel = config.mode === 'production' ? LogLevel.WARN : LogLevel.DEBUG
   }
 
   /**
@@ -52,7 +52,7 @@ class Logger {
     this.log(LogLevel.ERROR, message, context, error)
 
     // In production, send to error tracking service
-    if (env.isProduction) {
+    if (config.mode === 'production') {
       this.sendToErrorTracking(message, error, context)
     }
   }
