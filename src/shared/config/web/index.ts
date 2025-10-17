@@ -25,6 +25,8 @@ let cachedConfig: WebConfig | null = null
 /**
  * Load web frontend configuration from all sources
  * Merges environment variables, config files, and defaults
+ *
+ * Now loads from unified balda.config.ts and extracts the 'web' section
  */
 export async function loadWebConfig(): Promise<WebConfig> {
   // Return cached config if already loaded
@@ -33,17 +35,20 @@ export async function loadWebConfig(): Promise<WebConfig> {
   }
 
   try {
-    // Load configuration using c12
-    const { config: userConfig } = await c12LoadConfig<Partial<WebConfig>>({
-      name: 'web',
-      defaults: defaultWebConfig,
+    // Load unified configuration using c12 (from balda.config.ts)
+    const { config: unifiedConfig } = await c12LoadConfig<{ web?: Partial<WebConfig> }>({
+      name: 'balda', // Load balda.config.ts
+      defaults: { web: defaultWebConfig },
       dotenv: true, // Load from .env files
       packageJson: false, // Don't load from package.json
       envName: process.env['NODE_ENV'] || 'development',
     })
 
+    // Extract web config from unified config
+    const webConfigFromFile = unifiedConfig?.web || {}
+
     // Merge environment variables with loaded config
-    const config = mergeEnvVariables(userConfig || {})
+    const config = mergeEnvVariables(webConfigFromFile)
 
     // Cache the configuration
     cachedConfig = config as WebConfig

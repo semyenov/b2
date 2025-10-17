@@ -50,11 +50,11 @@ export default defineConfig(async () => {
     server: {
       port: 5173,
       proxy: {
-        '/api': {
+        // Proxy all API endpoints (games, dictionary, health, etc.)
+        '^/(games|dictionary|health|swagger)': {
           target: webConfig.api.baseUrl,
           changeOrigin: true,
           secure: false,
-          rewrite: path => path.replace(/^\/api/, ''),
         },
       },
     },

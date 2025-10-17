@@ -1,23 +1,31 @@
 /**
- * Balda Application Configuration
+ * Balda Unified Application Configuration
  *
- * This file defines the default configuration for the Balda game server.
+ * This file defines configuration for BOTH backend server and web frontend.
  * Values can be overridden by:
  * - Environment variables (highest priority)
  * - .env files
  * - This config file (lowest priority)
+ *
+ * Backend config uses standard env vars (PORT, DATABASE_URL, etc.)
+ * Frontend config uses VITE_* prefixed env vars (VITE_API_URL, VITE_DEBUG, etc.)
  *
  * For production deployments, always use environment variables for sensitive data
  * like JWT secrets and database credentials.
  */
 
 import type { AppConfig } from './src/shared/config/server/schema'
+import type { WebConfig } from './src/shared/config/web/schema'
 
 type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K]
 }
 
 export default {
+  // ============================================================================
+  // BACKEND SERVER CONFIGURATION
+  // ============================================================================
+
   // Server configuration
   server: {
     port: 3000,
@@ -93,10 +101,6 @@ export default {
     path: '/swagger',
   },
 
-  // ============================================================================
-  // Security & Production Features
-  // ============================================================================
-
   // Security headers (OWASP compliance)
   security: {
     enabled: false, // Enable in production for OWASP compliance
@@ -163,10 +167,6 @@ export default {
     maxMemoryPolicy: 'allkeys-lru',
   },
 
-  // ============================================================================
-  // Game-Specific Configuration
-  // ============================================================================
-
   // Game rules and limits
   game: {
     allowedBoardSizes: [3, 4, 5, 6, 7],
@@ -202,8 +202,69 @@ export default {
     // estimatedEnd: '2025-10-18T12:00:00Z', // ISO 8601 datetime
   },
 
-  // Environment-specific overrides
-  // These are applied based on NODE_ENV
+  // ============================================================================
+  // WEB FRONTEND CONFIGURATION
+  // ============================================================================
+
+  web: {
+    // Environment mode (auto-detected from NODE_ENV)
+    mode: 'development',
+
+    // API configuration
+    api: {
+      baseUrl: 'http://localhost:3000', // Override with VITE_API_URL
+      timeout: 30000, // 30 seconds
+      retryEnabled: true,
+      maxRetries: 3,
+    },
+
+    // Application configuration
+    app: {
+      name: 'Balda',
+      devMode: true,
+      debugMode: false,
+    },
+
+    // UI/UX configuration
+    ui: {
+      theme: 'dark',
+      animations: true,
+      toastDuration: 3000, // 3 seconds
+      autoLoadSuggestions: true,
+      showCoordinates: true,
+    },
+
+    // Performance configuration
+    performance: {
+      enableServiceWorker: false, // Enable in production for offline support
+      lazyLoading: true,
+      searchDebounce: 300, // 300ms
+      virtualScrollThreshold: 100, // items
+    },
+
+    // Monitoring configuration
+    monitoring: {
+      enabled: false, // Enable in production
+      sampleRate: 1.0, // 100% of errors
+      enablePerformance: false,
+      performanceSampleRate: 0.1, // 10% of sessions
+    },
+
+    // Feature flags
+    features: {
+      aiPlayers: true,
+      multiplayer: true,
+      suggestions: true,
+      authentication: false, // Future feature
+      leaderboards: false, // Future feature
+      socialSharing: false, // Future feature
+    },
+  },
+
+  // ============================================================================
+  // ENVIRONMENT-SPECIFIC OVERRIDES (Backend)
+  // ============================================================================
+
   $development: {
     logging: {
       level: 'debug',
@@ -221,6 +282,18 @@ export default {
     },
     monitoring: {
       enabled: false, // Typically disabled in local development
+    },
+    web: {
+      app: {
+        devMode: true,
+        debugMode: true,
+      },
+      api: {
+        baseUrl: 'http://localhost:3000',
+      },
+      monitoring: {
+        enabled: false,
+      },
     },
   },
 
@@ -269,6 +342,31 @@ export default {
       maxConcurrentGames: 20, // Higher limit per user in production
       autoArchiveAfterHours: 48, // Keep games longer in production (2 days)
     },
+    web: {
+      app: {
+        devMode: false,
+        debugMode: false,
+      },
+      api: {
+        // API URL auto-detected from window.location in production
+        // Can be overridden with VITE_API_URL environment variable
+        timeout: 60000, // 60 seconds - longer timeout for production
+        maxRetries: 5, // More retries in production
+      },
+      ui: {
+        animations: true, // Keep animations in production
+      },
+      performance: {
+        enableServiceWorker: true, // Enable for offline support
+        lazyLoading: true,
+      },
+      monitoring: {
+        enabled: true, // Enable error tracking in production
+        sampleRate: 1.0,
+        enablePerformance: true,
+        performanceSampleRate: 0.1,
+      },
+    },
   },
 
   $test: {
@@ -294,9 +392,27 @@ export default {
     compression: {
       enabled: false, // Faster tests without compression
     },
+    web: {
+      app: {
+        devMode: false,
+        debugMode: false,
+      },
+      api: {
+        baseUrl: 'http://localhost:3001', // Test server
+        timeout: 5000, // Faster timeout for tests
+        retryEnabled: false, // No retries in tests
+      },
+      ui: {
+        animations: false, // Disable animations in tests
+        toastDuration: 100, // Faster toasts in tests
+      },
+      monitoring: {
+        enabled: false,
+      },
+    },
   },
-} satisfies DeepPartial<AppConfig> & {
-  $development?: DeepPartial<AppConfig>
-  $production?: DeepPartial<AppConfig>
-  $test?: DeepPartial<AppConfig>
+} satisfies DeepPartial<AppConfig & { web: WebConfig }> & {
+  $development?: DeepPartial<AppConfig & { web: WebConfig }>
+  $production?: DeepPartial<AppConfig & { web: WebConfig }>
+  $test?: DeepPartial<AppConfig & { web: WebConfig }>
 }
