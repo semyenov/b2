@@ -56,6 +56,13 @@ export default defineConfig(async () => {
           changeOrigin: true,
           secure: false,
         },
+        // Legacy /api prefix support
+        '/api': {
+          target: webConfig.api.baseUrl,
+          changeOrigin: true,
+          secure: false,
+          rewrite: path => path.replace(/^\/api/, ''),
+        },
       },
     },
   }
