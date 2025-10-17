@@ -1,10 +1,17 @@
 # Development Dockerfile for Balda API Server
 FROM oven/bun:1-alpine
 
+# Install development tools
+RUN apk add --no-cache \
+    curl \
+    wget \
+    git \
+    bash
+
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better caching
 COPY package.json bun.lock ./
 
 # Install all dependencies (including dev dependencies)
@@ -13,8 +20,22 @@ RUN bun install
 # Copy source code
 COPY . .
 
+# Create non-root user for development
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S balda -u 1001
+
+# Change ownership of app directory
+RUN chown -R balda:nodejs /app
+
+# Switch to non-root user
+USER balda
+
 # Expose port
 EXPOSE 3000
 
-# Start the development server
+# Health check for development
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+
+# Start the development server with hot reloading
 CMD ["bun", "run", "dev"]

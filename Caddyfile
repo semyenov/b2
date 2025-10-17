@@ -1,0 +1,106 @@
+# Caddyfile for Balda Game Application
+# This configuration sets up Caddy as a reverse proxy
+
+# Global options
+{
+    # Enable automatic HTTPS
+    email admin@localhost
+    # Use staging Let's Encrypt for development
+    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+# Main application server
+:80 {
+    # Enable CORS for development
+    header {
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+        Access-Control-Max-Age "86400"
+    }
+
+    # Handle preflight requests
+    @options {
+        method OPTIONS
+    }
+    respond @options 200
+
+    # API routes - proxy to backend server
+    handle /api/* {
+        # Strip /api prefix when forwarding to backend
+        rewrite * {path}
+        reverse_proxy localhost:3000
+    }
+
+    # WebSocket connections for real-time game updates
+    handle /ws {
+        reverse_proxy localhost:3000 {
+            # WebSocket upgrade
+            header_up Connection {>Connection}
+            header_up Upgrade {>Upgrade}
+        }
+    }
+
+    # Health check endpoint
+    handle /health {
+        reverse_proxy localhost:3000
+    }
+
+    # Swagger documentation
+    handle /swagger* {
+        reverse_proxy localhost:3000
+    }
+
+    # Static files - serve built frontend
+    handle /* {
+        root * /srv
+        file_server
+        try_files {path} /index.html
+    }
+
+    # Fallback for SPA routing
+    handle {
+        root * /srv
+        file_server
+        try_files {path} /index.html
+    }
+}
+
+# HTTPS configuration (for production)
+# Uncomment and configure for production deployment
+# balda.example.com {
+#     # Enable automatic HTTPS
+#     tls {
+#         dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+#     }
+#     
+#     # Same configuration as above but for HTTPS
+#     header {
+#         Strict-Transport-Security "max-age=31536000; includeSubDomains"
+#         X-Content-Type-Options "nosniff"
+#         X-Frame-Options "DENY"
+#         X-XSS-Protection "1; mode=block"
+#     }
+#     
+#     # API routes
+#     handle /api/* {
+#         reverse_proxy localhost:3000 {
+#             rewrite * /{path}
+#         }
+#     }
+#     
+#     # WebSocket connections
+#     handle /ws {
+#         reverse_proxy localhost:3000 {
+#             header_up Connection {>Connection}
+#             header_up Upgrade {>Upgrade}
+#         }
+#     }
+#     
+#     # Static files
+#     handle {
+#         root * /srv
+#         file_server
+#         try_files {path} /index.html
+#     }
+# }

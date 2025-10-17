@@ -1,23 +1,41 @@
 # Development Dockerfile for Balda Web Frontend
-FROM node:18-alpine
+FROM oven/bun:1-alpine
+
+# Install development tools
+RUN apk add --no-cache \
+    curl \
+    wget \
+    git \
+    bash
 
 # Set working directory
 WORKDIR /app
 
-# Install bun
-RUN npm install -g bun
-
-# Copy package files
+# Copy package files first for better caching
 COPY package.json bun.lock ./
 
-# Install dependencies
+# Install all dependencies (including dev dependencies)
 RUN bun install
 
 # Copy source code
 COPY . .
 
+# Create non-root user for development
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S balda -u 1001
+
+# Change ownership of app directory
+RUN chown -R balda:nodejs /app
+
+# Switch to non-root user
+USER balda
+
 # Expose port
 EXPOSE 5173
 
-# Start the development server
-CMD ["bun", "run", "dev"]
+# Health check for development
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:5173 || exit 1
+
+# Start the development server with hot reloading
+CMD ["bun", "run", "dev:web"]

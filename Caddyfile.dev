@@ -1,0 +1,48 @@
+# Development Caddyfile for Balda Game Application
+
+:80 {
+    # Enable CORS for development
+    header {
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+        Access-Control-Max-Age "86400"
+    }
+
+    # Handle preflight requests
+    @options {
+        method OPTIONS
+    }
+    respond @options 200
+
+    # API routes - proxy to backend server
+    handle /api/* {
+        # Strip /api prefix when forwarding to backend
+        rewrite * {path}
+        reverse_proxy api:3000
+    }
+
+    # WebSocket connections for real-time game updates
+    handle /ws {
+        reverse_proxy api:3000 {
+            # WebSocket upgrade
+            header_up Connection {>Connection}
+            header_up Upgrade {>Upgrade}
+        }
+    }
+
+    # Health check endpoint
+    handle /health {
+        reverse_proxy api:3000
+    }
+
+    # Swagger documentation
+    handle /swagger* {
+        reverse_proxy api:3000
+    }
+
+    # Frontend development server
+    handle /* {
+        reverse_proxy web:5173
+    }
+}

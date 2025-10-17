@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package files
 COPY package.json bun.lock ./
 
-# Install dependencies (production only)
-RUN bun install --frozen-lockfile --production
+# Install all dependencies (including dev dependencies for build)
+RUN bun install --frozen-lockfile
 
 # Copy source code
 COPY . .
@@ -19,6 +19,9 @@ RUN bun run build:server
 # Production stage
 FROM oven/bun:1-alpine AS production
 
+# Install wget for health checks
+RUN apk add --no-cache wget
+
 # Set working directory
 WORKDIR /app
 
@@ -28,13 +31,15 @@ COPY --from=base /app/dist/server ./dist/server
 COPY --from=base /app/src ./src
 COPY --from=base /app/package.json ./
 COPY --from=base /app/balda.config.ts ./
+COPY --from=base /app/tsconfig.json ./
+COPY --from=base /app/tsconfig.base.json ./
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S balda -u 1001
 
-# Change ownership
-RUN chown -R balda:nodejs /app
+# Change ownership of specific directories only
+RUN chown -R balda:nodejs /app/src /app/dist /app/package.json /app/balda.config.ts /app/tsconfig.json /app/tsconfig.base.json
 USER balda
 
 # Expose port
@@ -44,5 +49,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
-# Start the application (from source for better Bun compatibility)
-CMD ["bun", "run", "start"]
+# Start the application from built dist (with proper module resolution)
+CMD ["bun", "run", "dist/server/index.js"]
