@@ -1,11 +1,11 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { loadWebConfig } from './src/shared/config/web'
+import { loadConfig } from './src/shared/config/web'
 
 export default defineConfig(async () => {
   // Load web config using c12 (same pattern as backend)
-  const webConfig = await loadWebConfig()
+  const webConfig = await loadConfig()
 
   return {
     plugins: [
