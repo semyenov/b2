@@ -22,6 +22,37 @@ interface EnvironmentConfig {
 }
 
 /**
+ * Detects API base URL based on environment
+ * - Explicit VITE_API_URL takes priority (allows custom API domains)
+ * - Development mode: defaults to http://localhost:3000
+ * - Production mode: auto-detects from current window.location (same-origin)
+ */
+function detectApiBaseUrl(mode: EnvironmentConfig['mode']): string {
+  // Explicit override via environment variable (highest priority)
+  const envApiUrl = import.meta.env['VITE_API_URL']
+  if (envApiUrl) {
+    return envApiUrl
+  }
+
+  // Development: use localhost backend
+  if (mode === 'development') {
+    return 'http://localhost:3000'
+  }
+
+  // Production: auto-detect from current page URL (same-origin API)
+  if (typeof window !== 'undefined' && window.location) {
+    const { protocol, hostname, port } = window.location
+    // Use current origin (same protocol, host, port)
+    // This assumes frontend and backend are served from the same domain
+    const detectedPort = port ? `:${port}` : ''
+    return `${protocol}//${hostname}${detectedPort}`
+  }
+
+  // Fallback (should never happen in browser)
+  return 'http://localhost:3000'
+}
+
+/**
  * Validates and returns environment configuration
  * Throws error if configuration is invalid
  */
@@ -34,8 +65,8 @@ function getEnvironmentConfig(): EnvironmentConfig {
     throw new Error(`Invalid MODE: ${mode}. Must be one of: development, production, test`)
   }
 
-  // Get API URL with validation
-  const apiBaseUrl = import.meta.env['VITE_API_URL'] || 'http://localhost:3000'
+  // Detect API URL (smart detection based on mode)
+  const apiBaseUrl = detectApiBaseUrl(mode)
 
   // Validate API URL format
   try {
@@ -43,12 +74,14 @@ function getEnvironmentConfig(): EnvironmentConfig {
     void new URL(apiBaseUrl)
   }
   catch {
-    throw new Error(`Invalid VITE_API_URL: ${apiBaseUrl}. Must be a valid URL (e.g., http://localhost:3000)`)
+    throw new Error(`Invalid API URL: ${apiBaseUrl}. Must be a valid URL (e.g., http://localhost:3000)`)
   }
 
-  // Warn if using default in production
-  if (mode === 'production' && apiBaseUrl === 'http://localhost:3000') {
-    console.warn('⚠️  Using default API URL (http://localhost:3000) in production. Set VITE_API_URL environment variable.')
+  // Log detected URL in development for debugging
+  // Note: Cannot use logger here due to circular dependency (logger imports env)
+  if (mode === 'development') {
+    // eslint-disable-next-line no-console
+    console.log(`🔗 API URL: ${apiBaseUrl}`)
   }
 
   // Generate WebSocket URL from API URL

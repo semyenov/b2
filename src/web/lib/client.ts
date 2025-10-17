@@ -6,6 +6,7 @@ import type {
   SuggestionSchema,
 } from '@shared/schemas'
 import type { Static } from '@sinclair/typebox'
+import { env } from '@config/env'
 import { logger } from '@utils/logger'
 
 export type GameState = Static<typeof GameStateSchema>
@@ -15,26 +16,19 @@ export type Placement = Static<typeof PlacementSchema>
 export type Suggestion = Static<typeof SuggestionSchema>
 
 /**
- * Get API base URL based on environment
- * In development: uses http://localhost:3000 (direct backend connection)
- * In production: can be overridden via VITE_API_URL environment variable
- * Can be overridden via constructor parameter
- */
-function getDefaultApiBaseUrl(): string {
-  // Use direct backend URL (no proxy)
-  // CORS is configured in backend to allow cross-origin requests
-  return import.meta.env['VITE_API_URL'] || 'http://localhost:3000'
-}
-
-/**
  * API Client for Balda Game Backend
  * Handles all HTTP and WebSocket communication with the game server
+ *
+ * API URL is automatically detected:
+ * - Development: http://localhost:3000
+ * - Production: Same origin as frontend (auto-detected)
+ * - Custom: Override via VITE_API_URL environment variable
  */
 export class ApiClient {
   /**
-   * @param baseUrl - Base URL for API endpoints (default: '/api' for Vite proxy)
+   * @param baseUrl - Base URL for API endpoints (default: auto-detected from env config)
    */
-  constructor(private baseUrl: string = getDefaultApiBaseUrl()) { }
+  constructor(private baseUrl: string = env.apiBaseUrl) { }
 
   /**
    * Fetch JSON from API with error handling
