@@ -46,25 +46,27 @@ export function createJwtPlugin() {
   return new Elysia({ name: 'jwt-auth' })
     .use(jwt({
       name: 'jwt',
+      alg: 'HS256',
       secret: config.jwt.secret,
       exp: config.jwt.accessTokenExpiry,
     }))
     .use(jwt({
       name: 'refreshJwt',
+      alg: 'HS256',
       secret: config.jwt.refreshSecret,
       exp: config.jwt.refreshTokenExpiry,
     }))
     .derive(async ({ jwt, headers }) => {
       const auth = headers['authorization']
       if (!auth?.startsWith('Bearer ')) {
-        return { user: null as AuthUser | null }
+        return { user: null }
       }
 
       const token = auth.slice(7)
       try {
         const payload = await jwt.verify(token) as JWTPayload | false
         if (!payload) {
-          return { user: null as AuthUser | null }
+          return { user: null }
         }
 
         return {
@@ -72,11 +74,11 @@ export function createJwtPlugin() {
             id: payload.userId,
             email: payload.email,
             username: payload.username,
-          } as AuthUser,
+          },
         }
       }
       catch {
-        return { user: null as AuthUser | null }
+        return { user: null }
       }
     })
 }
@@ -90,7 +92,7 @@ export async function generateAccessToken(app: { jwt: { sign: (payload: Record<s
     email: user.email,
     username: user.username,
   }
-  return await (app.jwt.sign as (payload: Record<string, unknown>) => Promise<string>)(payload)
+  return await app.jwt.sign(payload)
 }
 
 /**
@@ -100,5 +102,5 @@ export async function generateRefreshToken(app: { refreshJwt: { sign: (payload: 
   const payload = {
     userId,
   }
-  return await (app.refreshJwt.sign as (payload: Record<string, unknown>) => Promise<string>)(payload)
+  return await app.refreshJwt.sign(payload)
 }
