@@ -64,7 +64,7 @@ export default {
 
   // CORS configuration
   cors: {
-    origin: true, // Allow all origins (set to specific domains in production)
+    origin: true, // Allow all origins in development (override in production with specific domains)
     credentials: true,
   },
 
@@ -81,7 +81,10 @@ export default {
 
   // WebSocket configuration
   websocket: {
-    archiveDelayMs: 300000, // 5 minutes
+    archiveDelayMs: 300000, // 5 minutes - delay before archiving inactive game connections
+    maxConnections: 1000, // Maximum concurrent WebSocket connections (per server instance)
+    pingInterval: 30000, // 30 seconds - keep-alive ping interval
+    pongTimeout: 10000, // 10 seconds - timeout waiting for pong response
   },
 
   // API documentation (Swagger)
@@ -223,33 +226,48 @@ export default {
 
   $production: {
     server: {
-      trustProxy: true, // Enable if behind reverse proxy (Nginx, HAProxy, etc.)
+      trustProxy: true, // Enable when behind reverse proxy (Nginx, HAProxy, Caddy, etc.)
+      requestTimeout: 60000, // 60 seconds - longer timeout for production
     },
     logging: {
-      level: 'info',
-      format: 'json',
-      colors: false,
+      level: 'info', // Only log important information in production
+      format: 'json', // Structured logging for log aggregation (ELK, Datadog, etc.)
+      colors: false, // No ANSI colors in production logs
     },
     swagger: {
       enabled: false, // Disable Swagger in production for security
     },
     rateLimit: {
       enabled: true,
-      max: 100, // Stricter rate limiting in production
+      max: 200, // Higher limit for production traffic
+      duration: 60000, // 1 minute window
+    },
+    cors: {
+      // IMPORTANT: Set specific origins in production for security
+      // Example: origin: ['https://balda.example.com', 'https://www.balda.example.com']
+      origin: true, // Override with specific domains via CORS_ORIGIN env var
     },
     security: {
-      enabled: true, // Enable security headers in production
+      enabled: true, // Enable all security headers in production
     },
     healthCheck: {
-      detailed: false, // Hide detailed metrics in production
+      detailed: false, // Hide detailed system metrics in production
     },
     monitoring: {
-      enabled: true, // Enable error tracking in production
-      sentrySampleRate: 1.0, // Send all errors to Sentry
+      enabled: true, // Enable error tracking and metrics in production
+      sentrySampleRate: 1.0, // Send all errors to Sentry (adjust if high volume)
     },
     compression: {
       enabled: true,
-      level: 6, // Good balance between speed and compression
+      level: 6, // Good balance between speed and compression ratio
+    },
+    websocket: {
+      maxConnections: 2000, // Higher limit for production (adjust based on server capacity)
+      pingInterval: 45000, // 45 seconds - slightly longer interval for production
+    },
+    game: {
+      maxConcurrentGames: 20, // Higher limit per user in production
+      autoArchiveAfterHours: 48, // Keep games longer in production (2 days)
     },
   },
 

@@ -122,6 +122,12 @@ export interface StorageConfig {
 export interface WebSocketConfig {
   /** Archive delay for inactive games in milliseconds (default: 300000 = 5 minutes) */
   archiveDelayMs: number
+  /** Maximum concurrent WebSocket connections per server instance (default: 1000) */
+  maxConnections: number
+  /** Keep-alive ping interval in milliseconds (default: 30000 = 30 seconds) */
+  pingInterval: number
+  /** Timeout waiting for pong response in milliseconds (default: 10000 = 10 seconds) */
+  pongTimeout: number
 }
 
 /**
@@ -371,6 +377,9 @@ export const defaultConfig: AppConfig = {
   },
   websocket: {
     archiveDelayMs: 300000, // 5 minutes
+    maxConnections: 1000,
+    pingInterval: 30000, // 30 seconds
+    pongTimeout: 10000, // 10 seconds
   },
   swagger: {
     enabled: true,

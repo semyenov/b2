@@ -166,6 +166,9 @@ function mergeEnvVariables(baseConfig: Partial<AppConfig>): Partial<AppConfig> {
     websocket: {
       ...baseConfig.websocket,
       archiveDelayMs: parseNumber(env['WS_ARCHIVE_DELAY_MS'], baseConfig.websocket?.archiveDelayMs || 300000),
+      maxConnections: parseNumber(env['WS_MAX_CONNECTIONS'], baseConfig.websocket?.maxConnections || 1000),
+      pingInterval: parseNumber(env['WS_PING_INTERVAL'], baseConfig.websocket?.pingInterval || 30000),
+      pongTimeout: parseNumber(env['WS_PONG_TIMEOUT'], baseConfig.websocket?.pongTimeout || 10000),
     },
     swagger: {
       ...baseConfig.swagger,
