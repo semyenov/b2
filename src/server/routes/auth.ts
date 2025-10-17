@@ -37,9 +37,8 @@ export function createAuthPlugin() {
         const user = await userService.create(body.email, body.username, body.password)
 
         // Generate tokens
-        // Type cast needed due to Elysia JWT plugin type limitations - runtime types are correct
-        const token = await generateAccessToken({ jwt: jwt as any }, user)
-        const refreshToken = await generateRefreshToken({ refreshJwt: refreshJwt as any }, user.id)
+        const token = await generateAccessToken({ jwt: jwt as { sign: (payload: Record<string, unknown>) => Promise<string> } }, user)
+        const refreshToken = await generateRefreshToken({ refreshJwt: refreshJwt as { sign: (payload: Record<string, unknown>) => Promise<string> } }, user.id)
 
         logger.info(`User registered successfully: ${user.email} (${user.username})`)
 
@@ -90,9 +89,8 @@ export function createAuthPlugin() {
       }
 
       // Generate tokens
-      // Type cast needed due to Elysia JWT plugin type limitations - runtime types are correct
-      const token = await generateAccessToken({ jwt: jwt as any }, user)
-      const refreshToken = await generateRefreshToken({ refreshJwt: refreshJwt as any }, user.id)
+      const token = await generateAccessToken({ jwt: jwt as { sign: (payload: Record<string, unknown>) => Promise<string> } }, user)
+      const refreshToken = await generateRefreshToken({ refreshJwt: refreshJwt as { sign: (payload: Record<string, unknown>) => Promise<string> } }, user.id)
 
       logger.info(`User logged in successfully: ${user.email} (${user.username})`)
 
@@ -140,8 +138,7 @@ export function createAuthPlugin() {
         }
 
         // Generate new access token
-        // Type cast needed due to Elysia JWT plugin type limitations - runtime types are correct
-        const token = await generateAccessToken({ jwt: jwt as any }, user)
+        const token = await generateAccessToken({ jwt: jwt as { sign: (payload: Record<string, unknown>) => Promise<string> } }, user)
 
         logger.info(`Token refreshed for user: ${user.email}`)
 

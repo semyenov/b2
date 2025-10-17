@@ -1,5 +1,4 @@
 import type { User } from '../models/user'
-import type { JWTPlugin } from '../types/elysia'
 import { jwt } from '@elysiajs/jwt'
 import { getConfig } from '@shared/config/server'
 import { Elysia } from 'elysia'
@@ -85,21 +84,21 @@ export function createJwtPlugin() {
 /**
  * Generate access token for user
  */
-export async function generateAccessToken(app: { jwt: JWTPlugin }, user: Pick<User, 'id' | 'email' | 'username'>): Promise<string> {
-  const payload: Record<string, unknown> & JWTPayload = {
+export async function generateAccessToken(app: { jwt: { sign: (payload: Record<string, unknown>) => Promise<string> } }, user: Pick<User, 'id' | 'email' | 'username'>): Promise<string> {
+  const payload = {
     userId: user.id,
     email: user.email,
     username: user.username,
   }
-  return await app.jwt.sign(payload)
+  return await (app.jwt.sign as (payload: Record<string, unknown>) => Promise<string>)(payload)
 }
 
 /**
  * Generate refresh token for user
  */
-export async function generateRefreshToken(app: { refreshJwt: JWTPlugin }, userId: string): Promise<string> {
-  const payload: Record<string, unknown> & RefreshTokenPayload = {
+export async function generateRefreshToken(app: { refreshJwt: { sign: (payload: Record<string, unknown>) => Promise<string> } }, userId: string): Promise<string> {
+  const payload = {
     userId,
   }
-  return await app.refreshJwt.sign(payload)
+  return await (app.refreshJwt.sign as (payload: Record<string, unknown>) => Promise<string>)(payload)
 }

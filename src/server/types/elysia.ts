@@ -1,15 +1,6 @@
 import type { AuthUser } from '../auth/jwt'
 
 /**
- * JWT plugin interface
- * Defines the shape of the jwt object added by @elysiajs/jwt
- */
-export interface JWTPlugin {
-  sign: (payload: Record<string, unknown>) => Promise<string>
-  verify: (token: string) => Promise<Record<string, unknown> | false>
-}
-
-/**
  * Extended request with custom properties
  */
 export interface ExtendedRequest extends Request {
@@ -32,8 +23,14 @@ export interface BaseContext {
  * Context with JWT plugins
  */
 export interface JWTContext extends BaseContext {
-  jwt: JWTPlugin
-  refreshJwt: JWTPlugin
+  jwt: {
+    sign: (payload: Record<string, unknown>) => Promise<string>
+    verify: (token?: string, options?: unknown) => Promise<Record<string, unknown> | false>
+  }
+  refreshJwt: {
+    sign: (payload: Record<string, unknown>) => Promise<string>
+    verify: (token?: string, options?: unknown) => Promise<Record<string, unknown> | false>
+  }
 }
 
 /**
