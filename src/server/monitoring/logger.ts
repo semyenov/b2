@@ -1,5 +1,5 @@
+import { getConfig } from '@shared/config/server'
 import { consola, createConsola } from 'consola'
-import { getConfig } from '../config'
 
 /**
  * Application logger with structured logging support

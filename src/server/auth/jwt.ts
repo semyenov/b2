@@ -1,8 +1,8 @@
 import type { User } from '../models/user'
 import type { JWTPlugin } from '../types/elysia'
 import { jwt } from '@elysiajs/jwt'
+import { getConfig } from '@shared/config/server'
 import { Elysia } from 'elysia'
-import { getConfig } from '../config'
 
 /**
  * JWT payload interface

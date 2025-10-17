@@ -52,7 +52,7 @@ export const LetterButton = memo<LetterButtonProps>(({
       aria-label={isSelected ? A11Y_LABELS.LETTER_BUTTON_SELECTED(letter) : A11Y_LABELS.LETTER_BUTTON(letter)}
       aria-pressed={isSelected}
       className={cn(
-        'w-full aspect-square font-black text-xl sm:text-2xl transition-all duration-300 border-2',
+        'w-full h-full aspect-square font-black text-xl sm:text-2xl transition-all duration-300 border-2',
         'group relative',
         getButtonStyle(),
         !isDisabled && 'cursor-pointer',

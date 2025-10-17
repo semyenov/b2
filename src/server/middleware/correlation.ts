@@ -1,5 +1,5 @@
+import { getConfig } from '@shared/config/server'
 import { Elysia } from 'elysia'
-import { getConfig } from '../config'
 import { logger, logRequest, logResponse } from '../monitoring/logger'
 
 /**

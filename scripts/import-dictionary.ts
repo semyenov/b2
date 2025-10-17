@@ -5,9 +5,9 @@
  */
 
 import { readFile } from 'node:fs/promises'
+import { loadConfig } from '@shared/config/server'
 import { consola } from 'consola'
 import { sift } from 'radash'
-import { loadConfig } from '../src/server/config'
 import { checkDatabaseConnection, db } from '../src/server/db/client'
 import { words } from '../src/server/db/schema'
 

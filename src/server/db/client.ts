@@ -1,7 +1,7 @@
+import { getConfig } from '@shared/config/server'
 import { consola } from 'consola'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
-import { getConfig } from '../config'
 import * as schema from './schema'
 
 /**
