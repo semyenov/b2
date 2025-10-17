@@ -102,6 +102,13 @@ function mergeEnvVariables(baseConfig: Partial<AppConfig>): Partial<AppConfig> {
   const isProduction = nodeEnv === 'production'
   const isDevelopment = nodeEnv === 'development'
 
+  // Helper to parse arrays from comma-separated strings
+  const parseArray = (value: string | undefined, defaultValue: string[]): string[] => {
+    if (!value)
+      return defaultValue
+    return value.split(',').map(v => v.trim()).filter(Boolean)
+  }
+
   return {
     server: {
       ...baseConfig.server,
@@ -110,6 +117,10 @@ function mergeEnvVariables(baseConfig: Partial<AppConfig>): Partial<AppConfig> {
       nodeEnv,
       isProduction,
       isDevelopment,
+      requestTimeout: parseNumber(env['REQUEST_TIMEOUT'], baseConfig.server?.requestTimeout || 30000),
+      bodyLimit: parseNumber(env['BODY_LIMIT'], baseConfig.server?.bodyLimit || 10485760),
+      shutdownTimeout: parseNumber(env['SHUTDOWN_TIMEOUT'], baseConfig.server?.shutdownTimeout || 10000),
+      trustProxy: parseBoolean(env['TRUST_PROXY'], baseConfig.server?.trustProxy ?? false),
     },
     database: {
       ...baseConfig.database,
@@ -160,6 +171,88 @@ function mergeEnvVariables(baseConfig: Partial<AppConfig>): Partial<AppConfig> {
       ...baseConfig.swagger,
       enabled: parseBoolean(env['SWAGGER_ENABLED'], baseConfig.swagger?.enabled ?? !isProduction),
       path: env['SWAGGER_PATH'] || baseConfig.swagger?.path || '/swagger',
+    },
+    security: {
+      ...baseConfig.security,
+      enabled: parseBoolean(env['SECURITY_ENABLED'], baseConfig.security?.enabled ?? isProduction),
+      hsts: {
+        enabled: parseBoolean(env['HSTS_ENABLED'], baseConfig.security?.hsts?.enabled ?? true),
+        maxAge: parseNumber(env['HSTS_MAX_AGE'], baseConfig.security?.hsts?.maxAge || 31536000),
+        includeSubDomains: parseBoolean(env['HSTS_INCLUDE_SUBDOMAINS'], baseConfig.security?.hsts?.includeSubDomains ?? true),
+        preload: parseBoolean(env['HSTS_PRELOAD'], baseConfig.security?.hsts?.preload ?? true),
+      },
+      csp: {
+        enabled: parseBoolean(env['CSP_ENABLED'], baseConfig.security?.csp?.enabled ?? true),
+        directives: baseConfig.security?.csp?.directives || {},
+      },
+      frameOptions: (env['FRAME_OPTIONS'] || baseConfig.security?.frameOptions || 'DENY') as any,
+      contentTypeOptions: parseBoolean(env['CONTENT_TYPE_OPTIONS'], baseConfig.security?.contentTypeOptions ?? true),
+      xssProtection: parseBoolean(env['XSS_PROTECTION'], baseConfig.security?.xssProtection ?? true),
+    },
+    compression: {
+      ...baseConfig.compression,
+      enabled: parseBoolean(env['COMPRESSION_ENABLED'], baseConfig.compression?.enabled ?? true),
+      level: parseNumber(env['COMPRESSION_LEVEL'], baseConfig.compression?.level || 6),
+      threshold: parseNumber(env['COMPRESSION_THRESHOLD'], baseConfig.compression?.threshold || 1024),
+      algorithms: baseConfig.compression?.algorithms || ['gzip', 'br'],
+    },
+    healthCheck: {
+      ...baseConfig.healthCheck,
+      enabled: parseBoolean(env['HEALTH_CHECK_ENABLED'], baseConfig.healthCheck?.enabled ?? true),
+      path: env['HEALTH_CHECK_PATH'] || baseConfig.healthCheck?.path || '/health',
+      timeout: parseNumber(env['HEALTH_CHECK_TIMEOUT'], baseConfig.healthCheck?.timeout || 5000),
+      detailed: parseBoolean(env['HEALTH_CHECK_DETAILED'], baseConfig.healthCheck?.detailed ?? !isProduction),
+    },
+    monitoring: {
+      ...baseConfig.monitoring,
+      enabled: parseBoolean(env['MONITORING_ENABLED'], baseConfig.monitoring?.enabled ?? isProduction),
+      sentryDsn: env['SENTRY_DSN'] || baseConfig.monitoring?.sentryDsn,
+      sentryEnvironment: env['SENTRY_ENVIRONMENT'] || baseConfig.monitoring?.sentryEnvironment || nodeEnv,
+      sentrySampleRate: env['SENTRY_SAMPLE_RATE'] ? Number.parseFloat(env['SENTRY_SAMPLE_RATE']) : (baseConfig.monitoring?.sentrySampleRate || 1.0),
+      prometheusEnabled: parseBoolean(env['PROMETHEUS_ENABLED'], baseConfig.monitoring?.prometheusEnabled ?? false),
+      prometheusPath: env['PROMETHEUS_PATH'] || baseConfig.monitoring?.prometheusPath || '/metrics',
+      correlationEnabled: parseBoolean(env['CORRELATION_ENABLED'], baseConfig.monitoring?.correlationEnabled ?? true),
+    },
+    cache: {
+      ...baseConfig.cache,
+      enabled: parseBoolean(env['CACHE_ENABLED'], baseConfig.cache?.enabled ?? false),
+      redisUrl: env['REDIS_URL'] || baseConfig.cache?.redisUrl,
+      keyPrefix: env['REDIS_KEY_PREFIX'] || baseConfig.cache?.keyPrefix || 'balda:',
+      defaultTtl: parseNumber(env['REDIS_DEFAULT_TTL'], baseConfig.cache?.defaultTtl || 3600),
+      maxMemoryPolicy: env['REDIS_MAX_MEMORY_POLICY'] || baseConfig.cache?.maxMemoryPolicy || 'allkeys-lru',
+    },
+    game: {
+      ...baseConfig.game,
+      allowedBoardSizes: env['GAME_ALLOWED_BOARD_SIZES']
+        ? parseArray(env['GAME_ALLOWED_BOARD_SIZES'], []).map(Number)
+        : (baseConfig.game?.allowedBoardSizes || [3, 4, 5, 6, 7]),
+      defaultBoardSize: parseNumber(env['GAME_DEFAULT_BOARD_SIZE'], baseConfig.game?.defaultBoardSize || 5),
+      turnTimeout: parseNumber(env['GAME_TURN_TIMEOUT'], baseConfig.game?.turnTimeout || 0),
+      maxConcurrentGames: parseNumber(env['GAME_MAX_CONCURRENT'], baseConfig.game?.maxConcurrentGames || 10),
+      autoArchiveAfterHours: parseNumber(env['GAME_AUTO_ARCHIVE_HOURS'], baseConfig.game?.autoArchiveAfterHours || 24),
+      maxPlayers: parseNumber(env['GAME_MAX_PLAYERS'], baseConfig.game?.maxPlayers || 4),
+    },
+    ai: {
+      ...baseConfig.ai,
+      thinkingDelay: parseNumber(env['AI_THINKING_DELAY'], baseConfig.ai?.thinkingDelay || 1500),
+      difficulty: (env['AI_DIFFICULTY'] || baseConfig.ai?.difficulty || 'medium') as any,
+      maxSuggestions: parseNumber(env['AI_MAX_SUGGESTIONS'], baseConfig.ai?.maxSuggestions || 100),
+      randomizeEasy: parseBoolean(env['AI_RANDOMIZE_EASY'], baseConfig.ai?.randomizeEasy ?? true),
+    },
+    featureFlags: {
+      ...baseConfig.featureFlags,
+      aiPlayers: parseBoolean(env['FEATURE_AI_PLAYERS'], baseConfig.featureFlags?.aiPlayers ?? true),
+      multiplayer: parseBoolean(env['FEATURE_MULTIPLAYER'], baseConfig.featureFlags?.multiplayer ?? true),
+      suggestions: parseBoolean(env['FEATURE_SUGGESTIONS'], baseConfig.featureFlags?.suggestions ?? true),
+      authentication: parseBoolean(env['FEATURE_AUTHENTICATION'], baseConfig.featureFlags?.authentication ?? false),
+      leaderboards: parseBoolean(env['FEATURE_LEADERBOARDS'], baseConfig.featureFlags?.leaderboards ?? false),
+    },
+    maintenance: {
+      ...baseConfig.maintenance,
+      enabled: parseBoolean(env['MAINTENANCE_ENABLED'], baseConfig.maintenance?.enabled ?? false),
+      message: env['MAINTENANCE_MESSAGE'] || baseConfig.maintenance?.message || 'System is under maintenance. Please try again later.',
+      allowedIps: env['MAINTENANCE_ALLOWED_IPS'] ? parseArray(env['MAINTENANCE_ALLOWED_IPS'], []) : (baseConfig.maintenance?.allowedIps || []),
+      estimatedEnd: env['MAINTENANCE_ESTIMATED_END'] || baseConfig.maintenance?.estimatedEnd,
     },
   }
 }
