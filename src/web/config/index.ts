@@ -39,7 +39,7 @@ export async function loadConfig(): Promise<WebConfig> {
     const { config: unifiedConfig } = await c12LoadConfig<{ web?: Partial<WebConfig> }>({
       name: 'balda', // Load balda.config.ts
       defaults: { web: defaultWebConfig },
-      dotenv: false, // Load from .env files
+      dotenv: true, // Load from .env files
       packageJson: false, // Don't load from package.json
       envName: process.env['NODE_ENV'] || 'development',
     })

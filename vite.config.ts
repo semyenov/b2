@@ -1,11 +1,12 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { loadConfig } from './src/web/config'
+import { loadConfig as loadServerConfig } from './src/server/config'
+import { loadConfig as loadWebConfig } from './src/web/config'
 
 export default defineConfig(async () => {
-  // Load web config using c12 (same pattern as backend)
-  const webConfig = await loadConfig()
+  const webConfig = await loadWebConfig()
+  const serverConfig = await loadServerConfig()
 
   return {
     plugins: [
@@ -43,13 +44,13 @@ export default defineConfig(async () => {
       proxy: {
         // Proxy all API endpoints (games, dictionary, health, etc.)
         '^/(games|dictionary|health|swagger)': {
-          target: webConfig.api.baseUrl,
+          target: `http://${serverConfig.server.host}:${serverConfig.server.port}`,
           changeOrigin: true,
           secure: false,
         },
         // Legacy /api prefix support
         '/api': {
-          target: webConfig.api.baseUrl,
+          target: `http://${serverConfig.server.host}:${serverConfig.server.port}`,
           changeOrigin: true,
           secure: false,
           rewrite: path => path.replace(/^\/api/, ''),

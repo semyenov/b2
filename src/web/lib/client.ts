@@ -28,7 +28,10 @@ export class ApiClient {
   /**
    * @param baseUrl - Base URL for API endpoints (default: auto-detected from config)
    */
-  constructor(private baseUrl: string = config.api.baseUrl) { }
+  constructor(private baseUrl: string = config.api.baseUrl) {
+    logger.info('baseUrl', { baseUrl })
+    logger.info('config', { config })
+  }
 
   /**
    * Fetch JSON from API with error handling
