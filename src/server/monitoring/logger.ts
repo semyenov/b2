@@ -26,7 +26,7 @@ function getLogger() {
                   timestamp: date?.toISOString(),
                   level: type,
                   tag,
-                  message: args.join(' '),
+                  message: args.filter(arg => typeof arg === 'string').join(' '),
                   ...rest,
                 }
                 // Use process.stdout.write for structured logging to avoid ESLint console rules

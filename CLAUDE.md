@@ -357,9 +357,11 @@ Web frontend uses `src/web/config/env.ts` for type-safe environment access.
 
 ## Production Deployment
 
-The web frontend is production-ready. See [PRODUCTION_READY.md](./PRODUCTION_READY.md) for:
-- Deployment checklist
-- Error monitoring setup (Sentry/LogRocket)
-- Bundle analysis
-- Maintenance guidelines
-- Code quality metrics
+The web frontend is production-ready. See documentation in `docs/guides/`:
+- [PRODUCTION_READY.md](./docs/guides/PRODUCTION_READY.md) - Deployment checklist, error monitoring, maintenance
+- [DEPLOYMENT_GUIDE.md](./docs/guides/DEPLOYMENT_GUIDE.md) - Step-by-step deployment instructions
+- [DOCKER.md](./docs/guides/DOCKER.md) - Docker containerization and orchestration
+- [DATABASE_MIGRATION_GUIDE.md](./docs/guides/DATABASE_MIGRATION_GUIDE.md) - Database setup and migrations
+- [DICTIONARY_SETUP_POSTGRES.md](./docs/guides/DICTIONARY_SETUP_POSTGRES.md) - Dictionary import and configuration
+
+For historical context and analysis, see `docs/archived/`.

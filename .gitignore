@@ -50,3 +50,5 @@ package-lock.json
 
 # environment config
 .env
+# Local environment overrides (gitignored)
+.env.local

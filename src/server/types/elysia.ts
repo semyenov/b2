@@ -10,10 +10,10 @@ export interface ExtendedRequest extends Request {
 /**
  * Base Elysia context with common properties
  */
-export interface BaseContext {
+export interface BaseContext extends Record<string, unknown> {
   request: ExtendedRequest
   set: {
-    status?: number | string
+    status?: number
     headers: Record<string, string>
   }
   headers: Record<string, string | undefined>

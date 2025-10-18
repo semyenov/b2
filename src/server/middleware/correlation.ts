@@ -11,65 +11,68 @@ import { logger, logRequest, logResponse } from '../monitoring/logger'
  * - Configuration is accessed lazily when needed
  */
 export const correlationMiddleware = new Elysia({ name: 'correlation' })
-  .derive(({ headers }) => {
-    // Extract or generate correlation ID
-    const correlationId = headers['x-correlation-id']
-      || headers['x-request-id']
+  .onRequest((context) => {
+    const { request } = context
+
+    // Extract or generate correlation ID from request headers
+    const correlationId = request.headers.get('x-correlation-id')
+      || request.headers.get('x-request-id')
       || crypto.randomUUID()
 
-    return { correlationId }
-  })
-  .onRequest((context: any) => {
-    // Type assertion needed: TypeScript can't infer that derive() adds 'correlationId'
-    const url = new URL(context.request.url)
+    const url = new URL(request.url)
 
     // Skip logging for certain paths
     if (url.pathname === '/favicon.ico' || url.pathname.startsWith('/swagger')) {
       return
     }
 
-    logRequest(context.request.method, url.pathname, context.correlationId)
+    logRequest(request.method, url.pathname, correlationId)
 
     // Store start time for duration tracking
-    ;(context.request as Request & { startTime?: number }).startTime = Date.now()
+    ;(request as Request & { startTime?: number }).startTime = Date.now()
+
+    // Store correlationId in the request for later use
+    ;(request as Request & { correlationId?: string }).correlationId = correlationId
   })
-  .onAfterResponse((context: any) => {
-    // Type assertion needed: TypeScript can't infer that derive() adds 'correlationId'
-    const url = new URL(context.request.url)
+  .onAfterResponse((context) => {
+    const { request, set } = context
+    const correlationId = (request as Request & { correlationId?: string }).correlationId
+    const url = new URL(request.url)
 
     // Skip logging for certain paths
     if (url.pathname === '/favicon.ico' || url.pathname.startsWith('/swagger')) {
       return
     }
 
-    const duration = Date.now() - ((context.request as Request & { startTime?: number }).startTime || Date.now())
-    const status = typeof context.set.status === 'number' ? context.set.status : 200
+    const duration = Date.now() - ((request as Request & { startTime?: number }).startTime || Date.now())
+    const status = typeof set.status === 'number' ? set.status : 200
 
-    logResponse(context.request.method, url.pathname, status, duration, context.correlationId)
+    logResponse(request.method, url.pathname, status, duration, correlationId)
   })
-  .onError((context: any) => {
-    // Type assertion needed: TypeScript can't infer that derive() adds 'correlationId'
-    const url = new URL(context.request.url)
+  .onError((context) => {
+    const { request, error } = context
+    const correlationId = (request as Request & { correlationId?: string }).correlationId
+    const url = new URL(request.url)
 
     // Access config lazily
     const config = getConfig()
 
     // Handle both Error instances and other error types
-    const errorInfo = context.error instanceof Error
+    const errorInfo = error instanceof Error
       ? {
-          name: context.error.name,
-          message: context.error.message,
-          stack: config.server.isProduction ? undefined : context.error.stack,
+          name: error.name,
+          message: error.message,
+          stack: config.server.isProduction ? undefined : error.stack,
         }
       : {
           name: 'UnknownError',
-          message: String(context.error),
+          message: String(error),
           stack: undefined,
         }
 
-    logger.error(`Error in ${context.request.method} ${url.pathname}`, {
-      correlationId: context.correlationId,
-      method: context.request.method,
+    logger.error(`Error in ${request.method} ${url.pathname}`, {
+      correlationId,
+      method: request.method,
       path: url.pathname,
       error: errorInfo,
     })

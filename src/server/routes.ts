@@ -87,6 +87,13 @@ async function getDictionary(): Promise<SizedDictionary> {
  * Dictionary plugin - handles dictionary-related endpoints
  */
 const dictionaryPlugin = new Elysia({ name: 'dictionary', prefix: '/dictionary', tags: ['dictionary'] })
+  .head('/', () => new Response(null, { status: 200 }), {
+    detail: {
+      summary: 'Dictionary metadata HEAD check',
+      description: 'HEAD request support for dictionary metadata endpoint.',
+      tags: ['dictionary'],
+    },
+  })
   .get('/', async () => {
     const dictPath = process.env['DICT_PATH']
     if (!dictPath)
@@ -122,6 +129,13 @@ const dictionaryPlugin = new Elysia({ name: 'dictionary', prefix: '/dictionary',
  * Game management plugin - handles game CRUD operations
  */
 const gamesPlugin = new Elysia({ name: 'games', prefix: '/games', tags: ['games'] })
+  .head('/', () => new Response(null, { status: 200 }), {
+    detail: {
+      summary: 'List all games (HEAD)',
+      description: 'HEAD request support for games list endpoint.',
+      tags: ['games'],
+    },
+  })
   .get('/', async () => await store.getAll(), {
     response: { 200: Type.Array(GameStateSchema) },
     detail: {
@@ -146,6 +160,21 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games', tags: ['games'
     detail: {
       summary: 'Create a new game',
       description: 'Creates a new Balda game with the specified board size, base word, and players. The base word is placed in the center row of the board.',
+      tags: ['games'],
+    },
+  })
+  .head('/:id', async ({ params }) => {
+    if (!isValidUUID(params.id))
+      throw new GameNotFoundError(params.id)
+    const game = await store.get(params.id)
+    if (!game)
+      throw new GameNotFoundError(params.id)
+    return new Response(null, { status: 200 })
+  }, {
+    params: GameIdParamsSchema,
+    detail: {
+      summary: 'Get game state (HEAD)',
+      description: 'HEAD request support for game state endpoint.',
       tags: ['games'],
     },
   })
@@ -196,6 +225,21 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games', tags: ['games'
       tags: ['games'],
     },
   })
+  .head('/:id/placements', async ({ params }) => {
+    if (!isValidUUID(params.id))
+      throw new GameNotFoundError(params.id)
+    const game = await store.get(params.id)
+    if (!game)
+      throw new GameNotFoundError(params.id)
+    return new Response(null, { status: 200 })
+  }, {
+    params: GameIdParamsSchema,
+    detail: {
+      summary: 'Find valid placements (HEAD)',
+      description: 'HEAD request support for placements endpoint.',
+      tags: ['games'],
+    },
+  })
   .get('/:id/placements', async ({ params, query }) => {
     // Validate UUID format before querying database
     if (!isValidUUID(params.id))
@@ -216,6 +260,21 @@ const gamesPlugin = new Elysia({ name: 'games', prefix: '/games', tags: ['games'
     detail: {
       summary: 'Find valid placements for a word',
       description: 'Returns all possible positions where a single letter can be placed to form the specified word on the current board.',
+      tags: ['games'],
+    },
+  })
+  .head('/:id/suggest', async ({ params }) => {
+    if (!isValidUUID(params.id))
+      throw new GameNotFoundError(params.id)
+    const game = await store.get(params.id)
+    if (!game)
+      throw new GameNotFoundError(params.id)
+    return new Response(null, { status: 200 })
+  }, {
+    params: GameIdParamsSchema,
+    detail: {
+      summary: 'Get AI move suggestions (HEAD)',
+      description: 'HEAD request support for suggestions endpoint.',
       tags: ['games'],
     },
   })
@@ -318,17 +377,17 @@ export function registerRoutes(app: Elysia): Elysia {
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore - Elysia type system complexities
   return app
-    .get('/health', () => ({ status: 'ok' }), {
-      detail: {
-        summary: 'Health check',
-        description: 'Returns the health status of the API server.',
-        tags: ['health'],
-      },
-    })
     .head('/health', () => new Response(null, { status: 200 }), {
       detail: {
         summary: 'Health check (HEAD)',
         description: 'Returns the health status of the API server for HEAD requests.',
+        tags: ['health'],
+      },
+    })
+    .get('/health', () => ({ status: 'ok' }), {
+      detail: {
+        summary: 'Health check',
+        description: 'Returns the health status of the API server.',
         tags: ['health'],
       },
     })
