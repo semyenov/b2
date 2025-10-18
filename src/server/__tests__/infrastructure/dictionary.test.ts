@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
-import { AllowAllSizedDictionary, TrieDictionary } from './dictionary'
+import { AllowAllSizedDictionary, TrieDictionary } from '../../domain/dictionary/dictionary'
 
 describe('Dictionary - TrieDictionary', () => {
   let dict: TrieDictionary

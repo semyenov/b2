@@ -32,20 +32,6 @@
         reverse_proxy api:3000
     }
 
-    # Health check endpoint (keep without /api prefix for Docker health checks)
-    handle /health {
-        reverse_proxy api:3000
-    }
-
-    # WebSocket connections for real-time game updates
-    handle /games/*/ws {
-        reverse_proxy api:3000 {
-            # WebSocket upgrade
-            header_up Connection {>Connection}
-            header_up Upgrade {>Upgrade}
-        }
-    }
-
     # Frontend - serve everything else from web container (nginx)
     # This handles / and all SPA routes
     handle {

@@ -1,12 +1,12 @@
 import type { Board, Suggestion, SuggestOptions } from '@shared/types'
-import type { SizedDictionary } from '../domain/dictionary/dictionary'
-import type { BoardPosition } from './balda'
+import type { SizedDictionary } from '../dictionary/dictionary'
+import type { BoardPosition } from './engine'
 import {
   ORTHOGONAL_DIRS,
   SUGGESTION_LIMITS,
   WORD_CONFIG,
 } from '@shared/config'
-import { calculateWordScore, isAdjacentToExisting, normalizeWord } from './balda'
+import { calculateWordScore, isAdjacentToExisting, normalizeWord } from './engine'
 
 // Re-export for backward compatibility
 export type { Suggestion, SuggestOptions }

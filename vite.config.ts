@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { loadConfig as loadServerConfig } from './src/server/config'
+import { loadConfig as loadServerConfig } from './src/server/core/config'
 import { loadConfig as loadWebConfig } from './src/web/config'
 
 export default defineConfig(async () => {

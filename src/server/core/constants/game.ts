@@ -8,7 +8,7 @@ import {
   ORTHOGONAL_DIRS as SHARED_ORTHOGONAL_DIRS,
   SUGGESTION_LIMITS,
   WORD_CONFIG,
-} from '../../shared/config'
+} from '@shared/config'
 
 /**
  * Orthogonal directions for board navigation (up, down, left, right)

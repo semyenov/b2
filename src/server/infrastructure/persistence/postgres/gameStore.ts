@@ -1,9 +1,9 @@
-import type { AppliedMove, GameState } from '../engine/balda'
+import type { AppliedMove, GameState } from '../../../domain/game/engine'
 import { consola } from 'consola'
 import { and, desc, eq, inArray } from 'drizzle-orm'
-import { calculateWordScore, normalizeWord } from '../engine/balda'
+import { OptimisticLockError, withRetry, wrapDatabaseOperation } from '../../../domain/errors/database'
+import { calculateWordScore, normalizeWord } from '../../../domain/game/engine'
 import { db } from './client'
-import { OptimisticLockError, withRetry, wrapDatabaseOperation } from './errors'
 import { gamePlayers, games, gameWords, moves } from './schema'
 
 // Type for Drizzle transaction - extracted from db.transaction callback parameter

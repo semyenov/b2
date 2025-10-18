@@ -1,6 +1,6 @@
-import { getConfig } from '@server/config'
+import { getConfig } from '@server/core/config'
 import { Elysia } from 'elysia'
-import { logger, logRequest, logResponse } from '../monitoring/logger'
+import { logger, logRequest, logResponse } from '../../../core/monitoring/logger'
 
 /**
  * Correlation middleware - tracks requests with unique IDs

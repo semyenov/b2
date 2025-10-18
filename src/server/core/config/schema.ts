@@ -236,6 +236,17 @@ export interface CacheConfig {
 }
 
 /**
+ * Letter normalization configuration
+ * Controls how letters are normalized during gameplay
+ */
+export interface LetterNormalizationConfig {
+  /** Normalize Ё to Е (default: false) */
+  normalizeYoToE: boolean
+  /** Normalize Е to Ё (default: false) */
+  normalizeEToYo: boolean
+}
+
+/**
  * Game-specific configuration
  * Core game rules and limits
  */
@@ -252,6 +263,8 @@ export interface GameConfig {
   autoArchiveAfterHours: number
   /** Maximum players per game (default: 4) */
   maxPlayers: number
+  /** Letter normalization settings */
+  letterNormalization: LetterNormalizationConfig
 }
 
 /**
@@ -445,6 +458,10 @@ export const defaultConfig: AppConfig = {
     maxConcurrentGames: 10,
     autoArchiveAfterHours: 24,
     maxPlayers: 4,
+    letterNormalization: {
+      normalizeYoToE: false, // Don't normalize Ё to Е by default
+      normalizeEToYo: false, // Don't normalize Е to Ё by default
+    },
   },
   ai: {
     thinkingDelay: 1500, // 1.5 seconds

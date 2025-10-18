@@ -1,5 +1,4 @@
 import type { RefreshTokenPayload } from '../auth/jwt'
-import { Elysia } from 'elysia'
 import {
   AuthResponseSchema,
   ErrorSchema,
@@ -8,10 +7,11 @@ import {
   RefreshTokenBodySchema,
   RefreshTokenResponseSchema,
   RegisterBodySchema,
-} from '../../shared/schemas'
+} from '@shared/schemas'
+import { Elysia } from 'elysia'
 import { createJwtPlugin, generateAccessToken, generateRefreshToken } from '../auth/jwt'
 import { AuthenticationError } from '../auth/middleware'
-import { logger } from '../monitoring/logger'
+import { logger } from '../core/monitoring/logger'
 import { userService } from '../services/userPostgres'
 
 /**

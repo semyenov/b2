@@ -175,6 +175,11 @@ export default {
     maxConcurrentGames: 10, // Per user (prevents abuse)
     autoArchiveAfterHours: 24, // Archive inactive games after 24 hours
     maxPlayers: 4,
+    // Letter normalization settings
+    letterNormalization: {
+      normalizeYoToE: false, // Set to true to normalize Ё to Е
+      normalizeEToYo: true, // Set to true to normalize Е to Ё
+    },
   },
 
   // AI player configuration
@@ -212,7 +217,7 @@ export default {
 
     // API configuration
     api: {
-      baseUrl: 'http://localhost:3000', // Override with VITE_API_URL
+      baseUrl: 'http://localhost/api', // Override with VITE_API_URL
       timeout: 30000, // 30 seconds
       retryEnabled: true,
       maxRetries: 3,

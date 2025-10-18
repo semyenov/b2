@@ -4,11 +4,11 @@
  */
 
 import type { User } from '../models/user'
+import { users } from '@server/infrastructure/persistence/postgres/schema'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
-import { db } from '../db/client'
-import { UniqueViolationError, wrapDatabaseOperation } from '../db/errors'
-import { users } from '../db/schema'
+import { UniqueViolationError, wrapDatabaseOperation } from '../domain/errors/database'
+import { db } from '../infrastructure/persistence/postgres/client'
 
 /**
  * Convert database user to application user model

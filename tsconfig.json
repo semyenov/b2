@@ -13,8 +13,12 @@
       "@shared/config/web": ["src/shared/config/web"],
       "@shared/config/web/*": ["src/shared/config/web/*"],
 
-      /* Server-side imports */
+      /* Server-side imports - Clean architecture layers */
       "@server/*": ["src/server/*"],
+      "@server/core/*": ["src/server/core/*"],
+      "@server/domain/*": ["src/server/domain/*"],
+      "@server/infrastructure/*": ["src/server/infrastructure/*"],
+      "@server/presentation/*": ["src/server/presentation/*"],
 
       /* Web frontend aliases (all from src/web) */
       "@web/*": ["src/web/*"],

@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
-import { cloneGameState, initialGameCAT, initialGameHELLO } from '../../../test/fixtures/gameStates'
-import { mockDictionary } from '../../../test/fixtures/mockDictionary'
-import { suggestWords } from './suggest'
+import { cloneGameState, initialGameCAT, initialGameHELLO } from '../../../../test/fixtures/gameStates'
+import { mockDictionary } from '../../../../test/fixtures/mockDictionary'
+import { suggestWords } from '../../domain/game/suggestions'
 
 describe('Suggestion Engine', () => {
   describe('suggestWords', () => {

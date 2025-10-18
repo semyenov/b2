@@ -1,17 +1,17 @@
 import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
-import { loadConfig } from '@server/config'
+import { loadConfig } from '@server/core/config'
+import { GameIdParamsSchema } from '@shared/schemas'
 import { Elysia } from 'elysia'
 import { rateLimit } from 'elysia-rate-limit'
-import { GameIdParamsSchema } from '../shared/schemas'
 import { createJwtPlugin } from './auth/jwt'
 import { AuthenticationError, AuthorizationError } from './auth/middleware'
 import { extractTokenFromQuery, isWsAuthRequired, verifyWsToken } from './auth/wsAuth'
-import { DictionaryError, GameNotFoundError, InvalidMoveError, InvalidPlacementError } from './errors'
-import { correlationMiddleware } from './middleware/correlation'
-import { logger } from './monitoring/logger'
+import { logger } from './core/monitoring/logger'
+import { DictionaryError, GameNotFoundError, InvalidMoveError, InvalidPlacementError } from './domain/errors'
+import { addClient, removeClient } from './infrastructure/websocket/hub'
+import { correlationMiddleware } from './presentation/http/middleware/correlation'
 import { registerRoutes } from './routes'
-import { addClient, removeClient } from './wsHub'
 
 // Load configuration on startup
 const config = await loadConfig()
@@ -19,7 +19,7 @@ const config = await loadConfig()
 // Check database connection on startup
 await (async () => {
   if (config.database.url) {
-    const { checkDatabaseConnection } = await import('./db/client')
+    const { checkDatabaseConnection } = await import('./infrastructure/persistence/postgres/client')
     const connected = await checkDatabaseConnection()
     if (!connected) {
       logger.error('Failed to connect to database. Exiting...')

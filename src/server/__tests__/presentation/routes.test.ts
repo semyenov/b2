@@ -1,9 +1,9 @@
 import cors from '@elysiajs/cors'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'bun:test'
 import { Elysia } from 'elysia'
-import { createTestClient } from '../../test/helpers/testClient'
-import { registerRoutes } from './routes'
-import { store } from './store'
+import { createTestClient } from '../../../../test/helpers/testClient'
+import { registerRoutes } from '../../routes'
+import { store } from '../../store'
 
 // Create test app instance
 const app = new Elysia()

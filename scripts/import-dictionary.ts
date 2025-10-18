@@ -9,7 +9,7 @@ import { loadConfig } from '@server/config'
 import { consola } from 'consola'
 import { sift } from 'radash'
 import { checkDatabaseConnection, db } from '../src/server/db/client'
-import { words } from '../src/server/db/schema'
+import { words } from '../src/server/infrastructure/persistence/postgres/schema'
 
 const DEFAULT_DICT_PATH = './data/dictionaries/russian.txt'
 const DEFAULT_LANGUAGE = 'ru'

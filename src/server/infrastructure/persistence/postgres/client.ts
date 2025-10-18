@@ -1,4 +1,4 @@
-import { getConfig } from '@server/config'
+import { getConfig } from '@server/core/config'
 import { consola } from 'consola'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'

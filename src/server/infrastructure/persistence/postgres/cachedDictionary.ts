@@ -1,6 +1,6 @@
-import type { SizedDictionary } from '../dictionary'
+import type { SizedDictionary } from '../../../domain/dictionary/dictionary'
 import { consola } from 'consola'
-import { TrieDictionary } from '../dictionary'
+import { TrieDictionary } from '../../../domain/dictionary/dictionary'
 import { PostgresDictionary } from './dictionaryStore'
 
 /**

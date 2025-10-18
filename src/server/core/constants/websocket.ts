@@ -3,7 +3,7 @@
  * Configuration for WebSocket communication and game archiving
  */
 
-import { WEBSOCKET_TIMING } from '../../shared/config'
+import { WEBSOCKET_TIMING } from '@shared/config'
 
 /**
  * WebSocket connection states

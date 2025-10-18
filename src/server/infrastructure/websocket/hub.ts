@@ -1,6 +1,6 @@
-import type { GameState } from './engine/balda'
+import type { GameState } from '@server/domain/game/engine'
+import { ARCHIVE_DELAY_MS, WS_STATES } from '@server/core/constants/websocket'
 import { consola } from 'consola'
-import { ARCHIVE_DELAY_MS, WS_STATES } from './constants/websocket'
 
 interface WsClient {
   send: (data: string) => number

@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: balda
       POSTGRES_PASSWORD: balda
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./src/server/db/migrations:/docker-entrypoint-initdb.d
@@ -32,12 +32,12 @@ services:
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-your-super-secret-refresh-jwt-key-change-this-in-production}
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost}
-    ports:
-      - '3000:3000'
+    # ports:
+    #   - '3000:3000'
     depends_on:
       postgres:
         condition: service_healthy
-    command: [sh, -c, 'sleep 15 && bun run dist/server/index.js']
+    command: [sh, -c, "sleep 15 && bun run dist/server/index.js"]
     healthcheck:
       test:
         - CMD
@@ -45,7 +45,7 @@ services:
         - --no-verbose
         - --tries=1
         - --spider
-        - 'http://localhost:3000/health'
+        - "http://localhost:3000/health"
       interval: 30s
       timeout: 10s
       start_period: 30s
@@ -58,8 +58,8 @@ services:
       context: .
       dockerfile: Dockerfile.web
     container_name: balda_web
-    ports:
-      - '8080:80'
+    # ports:
+    #   - '8080:80'
     environment:
       - NODE_ENV=production
     depends_on:
@@ -72,7 +72,7 @@ services:
         - --no-verbose
         - --tries=1
         - --spider
-        - 'http://localhost:80'
+        - "http://localhost:80"
 
       interval: 30s
       timeout: 5s
@@ -83,7 +83,7 @@ services:
     image: caddy:2-alpine
     container_name: balda_caddy
     ports:
-      - '80:80'
+      - "80:80"
       # - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile

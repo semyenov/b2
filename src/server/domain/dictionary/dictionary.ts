@@ -1,7 +1,7 @@
-import type { Dictionary } from './engine/balda'
+import type { Dictionary } from '@shared/types'
 import { consola } from 'consola'
 import { objectify, sift } from 'radash'
-import { DEFAULT_ALPHABET } from './constants/'
+import { DEFAULT_ALPHABET } from '../../core/constants/'
 
 export interface SizedDictionary extends Dictionary {
   readonly hasPrefix: (prefix: string) => boolean // Override optional with required

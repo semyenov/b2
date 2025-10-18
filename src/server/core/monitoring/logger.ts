@@ -1,4 +1,4 @@
-import { getConfig } from '@server/config'
+import { getConfig } from '@server/core/config'
 import { consola, createConsola } from 'consola'
 
 /**

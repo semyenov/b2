@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
-import { cloneGameState, gameWithOneMoveCAT, initialGameCAT } from '../../../test/fixtures/gameStates'
-import { mockDictionary } from '../../../test/fixtures/mockDictionary'
+import { cloneGameState, gameWithOneMoveCAT, initialGameCAT } from '../../../../test/fixtures/gameStates'
+import { mockDictionary } from '../../../../test/fixtures/mockDictionary'
 import {
   AllowAllDictionary,
   applyMove,
@@ -13,9 +13,11 @@ import {
   forEachNeighbor,
   isAdjacentToExisting,
   isInside,
+  normalizeLetterWithConfig,
   normalizeWord,
+  normalizeWordWithConfig,
   placeBaseWord,
-} from './balda'
+} from '../../domain/game/engine'
 
 describe('Game Engine - Board Utilities', () => {
   describe('createEmptyBoard', () => {
@@ -127,6 +129,68 @@ describe('Game Engine - Board Utilities', () => {
     test('handles Russian letters', () => {
       expect(normalizeWord('привет')).toBe('ПРИВЕТ')
       expect(normalizeWord('Мир')).toBe('МИР')
+    })
+  })
+
+  describe('normalizeLetterWithConfig', () => {
+    test('normalizes Ё to Е when normalizeYoToE is true', () => {
+      const config = { normalizeYoToE: true, normalizeEToYo: false }
+      expect(normalizeLetterWithConfig('Ё', config)).toBe('Е')
+      expect(normalizeLetterWithConfig('ё', config)).toBe('Е')
+    })
+
+    test('normalizes Е to Ё when normalizeEToYo is true', () => {
+      const config = { normalizeYoToE: false, normalizeEToYo: true }
+      expect(normalizeLetterWithConfig('Е', config)).toBe('Ё')
+      expect(normalizeLetterWithConfig('е', config)).toBe('Ё')
+    })
+
+    test('does not normalize when both options are false', () => {
+      const config = { normalizeYoToE: false, normalizeEToYo: false }
+      expect(normalizeLetterWithConfig('Ё', config)).toBe('Ё')
+      expect(normalizeLetterWithConfig('Е', config)).toBe('Е')
+    })
+
+    test('handles other letters normally', () => {
+      const config = { normalizeYoToE: true, normalizeEToYo: false }
+      expect(normalizeLetterWithConfig('А', config)).toBe('А')
+      expect(normalizeLetterWithConfig('а', config)).toBe('А')
+      expect(normalizeLetterWithConfig('B', config)).toBe('B')
+    })
+
+    test('handles empty strings', () => {
+      const config = { normalizeYoToE: true, normalizeEToYo: false }
+      expect(normalizeLetterWithConfig('', config)).toBe('')
+    })
+  })
+
+  describe('normalizeWordWithConfig', () => {
+    test('normalizes Ё to Е in words when normalizeYoToE is true', () => {
+      const config = { normalizeYoToE: true, normalizeEToYo: false }
+      expect(normalizeWordWithConfig('Ёлка', config)).toBe('ЕЛКА')
+      expect(normalizeWordWithConfig('ёлка', config)).toBe('ЕЛКА')
+    })
+
+    test('normalizes Е to Ё in words when normalizeEToYo is true', () => {
+      const config = { normalizeYoToE: false, normalizeEToYo: true }
+      expect(normalizeWordWithConfig('Елка', config)).toBe('ЁЛКА')
+      expect(normalizeWordWithConfig('елка', config)).toBe('ЁЛКА')
+    })
+
+    test('handles mixed letters correctly', () => {
+      const config = { normalizeYoToE: true, normalizeEToYo: false }
+      expect(normalizeWordWithConfig('Ёлка и Елка', config)).toBe('ЕЛКА И ЕЛКА')
+    })
+
+    test('handles empty strings', () => {
+      const config = { normalizeYoToE: true, normalizeEToYo: false }
+      expect(normalizeWordWithConfig('', config)).toBe('')
+      expect(normalizeWordWithConfig('   ', config)).toBe('')
+    })
+
+    test('trims whitespace and converts to uppercase', () => {
+      const config = { normalizeYoToE: false, normalizeEToYo: false }
+      expect(normalizeWordWithConfig('  привет  ', config)).toBe('ПРИВЕТ')
     })
   })
 })

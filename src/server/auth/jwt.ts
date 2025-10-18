@@ -1,6 +1,6 @@
 import type { User } from '../models/user'
 import { jwt } from '@elysiajs/jwt'
-import { getConfig } from '@server/config'
+import { getConfig } from '@server/core/config'
 import { Elysia } from 'elysia'
 
 /**
