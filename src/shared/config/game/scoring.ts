@@ -23,46 +23,46 @@ export const LETTER_SCORES: Readonly<Record<string, number>> = Object.freeze({
 
   // Common Russian letters (Score: 1)
   // These appear most frequently in Russian text
-  А: 1, // A - most common vowel
-  Е: 1, // E/Ye - very common
-  И: 1, // I - common vowel
-  Н: 1, // N - very common consonant
-  О: 1, // O - common vowel
-  Р: 1, // R - common consonant
-  С: 1, // S - very common consonant
-  Т: 1, // T - most common consonant
+  А: 4, // A - most common vowel
+  Е: 4, // E/Ye - very common
+  И: 4, // I - common vowel
+  Н: 4, // N - very common consonant
+  О: 4, // O - common vowel
+  Р: 4, // R - common consonant
+  С: 4, // S - very common consonant
+  Т: 4, // T - most common consonant
 
   // Medium frequency Russian letters (Score: 2)
-  В: 2, // V - fairly common
-  Д: 2, // D - fairly common
-  К: 2, // K - fairly common
-  Л: 2, // L - fairly common
-  М: 2, // M - fairly common
-  П: 2, // P - fairly common
-  У: 2, // U - fairly common vowel
-  Я: 2, // Ya - fairly common
+  В: 3, // V - fairly common
+  Д: 3, // D - fairly common
+  К: 3, // K - fairly common
+  Л: 3, // L - fairly common
+  М: 3, // M - fairly common
+  П: 3, // P - fairly common
+  У: 3, // U - fairly common vowel
+  Я: 3, // Ya - fairly common
 
   // Less common Russian letters (Score: 3)
-  Б: 3, // B - less common
-  Г: 3, // G - less common
-  Ж: 3, // Zh - less common
-  З: 3, // Z - less common
-  Й: 3, // Y (short) - less common
-  Х: 3, // Kh - less common
-  Ц: 3, // Ts - less common
-  Ч: 3, // Ch - less common
+  Б: 2, // B - less common
+  Г: 2, // G - less common
+  Ж: 2, // Zh - less common
+  З: 2, // Z - less common
+  Й: 2, // Y (short) - less common
+  Х: 2, // Kh - less common
+  Ц: 2, // Ts - less common
+  Ч: 2, // Ch - less common
 
   // Rare Russian letters (Score: 4)
   // Highest value for strategic gameplay
-  Ё: 4, // Yo - very rare (often replaced with Е)
-  Ш: 4, // Sh - rare
-  Щ: 4, // Shch - rare
-  Ъ: 4, // Hard sign - very rare
-  Ы: 4, // Y - rare vowel
-  Ь: 4, // Soft sign - rare
-  Э: 4, // E - rare
-  Ю: 4, // Yu - rare
-  Ф: 4, // F - rare (often in borrowed words)
+  Ё: 1, // Yo - very rare (often replaced with Е)
+  Ш: 1, // Sh - rare
+  Щ: 1, // Shch - rare
+  Ъ: 1, // Hard sign - very rare
+  Ы: 1, // Y - rare vowel
+  Ь: 1, // Soft sign - rare
+  Э: 1, // E - rare
+  Ю: 1, // Yu - rare
+  Ф: 1, // F - rare (often in borrowed words)
 
   // ========================================
   // LATIN LETTERS (English)

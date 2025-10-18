@@ -177,8 +177,8 @@ export default {
     maxPlayers: 4,
     // Letter normalization settings
     letterNormalization: {
-      normalizeYoToE: false, // Set to true to normalize Ё to Е
-      normalizeEToYo: true, // Set to true to normalize Е to Ё
+      normalizeYoToE: true, // Set to true to normalize Ё to Е
+      normalizeEToYo: false, // Set to true to normalize Е to Ё
     },
   },
 
