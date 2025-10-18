@@ -28,8 +28,7 @@
       "@types": ["src/web/types"],
       "@types/*": ["src/web/types/*"],
       "@constants": ["src/web/constants"],
-      "@constants/*": ["src/web/constants/*"],
-      "@config/*": ["src/web/config/*"]
+      "@constants/*": ["src/web/constants/*"]
     }
   },
   "include": [

@@ -4,7 +4,7 @@
  */
 
 import type { ApiClient, GameState, MoveBody, Suggestion } from '@lib/client'
-import type { Position } from '../../shared/types'
+import type { Position } from '@shared/types'
 import type { Screen } from './ui'
 
 // Re-export for barrel export

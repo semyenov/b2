@@ -12,7 +12,7 @@
  * making it available in the browser without additional runtime loading.
  */
 
-import type { WebConfig } from '@web/config/schema'
+import type { WebConfig } from './schema'
 
 /**
  * Complete web configuration

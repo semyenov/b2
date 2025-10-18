@@ -7,9 +7,6 @@
  * - API client types (generated from schemas)
  */
 
-// Shared Domain Types (from @shared/types)
-export type { Board, GameStatus, Position } from '../../shared/types'
-
 // API Client Types (from lib/client)
 export type { CreateGameBody, GameState, MoveBody, Placement, Suggestion } from '../lib/client'
 
@@ -33,3 +30,6 @@ export type {
   GameStatusConfig,
   GameStep,
 } from './ui'
+
+// Shared Domain Types (from @shared/types)
+export type { Board, GameStatus, Position } from '@shared/types'

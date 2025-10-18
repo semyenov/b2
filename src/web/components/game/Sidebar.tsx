@@ -1,8 +1,8 @@
 import type { GameState } from '@lib/client'
 import { usePlayerStats } from '@hooks/usePlayerStats'
+import { calculateWordScore } from '@shared/config'
 import { cn } from '@utils/classNames'
 import { getRussianPluralForm } from '@utils/russianPlural'
-import { calculateWordScore } from '@utils/wordScore'
 import { memo } from 'react'
 
 export interface SidebarProps {

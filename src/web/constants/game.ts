@@ -11,7 +11,7 @@ import {
   SCORE_THRESHOLDS,
   SUGGESTION_LIMITS,
   WORD_CONFIG,
-} from '../../shared/config'
+} from '@shared/config'
 
 // Note: Game status configuration moved to statusConfig.ts to avoid duplication
 // Import from '../constants/statusConfig' if needed
