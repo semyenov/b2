@@ -25,33 +25,34 @@
     }
     respond @options 200
 
-    # API routes - proxy to backend server
-    handle /api/* {
-        # Strip /api prefix when forwarding to backend
-        rewrite * {path}
+    # API routes - proxy directly to backend (backend has no /api prefix)
+    handle /games* {
         reverse_proxy api:3000
     }
 
-    # # WebSocket connections for real-time game updates
-    # handle /ws {
-    #     reverse_proxy api:3000 {
-    #         # WebSocket upgrade
-    #         header_up Connection {>Connection}
-    #         header_up Upgrade {>Upgrade}
-    #     }
-    # }
+    handle /dictionary* {
+        reverse_proxy api:3000
+    }
 
-    # # Health check endpoint
-    # handle /health {
-    #     reverse_proxy api:3000
-    # }
+    handle /health {
+        reverse_proxy api:3000
+    }
 
-    # # Swagger documentation
-    # handle /swagger* {
-    #     reverse_proxy api:3000
-    # }
+    handle /swagger* {
+        reverse_proxy api:3000
+    }
 
-    # Static files - proxy to web container (nginx)
+    # WebSocket connections for real-time game updates
+    handle /games/*/ws {
+        reverse_proxy api:3000 {
+            # WebSocket upgrade
+            header_up Connection {>Connection}
+            header_up Upgrade {>Upgrade}
+        }
+    }
+
+    # Frontend - serve everything else from web container (nginx)
+    # This handles / and all SPA routes
     handle {
         reverse_proxy web:80
     }
