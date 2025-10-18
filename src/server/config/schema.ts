@@ -343,7 +343,7 @@ export const defaultConfig: AppConfig = {
     trustProxy: false,
   },
   database: {
-    url: 'postgresql://balda:balda@localhost:5432/balda',
+    url: 'postgresql://balda:balda@postgres:5432/balda',
     maxConnections: 20,
     idleTimeout: 20,
     connectTimeout: 10,

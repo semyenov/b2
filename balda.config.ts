@@ -41,7 +41,7 @@ export default {
 
   // Database configuration
   database: {
-    url: 'postgresql://balda:balda@localhost:5432/balda',
+    url: 'postgresql://balda:balda@postgres:5432/balda',
     maxConnections: 20,
     idleTimeout: 20, // seconds
     connectTimeout: 10, // seconds
@@ -289,7 +289,7 @@ export default {
         debugMode: true,
       },
       api: {
-        baseUrl: 'http://localhost:3000',
+        // baseUrl: 'http://localhost:3000',
       },
       monitoring: {
         enabled: false,

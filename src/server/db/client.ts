@@ -64,18 +64,25 @@ async function shutdown() {
 process.on('SIGTERM', shutdown)
 process.on('SIGINT', shutdown)
 
-// Health check function
-export async function checkDatabaseConnection(): Promise<boolean> {
-  try {
-    const { client: dbClient } = initializeDatabase()
-    await dbClient`SELECT 1`
-    consola.success('Database connection established')
-    return true
+// Health check function with retry logic for Docker environments
+export async function checkDatabaseConnection(maxRetries = 5, retryDelay = 2000): Promise<boolean> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const { client: dbClient } = initializeDatabase()
+      await dbClient`SELECT 1`
+      consola.success('Database connection established')
+      return true
+    }
+    catch (error) {
+      if (attempt === maxRetries) {
+        consola.error('Database connection failed after', maxRetries, 'attempts:', error)
+        return false
+      }
+      consola.warn(`Database connection attempt ${attempt}/${maxRetries} failed, retrying in ${retryDelay}ms...`)
+      await new Promise(resolve => setTimeout(resolve, retryDelay))
+    }
   }
-  catch (error) {
-    consola.error('Database connection failed:', error)
-    return false
-  }
+  return false
 }
 
 // Export function to get the client for advanced queries

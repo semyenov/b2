@@ -325,6 +325,13 @@ export function registerRoutes(app: Elysia): Elysia {
         tags: ['health'],
       },
     })
+    .head('/health', () => new Response(null, { status: 200 }), {
+      detail: {
+        summary: 'Health check (HEAD)',
+        description: 'Returns the health status of the API server for HEAD requests.',
+        tags: ['health'],
+      },
+    })
     .use(async () => await authPluginImport)
     .use(dictionaryPlugin)
     .use(gamesPlugin)

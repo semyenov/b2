@@ -47,6 +47,18 @@ export async function loadConfig(): Promise<AppConfig> {
       // Environment variable resolution
       // Maps environment variables to config paths
       envName: process.env['NODE_ENV'] || 'development',
+
+      // Explicit environment variable mapping
+      env: {
+        DATABASE_URL: 'database.url',
+        JWT_SECRET: 'jwt.secret',
+        JWT_REFRESH_SECRET: 'jwt.refreshSecret',
+        PORT: 'server.port',
+        HOST: 'server.host',
+        NODE_ENV: 'server.nodeEnv',
+        LOG_LEVEL: 'logging.level',
+        CORS_ORIGIN: 'cors.origin',
+      },
     })
 
     // Merge environment variables with loaded config
