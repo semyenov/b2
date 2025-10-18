@@ -49,5 +49,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
-# Start the application from built dist (with proper module resolution)
-CMD ["bun", "run", "dist/server/index.js"]
+# Start the application from source (avoids build issues)
+CMD ["bun", "run", "src/server/index.ts"]

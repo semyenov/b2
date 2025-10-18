@@ -318,7 +318,10 @@ export function registerRoutes(app: Elysia): Elysia {
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore - Elysia type system complexities
   return app
-    .get('/health', () => ({ status: 'ok' }), {
+    .get('/health', () => new Response(JSON.stringify({ status: 'ok' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+    }), {
       detail: {
         summary: 'Health check',
         description: 'Returns the health status of the API server.',
