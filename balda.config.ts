@@ -14,7 +14,7 @@
  * like JWT secrets and database credentials.
  */
 
-import type { AppConfig } from './src/server/config/schema'
+import type { AppConfig } from './src/server/core/config/schema'
 import type { WebConfig } from './src/web/config/schema'
 
 type DeepPartial<T> = {
