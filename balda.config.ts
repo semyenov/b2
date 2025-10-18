@@ -29,7 +29,7 @@ export default {
   // Server configuration
   server: {
     port: 3000,
-    host: 'localhost',
+    host: '0.0.0.0',
     nodeEnv: 'development',
     isProduction: false,
     isDevelopment: true,
@@ -50,8 +50,8 @@ export default {
 
   // JWT authentication
   jwt: {
-    secret: 'change-me-in-production',
-    refreshSecret: 'change-me-refresh-in-production',
+    secret: '868534c9baab1e5a394f19cc2bddd8b7b8ee107abc8ad3ef29e7df9b156f9651',
+    refreshSecret: 'bc38dcde8329e3972ed7f6e64432c1846d0305b2120f0187ede57c7c8bf91cd8',
     accessTokenExpiry: '1h',
     refreshTokenExpiry: '7d',
   },

@@ -25,20 +25,15 @@
     }
     respond @options 200
 
-    # API routes - proxy directly to backend (backend has no /api prefix)
-    handle /games* {
+    # API routes - proxy to backend with /api prefix
+    handle /api/* {
+        # Strip /api prefix when forwarding to backend
+        uri strip_prefix /api
         reverse_proxy api:3000
     }
 
-    handle /dictionary* {
-        reverse_proxy api:3000
-    }
-
+    # Health check endpoint (keep without /api prefix for Docker health checks)
     handle /health {
-        reverse_proxy api:3000
-    }
-
-    handle /swagger* {
         reverse_proxy api:3000
     }
 
