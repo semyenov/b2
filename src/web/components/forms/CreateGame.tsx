@@ -1,5 +1,6 @@
 import type { CreateGameBody } from '@lib/client'
 import { BOARD_SIZES } from '@constants/game'
+import { UI_MESSAGES } from '@constants/messages'
 import { useCreateGameForm } from '@hooks/useCreateGameForm'
 import { cn } from '@utils/classNames'
 import { memo } from 'react'
@@ -23,21 +24,21 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-info-400 to-info-500 mb-3">
-          Создать игру
+          {UI_MESSAGES.CREATE_GAME_TITLE}
         </h1>
         <p className="text-gray-400 text-base">
-          Настройте параметры новой игры
+          {UI_MESSAGES.CREATE_GAME_SUBTITLE}
         </p>
       </div>
 
       {/* Form Card */}
       <div className="w-full max-w-lg">
         <Card variant="gradient" padding="spacious">
-          <form onSubmit={handleSubmit} className="space-y-6" aria-label="Форма создания новой игры">
+          <form onSubmit={handleSubmit} className="space-y-6" aria-label={UI_MESSAGES.CREATE_GAME_FORM_ARIA}>
             {/* Board Size */}
             <div>
               <label id="board-size-label" className="block text-base font-bold text-gray-300 mb-3">
-                📐 Размер доски
+                {UI_MESSAGES.BOARD_SIZE}
               </label>
               <div
                 className="grid grid-cols-5 gap-2"
@@ -50,7 +51,7 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
                     type="button"
                     role="radio"
                     aria-checked={size === String(s)}
-                    aria-label={`Размер доски ${s} на ${s}`}
+                    aria-label={UI_MESSAGES.BOARD_SIZE_ARIA(s)}
                     onClick={() => setSize(String(s))}
                     className={cn(
                       'py-3 font-bold text-base transition-all duration-200',
@@ -70,12 +71,12 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
             {/* Base Word */}
             <Input
               id="base-word-input"
-              label={`📝 Базовое слово (${size} русских букв)`}
+              label={UI_MESSAGES.BASE_WORD(Number.parseInt(size, 10))}
               type="text"
               value={baseWord}
               onChange={e => setBaseWord(e.target.value.toUpperCase())}
               error={error}
-              helpText="Слово будет размещено в центре доски"
+              helpText={UI_MESSAGES.BASE_WORD_HELP}
               className="uppercase text-center text-2xl tracking-widest text-info-400"
               placeholder={size === '5' ? 'БАЛДА' : size === '3' ? 'КОТ' : 'СЛОВО'}
               maxLength={Number.parseInt(size, 10)}
@@ -91,7 +92,7 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
                 onClick={onBack}
                 className="flex-1"
               >
-                ← Назад
+                {UI_MESSAGES.BACK}
               </Button>
               <Button
                 type="submit"
@@ -99,7 +100,7 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
                 size="lg"
                 className="flex-1"
               >
-                ✓ Создать
+                {UI_MESSAGES.CREATE}
               </Button>
             </div>
           </form>
@@ -107,8 +108,8 @@ export const CreateGame = memo(({ onSubmit, onBack }: CreateGameProps) => {
 
         {/* Help Text */}
         <div className="mt-6 text-center text-gray-500 text-sm space-y-1">
-          <p>💡 Совет: Выберите интересное слово для лучшей игры</p>
-          <p>🎮 Игра начнётся автоматически после создания</p>
+          <p>{UI_MESSAGES.CREATE_GAME_TIP}</p>
+          <p>{UI_MESSAGES.CREATE_GAME_INFO}</p>
         </div>
       </div>
     </div>

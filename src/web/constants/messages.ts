@@ -77,6 +77,89 @@ export const ERROR_MESSAGE_MAP: Record<string, string> = {
 } as const
 
 /**
+ * UI Messages for user interface components
+ * All user-facing text should be centralized here for i18n support
+ */
+export const UI_MESSAGES = {
+  // Menu Screen
+  GAME_TITLE: 'БАЛДА',
+  GAME_SUBTITLE: 'Словесная игра для ума',
+  QUICK_START: 'Быстрая игра 5×5',
+  PLAY_VS_AI: 'Играть с AI',
+  CREATE_GAME: 'Создать игру',
+  JOIN_GAME: 'Присоединиться',
+  OR: 'или',
+  VERSION: 'Версия 2.0 • Сделано с ❤️',
+
+  // Create Game Screen
+  CREATE_GAME_TITLE: 'Создать игру',
+  CREATE_GAME_SUBTITLE: 'Настройте параметры новой игры',
+  BOARD_SIZE: '📐 Размер доски',
+  BASE_WORD: (size: number) => `📝 Базовое слово (${size} русских букв)`,
+  BASE_WORD_HELP: 'Слово будет размещено в центре доски',
+  BOARD_SIZE_ARIA: (size: number) => `Размер доски ${size} на ${size}`,
+  CREATE_GAME_FORM_ARIA: 'Форма создания новой игры',
+  BACK: '← Назад',
+  CREATE: '✓ Создать',
+  CREATE_GAME_TIP: '💡 Совет: Выберите интересное слово для лучшей игры',
+  CREATE_GAME_INFO: '🎮 Игра начнётся автоматически после создания',
+
+  // Game List Screen
+  AVAILABLE_GAMES: 'Доступные игры',
+  AVAILABLE_GAMES_SUBTITLE: 'Присоединитесь к существующей игре или создайте новую',
+  BACK_TO_MENU: '← Назад в меню',
+  NO_GAMES_AVAILABLE: 'Нет доступных игр',
+  NO_GAMES_MESSAGE: 'Станьте первым, кто создаст игру!',
+  CREATE_NEW_GAME: 'Создать новую игру',
+  BOARD_LABEL: 'Доска:',
+  TURN_LABEL: 'Ход:',
+  CURRENT_PLAYER_LABEL: 'Сейчас:',
+  JOIN: 'Присоединиться →',
+  JOIN_GAME_ARIA: (baseWord: string, size: number, status: string) =>
+    `Присоединиться к игре ${baseWord}, размер ${size}×${size}, ${status}`,
+
+  // Plural forms for game list
+  GAME_PLURAL: ['игра', 'игры', 'игр'] as [string, string, string],
+  AVAILABLE_PLURAL: ['доступна', 'доступно', 'доступно'] as [string, string, string],
+} as const
+
+/**
+ * Accessibility announcements for screen readers
+ * Used with live regions (aria-live) to announce important state changes
+ */
+export const A11Y_ANNOUNCEMENTS = {
+  // Move announcements
+  MOVE_SUBMITTED: (word: string, score: number) =>
+    `Ход принят: слово ${word}, получено ${score} очков`,
+  MOVE_FAILED: (error: string) => `Ход отклонён: ${error}`,
+
+  // AI state announcements
+  AI_THINKING: 'Компьютер думает над ходом',
+  AI_MOVE_MADE: (word: string, score: number) =>
+    `Компьютер сделал ход: слово ${word}, ${score} очков`,
+  AI_NO_MOVES: 'У компьютера нет доступных ходов',
+
+  // Suggestions announcements
+  LOADING_SUGGESTIONS: 'Загрузка подсказок',
+  SUGGESTIONS_LOADED: (count: number) =>
+    `Загружено ${count} подсказок`,
+  NO_SUGGESTIONS: 'Подсказок не найдено',
+
+  // Game state announcements
+  YOUR_TURN: 'Ваш ход',
+  WAITING_FOR_OPPONENT: (playerName: string) =>
+    `Ожидание хода игрока ${playerName}`,
+  GAME_FINISHED: 'Игра завершена',
+  GAME_WINNER: (playerName: string, score: number) =>
+    `Победитель: ${playerName} с ${score} очками`,
+
+  // Error announcements
+  ERROR_OCCURRED: (message: string) => `Ошибка: ${message}`,
+  CONNECTION_LOST: 'Соединение с сервером потеряно',
+  CONNECTION_RESTORED: 'Соединение восстановлено',
+} as const
+
+/**
  * Translates an English error message to Russian
  * Falls back to original message if no translation found
  *

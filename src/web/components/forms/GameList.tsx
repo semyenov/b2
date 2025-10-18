@@ -1,5 +1,6 @@
 import type { GameState } from '@lib/client'
 import type { BadgeVariant } from '../ui'
+import { UI_MESSAGES } from '@constants/messages'
 import { STATUS_CONFIG } from '@constants/statusConfig'
 import { useKeyboardNavigation } from '@hooks/useKeyboardNavigation'
 import { formatTimeAgo, getBaseWord, getGameStatus } from '@utils/gameHelpers'
@@ -32,11 +33,11 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-info-400 mb-2">Доступные игры</h1>
-            <p className="text-surface-400 text-base">Присоединитесь к существующей игре или создайте новую</p>
+            <h1 className="text-3xl font-bold text-info-400 mb-2">{UI_MESSAGES.AVAILABLE_GAMES}</h1>
+            <p className="text-surface-400 text-base">{UI_MESSAGES.AVAILABLE_GAMES_SUBTITLE}</p>
           </div>
           <Button variant="gray" size="md" onClick={onBack}>
-            ← Назад в меню
+            {UI_MESSAGES.BACK_TO_MENU}
           </Button>
         </div>
 
@@ -45,10 +46,10 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
           ? (
               <Card variant="default" padding="spacious" className="text-center">
                 <div className="text-6xl mb-4">🎮</div>
-                <h3 className="text-xl font-bold text-surface-300 mb-2">Нет доступных игр</h3>
-                <p className="text-surface-400 text-base mb-6">Станьте первым, кто создаст игру!</p>
+                <h3 className="text-xl font-bold text-surface-300 mb-2">{UI_MESSAGES.NO_GAMES_AVAILABLE}</h3>
+                <p className="text-surface-400 text-base mb-6">{UI_MESSAGES.NO_GAMES_MESSAGE}</p>
                 <Button variant="primary" size="lg" onClick={onBack}>
-                  Создать новую игру
+                  {UI_MESSAGES.CREATE_NEW_GAME}
                 </Button>
               </Card>
             )
@@ -57,9 +58,9 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                 <div className="text-surface-400 mb-4">
                   {games.length}
                   {' '}
-                  {getRussianPluralForm(games.length, ['игра', 'игры', 'игр'])}
+                  {getRussianPluralForm(games.length, UI_MESSAGES.GAME_PLURAL)}
                   {' '}
-                  {getRussianPluralForm(games.length, ['доступна', 'доступно', 'доступно'])}
+                  {getRussianPluralForm(games.length, UI_MESSAGES.AVAILABLE_PLURAL)}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {games.map((game) => {
@@ -88,7 +89,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                         tabIndex={0}
                         onClick={() => handleJoin(game)}
                         onKeyDown={e => handleKeyDown(e, () => handleJoin(game))}
-                        aria-label={`Присоединиться к игре ${baseWord}, размер ${game.size}×${game.size}, ${statusInfo.label}`}
+                        aria-label={UI_MESSAGES.JOIN_GAME_ARIA(baseWord, game.size, statusInfo.label)}
                       >
                         {/* Header: Status + Time */}
                         <div className="flex justify-between items-start mb-4">
@@ -112,7 +113,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                         {/* Game Info */}
                         <div className="space-y-2 mb-5 text-sm">
                           <div className="flex items-center justify-between">
-                            <span className="text-surface-400">Доска:</span>
+                            <span className="text-surface-400">{UI_MESSAGES.BOARD_LABEL}</span>
                             <span className="text-surface-300 font-mono">
                               {game.size}
                               ×
@@ -120,12 +121,12 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                             </span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-surface-400">Ход:</span>
+                            <span className="text-surface-400">{UI_MESSAGES.TURN_LABEL}</span>
                             <span className="text-surface-300 font-bold">{turnNumber}</span>
                           </div>
                           {status === 'in_progress' && (
                             <div className="flex items-center justify-between">
-                              <span className="text-surface-400">Сейчас:</span>
+                              <span className="text-surface-400">{UI_MESSAGES.CURRENT_PLAYER_LABEL}</span>
                               <span className="text-user-300 font-bold text-xs">
                                 {currentPlayer}
                               </span>
@@ -169,7 +170,7 @@ export const GameList = memo(({ games, onJoin, onBack }: GameListProps) => {
                             handleJoin(game)
                           }}
                         >
-                          Присоединиться →
+                          {UI_MESSAGES.JOIN}
                         </Button>
                       </Card>
                     )

@@ -1,10 +1,10 @@
 import type { CreateGameBody, GameState, MoveBody } from '@lib/client'
 import type { Screen, UseGameClientReturn } from '@types'
-import { GAME_CONFIG } from '@constants/game'
 import { ERROR_MESSAGES, translateErrorMessage } from '@constants/messages'
 import { ApiClient } from '@lib/client'
 import { logger } from '@utils/logger'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useAIPlayer } from './useAIPlayer'
 
 // Re-export for backwards compatibility
 export type { Screen, UseGameClientReturn } from '@types'
@@ -21,16 +21,11 @@ export function useGameClient(): UseGameClientReturn {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
 
-  // AI state
-  const [aiThinking, setAIThinking] = useState(false)
-  const [aiError, setAIError] = useState<string | null>(null)
-
   // Refs
   const apiClient = useRef(new ApiClient()).current
   const wsRef = useRef<WebSocket | null>(null)
-  const lastProcessedMoveCount = useRef(0)
-  const aiMoveInProgress = useRef(false)
   const wsConnected = useRef(false)
+  const lastUpdateTimestamp = useRef(0) // Track local updates to prevent race conditions
 
   // Check server health on mount
   useEffect(() => {
@@ -47,6 +42,18 @@ export function useGameClient(): UseGameClientReturn {
         gameId,
         (updatedGame) => {
           wsConnected.current = true
+
+          // Skip WebSocket update if we just made a local move (within 200ms)
+          // This prevents race conditions between local state updates and WebSocket broadcasts
+          const timeSinceLastUpdate = Date.now() - lastUpdateTimestamp.current
+          if (timeSinceLastUpdate < 200) {
+            logger.debug('Skipping WebSocket update (local update recent)', {
+              timeSinceLastUpdate,
+              gameId: updatedGame.id,
+            })
+            return
+          }
+
           logger.debug('WebSocket game update received', {
             gameId: updatedGame.id,
             moves: updatedGame.moves.length,
@@ -150,8 +157,11 @@ export function useGameClient(): UseGameClientReturn {
         totalMoves: result.moves.length,
         previousMoves: currentGame.moves.length,
       })
-      // CRITICAL FIX: Update local state immediately with the move result
-      // Don't rely solely on WebSocket broadcast which has 50ms delay
+      // Update timestamp to prevent WebSocket race condition
+      lastUpdateTimestamp.current = Date.now()
+
+      // Update local state immediately with the move result
+      // WebSocket broadcast will be skipped if it arrives within 200ms
       setCurrentGame(result)
       return true
     }
@@ -161,130 +171,12 @@ export function useGameClient(): UseGameClientReturn {
     }
   }, [currentGame, apiClient, apiCall])
 
-  // AI Player automation
-  // Integrated into useGameClient for consistent state management
-  useEffect(() => {
-    logger.debug('AI effect triggered', {
-      hasCurrentGame: !!currentGame,
-      currentPlayerIndex: currentGame?.currentPlayerIndex,
-      movesLength: currentGame?.moves.length,
-      lastProcessed: lastProcessedMoveCount.current,
-      aiPlayers: currentGame?.aiPlayers,
-    })
-
-    if (!currentGame) {
-      setAIThinking(false)
-      return
-    }
-
-    // Check if current player is AI
-    const currentPlayer = currentGame.players[currentGame.currentPlayerIndex]!
-    const isAITurn = currentGame.aiPlayers.includes(currentPlayer)
-
-    logger.debug('AI turn check', {
-      currentPlayer,
-      isAITurn,
-      aiPlayers: currentGame.aiPlayers,
-    })
-
-    if (!isAITurn) {
-      setAIThinking(false)
-      aiMoveInProgress.current = false
-      return
-    }
-
-    // Don't re-trigger if we already processed this turn
-    if (currentGame.moves.length === lastProcessedMoveCount.current) {
-      logger.debug('AI turn already processed, skipping', {
-        currentMoves: currentGame.moves.length,
-        lastProcessed: lastProcessedMoveCount.current,
-      })
-      return
-    }
-
-    // CRITICAL: Prevent race condition during AI "thinking" delay
-    // If AI move is already in progress, skip to prevent double-submission
-    if (aiMoveInProgress.current) {
-      logger.debug('AI move already in progress, skipping duplicate trigger', {
-        currentMoves: currentGame.moves.length,
-      })
-      return
-    }
-
-    // AI's turn - make a move
-    const makeAIMove = async () => {
-      // Mark AI move as in progress BEFORE any async operations
-      aiMoveInProgress.current = true
-      setAIThinking(true)
-      setAIError(null)
-
-      try {
-        logger.info('AI turn detected:', {
-          player: currentPlayer,
-          moveCount: currentGame.moves.length,
-        })
-
-        // Simulate "thinking" delay for better UX
-        await new Promise(resolve => setTimeout(resolve, GAME_CONFIG.AI_THINKING_DELAY_MS))
-
-        // Load suggestions
-        const suggestions = await apiClient.getSuggestions(currentGame.id, GAME_CONFIG.MAX_SUGGESTIONS_DISPLAY)
-
-        if (suggestions.length > 0) {
-          // Select best suggestion (first one is highest scored)
-          const bestMove = suggestions[0]!
-
-          // Construct move body
-          const moveBody: MoveBody = {
-            playerId: currentPlayer,
-            position: bestMove.position,
-            letter: bestMove.letter,
-            word: bestMove.word.toUpperCase(),
-          }
-
-          logger.debug('AI making move:', { moveBody, suggestion: bestMove })
-
-          // Submit the move using the same state-updating function as user moves
-          const success = await makeMove(moveBody)
-
-          if (success) {
-            // Update counter after successful AI move to prevent re-triggering
-            lastProcessedMoveCount.current = currentGame.moves.length + 1
-            logger.debug('AI move completed, updated counter', {
-              lastProcessed: lastProcessedMoveCount.current,
-            })
-          }
-        }
-        else {
-          // No valid moves available - game is stuck
-          setAIError(ERROR_MESSAGES.AI_NO_MOVES)
-          logger.warn('AI has no valid moves available', {
-            gameId: currentGame.id,
-            player: currentPlayer,
-          })
-          // Reset to allow future detection if game state changes
-          lastProcessedMoveCount.current = currentGame.moves.length
-        }
-      }
-      catch (error) {
-        const errorMessage = error instanceof Error ? translateErrorMessage(error.message) : ERROR_MESSAGES.AI_MOVE_FAILED
-        setAIError(errorMessage)
-        logger.error('AI move failed', error as Error, {
-          gameId: currentGame.id,
-          player: currentPlayer,
-        })
-        // Reset to allow retry on next state change
-        lastProcessedMoveCount.current = currentGame.moves.length
-      }
-      finally {
-        setAIThinking(false)
-        // Clear in-progress flag after move completes (success or failure)
-        aiMoveInProgress.current = false
-      }
-    }
-
-    makeAIMove()
-  }, [currentGame, makeMove, apiClient])
+  // AI Player automation - Extracted to separate hook for better separation of concerns
+  const { aiThinking, aiError } = useAIPlayer({
+    currentGame,
+    makeMove,
+    apiClient,
+  })
 
   const quickStart = async () => {
     const words = await apiCall(() => apiClient.getRandomWords(5, 1))
