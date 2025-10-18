@@ -1,5 +1,6 @@
 import type { Suggestion } from '@lib/client'
 import type { ScoreTier } from '@utils/suggestionHelpers'
+import { UI_MESSAGES } from '@constants/messages'
 import { cn } from '@utils/classNames'
 import { getSuggestionCoordLabel } from '@utils/suggestionHelpers'
 import { memo } from 'react'
@@ -66,7 +67,7 @@ export const SuggestionCard = memo(({
     <button
       type="button"
       onClick={() => onClick(suggestion)}
-      aria-label={`Подсказка ${rank}: ${suggestion.word}, буква ${suggestion.letter} на позиции ${posStr}, ${suggestion.score} очков`}
+      aria-label={UI_MESSAGES.SUGGESTION_ARIA(rank, suggestion.word, suggestion.letter, posStr, suggestion.score)}
       className={cn(
         // Base styles
         'group relative w-full transition-all duration-300',

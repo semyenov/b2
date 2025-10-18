@@ -1,5 +1,6 @@
 import type { Suggestion } from '@lib/client'
 import { GAME_CONFIG } from '@constants/game'
+import { UI_MESSAGES } from '@constants/messages'
 import { getScoreTier } from '@utils/suggestionHelpers'
 import { memo, useMemo } from 'react'
 import { Spinner } from '../ui'
@@ -50,7 +51,7 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
           <div className="flex flex-col items-center gap-4">
             <Spinner size="lg" />
             <div className="text-surface-400 text-sm font-medium">
-              Загрузка подсказок...
+              {UI_MESSAGES.SUGGESTIONS_LOADING}
             </div>
           </div>
         </div>
@@ -64,10 +65,10 @@ export const SuggestionsPanel = memo<SuggestionsPanelProps>(({
       <PanelContainer>
         <div className="flex flex-col items-center justify-center h-full text-center px-6 py-12">
           <div className="text-surface-500 text-2xl font-bold tracking-wide uppercase">
-            ПУСТО
+            {UI_MESSAGES.SUGGESTIONS_EMPTY_TITLE}
           </div>
           <div className="text-surface-600 text-sm mt-2">
-            AI не может найти подходящие ходы
+            {UI_MESSAGES.SUGGESTIONS_EMPTY_MESSAGE}
           </div>
         </div>
       </PanelContainer>

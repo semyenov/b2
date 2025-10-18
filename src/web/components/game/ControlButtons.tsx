@@ -1,4 +1,5 @@
 import type { Position } from '@types'
+import { UI_MESSAGES } from '@constants/messages'
 import { getGameStep } from '@utils/gameStepUtils'
 import { isClearButtonDisabled } from '@utils/uiHelpers'
 import { memo } from 'react'
@@ -68,18 +69,18 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           variant="gray"
           size="md"
           onClick={onExit}
-          aria-label="Выйти в главное меню"
+          aria-label={UI_MESSAGES.EXIT_BUTTON_ARIA}
         >
-          Выход
+          {UI_MESSAGES.EXIT_BUTTON}
         </Button>
         <Button
           type="button"
           variant="warning"
           size="md"
           onClick={onRestartWithNewWord}
-          aria-label="Начать новую игру с теми же параметрами"
+          aria-label={UI_MESSAGES.NEW_GAME_BUTTON_ARIA}
         >
-          Новая игра
+          {UI_MESSAGES.NEW_GAME_BUTTON}
         </Button>
       </div>
 
@@ -95,12 +96,10 @@ export const ControlButtons = memo<ControlButtonsProps>(({
             variant="success"
             size="md"
             onClick={onSubmitMove}
-            aria-label={`Отправить слово ${formedWord}`}
+            aria-label={UI_MESSAGES.SUBMIT_WORD_ARIA(formedWord)}
             className="whitespace-nowrap uppercase tracking-wider"
           >
-            Отправить слово «
-            {formedWord}
-            »
+            {UI_MESSAGES.SUBMIT_WORD_BUTTON(formedWord)}
           </Button>
         )}
       </div>
@@ -114,11 +113,11 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           size="md"
           onClick={onToggleSuggestions}
           disabled={!isMyTurn}
-          aria-label={showSuggestions ? 'Скрыть подсказки AI' : 'Показать подсказки AI'}
+          aria-label={showSuggestions ? UI_MESSAGES.SUGGESTION_BUTTON_HIDE : UI_MESSAGES.SUGGESTION_BUTTON_SHOW}
           aria-pressed={showSuggestions}
           className={showSuggestions ? 'shadow-depth-3' : ''}
         >
-          Подсказка
+          {UI_MESSAGES.SUGGESTION_BUTTON_TEXT}
         </Button>
 
         {/* Clear button */}
@@ -128,9 +127,9 @@ export const ControlButtons = memo<ControlButtonsProps>(({
           size="md"
           onClick={handleClearClick}
           disabled={isClearDisabled && !showSuggestions}
-          aria-label={showSuggestions ? 'Скрыть подсказки' : 'Отменить выбор ячейки и буквы'}
+          aria-label={showSuggestions ? UI_MESSAGES.CANCEL_BUTTON_ARIA_SUGGESTIONS : UI_MESSAGES.CANCEL_BUTTON_ARIA_SELECTION}
         >
-          Отмена
+          {UI_MESSAGES.CANCEL_BUTTON_TEXT}
         </Button>
       </div>
     </div>

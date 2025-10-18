@@ -1,4 +1,5 @@
 import { RUSSIAN_ALPHABET } from '@constants/game'
+import { UI_MESSAGES } from '@constants/messages'
 import { useHover } from '@hooks/useHover'
 import { useKeyboardNavigation } from '@hooks/useKeyboardNavigation'
 import { isLetterButtonDisabled } from '@utils/uiHelpers'
@@ -33,7 +34,7 @@ export const AlphabetPanel = memo<AlphabetPanelProps>(({
       <div
         className="flex-1 min-h-0 flex items-center justify-center px-4 py-4"
         role="group"
-        aria-label="Выбор буквы для размещения на доске"
+        aria-label={UI_MESSAGES.ALPHABET_PANEL_ARIA}
       >
         <div className="alphabet-grid grid grid-cols-6 gap-2 h-full">
           {RUSSIAN_ALPHABET.map((letter) => {

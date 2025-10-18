@@ -1,4 +1,5 @@
 import type { ErrorInfo, ReactNode } from 'react'
+import { UI_MESSAGES } from '@constants/messages'
 import { logger } from '@utils/logger'
 import { Component } from 'react'
 
@@ -69,10 +70,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="text-center mb-6">
               <div className="text-6xl mb-4">⚠️</div>
               <h1 className="text-3xl font-bold text-danger-400 mb-2">
-                Что-то пошло не так
+                {UI_MESSAGES.ERROR_BOUNDARY_TITLE}
               </h1>
               <p className="text-surface-300 text-lg">
-                Произошла непредвиденная ошибка в приложении
+                {UI_MESSAGES.ERROR_BOUNDARY_SUBTITLE}
               </p>
             </div>
 
@@ -97,19 +98,19 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 onClick={this.handleReset}
                 className="flex-1 py-4 bg-info-600 hover:bg-info-700 border-2 border-info-500 font-bold text-lg text-white transition-all duration-200 hover:shadow-depth-3"
               >
-                🔄 Попробовать снова
+                {UI_MESSAGES.ERROR_BOUNDARY_RETRY}
               </button>
               <button
                 onClick={() => window.location.href = '/'}
                 className="flex-1 py-4 bg-surface-700 hover:bg-surface-600 border-2 border-surface-600 font-bold text-lg text-surface-300 transition-all duration-200 hover:shadow-depth-2"
               >
-                🏠 На главную
+                {UI_MESSAGES.ERROR_BOUNDARY_HOME}
               </button>
             </div>
 
             {/* Help Text */}
             <p className="text-center text-surface-500 text-sm mt-6">
-              Если проблема повторяется, попробуйте обновить страницу или очистить кеш браузера
+              {UI_MESSAGES.ERROR_BOUNDARY_HELP}
             </p>
           </div>
         </div>

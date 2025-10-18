@@ -5,10 +5,10 @@
  */
 
 import { readFile } from 'node:fs/promises'
-import { loadConfig } from '@server/config'
+import { loadConfig } from '@server/core/config'
+import { checkDatabaseConnection, db } from '@server/infrastructure/persistence/postgres/client'
 import { consola } from 'consola'
 import { sift } from 'radash'
-import { checkDatabaseConnection, db } from '../src/server/db/client'
 import { words } from '../src/server/infrastructure/persistence/postgres/schema'
 
 const DEFAULT_DICT_PATH = './data/dictionaries/russian.txt'

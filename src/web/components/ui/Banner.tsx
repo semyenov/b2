@@ -1,3 +1,4 @@
+import { UI_MESSAGES } from '@constants/messages'
 import { cn } from '@utils/classNames'
 import { memo, useEffect } from 'react'
 
@@ -56,7 +57,7 @@ export const Banner = memo(({ variant, message, onClose, autoDismissMs = 5000 }:
           <button
             onClick={onClose}
             className="ml-2 hover:bg-white/10 px-2 py-1 transition-all duration-200 text-sm opacity-70 hover:opacity-100"
-            aria-label="Закрыть уведомление"
+            aria-label={UI_MESSAGES.BANNER_CLOSE_ARIA}
           >
             ✕
           </button>

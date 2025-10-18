@@ -1,3 +1,4 @@
+import { UI_MESSAGES } from '@constants/messages'
 import { cn } from '@utils/classNames'
 import { memo } from 'react'
 
@@ -14,7 +15,7 @@ export interface StatusMessageProps {
 const stepConfig = {
   'waiting': {
     icon: '',
-    text: 'Ход противника',
+    text: UI_MESSAGES.STATUS_OPPONENT_TURN,
     className: 'text-opponent-400',
   },
   'select-cell': {
@@ -24,12 +25,12 @@ const stepConfig = {
   },
   'select-letter': {
     icon: '',
-    text: 'Выбери букву',
+    text: UI_MESSAGES.STATUS_SELECT_LETTER,
     className: 'text-surface-400',
   },
   'build-word': {
     icon: '',
-    text: 'Составь слово',
+    text: UI_MESSAGES.STATUS_FORM_WORD,
     className: 'text-surface-400',
   },
 }

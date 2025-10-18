@@ -1,4 +1,5 @@
 import type { GameState } from '@lib/client'
+import { UI_MESSAGES } from '@constants/messages'
 import { usePlayerStats } from '@hooks/usePlayerStats'
 import { calculateWordScore } from '@shared/config'
 import { cn } from '@utils/classNames'
@@ -58,7 +59,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="text-xs font-medium text-surface-400 uppercase tracking-wider">
-                    Счет
+                    {UI_MESSAGES.SIDEBAR_SCORE_LABEL}
                   </div>
                   {!isLetterCountTied && (
                     <div className={cn(
@@ -85,7 +86,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="text-xs font-medium text-surface-400 uppercase tracking-wider">
-                    Очки
+                    {UI_MESSAGES.SIDEBAR_POINTS_LABEL}
                   </div>
                   {!isScoreTied && (
                     <div className={cn(
@@ -113,7 +114,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                 <div className="flex flex-col items-center justify-center h-full text-center">
                   <div className="space-y-4">
                     <div className="text-surface-500 text-2xl font-bold tracking-wide uppercase">
-                      ПУСТО
+                      {UI_MESSAGES.SIDEBAR_NO_WORDS}
                     </div>
                     <div className="flex flex-col gap-3 opacity-30">
                       <div className="h-px w-24 bg-gradient-to-r from-transparent via-surface-700 to-transparent mx-auto" />
@@ -156,7 +157,7 @@ export const Sidebar = memo(({ game, playerIndex, onWordHover, onWordLeave }: Si
                           <div className="text-xs font-bold text-surface-500 group-hover:text-info-400 transition-colors duration-200 uppercase">
                             {wordScore}
                             {' '}
-                            {getRussianPluralForm(wordScore, ['очко', 'очка', 'очков'])}
+                            {getRussianPluralForm(wordScore, UI_MESSAGES.SIDEBAR_POINTS_PLURAL)}
                           </div>
                           <div className="w-2 h-2 bg-info-400/50 group-hover:bg-info-400 transition-colors duration-200" />
                         </div>

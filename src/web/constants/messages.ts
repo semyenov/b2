@@ -81,6 +81,53 @@ export const ERROR_MESSAGE_MAP: Record<string, string> = {
  * All user-facing text should be centralized here for i18n support
  */
 export const UI_MESSAGES = {
+  // Error Boundary
+  ERROR_BOUNDARY_TITLE: 'Что-то пошло не так',
+  ERROR_BOUNDARY_SUBTITLE: 'Произошла непредвиденная ошибка в приложении',
+  ERROR_BOUNDARY_RETRY: '🔄 Попробовать снова',
+  ERROR_BOUNDARY_HOME: '🏠 На главную',
+  ERROR_BOUNDARY_HELP: 'Если проблема повторяется, попробуйте обновить страницу или очистить кеш браузера',
+
+  // Control Buttons
+  EXIT_BUTTON: 'Выход',
+  EXIT_BUTTON_ARIA: 'Выйти в главное меню',
+  NEW_GAME_BUTTON: 'Новая игра',
+  NEW_GAME_BUTTON_ARIA: 'Начать новую игру с теми же параметрами',
+  SUBMIT_WORD_BUTTON: (word: string) => `Отправить слово «${word}»`,
+  SUBMIT_WORD_ARIA: (word: string) => `Отправить слово ${word}`,
+  SUGGESTION_BUTTON_SHOW: 'Показать подсказки AI',
+  SUGGESTION_BUTTON_HIDE: 'Скрыть подсказки AI',
+  SUGGESTION_BUTTON_TEXT: 'Подсказка',
+  CANCEL_BUTTON_TEXT: 'Отмена',
+  CANCEL_BUTTON_ARIA_SUGGESTIONS: 'Скрыть подсказки',
+  CANCEL_BUTTON_ARIA_SELECTION: 'Отменить выбор ячейки и буквы',
+
+  // Status Messages
+  STATUS_OPPONENT_TURN: 'Ход противника',
+  STATUS_SELECT_LETTER: 'Выбери букву',
+  STATUS_FORM_WORD: 'Составь слово',
+
+  // Suggestions Panel
+  SUGGESTIONS_LOADING: 'Загрузка подсказок...',
+  SUGGESTIONS_EMPTY_TITLE: 'ПУСТО',
+  SUGGESTIONS_EMPTY_MESSAGE: 'AI не может найти подходящие ходы',
+
+  // Sidebar
+  SIDEBAR_SCORE_LABEL: 'Счет',
+  SIDEBAR_POINTS_LABEL: 'Очки',
+  SIDEBAR_NO_WORDS: 'ПУСТО',
+  SIDEBAR_POINTS_PLURAL: ['очко', 'очка', 'очков'] as [string, string, string],
+
+  // Alphabet Panel
+  ALPHABET_PANEL_ARIA: 'Выбор буквы для размещения на доске',
+
+  // Suggestion Card
+  SUGGESTION_ARIA: (rank: number, word: string, letter: string, position: string, score: number) =>
+    `Подсказка ${rank}: ${word}, буква ${letter} на позиции ${position}, ${score} очков`,
+
+  // Banner
+  BANNER_CLOSE_ARIA: 'Закрыть уведомление',
+
   // Menu Screen
   GAME_TITLE: 'БАЛДА',
   GAME_SUBTITLE: 'Словесная игра для ума',
