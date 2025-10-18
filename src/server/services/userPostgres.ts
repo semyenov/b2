@@ -68,7 +68,10 @@ export const userService = {
 
         return dbUserToModel(newUser)
       },
-      { email, username },
+      {
+        email,
+        username,
+      },
     )
   },
 

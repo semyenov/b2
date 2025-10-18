@@ -11,32 +11,25 @@ import { logger, logRequest, logResponse } from '../monitoring/logger'
  * - Configuration is accessed lazily when needed
  */
 export const correlationMiddleware = new Elysia({ name: 'correlation' })
-  .onRequest((context) => {
-    const { request } = context
-
-    // Extract or generate correlation ID from request headers
-    const correlationId = request.headers.get('x-correlation-id')
-      || request.headers.get('x-request-id')
+  .derive(({ headers, request }) => {
+    const startTime = Date.now()
+    const url = new URL(request.url)
+    const correlationId = headers['x-correlation-id']
+      || headers['x-request-id']
       || crypto.randomUUID()
 
-    const url = new URL(request.url)
-
-    // Skip logging for certain paths
-    if (url.pathname === '/favicon.ico' || url.pathname.startsWith('/swagger')) {
-      return
+    return {
+      url,
+      startTime,
+      correlationId,
     }
-
+  })
+  .onBeforeHandle((context) => {
+    const { request, url, correlationId } = context
     logRequest(request.method, url.pathname, correlationId)
-
-    // Store start time for duration tracking
-    ;(request as Request & { startTime?: number }).startTime = Date.now()
-
-    // Store correlationId in the request for later use
-    ;(request as Request & { correlationId?: string }).correlationId = correlationId
   })
   .onAfterResponse((context) => {
-    const { request, set } = context
-    const correlationId = (request as Request & { correlationId?: string }).correlationId
+    const { request, set, correlationId, startTime } = context
     const url = new URL(request.url)
 
     // Skip logging for certain paths
@@ -44,14 +37,13 @@ export const correlationMiddleware = new Elysia({ name: 'correlation' })
       return
     }
 
-    const duration = Date.now() - ((request as Request & { startTime?: number }).startTime || Date.now())
+    const duration = Date.now() - startTime
     const status = typeof set.status === 'number' ? set.status : 200
 
     logResponse(request.method, url.pathname, status, duration, correlationId)
   })
   .onError((context) => {
-    const { request, error } = context
-    const correlationId = (request as Request & { correlationId?: string }).correlationId
+    const { request, error, correlationId } = context
     const url = new URL(request.url)
 
     // Access config lazily

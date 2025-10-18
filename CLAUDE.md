@@ -16,6 +16,7 @@ Balda is a word-building game where players take turns adding a single letter to
 ### Backend & Server
 - `bun run dev` - Start backend server with hot reload (port 3000)
 - `bun run check` - Type-check the codebase (TypeScript noEmit)
+- `bun run type-check:watch` - Type-check in watch mode
 - `bun run lint` - Check ESLint issues
 - `bun run lint:fix` - Auto-fix ESLint issues
 
@@ -23,6 +24,7 @@ Balda is a word-building game where players take turns adding a single letter to
 - `bunx drizzle-kit migrate` - Run database migrations
 - `bun run db:reset --confirm` - Drop and recreate database (destructive!)
 - `bun run db:view` - View database contents (games, moves, words)
+- `bun run db:studio` - Launch Drizzle Studio (interactive database UI)
 - `bun run dict:import` - Import Russian dictionary to PostgreSQL (50,910 words)
 - `bun run dict:import:en <file> en` - Import custom English dictionary
 - `bun run migrate:normalize` - Migrate old JSONB data to normalized schema
@@ -34,6 +36,82 @@ Balda is a word-building game where players take turns adding a single letter to
 - `bun run dev:web` - Start web frontend dev server (port 5173)
 - `bun run dev:all` - Start both backend and web frontend concurrently
 - `bun run build:web` - Build web frontend for production
+- `bun run preview:web` - Preview production build locally
+
+### Testing
+- `bun test` - Run all tests
+- `bun run test:watch` - Run tests in watch mode
+- `bun run test:coverage` - Run tests with coverage report
+- `bun run coverage:check` - Verify coverage meets 80% threshold
+
+**Test Structure**:
+- Test files: `**/*.test.ts` (located next to source files)
+- Test setup: `test/setup.ts` (preloaded for all tests)
+- Test fixtures: `test/fixtures/` (mock data and dictionaries)
+- Test helpers: `test/helpers/` (test client utilities)
+- Coverage threshold: 80% (enforced via `bunfig.toml`)
+
+Example test locations:
+- Engine tests: `src/server/engine/balda.test.ts`, `src/server/engine/suggest.test.ts`
+- Route tests: `src/server/routes.test.ts`
+- Dictionary tests: `src/server/dictionary.test.ts`
+
+### Docker Development
+- `bun run build:docker` - Build Docker images
+- `bun run dev:docker` - Start development environment in Docker
+- `bun run dev:docker:logs` - View Docker container logs
+- `bun run dev:docker:stop` - Stop Docker containers
+- `bun run dev:docker:clean` - Clean up Docker resources
+
+### Code Analysis & Maintenance
+- `bun run analyze:codebase` - Analyze codebase structure
+- `bun run analyze:codebase:verbose` - Detailed codebase analysis
+- `bun run analyze:codebase:json` - JSON output for tooling
+- `bun run knip` - Find unused files, exports, and dependencies
+- `bun run knip:production` - Check production dependencies only
+- `bun run knip:fix` - Auto-fix issues found by knip
+
+### Migration Scripts (Advanced)
+- `bun run colors:migrate:dry` - Preview color scheme migration
+- `bun run colors:migrate` - Apply color migration
+- `bun run colors:rollback` - Rollback color changes
+- `bun run imports:to-alias:dry` - Preview converting to path aliases
+- `bun run imports:to-alias` - Convert relative imports to aliases
+- `bun run imports:to-relative:dry` - Preview converting to relative
+- `bun run imports:to-relative` - Convert aliases to relative imports
+
+## TypeScript Configuration
+
+### Path Aliases
+The project uses path aliases for cleaner imports (configured in `tsconfig.json`):
+
+**Cross-layer (shared code)**:
+- `@shared/*` → `src/shared/*` - Shared types and configuration
+- `@shared/config/server` → Server-specific configuration
+- `@shared/config/web` → Web-specific configuration
+
+**Server-side**:
+- `@server/*` → `src/server/*` - Server modules
+
+**Web frontend**:
+- `@web/*` → `src/web/*` - Web modules (generic)
+- `@components` / `@components/*` → `src/web/components/*`
+- `@hooks` / `@hooks/*` → `src/web/hooks/*`
+- `@utils` / `@utils/*` → `src/web/utils/*`
+- `@lib/*` → `src/web/lib/*`
+- `@types` / `@types/*` → `src/web/types/*`
+- `@constants` / `@constants/*` → `src/web/constants/*`
+
+**Usage Example**:
+```typescript
+// Instead of relative imports like:
+import { GameState } from '../../../shared/types'
+
+// Use path aliases:
+import { GameState } from '@shared/types'
+import { logger } from '@utils/logger'
+import { Board } from '@components/Board'
+```
 
 ## Architecture
 
@@ -354,6 +432,66 @@ Modern React-based web UI built with Vite and Tailwind CSS, following clean arch
 - `MODE` - Build mode (development/production, managed by Vite)
 
 Web frontend uses `src/web/config/env.ts` for type-safe environment access.
+
+## Quick Reference
+
+### Common Development Workflows
+
+**Starting Development**:
+```bash
+# 1. Start PostgreSQL
+docker compose up -d
+
+# 2. Start backend server
+bun run dev
+
+# 3. In another terminal, start web frontend
+bun run dev:web
+
+# Or start both together
+bun run dev:all
+```
+
+**Making Changes**:
+```bash
+# 1. Type-check while developing
+bun run type-check:watch
+
+# 2. Run tests
+bun run test:watch
+
+# 3. Lint and fix issues
+bun run lint:fix
+
+# 4. Check coverage
+bun run coverage:check
+```
+
+**Database Operations**:
+```bash
+# View database contents
+bun run db:view
+
+# Run migrations
+bunx drizzle-kit migrate
+
+# Interactive database UI
+bun run db:studio
+
+# Reset database (destructive!)
+bun run db:reset --confirm
+```
+
+### Environment Setup Checklist
+
+1. ✅ Install Bun runtime
+2. ✅ Run `bun install`
+3. ✅ Copy `.env.example` to `.env`
+4. ✅ Start PostgreSQL: `docker compose up -d`
+5. ✅ Import dictionary: `bun run dict:import`
+6. ✅ Run migrations: `bunx drizzle-kit migrate`
+7. ✅ Start dev server: `bun run dev`
+8. ✅ Verify: visit http://localhost:3000/swagger
 
 ## Production Deployment
 

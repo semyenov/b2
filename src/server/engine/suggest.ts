@@ -1,6 +1,6 @@
-import type { Suggestion, SuggestOptions } from '../../shared/types'
+import type { Board, Suggestion, SuggestOptions } from '../../shared/types'
 import type { SizedDictionary } from '../dictionary'
-import type { BoardPosition, Letter } from './balda'
+import type { BoardPosition } from './balda'
 import {
   ORTHOGONAL_DIRS,
   SUGGESTION_LIMITS,
@@ -12,7 +12,7 @@ import { calculateWordScore, isAdjacentToExisting, normalizeWord } from './balda
 export type { Suggestion, SuggestOptions }
 
 export function suggestWords(
-  board: Letter[][],
+  board: Board,
   dict: SizedDictionary,
   options: SuggestOptions = {},
 ): Suggestion[] {
@@ -91,7 +91,7 @@ export function suggestWords(
  * Only explores paths that include the target position and prunes invalid prefixes
  */
 function enumerateAroundOptimized(
-  board: Letter[][],
+  board: Board,
   pos: BoardPosition,
   _letter: string,
   dict: SizedDictionary,

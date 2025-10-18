@@ -41,6 +41,7 @@
     "dist",
     "data",
     "**/*.spec.ts",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "scripts/legacy/**/*"
   ]
 }
