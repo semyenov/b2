@@ -5,7 +5,7 @@ import { defineConfig } from 'drizzle-kit'
 const databaseUrl = process.env.DATABASE_URL || 'postgresql://balda:balda@localhost:5432/balda'
 
 export default defineConfig({
-  schema: './src/server/db/schema.ts',
+  schema: './src/server/infrastructure/persistence/postgres/schema',
   out: './drizzle', // Match where we created migration files
   dialect: 'postgresql',
   dbCredentials: {
