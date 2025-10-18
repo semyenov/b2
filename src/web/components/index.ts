@@ -5,22 +5,22 @@
  * Exports are organized into:
  * - ui: Generic reusable UI primitives
  * - game: Game-specific components
- * - forms: Form and list screens
- * - screens: Top-level screen layouts
  * - utilities: ErrorBoundary and other utilities
+ *
+ * NOTE: Screens and forms are NOT exported here to enable code splitting.
+ * They are lazy-loaded directly in App.tsx for optimal bundle size.
  */
 
 // Utilities
 export { ErrorBoundary, withErrorBoundary } from './ErrorBoundary'
 
-// Form Components
-export * from './forms'
-
-// Game Components
+// Game Components (used within GameScreen, not lazy-loaded)
 export * from './game'
 
-// Screen Layouts
-export * from './screens'
-
-// UI Primitives
+// UI Primitives (shared across all screens, must be in main bundle)
 export * from './ui'
+
+// ❌ Screens and Forms are NOT exported here - they are lazy-loaded in App.tsx
+// This prevents them from being bundled into the main chunk
+// export * from './forms'    // Commented out for code splitting
+// export * from './screens'  // Commented out for code splitting

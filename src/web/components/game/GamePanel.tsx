@@ -3,6 +3,7 @@ import { useAnimatedPanel } from '@hooks/useAnimatedPanel'
 import { useClickOutside } from '@hooks/useClickOutside'
 import { cn } from '@utils/classNames'
 import { shouldShowAlphabetPanel } from '@utils/uiHelpers'
+import { useEffect, useRef } from 'react'
 import { AlphabetPanel } from './AlphabetPanel'
 import { SuggestionsPanel } from './SuggestionsPanel'
 
@@ -57,6 +58,38 @@ export function GamePanel({
     shouldShowPanel && !isClosing,
     excludeRefs,
   )
+
+  // Track panel mode changes for focus management
+  const prevShowSuggestionsRef = useRef(showSuggestions)
+
+  // Focus management - Focus first interactive element when panel opens/changes
+  useEffect(() => {
+    // Only focus if panel just became visible or mode changed
+    const panelJustOpened = isVisible && !isClosing
+    const modeChanged = prevShowSuggestionsRef.current !== showSuggestions
+    prevShowSuggestionsRef.current = showSuggestions
+
+    if (!panelJustOpened || !panelRef.current) {
+      return
+    }
+
+    // Small delay to ensure DOM is ready after animation starts
+    const focusTimer = setTimeout(() => {
+      if (!panelRef.current)
+        return
+
+      // Focus first interactive element (button or focusable suggestion)
+      const firstInteractive = panelRef.current.querySelector<HTMLElement>(
+        'button:not([disabled]), [role="button"]:not([aria-disabled="true"]), a[href]',
+      )
+
+      if (firstInteractive) {
+        firstInteractive.focus()
+      }
+    }, modeChanged ? 50 : 150) // Shorter delay if just switching modes
+
+    return () => clearTimeout(focusTimer)
+  }, [isVisible, isClosing, showSuggestions, panelRef])
 
   // Don't render if not visible
   if (!isVisible) {
